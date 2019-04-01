@@ -1,19 +1,21 @@
 #include "MenuState.h"
 #include "StateManager.h"
 
+#include "System/Log.h"
 #include "System/Input.h"
 #include "Vendor/ImGui/imgui.h"
+
 
 #include "PlayState.h"
 
 MenuState::MenuState()
 {
-
+	LOG_INFO("MenuState created");
 }
 
 MenuState::~MenuState()
 {
-	
+	LOG_WARNING("MenuState destroyed");
 }
 
 void MenuState::update(float dt)

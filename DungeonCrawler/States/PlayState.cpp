@@ -1,18 +1,19 @@
 #include "PlayState.h"
 #include "Vendor/ImGui/imgui.h"
 
+#include "System/Log.h"
 #include "System/Input.h"
 #include "StateManager.h"
 
 
 PlayState::PlayState()
 {
-	
+	LOG_INFO("PlayState created");
 }
 
 PlayState::~PlayState()
 {
-
+	LOG_WARNING("PlayState destroyed");
 }
 
 void PlayState::update(float dt)
