@@ -156,6 +156,7 @@
   <ItemGroup>
     <ClCompile Include="System\Application.cpp" />
     <ClCompile Include="System\Input.cpp" />
+    <ClCompile Include="System\Log.cpp" />
     <ClCompile Include="System\Main.cpp" />
     <ClCompile Include="States\MenuState.cpp" />
     <ClCompile Include="States\PlayState.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="States\PlayState.h" />
     <ClInclude Include="States\State.h" />
     <ClInclude Include="States\StateManager.h" />
+    <ClInclude Include="System\Log.h" />
     <ClInclude Include="Vendor\ImGui\imconfig.h" />
     <ClInclude Include="Vendor\ImGui\imgui.h" />
     <ClInclude Include="Vendor\ImGui\imgui_impl_glfw.h" />

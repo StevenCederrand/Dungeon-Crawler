@@ -6,6 +6,8 @@
 #include "Vendor/ImGui/imgui_impl_glfw.h"
 #include "Vendor/ImGui/imgui_impl_opengl3.h"
 
+#include "Log.h"
+
 #define GL_GPU_MEM_INFO_TOTAL_AVAILABLE_MEM_NVX 0x9048
 #define GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX 0x9049
 
@@ -32,7 +34,7 @@ bool Application::initialize()
 	bool glfwInitialized = glfwInit();
 
 	if (!glfwInitialized) {
-		printf("GLFW failed to initialize!\n");
+		LOG_ERROR("Failed to initialize GLFW");
 	}
 
 	// Using openGL 4.3
@@ -46,7 +48,7 @@ bool Application::initialize()
 
 	if (m_window == nullptr) {
 		glfwTerminate();
-		printf("GLFW Window could not be created!\n");
+		LOG_ERROR("Failed to create GLFW window");
 		return false;
 	}
 
@@ -57,7 +59,7 @@ bool Application::initialize()
 
 	if (status != GLEW_OK) {
 		glfwTerminate();
-		printf("GLEW failed to be initialized!\n");
+		LOG_ERROR("Failed to initialize GLEW");
 	}
 
 	// Vsync
@@ -76,6 +78,8 @@ bool Application::initialize()
 	m_input = new Input();
 	m_stateManager = new StateManager();
 	m_stateManager->setState(new MenuState());
+
+	LOG_INFO("Application successfully initialized");
 	return true;
 }
 
@@ -83,7 +87,7 @@ void Application::run()
 {
 	float currentTime = 0.f;
 	float lastTime = 0.f;
-
+	LOG_INFO("Running Application loop");
 	while (!glfwWindowShouldClose(m_window)) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
