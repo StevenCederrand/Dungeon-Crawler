@@ -2,7 +2,7 @@
 Repo för lilla spel projektet DV1572.
 
 Rules of code: 
-- You may use any style of { /} except { code }. 
+- You may use any bracketing. 
 - Member variables are to start with "m_".
 - Function names are to start with small character. 
 
