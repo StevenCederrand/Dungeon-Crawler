@@ -1,6 +1,8 @@
 #ifndef _PLAYSTATE_H
 #define _PLAYSTATE_H
 #include "State.h"
+#include "Parser/Parser.h"
+#include "Graphics/GLinit.h"
 
 class PlayState : public State {
 public:
@@ -12,7 +14,8 @@ public:
 	void render();
 
 private:
-
+	Parser* m_parser;
+	GLinit* m_GLinit;
 };
 
 #endif

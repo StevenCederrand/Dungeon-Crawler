@@ -1,12 +1,12 @@
 #include "MenuState.h"
 #include "StateManager.h"
 
+#include "PlayState.h"
 #include "System/Log.h"
 #include "System/Input.h"
 #include "Vendor/ImGui/imgui.h"
 
 
-#include "PlayState.h"
 
 MenuState::MenuState()
 {

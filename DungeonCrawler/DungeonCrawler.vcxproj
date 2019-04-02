@@ -154,6 +154,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Graphics\GLinit.cpp" />
+    <ClCompile Include="Graphics\Mesh.cpp" />
+    <ClCompile Include="Graphics\MeshMap.cpp" />
     <ClCompile Include="Parser\ParserData.cpp" />
     <ClCompile Include="System\Application.cpp" />
     <ClCompile Include="System\Input.cpp" />
@@ -173,6 +176,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals\Paths.h" />
+    <ClInclude Include="Graphics\GLinit.h" />
+    <ClInclude Include="Graphics\Mesh.h" />
+    <ClInclude Include="Graphics\MeshMap.h" />
     <ClInclude Include="Parser\ParserData.h" />
     <ClInclude Include="System\Application.h" />
     <ClInclude Include="System\Input.h" />

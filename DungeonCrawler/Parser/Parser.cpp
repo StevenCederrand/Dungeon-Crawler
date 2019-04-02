@@ -4,7 +4,7 @@
 #include "Globals/Paths.h"
 #include "System/Log.h"
 
-#define CAPACITY 250000
+#define CAPACITY 5000
 
 Parser::Parser()
 {
@@ -12,6 +12,7 @@ Parser::Parser()
 
 Parser::~Parser()
 {
+	cleanMemoryAllocated();
 }
 
 ParserData * Parser::loadFromObj(const std::string & filename)
@@ -26,14 +27,15 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 	std::vector<glm::vec3> tempNormalBuffer;
 	tempNormalBuffer.reserve(CAPACITY);
 
-	std::ifstream objFile(filename);
+	std::ifstream objFile(OBJFilePath + filename);
 	if (!objFile.is_open())
 	{
-		LOG_ERROR("Could not find OBJ file " + filename);
+		LOG_ERROR("Could not find OBJ file " + filename + "\nFull path: " + OBJFilePath + filename);
 		return nullptr;
 	}
 
-	ParserData* data = new ParserData();
+
+	ParserData* data = new ParserData(CAPACITY);
 	std::string line;
 	std::string MTLfile = "";
 	GLuint indexCount = 0;
@@ -87,8 +89,22 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 	tempUVBuffer.clear();
 	tempNormalBuffer.clear();
 
+	// Parse the material 
+	parseMaterialFile(MTLfile, data);
 
-	return nullptr;
+	m_memoryTracker.emplace_back(data);
+	
+	return data;
+}
+
+void Parser::cleanMemoryAllocated()
+{
+	for (size_t i = 0; i < m_memoryTracker.size(); i++)
+	{
+		delete m_memoryTracker[i];
+	}
+
+	m_memoryTracker.clear();
 }
 
 std::vector<std::string> Parser::split(const std::string & line, const char splitter)
@@ -113,9 +129,52 @@ void Parser::processFace(GLuint vertexIndex, GLuint uvIndex, GLuint normalIndex,
 	int uvStartPos = (uvIndex - 1) * 2;
 	int normalStartPos = (normalIndex - 1) * 3;
 
-	/*parserData->addIndices(indexCounter++);
-	parserData->addVertex(vertices[vertexStartPos], vertices[vertexStartPos + 1], vertices[vertexStartPos + 2]);
-	parserData->addUV(uvs[uvStartPos], uvs[uvStartPos + 1]);
-	parserData->addNormal(normals[normalStartPos], normals[normalStartPos + 1], normals[normalStartPos + 2]);*/
+	parserData->addIndex(indexCounter++);
+	parserData->addVertex(tempVertices[vertexStartPos]);
+	parserData->addUV(tempUvs[uvStartPos]);
+	parserData->addNormal(tempNormals[normalStartPos]);
 
+}
+
+void Parser::parseMaterialFile(const std::string& filename, ParserData* parserData)
+{
+	std::ifstream mtlFile(OBJFilePath + filename);
+	if (!mtlFile.is_open())
+	{
+		LOG_ERROR("Could not find Material file " + filename);
+		return;
+	}
+
+	std::string line;
+	while (std::getline(mtlFile, line))
+	{
+
+		std::vector<std::string> attribs = split(line, ' ');
+		if (attribs.size() == 0)
+			continue;
+
+		if (attribs[0] == "Ka")
+		{
+			parserData->setAmbientColor(std::stof(attribs[1]), std::stof(attribs[2]), std::stof(attribs[3]));
+		}
+		else if (attribs[0] == "Kd")
+		{
+			parserData->setDiffuseColor(std::stof(attribs[1]), std::stof(attribs[2]), std::stof(attribs[3]));
+		}
+		else if (attribs[0] == "Ks")
+		{
+			parserData->setSpecularColor(std::stof(attribs[1]), std::stof(attribs[2]), std::stof(attribs[3]));
+		}
+		else if (attribs[0] == "Ns" || attribs[0] == "Ni")
+		{
+			parserData->setShininess(std::stof(attribs[1]));
+		}
+		else if (attribs[0] == "map_Kd")
+		{
+			parserData->setTextureFilename(TexturePath + attribs[1]);
+		}
+
+	}
+
+	mtlFile.close();
 }

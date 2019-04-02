@@ -7,6 +7,7 @@
 #include "Vendor/ImGui/imgui_impl_opengl3.h"
 
 #include "Log.h"
+#include "Graphics/MeshMap.h"
 
 #define GL_GPU_MEM_INFO_TOTAL_AVAILABLE_MEM_NVX 0x9048
 #define GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX 0x9049
@@ -21,6 +22,7 @@ Application::Application()
 
 Application::~Application()
 {
+	MeshMap::cleanUp();
 	delete m_input;
 	delete m_stateManager;
 	glfwTerminate();

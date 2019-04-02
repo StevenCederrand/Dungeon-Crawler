@@ -5,15 +5,27 @@
 #include "System/Input.h"
 #include "StateManager.h"
 
+#include "Graphics/MeshMap.h"
 
 PlayState::PlayState()
 {
 	LOG_INFO("PlayState created");
+	
+	m_parser = new Parser();
+	m_GLinit = new GLinit();
+
+	ParserData* data = m_parser->loadFromObj("box.obj");
+	m_GLinit->createMesh("Box", data);
+
+	Mesh* box = MeshMap::getMesh("Box");
+
 }
 
 PlayState::~PlayState()
 {
 	LOG_WARNING("PlayState destroyed");
+	delete m_parser;
+	delete m_GLinit;
 }
 
 void PlayState::update(float dt)
