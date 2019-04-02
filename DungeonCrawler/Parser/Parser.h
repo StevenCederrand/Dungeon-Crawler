@@ -1,6 +1,7 @@
 #ifndef _PARSER_H
 #define _PARSER_H
 #include "ParserData.h"
+#include <GLM/glm.hpp>
 #include <GL/glew.h>
 #include <vector>
 #include <string>
@@ -16,9 +17,9 @@ private:
 	std::vector<std::string> split(const std::string& line, const char splitter);
 
 	void processFace(GLuint vertexIndex, GLuint uvIndex, GLuint normalIndex, GLuint& indexCounter,
-		const std::vector<GLfloat>& tempVertices,
-		const std::vector<GLfloat>& tempUvs,
-		const std::vector<GLfloat>& tempNormals,
+		const std::vector<glm::vec3>& tempVertices,
+		const std::vector<glm::vec2>& tempUvs,
+		const std::vector<glm::vec3>& tempNormals,
 		ParserData* parserData);
 
 };
