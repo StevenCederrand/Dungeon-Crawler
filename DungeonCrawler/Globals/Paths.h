@@ -2,9 +2,9 @@
 #define _PATHS_H
 #include <string>
 
-static std::string OBJFilePath = "Assets/ObjModels/";
-static std::string TexturePath = "Assets/Textures/";
-static std::string FBXPath = "Assets/FBX/";
-static std::string Binaries = "Assets/Binaries/";
+static const std::string OBJFilePath = "Assets/ObjModels/";
+static const std::string TexturePath = "Assets/Textures/";
+static const std::string FBXPath = "Assets/FBX/";
+static const std::string Binaries = "Assets/Binaries/";
 
 #endif

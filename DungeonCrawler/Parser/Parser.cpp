@@ -106,16 +106,16 @@ std::vector<std::string> Parser::split(const std::string & line, const char spli
 }
 
 void Parser::processFace(GLuint vertexIndex, GLuint uvIndex, GLuint normalIndex, GLuint & indexCounter, 
-	const std::vector<GLfloat>& tempVertices, const std::vector<GLfloat>& tempUvs, const std::vector<GLfloat>& tempNormals, 
+	const std::vector<glm::vec3>& tempVertices, const std::vector<glm::vec2>& tempUvs, const std::vector<glm::vec3>& tempNormals,
 	ParserData * parserData)
 {
 	int vertexStartPos = (vertexIndex - 1) * 3;
 	int uvStartPos = (uvIndex - 1) * 2;
 	int normalStartPos = (normalIndex - 1) * 3;
 
-	parserData->addIndices(indexCounter++);
+	/*parserData->addIndices(indexCounter++);
 	parserData->addVertex(vertices[vertexStartPos], vertices[vertexStartPos + 1], vertices[vertexStartPos + 2]);
 	parserData->addUV(uvs[uvStartPos], uvs[uvStartPos + 1]);
-	parserData->addNormal(normals[normalStartPos], normals[normalStartPos + 1], normals[normalStartPos + 2]);
+	parserData->addNormal(normals[normalStartPos], normals[normalStartPos + 1], normals[normalStartPos + 2]);*/
 
 }
