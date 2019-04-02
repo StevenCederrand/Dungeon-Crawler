@@ -7,9 +7,9 @@ Rules of code:
 - Function names are to start with small character. 
 
 Dates: 
-[x] Pitch: 2/4
-- High Concept: 5/4
-[x] Codebase: 5/4
+- [x]  Pitch: 2/4
+- [ ] High Concept: 5/4
+- [x]  Codebase: 5/4
 
 DOCUMENTATION
 
