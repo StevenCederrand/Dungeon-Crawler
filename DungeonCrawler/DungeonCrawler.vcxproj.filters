@@ -57,5 +57,8 @@
     <ClInclude Include="Vendor\ImGui\imstb_textedit.h" />
     <ClInclude Include="Vendor\ImGui\imstb_truetype.h" />
     <ClInclude Include="Vendor\stb\stb_image.h" />
+    <ClInclude Include="GameObjects\Box.h" />
+    <ClInclude Include="GameObjects\GameObject.h" />
+    <ClInclude Include="GameObjects\GameObjectManager.h" />
   </ItemGroup>
 </Project>

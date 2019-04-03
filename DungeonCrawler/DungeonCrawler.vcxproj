@@ -184,6 +184,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
+    <ClInclude Include="GameObjects\Box.h" />
+    <ClInclude Include="GameObjects\GameObject.h" />
+    <ClInclude Include="GameObjects\GameObjectManager.h" />
     <ClInclude Include="Globals\Paths.h" />
     <ClInclude Include="Graphics\GLinit.h" />
     <ClInclude Include="Graphics\Mesh.h" />
