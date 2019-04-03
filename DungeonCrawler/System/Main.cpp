@@ -1,6 +1,5 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "Application.h"
-#include <FMOD/fmod.hpp>
 #include "Log.h"
 
 int main() {

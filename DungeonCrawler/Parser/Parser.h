@@ -4,13 +4,15 @@
 #include <GLM/glm.hpp>
 #include <vector>
 #include <string>
-
+#include "../Audio/AudioEngine.h"
 
 class Parser {
 public:
 	Parser();
 	~Parser();
 	ParserData* loadFromObj(const std::string& filename);
+	//Parse SSO files
+	void parseSSO(const std::string filename);
 	void cleanMemoryAllocated();
 
 private:
