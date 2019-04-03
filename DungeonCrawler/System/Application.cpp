@@ -15,13 +15,14 @@
 int Application::windowWidth = 1280;
 int Application::windowHeight = 720;
 
-Application::Application()
-{
+Application::Application() {
+	if (audioEngine.loadSound("Sound.wav", "S") == FMOD_OK) {
+		LOG_INFO("OK SOUND");
+	}
 }
 
 
-Application::~Application()
-{
+Application::~Application() {
 	MeshMap::cleanUp();
 	delete m_input;
 	delete m_stateManager;
@@ -90,6 +91,9 @@ void Application::run()
 	float currentTime = 0.f;
 	float lastTime = 0.f;
 	LOG_INFO("Running Application loop");
+
+	audioEngine.play("S", 1.0f);
+	LOG_INFO("PLAY");
 	while (!glfwWindowShouldClose(m_window)) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
@@ -103,6 +107,8 @@ void Application::run()
 		m_stateManager->update(dt);
 		m_stateManager->render();
 
+		// SOUND STUFF
+		this->audioEngine.update();
 		// IMGUI STUFF
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();

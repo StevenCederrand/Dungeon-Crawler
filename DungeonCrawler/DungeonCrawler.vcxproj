@@ -154,6 +154,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Audio\AudioEngine.cpp" />
     <ClCompile Include="Graphics\GLinit.cpp" />
     <ClCompile Include="Graphics\Mesh.cpp" />
     <ClCompile Include="Graphics\MeshMap.cpp" />
@@ -175,6 +176,7 @@
     <ClCompile Include="Vendor\stb\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Audio\AudioEngine.h" />
     <ClInclude Include="Globals\Paths.h" />
     <ClInclude Include="Graphics\GLinit.h" />
     <ClInclude Include="Graphics\Mesh.h" />

@@ -4,7 +4,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "Input.h"
-
+#include "../Audio/AudioEngine.h"
 #include "States/StateManager.h"
 
 class Application
@@ -26,6 +26,7 @@ private:
 	GLFWwindow* m_window;
 	Input* m_input;
 	StateManager* m_stateManager;
+	AudioEngine audioEngine;
 };
 
 #endif
