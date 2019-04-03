@@ -8,31 +8,37 @@
 #include <map>
 #include <vector>
 
-class AudioEngine {
+struct ChannelData {
+	FMOD::Channel* m_channel;
+	std::string key;
+};
 
+class AudioEngine {
 public:
 	AudioEngine();
 	~AudioEngine();
-
-	FMOD::System* getSoundSystem();
+	
+	static FMOD::System* getSoundSystem();
 	//loadSound(Name, is the sound looping?, is it a 3D sound?, should we stream it?) : Name assumes that the sound is in the audio folder, include extension at the end of the name
-	FMOD_RESULT loadSound(std::string name, std::string key);
-	FMOD_RESULT loadSound(std::string name, std::string key, bool looping, bool m3DSound, bool stream);
+	static FMOD_RESULT loadSound(std::string name, std::string key);
+	static FMOD_RESULT loadSound(std::string name, std::string key, bool looping, bool m3DSound, bool stream);
 	//Remove a sound from the map
-	bool unloadSound(std::string key);
-	void update();
+	static bool unloadSound(std::string key);
+	static void update();
 	//Play a sound
-	void play(std::string key, float volume);
-private:
-	//Check to see if a key in the hashmap is in use
-	bool keyInUse(std::string key);
-	
-	FMOD::System *m_soundSystem;
-	std::map<std::string, FMOD::Sound*> m_sounds;
-	
-	std::vector<FMOD::Channel*> channels;
+	static void play(std::string key, float volume);
 
-	void* m_extraDriverData;
+private:
+	static FMOD_RESULT init();
+	//Check to see if a key in the hashmap is in use
+	static bool keyInUse(std::string key);
+	static bool playingSound(std::string key);
+
+	//Sound effect containers
+	static FMOD::System *m_soundSystem;
+	static std::map<std::string, FMOD::Sound*> m_sounds;	
+	static std::vector<FMOD::Channel*> m_channels;
+	static void* m_extraDriverData;
 };
 
 

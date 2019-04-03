@@ -16,9 +16,7 @@ int Application::windowWidth = 1280;
 int Application::windowHeight = 720;
 
 Application::Application() {
-	if (audioEngine.loadSound("Sound.wav", "S") == FMOD_OK) {
-		LOG_INFO("OK SOUND");
-	}
+
 }
 
 
@@ -26,6 +24,8 @@ Application::~Application() {
 	MeshMap::cleanUp();
 	delete m_input;
 	delete m_stateManager;
+	delete m_audioEngine;
+
 	glfwTerminate();
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui::DestroyContext();
@@ -77,10 +77,16 @@ bool Application::initialize()
 	ImGui_ImplOpenGL3_Init("#version 410 core");
 	ImGui::StyleColorsDark();
 
-	// Initializes the input sytem
+	// Initialize the audio system
+	m_audioEngine = new AudioEngine();
+	AudioEngine::loadSound("Sound.wav", "StartSound");
+
+	// Initializes the input system
 	m_input = new Input();
 	m_stateManager = new StateManager();
 	m_stateManager->setState(new MenuState());
+
+
 
 	LOG_INFO("Application successfully initialized");
 	return true;
@@ -92,8 +98,9 @@ void Application::run()
 	float lastTime = 0.f;
 	LOG_INFO("Running Application loop");
 
-	audioEngine.play("S", 1.0f);
-	LOG_INFO("PLAY");
+	
+	AudioEngine::play("StartSound", 1.0f);
+
 	while (!glfwWindowShouldClose(m_window)) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
@@ -108,7 +115,8 @@ void Application::run()
 		m_stateManager->render();
 
 		// SOUND STUFF
-		this->audioEngine.update();
+		this->m_audioEngine->update();
+
 		// IMGUI STUFF
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();

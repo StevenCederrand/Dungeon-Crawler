@@ -5,11 +5,12 @@
 #include "System/Log.h"
 #include "System/Input.h"
 #include "Vendor/ImGui/imgui.h"
+#include "../Audio/AudioEngine.h"
 
 
+MenuState::MenuState() {
 
-MenuState::MenuState()
-{
+	AudioEngine::loadSound("MenuClickFine.wav", "MC");
 	LOG_INFO("MenuState created");
 }
 
@@ -24,6 +25,12 @@ void MenuState::update(float dt)
 	{
 		m_stateManager->pushTemporaryState(new PlayState());
 	}
+
+	if (Input::isMouseReleased(GLFW_MOUSE_BUTTON_LEFT)) {
+		AudioEngine::play("MC", 1.0f);
+	}
+	AudioEngine::update();
+
 }
 
 void MenuState::renderImGUI()
