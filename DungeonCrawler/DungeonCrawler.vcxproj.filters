@@ -28,6 +28,7 @@
     <ClCompile Include="Vendor\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Vendor\stb\stb_image.cpp" />
     <ClCompile Include="Audio\AudioEngine.cpp" />
+    <ClCompile Include="Graphics\Framebuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -60,5 +61,6 @@
     <ClInclude Include="GameObjects\Box.h" />
     <ClInclude Include="GameObjects\GameObject.h" />
     <ClInclude Include="GameObjects\GameObjectManager.h" />
+    <ClInclude Include="Graphics\Framebuffer.h" />
   </ItemGroup>
 </Project>
