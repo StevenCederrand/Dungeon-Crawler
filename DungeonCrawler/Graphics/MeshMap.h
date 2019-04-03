@@ -8,6 +8,7 @@ class MeshMap {
 
 public:
 	static void addMesh(const std::string& name, Mesh* mesh);
+	static bool MeshExistWithName(std::string& name);
 	static Mesh* getMesh(const std::string& name);
 	static void cleanUp();
 

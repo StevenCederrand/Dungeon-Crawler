@@ -14,7 +14,7 @@ StateManager::~StateManager()
 void StateManager::popState()
 {
 	if (m_states.size() > 1){
-		delete m_states.back();
+		delete m_states[m_states.size() - 1];
 		m_states.pop_back();
 	}
 	else{
