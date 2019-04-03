@@ -7,11 +7,7 @@
 #include "../Globals/Paths.h"
 #include <map>
 #include <vector>
-
-struct ChannelData {
-	FMOD::Channel* m_channel;
-	std::string key;
-};
+#include "../Parser/Parser.h"
 
 class AudioEngine {
 public:
@@ -19,7 +15,8 @@ public:
 	~AudioEngine();
 	
 	static FMOD::System* getSoundSystem();
-	//loadSound(Name, is the sound looping?, is it a 3D sound?, should we stream it?) : Name assumes that the sound is in the audio folder, include extension at the end of the name
+	//Used for loading setlists. 
+	static FMOD_RESULT loadSSO(std::string name);
 	static FMOD_RESULT loadSound(std::string name, std::string key);
 	static FMOD_RESULT loadSound(std::string name, std::string key, bool looping, bool m3DSound, bool stream);
 	//Remove a sound from the map
@@ -33,7 +30,6 @@ private:
 	//Check to see if a key in the hashmap is in use
 	static bool keyInUse(std::string key);
 	static bool playingSound(std::string key);
-
 	//Sound effect containers
 	static FMOD::System *m_soundSystem;
 	static std::map<std::string, FMOD::Sound*> m_sounds;	

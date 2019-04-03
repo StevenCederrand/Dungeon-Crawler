@@ -5,7 +5,6 @@ std::map<std::string, FMOD::Sound*> AudioEngine::m_sounds;
 std::vector<FMOD::Channel*> AudioEngine::m_channels;
 void* AudioEngine::m_extraDriverData;
 
-
 AudioEngine::AudioEngine() {
 	if (init() != FMOD_OK) {
 		LOG_WARNING("AUDIO ENGINE INIT FAILED");
@@ -46,7 +45,18 @@ FMOD::System * AudioEngine::getSoundSystem()
 	return m_soundSystem;
 }
 
-//This works
+FMOD_RESULT AudioEngine::loadSSO(std::string name) {
+	FMOD_RESULT res = FMOD_OK;
+	
+	Parser parser;
+
+	parser.parseSSO(name);
+
+	LOG_INFO("SSO read");
+
+	return res;
+}
+
 FMOD_RESULT AudioEngine::loadSound(std::string name, std::string key) {
 	if (keyInUse(key)) {
 		LOG_WARNING("Sound key already in use");
@@ -113,6 +123,7 @@ void AudioEngine::update() {
 		if (!isPlaying) {	
 			temp->stop();
 			m_channels.erase(m_channels.begin() + i);
+			LOG_WARNING("Channel erased");
 		}
 	}
 }
@@ -158,4 +169,3 @@ bool AudioEngine::playingSound(std::string key) {
 	}
 	return false;
 }
-

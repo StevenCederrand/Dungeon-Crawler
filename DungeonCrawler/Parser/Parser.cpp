@@ -107,6 +107,31 @@ void Parser::cleanMemoryAllocated()
 	m_memoryTracker.clear();
 }
 
+void Parser::parseSSO(const std::string filename) {
+	std::string line;
+	std::ifstream ssoFile(SoundPath + filename);
+
+	if (!ssoFile.is_open()) {
+		LOG_ERROR("ERROR OPENING SSO FILE");
+	}
+
+	int lines = 0;
+	while (std::getline(ssoFile, line)) {
+		//Ignore comment and empty line
+		if (line[0] == '#' || line == "") {
+			continue;
+		}
+		
+		int space = line.find(' ');
+		std::string key = line.substr(0, space);
+		std::string filename = line.substr(++space, line.size());
+		AudioEngine::loadSound(filename, key);
+
+		LOG_INFO(key + " " + filename);
+	}
+	LOG_INFO(lines);
+}
+
 std::vector<std::string> Parser::split(const std::string & line, const char splitter)
 {
 	std::vector<std::string> tokens;

@@ -79,7 +79,6 @@ bool Application::initialize()
 
 	// Initialize the audio system
 	m_audioEngine = new AudioEngine();
-	AudioEngine::loadSound("Sound.wav", "StartSound");
 
 	// Initializes the input system
 	m_input = new Input();
@@ -97,9 +96,6 @@ void Application::run()
 	float currentTime = 0.f;
 	float lastTime = 0.f;
 	LOG_INFO("Running Application loop");
-
-	
-	AudioEngine::play("StartSound", 1.0f);
 
 	while (!glfwWindowShouldClose(m_window)) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

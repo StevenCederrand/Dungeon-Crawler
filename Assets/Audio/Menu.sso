@@ -1,0 +1,5 @@
+#Startup sound
+SystemStart SYSstart.wav
+
+#SFX
+LMouseClick MenuClickFine.wav

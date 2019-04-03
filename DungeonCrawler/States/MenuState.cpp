@@ -9,13 +9,13 @@
 
 
 MenuState::MenuState() {
-
-	AudioEngine::loadSound("MenuClickFine.wav", "MC");
+	AudioEngine::loadSSO("Menu.sso");
 	LOG_INFO("MenuState created");
 }
 
 MenuState::~MenuState()
 {
+	LOG_INFO("SS");
 	LOG_WARNING("MenuState destroyed");
 }
 
@@ -27,7 +27,11 @@ void MenuState::update(float dt)
 	}
 
 	if (Input::isMouseReleased(GLFW_MOUSE_BUTTON_LEFT)) {
-		AudioEngine::play("MC", 1.0f);
+		AudioEngine::play("LMouseClick", 1.0f);
+	}
+
+	if (Input::isKeyReleased(GLFW_KEY_ENTER)) {
+		AudioEngine::play("SystemStart", 1.0f);
 	}
 	AudioEngine::update();
 
