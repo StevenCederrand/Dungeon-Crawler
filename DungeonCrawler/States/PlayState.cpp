@@ -22,8 +22,6 @@ PlayState::PlayState()
 
 	ParserData* data = m_parser->loadFromObj("box.obj");
 
-
-
 	m_GLinit->createMesh("Box", data);
 
 	Mesh* boxMesh = MeshMap::getMesh("Box");

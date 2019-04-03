@@ -8,8 +8,8 @@ Shader::Shader(std::string vertex, std::string fragment)
 	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	GLint compileResult;
 	char buffer[1024];
-	m_shaderSetUp(vertex, vertexShader);
-	m_shaderSetUp(fragment, fragmentShader);
+	shaderSetup(vertex, vertexShader);
+	shaderSetup(fragment, fragmentShader);
 
 	m_shaderProg = glCreateProgram();
 	glAttachShader(m_shaderProg, vertexShader);
@@ -41,9 +41,9 @@ Shader::Shader(std::string vertex, std::string geometry, std::string fragment)
 	GLint compileResult;
 	char buffer[1024];
 	//m_shaderSetUp does Vertex, geometry and fragment shader setup
-	m_shaderSetUp(vertex, vertexShader);
-	m_shaderSetUp(geometry, geometryShader);
-	m_shaderSetUp(fragment, fragmentShader);
+	shaderSetup(vertex, vertexShader);
+	shaderSetup(geometry, geometryShader);
+	shaderSetup(fragment, fragmentShader);
 
 	m_shaderProg = glCreateProgram();
 	glAttachShader(m_shaderProg, vertexShader);
@@ -183,7 +183,7 @@ std::string Shader::getName() const
 }
 
 //one function for all the shaders instead of one for each
-void Shader::m_shaderSetUp(std::string shaderName, unsigned int &shader)
+void Shader::shaderSetup(std::string shaderName, unsigned int &shader)
 {
 
 

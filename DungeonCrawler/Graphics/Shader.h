@@ -31,7 +31,7 @@ private:
 
 	std::string m_name;
 	int m_shaderProg;
-	void m_shaderSetUp(std::string shaderName, unsigned int &shader);
+	void shaderSetup(std::string shaderName, unsigned int &shader);
 
 };
 

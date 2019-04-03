@@ -8,7 +8,7 @@
 
 Camera::Camera()
 {
-	m_position = glm::vec3(0.f, 0.f, 0.f);
+	m_position = glm::vec3(0.f, 0.f, 5.f);
 	m_lookDirection = glm::vec3(0.f, 0.f, -1.f);
 	m_yaw = 0.f;
 	m_pitch = 0.f;
@@ -77,6 +77,7 @@ void Camera::move(float dt)
 	if (Input::isKeyHeldDown(GLFW_KEY_W))
 	{
 		m_position.x += m_lookDirection.x * m_cameraSpeed * dt;
+		m_position.y += m_lookDirection.y * m_cameraSpeed * dt;
 		m_position.z += m_lookDirection.z * m_cameraSpeed * dt;
 	}
 
@@ -89,6 +90,7 @@ void Camera::move(float dt)
 	if (Input::isKeyHeldDown(GLFW_KEY_S))
 	{
 		m_position.x -= m_lookDirection.x * m_cameraSpeed * dt;
+		m_position.y -= m_lookDirection.y * m_cameraSpeed * dt;
 		m_position.z -= m_lookDirection.z * m_cameraSpeed * dt;
 	}
 
