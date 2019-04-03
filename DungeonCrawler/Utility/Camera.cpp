@@ -78,6 +78,7 @@ void Camera::move(float dt)
 	{
 		m_position.x += m_lookDirection.x * m_cameraSpeed * dt;
 		m_position.z += m_lookDirection.z * m_cameraSpeed * dt;
+		m_position.y += m_lookDirection.y * m_cameraSpeed * dt;
 	}
 
 	if (Input::isKeyHeldDown(GLFW_KEY_A))
@@ -90,6 +91,7 @@ void Camera::move(float dt)
 	{
 		m_position.x -= m_lookDirection.x * m_cameraSpeed * dt;
 		m_position.z -= m_lookDirection.z * m_cameraSpeed * dt;
+		m_position.y -= m_lookDirection.y * m_cameraSpeed * dt;
 	}
 
 	if (Input::isKeyHeldDown(GLFW_KEY_D))
