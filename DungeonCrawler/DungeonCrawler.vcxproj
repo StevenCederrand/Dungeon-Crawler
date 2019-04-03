@@ -158,6 +158,8 @@
     <ClCompile Include="Graphics\Mesh.cpp" />
     <ClCompile Include="Graphics\MeshMap.cpp" />
     <ClCompile Include="Parser\ParserData.cpp" />
+    <ClCompile Include="Graphics\Shader.cpp" />
+    <ClCompile Include="Graphics\ShaderMap.cpp" />
     <ClCompile Include="System\Application.cpp" />
     <ClCompile Include="System\Input.cpp" />
     <ClCompile Include="System\Log.cpp" />
@@ -180,6 +182,8 @@
     <ClInclude Include="Graphics\Mesh.h" />
     <ClInclude Include="Graphics\MeshMap.h" />
     <ClInclude Include="Parser\ParserData.h" />
+    <ClInclude Include="Graphics\Shader.h" />
+    <ClInclude Include="Graphics\ShaderMap.h" />
     <ClInclude Include="System\Application.h" />
     <ClInclude Include="System\Input.h" />
     <ClInclude Include="States\MenuState.h" />
