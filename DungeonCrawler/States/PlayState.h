@@ -3,6 +3,9 @@
 #include "State.h"
 #include "Parser/Parser.h"
 #include "Graphics/GLinit.h"
+#include "Graphics/Renderer.h"
+#include "Utility/Camera.h"
+#include "GameObjects/GameObjectManager.h"
 
 class PlayState : public State {
 public:
@@ -16,6 +19,9 @@ public:
 private:
 	Parser* m_parser;
 	GLinit* m_GLinit;
+	Camera* m_camera;
+	Renderer* m_renderer;
+	GameObjectManager* m_gameObjectManager;
 };
 
 #endif

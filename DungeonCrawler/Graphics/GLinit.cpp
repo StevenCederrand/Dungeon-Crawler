@@ -12,6 +12,9 @@ GLinit::~GLinit()
 
 void GLinit::createMesh(std::string name, ParserData* data)
 {
+	if (MeshMap::MeshExistWithName(name))
+		return;
+
 	GLuint vao = createAndBindVAO();
 	bindIndices(data->getIndices());
 	storeDataInAttributeList(0, 3, data->getVertices().size() ,data->getVertices().data());

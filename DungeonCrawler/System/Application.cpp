@@ -17,8 +17,8 @@ int Application::windowHeight = 720;
 
 Application::Application()
 {
-}
 
+}
 
 Application::~Application()
 {
@@ -96,6 +96,11 @@ void Application::run()
 		m_input->clearKeys();
 		glfwPollEvents();
 
+		if (Input::isKeyReleased(GLFW_KEY_ESCAPE))
+		{
+			glfwSetWindowShouldClose(m_window, true);
+		}
+
 		currentTime = static_cast<float>(glfwGetTime());
 		float dt = currentTime - lastTime;
 		lastTime = currentTime;
@@ -127,7 +132,7 @@ void Application::renderImGUI()
 	glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX,
 		&availableGpuMemory);
 
-	ImGui::Begin("System");
+	ImGui::Begin("System (Esc to exit application)");
 
 	// fps
 	float fps = ImGui::GetIO().Framerate;

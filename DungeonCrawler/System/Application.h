@@ -26,6 +26,7 @@ private:
 	GLFWwindow* m_window;
 	Input* m_input;
 	StateManager* m_stateManager;
+	
 };
 
 #endif
