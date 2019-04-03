@@ -53,20 +53,19 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 		}
 		else if (attribs[0] == "v")
 		{
-			for (int i = 1; i < 4; i++)
-				tempVertexBuffer.emplace_back(std::stof(attribs[i]));
+			glm::vec3 vert = glm::vec3(std::stof(attribs[1]), std::stof(attribs[2]), std::stof(attribs[3]));
+			tempVertexBuffer.emplace_back(vert);
 
 		}
 		else if (attribs[0] == "vt")
 		{
-			for (int i = 1; i < 3; i++)
-				tempUVBuffer.emplace_back(std::stof(attribs[i]));
+			glm::vec2 vert = glm::vec2(std::stof(attribs[1]), std::stof(attribs[2]));
+			tempUVBuffer.emplace_back(vert);
 		}
 		else if (attribs[0] == "vn")
 		{
-			for (int i = 1; i < 4; i++)
-				tempNormalBuffer.emplace_back(std::stof(attribs[i]));
-
+			glm::vec3 vert = glm::vec3(std::stof(attribs[1]), std::stof(attribs[2]), std::stof(attribs[3]));
+			tempNormalBuffer.emplace_back(vert);
 		}
 		else if (attribs[0] == "f")
 		{
@@ -125,14 +124,19 @@ void Parser::processFace(GLuint vertexIndex, GLuint uvIndex, GLuint normalIndex,
 	const std::vector<glm::vec3>& tempVertices, const std::vector<glm::vec2>& tempUvs, const std::vector<glm::vec3>& tempNormals,
 	ParserData * parserData)
 {
-	int vertexStartPos = (vertexIndex - 1) * 3;
-	int uvStartPos = (uvIndex - 1) * 2;
-	int normalStartPos = (normalIndex - 1) * 3;
+	int vertexStartPos = (vertexIndex - 1);
+	int uvStartPos = (uvIndex - 1);
+	int normalStartPos = (normalIndex - 1);
 
 	parserData->addIndex(indexCounter++);
 	parserData->addVertex(tempVertices[vertexStartPos]);
 	parserData->addUV(tempUvs[uvStartPos]);
 	parserData->addNormal(tempNormals[normalStartPos]);
+
+	glm::vec3 pos = tempVertices[vertexStartPos];
+	
+	LOG_TRACE(std::to_string(pos.x) + ", " +  std::to_string(pos.y) + ", " + std::to_string(pos.z));
+
 
 }
 

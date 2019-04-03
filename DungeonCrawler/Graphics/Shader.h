@@ -13,6 +13,9 @@ public:
 	Shader(std::string Vertex, std::string fragment);
 	Shader(std::string Vertex, std::string geometry, std::string fragment);
 	~Shader();
+	
+	void use();
+	void unuse();
 
 	void setMat3(std::string name, glm::mat3 mat);
 	void setMat4(std::string name, glm::mat4 mat);

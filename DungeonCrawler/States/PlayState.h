@@ -22,6 +22,7 @@ private:
 	Camera* m_camera;
 	Renderer* m_renderer;
 	GameObjectManager* m_gameObjectManager;
+	
 };
 
 #endif

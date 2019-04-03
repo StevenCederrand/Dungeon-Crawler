@@ -1,9 +1,13 @@
 #include "Renderer.h"
+#include "ShaderMap.h"
 
 #define MESH_VECTOR_RESERVE_SIZE 150
 
-Renderer::Renderer()
+Renderer::Renderer(Camera* camera)
 {
+	m_camera = camera;
+	glEnable(GL_DEPTH_TEST);
+
 }
 
 Renderer::~Renderer()
@@ -35,31 +39,35 @@ void Renderer::prepareGameObjects(const std::vector<GameObject*>& gameObjects)
 void Renderer::render()
 {
 
-	//if (m_meshes.size() == 0)
-	//	return;
+	if (m_meshes.size() == 0)
+		return;
 
-	//// Use shader
-	//// Set view matrix
-	//// Set projectionMatrix (if not already set)
+	// Use shader
+	Shader* goShader = ShaderMap::getShader("GameObjectShader");
+	goShader->use();
 
-	//for (auto &currentMesh : m_meshes)
-	//{
-	//	bindMesh(currentMesh.first);
+	// Set view matrix
+	goShader->setMat4("viewMatrix", m_camera->getViewMatrix());
+	goShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
 
-	//	for (auto object : currentMesh.second)
-	//	{
-	//		// Set per gameobject attributes to shader
-	//		// Model matrix for an example
-	//		glDrawElements(GL_TRIANGLES, object->getMesh()->getNrOfIndices(), GL_UNSIGNED_INT, NULL);
-	//	}
+	for (auto &currentMesh : m_meshes)
+	{
+		bindMesh(currentMesh.first);
 
-	//	unbindMesh();
+		for (auto object : currentMesh.second)
+		{
+			goShader->setMat4("modelMatrix", object->getModelMatrix());
+			glDrawElements(GL_TRIANGLES, object->getMesh()->getNrOfIndices(), GL_UNSIGNED_INT, NULL);
+		}
 
-	//}
+		unbindMesh();
 
-	//// Unuse shader
+	}
 
-	//// clear mesh map
+	// Unuse shader
+	goShader->unuse();
+
+	// clear mesh map
 	m_meshes.clear();
 
 

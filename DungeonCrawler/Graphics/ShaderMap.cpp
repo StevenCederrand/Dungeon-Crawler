@@ -20,5 +20,12 @@ Shader * ShaderMap::getShader(std::string name)
 
 void ShaderMap::cleanUp()
 {
+	std::map<std::string, Shader*>::iterator it;
+
+	for (it = m_shaderMap.begin(); it != m_shaderMap.end(); it++)
+	{
+		delete it->second;
+	}
+
 	m_shaderMap.clear();
 }

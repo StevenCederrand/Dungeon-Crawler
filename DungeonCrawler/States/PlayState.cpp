@@ -6,8 +6,9 @@
 #include "StateManager.h"
 
 #include "Graphics/MeshMap.h"
-
+#include "Graphics/ShaderMap.h"
 #include "GameObjects/Box.h"
+
 
 PlayState::PlayState()
 {
@@ -16,17 +17,21 @@ PlayState::PlayState()
 	m_parser = new Parser();
 	m_GLinit = new GLinit();
 	m_camera = new Camera();
-	m_renderer = new Renderer();
+	m_renderer = new Renderer(m_camera);
 	m_gameObjectManager = new GameObjectManager();
 
 	ParserData* data = m_parser->loadFromObj("box.obj");
+
+
+
 	m_GLinit->createMesh("Box", data);
 
 	Mesh* boxMesh = MeshMap::getMesh("Box");
 
+	Shader* goShader = new Shader("GameObjectShader.vert", "GameObjectShader.frag");
+	ShaderMap::addShader("GameObjectShader", goShader);
 
 	m_gameObjectManager->addGameObject(new Box(boxMesh));
-
 }
 
 PlayState::~PlayState()

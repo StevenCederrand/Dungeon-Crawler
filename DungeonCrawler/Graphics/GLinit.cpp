@@ -17,9 +17,9 @@ void GLinit::createMesh(std::string name, ParserData* data)
 
 	GLuint vao = createAndBindVAO();
 	bindIndices(data->getIndices());
-	storeDataInAttributeList(0, 3, data->getVertices().size() ,data->getVertices().data());
-	storeDataInAttributeList(1, 2, data->getUvs().size(), data->getUvs().data());
-	storeDataInAttributeList(2, 3, data->getNormals().size(), data->getNormals().data());
+	storeDataInAttributeList(0, 3, data->getVertices());
+	storeDataInAttributeList(1, 2, data->getUvs());
+	storeDataInAttributeList(2, 3, data->getNormals());
 	glBindVertexArray(NULL);
 
 	GLuint textureID = createTexture(data->getTextureFilename());
@@ -55,12 +55,23 @@ void GLinit::bindIndices(const std::vector<GLuint>& indices)
 	m_vbos.emplace_back(&ibo);
 }
 
-void GLinit::storeDataInAttributeList(const GLuint & attributeNumber, const GLuint & dataPerAttribute, GLuint bufferSize, const GLvoid * data)
+void GLinit::storeDataInAttributeList(const GLuint & attributeNumber, const GLuint & dataPerAttribute, const std::vector<glm::vec3>& dataVec)
 {
 	GLuint vbo;
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * bufferSize * dataPerAttribute, data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * dataVec.size() * dataPerAttribute, dataVec.data(), GL_STATIC_DRAW);
+	glVertexAttribPointer(attributeNumber, dataPerAttribute, GL_FLOAT, GL_FALSE, NULL, NULL);
+	glBindBuffer(GL_ARRAY_BUFFER, NULL);
+	m_vbos.emplace_back(&vbo);
+}
+
+void GLinit::storeDataInAttributeList(const GLuint & attributeNumber, const GLuint & dataPerAttribute, const std::vector<glm::vec2>& dataVec)
+{
+	GLuint vbo;
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * dataVec.size() * dataPerAttribute, dataVec.data(), GL_STATIC_DRAW);
 	glVertexAttribPointer(attributeNumber, dataPerAttribute, GL_FLOAT, GL_FALSE, NULL, NULL);
 	glBindBuffer(GL_ARRAY_BUFFER, NULL);
 	m_vbos.emplace_back(&vbo);

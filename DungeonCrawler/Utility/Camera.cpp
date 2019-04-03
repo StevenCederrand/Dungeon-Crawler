@@ -4,11 +4,11 @@
 
 #include "System/Application.h"
 #include "System/Input.h"
-
+#include "System/Log.h"
 
 Camera::Camera()
 {
-	m_position = glm::vec3(0.f, 0.f, 5.f);
+	m_position = glm::vec3(0.f, 0.f, 0.f);
 	m_lookDirection = glm::vec3(0.f, 0.f, -1.f);
 	m_yaw = 0.f;
 	m_pitch = 0.f;
@@ -116,6 +116,9 @@ void Camera::move(float dt)
 	{
 		m_cameraSpeed = 5.f;
 	}
+
+	//LOG_TRACE("" + std::to_string(m_position.x) + ", " + std::to_string(m_position.y) + ", " + std::to_string(m_position.z));
+
 }
 
 void Camera::snapMouseToMiddle()

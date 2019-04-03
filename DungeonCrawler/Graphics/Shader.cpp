@@ -1,63 +1,9 @@
 #include "Shader.h"
 #include "System/Log.h"
-
+#include "Globals/Paths.h"
 
 Shader::Shader(std::string vertex, std::string fragment)
 {
-	/*
-	std::string vCode;
-	std::string fCode;
-
-	std::ifstream vShader;
-	std::ifstream fShader;
-
-	vShader.open(vertex);
-	fShader.open(fragment);
-
-	std::stringstream vStream;
-	std::stringstream fStream;
-
-	vStream << vShader.rdbuf();
-	fStream << fShader.rdbuf();
-	vShader.close();
-	fShader.close();
-
-
-	vCode = vStream.str();
-	fCode = fStream.str();
-
-	GLint compileResult;
-	char buffer[1024];
-	//			Vertex!
-	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	const char* shaderPtr = vCode.c_str();
-	glShaderSource(vertexShader, 1, &shaderPtr, nullptr);
-	glCompileShader(vertexShader);
-
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &compileResult);
-	if (compileResult == GL_FALSE) 
-	{
-		glGetShaderInfoLog(vertexShader, 1024, nullptr, buffer);
-		LOG_WARNING("ERROR COMPILING VERTEXSHADER");	
-		LOG_INFO(buffer);
-	}
-
-	//			fragment!
-	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	const char* shaderPtr = vCode.c_str();
-	glShaderSource(fragmentShader, 1, &shaderPtr, nullptr);
-	glCompileShader(fragmentShader);
-
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &compileResult);
-	if (compileResult == GL_FALSE)
-	{
-		glGetShaderInfoLog(fragmentShader, 1024, nullptr, buffer);
-		LOG_WARNING("ERROR COMPILING VERTEXSHADER");
-		LOG_INFO(buffer);
-	}
-
-	*/
-
 	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	GLint compileResult;
@@ -125,6 +71,17 @@ Shader::Shader(std::string vertex, std::string geometry, std::string fragment)
 Shader::~Shader()
 {
 }
+
+void Shader::use()
+{
+	glUseProgram(m_shaderProg);
+}
+
+void Shader::unuse()
+{
+	glUseProgram(NULL);
+}
+
 //uniform mat3
 void Shader::setMat3(std::string name, glm::mat3 mat)
 {
@@ -228,14 +185,23 @@ std::string Shader::getName() const
 //one function for all the shaders instead of one for each
 void Shader::m_shaderSetUp(std::string shaderName, unsigned int &shader)
 {
+
+
 	std::string Code;
 	std::ifstream Shader;
-	Shader.open(shaderName);
+	Shader.open(ShaderPath + shaderName);
+
+	if (!Shader.is_open())
+	{
+		LOG_ERROR("Failed to find shader file " + shaderName);
+	}
+
 	std::stringstream Stream;
 	Stream << Shader.rdbuf();
 	Shader.close();
 
 	Code = Stream.str();
+
 	GLint compileResult;
 	char buffer[1024];
 

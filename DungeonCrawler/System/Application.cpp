@@ -8,6 +8,7 @@
 
 #include "Log.h"
 #include "Graphics/MeshMap.h"
+#include "Graphics/ShaderMap.h"
 
 #define GL_GPU_MEM_INFO_TOTAL_AVAILABLE_MEM_NVX 0x9048
 #define GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX 0x9049
@@ -23,8 +24,10 @@ Application::Application()
 Application::~Application()
 {
 	MeshMap::cleanUp();
+	ShaderMap::cleanUp();
 	delete m_input;
 	delete m_stateManager;
+
 	glfwTerminate();
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui::DestroyContext();
@@ -91,6 +94,7 @@ void Application::run()
 	float lastTime = 0.f;
 	LOG_INFO("Running Application loop");
 	while (!glfwWindowShouldClose(m_window)) {
+		glClearColor(0.f, 0.f, 0.f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		m_input->clearKeys();

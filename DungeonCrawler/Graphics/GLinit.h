@@ -15,7 +15,8 @@ public:
 private:
 	GLuint createAndBindVAO();
 	void bindIndices(const std::vector<GLuint>& indices);
-	void storeDataInAttributeList(const GLuint& attributeNumber, const GLuint& dataPerAttribute, GLuint bufferSize, const GLvoid * data);
+	void storeDataInAttributeList(const GLuint& attributeNumber, const GLuint& dataPerAttribute, const std::vector<glm::vec3>& dataVector);
+	void storeDataInAttributeList(const GLuint& attributeNumber, const GLuint& dataPerAttribute, const std::vector<glm::vec2>& dataVector);
 	GLuint createTexture(std::string filename);
 
 private:
