@@ -27,9 +27,7 @@ PlayState::PlayState()
 	m_GLinit->createMesh("Box", data);
 
 	Mesh* boxMesh = MeshMap::getMesh("Box");
-
-	Shader* goShader = new Shader("GameObjectShader.vert", "GameObjectShader.frag");
-	ShaderMap::addShader("GameObjectShader", goShader);
+	ShaderMap::createShader("GameObjectShader", "GameObjectShader.vert", "GameObjectShader.frag");
 
 	m_gameObjectManager->addGameObject(new Box(boxMesh));
 }
