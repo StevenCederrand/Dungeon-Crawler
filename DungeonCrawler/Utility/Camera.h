@@ -7,7 +7,7 @@ class Camera {
 public:
 	const float NEAR_CLIPPING = 0.1f;
 	const float FAR_CLIPPING = 70.f;
-	const float FOV = 45.f;
+	const float FOV = 90.f;
 
 public:
 	Camera();

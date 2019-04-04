@@ -8,12 +8,12 @@
 
 Camera::Camera()
 {
-	m_position = glm::vec3(0.f, 0.f, 0.f);
-	m_lookDirection = glm::vec3(0.f, 0.f, -1.f);
+	m_position = glm::vec3(0.f, 10.f, 0.f);
+	m_lookDirection = glm::vec3(1.f, 0.f, 0.f);
 	m_yaw = 0.f;
 	m_pitch = 0.f;
 	m_distanceToOrbitPoint = 5.f;
-	m_cameraRight = glm::vec3(1.f, 0.f, 0.f);
+	m_cameraRight = glm::vec3(-1.f, 0.f, 0.f);
 	m_cameraUp = glm::vec3(0.f, 1.0f, 0.f);
 	m_cameraSpeed = 5.f;
 	m_sensitivity = 0.1f;
@@ -34,7 +34,7 @@ void Camera::update(float dt)
 		if (!m_locked)
 		{
 			move(dt);
-			lookAround(dt);
+			//lookAround(dt);
 			calculateCameraAxis();
 			setViewMatrix();
 		}
@@ -142,7 +142,7 @@ void Camera::setProjectionMatrix()
 
 void Camera::setViewMatrix()
 {
-	m_viewMatrix = glm::lookAt(m_position, m_position + m_lookDirection, m_cameraUp);
+	m_viewMatrix = glm::lookAt(m_position, m_lookDirection, m_cameraUp);
 }
 
 void Camera::setToOrbit(bool shouldOrbit)

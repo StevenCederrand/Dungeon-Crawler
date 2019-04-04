@@ -8,6 +8,7 @@
 #include "Graphics/MeshMap.h"
 #include "Graphics/ShaderMap.h"
 #include "GameObjects/Box.h"
+#include "GameObjects/Player.h"
 
 
 PlayState::PlayState()
@@ -31,7 +32,8 @@ PlayState::PlayState()
 	Shader* goShader = new Shader("GameObjectShader.vert", "GameObjectShader.frag");
 	ShaderMap::addShader("GameObjectShader", goShader);
 
-	m_gameObjectManager->addGameObject(new Box(boxMesh));
+	//m_gameObjectManager->addGameObject(new Box(boxMesh));
+	m_gameObjectManager->addGameObject(new Player(boxMesh));
 }
 
 PlayState::~PlayState()

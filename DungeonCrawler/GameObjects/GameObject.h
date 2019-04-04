@@ -13,6 +13,8 @@ public:
 	void updateModelMatrix();
 	void setPosition(const glm::vec3& position);
 	void translate(const glm::vec3& translationVector);
+	
+	void setTranslateRotation(const glm::vec3 translateRotation);
 
 	void setScale(const glm::vec3& scale);
 	void setRotation(const glm::vec3 rotation);
