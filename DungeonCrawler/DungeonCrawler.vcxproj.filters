@@ -62,5 +62,6 @@
     <ClInclude Include="GameObjects\GameObject.h" />
     <ClInclude Include="GameObjects\GameObjectManager.h" />
     <ClInclude Include="Graphics\Framebuffer.h" />
+    <ClInclude Include="Globals\Settings.h" />
   </ItemGroup>
 </Project>

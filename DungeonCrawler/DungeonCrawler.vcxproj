@@ -189,6 +189,7 @@
     <ClInclude Include="GameObjects\GameObject.h" />
     <ClInclude Include="GameObjects\GameObjectManager.h" />
     <ClInclude Include="Globals\Paths.h" />
+    <ClInclude Include="Globals\Settings.h" />
     <ClInclude Include="Graphics\Framebuffer.h" />
     <ClInclude Include="Graphics\GLinit.h" />
     <ClInclude Include="Graphics\Mesh.h" />
