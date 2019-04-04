@@ -88,7 +88,7 @@ bool Application::initialize()
 	m_stateManager = new StateManager();
 	m_stateManager->setState(new MenuState());
 
-
+	ShaderInit init;
 
 	LOG_INFO("Application successfully initialized");
 	return true;
@@ -101,9 +101,9 @@ void Application::run()
 	LOG_INFO("Running Application loop");
 
 	while (!glfwWindowShouldClose(m_window)) {
-		glClearColor(1.f, 1.f, 1.f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
+
+		glClearColor(0.f, 0.f, 0.f, 1.0f);
+
 		m_input->clearKeys();
 		glfwPollEvents();
 

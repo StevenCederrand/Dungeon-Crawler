@@ -6,9 +6,11 @@ Framebuffer::Framebuffer() {
 
 Framebuffer::~Framebuffer()
 {
+	glDeleteFramebuffers(1, &this->m_frameBuffer);
+	//glDeleteFramebuffers(1, &this->m_shadowBuffer);
 }
 
-void Framebuffer::genFrameBuffers() {
+FRAMEBUFFER_RESULT Framebuffer::genFrameBuffers() {
 	
 	//Deferred rendering 
 	glGenFramebuffers(1, &this->m_frameBuffer);
@@ -16,12 +18,12 @@ void Framebuffer::genFrameBuffers() {
 	this->genDeferredBuffers();
 	this->genRenderBuffer();
 
-	if (glCheckFramebufferStatus(this->m_frameBuffer) != GL_FRAMEBUFFER_COMPLETE) {
-		LOG_ERROR("ERROR GENERATING FREAMEBUFFER OBJECT");
-		return;
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+		return FRAMEBUFFER_FAILED;
 	}
+
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
-	
+	return FRAMEBUFFER_OK;
 	//Used for shadow mapping
 	//glGenFramebuffers(1, &this->m_shadowBuffer);
 	//glBindFramebuffer(GL_FRAMEBUFFER, this->m_shadowBuffer);
@@ -61,7 +63,8 @@ void Framebuffer::genDeferredBuffers() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->m_positionBuffer, 0);
-	
+	glBindTexture(GL_TEXTURE_2D, NULL);
+
 	//Generate normal texture
 	glGenTextures(1, &this->m_normalBuffer);
 	glBindTexture(GL_TEXTURE_2D, this->m_normalBuffer);
@@ -70,7 +73,8 @@ void Framebuffer::genDeferredBuffers() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, this->m_normalBuffer, 0);
-		
+	glBindTexture(GL_TEXTURE_2D, NULL);
+
 	//Generate colour texture
 	glGenTextures(1, &this->m_colourBuffer);
 	glBindTexture(GL_TEXTURE_2D, this->m_colourBuffer);
@@ -79,6 +83,7 @@ void Framebuffer::genDeferredBuffers() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, this->m_colourBuffer, 0);
+	glBindTexture(GL_TEXTURE_2D, NULL);
 
 	unsigned int attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
 	glDrawBuffers(3, attachments);
@@ -102,8 +107,8 @@ void Framebuffer::bindDeferredTextures() {
 	glBindTexture(GL_TEXTURE_2D, this->m_normalBuffer);
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, this->m_colourBuffer);
-	glActiveTexture(GL_TEXTURE3);
-	glBindTexture(GL_TEXTURE_2D, this->m_depthMap);
+	//glActiveTexture(GL_TEXTURE3);
+	//glBindTexture(GL_TEXTURE_2D, this->m_depthMap);
 }
 
 void Framebuffer::unbindDeferredTextures() {
@@ -113,7 +118,17 @@ void Framebuffer::unbindDeferredTextures() {
 	glBindTexture(GL_TEXTURE_2D, NULL);
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, NULL);
-	glActiveTexture(GL_TEXTURE3);
-	glBindTexture(GL_TEXTURE_2D, NULL);
+	//glActiveTexture(GL_TEXTURE3);
+	//glBindTexture(GL_TEXTURE_2D, NULL);
+}
 
+unsigned int Framebuffer::getFrameBuffer() const {
+	return this->m_frameBuffer;
+}
+
+FRAMEBUFFER_RESULT Framebuffer::frameBufferStatus() {
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+		return FRAMEBUFFER_FAILED;
+	}
+	return FRAMEBUFFER_OK;
 }

@@ -164,6 +164,7 @@
     <ClCompile Include="Graphics\Mesh.cpp" />
     <ClCompile Include="Graphics\MeshMap.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
+    <ClCompile Include="Graphics\ShaderInit.cpp" />
     <ClCompile Include="Parser\ParserData.cpp" />
     <ClCompile Include="Graphics\Shader.cpp" />
     <ClCompile Include="Graphics\ShaderMap.cpp" />
@@ -190,12 +191,14 @@
     <ClInclude Include="GameObjects\GameObject.h" />
     <ClInclude Include="GameObjects\GameObjectManager.h" />
     <ClInclude Include="Globals\Paths.h" />
+    <ClInclude Include="Globals\Settings.h" />
     <ClInclude Include="Graphics\Framebuffer.h" />
     <ClInclude Include="Graphics\GLinit.h" />
     <ClInclude Include="Graphics\LightManager.h" />
     <ClInclude Include="Graphics\Mesh.h" />
     <ClInclude Include="Graphics\MeshMap.h" />
     <ClInclude Include="Graphics\Renderer.h" />
+    <ClInclude Include="Graphics\ShaderInit.h" />
     <ClInclude Include="Parser\ParserData.h" />
     <ClInclude Include="Graphics\Shader.h" />
     <ClInclude Include="Graphics\ShaderMap.h" />
