@@ -145,6 +145,32 @@ std::vector<std::string> Parser::split(const std::string & line, const char spli
 	return tokens;
 }
 
+int Parser::getFaceIndexIfExist(GLuint vertexIndex, GLuint uvIndex, GLuint normalIndex, GLuint indexCounter)
+{
+	for (size_t i = 0; i < m_faces.size(); i++)
+	{
+		OBJFace& face = m_faces[i];
+
+		if (face.vertexIndex == vertexIndex && face.uvIndex == uvIndex && face.normalIndex == normalIndex)
+		{
+			// It exist so return the index number
+			return face.index;
+		}
+	}
+
+
+	// If it gets here then it doesn't exist so add it to the list of faces
+	OBJFace face;
+	face.index = indexCounter;
+	face.vertexIndex = vertexIndex;
+	face.uvIndex = uvIndex;
+	face.normalIndex = normalIndex;
+
+	m_faces.emplace_back(face);
+
+	return -1;
+}
+
 void Parser::processFace(GLuint vertexIndex, GLuint uvIndex, GLuint normalIndex, GLuint & indexCounter, 
 	const std::vector<glm::vec3>& tempVertices, const std::vector<glm::vec2>& tempUvs, const std::vector<glm::vec3>& tempNormals,
 	ParserData * parserData)
@@ -153,14 +179,24 @@ void Parser::processFace(GLuint vertexIndex, GLuint uvIndex, GLuint normalIndex,
 	int uvStartPos = (uvIndex - 1);
 	int normalStartPos = (normalIndex - 1);
 
+	int index = getFaceIndexIfExist(vertexIndex, uvIndex, normalIndex, indexCounter);
+
+	// It exists so just add the index
+	if (index != -1)
+	{
+		parserData->addIndex(index);
+		return;
+	}
+
+
 	parserData->addIndex(indexCounter++);
 	parserData->addVertex(tempVertices[vertexStartPos]);
 	parserData->addUV(tempUvs[uvStartPos]);
 	parserData->addNormal(tempNormals[normalStartPos]);
 
-	glm::vec3 pos = tempVertices[vertexStartPos];
+	//glm::vec3 pos = tempVertices[vertexStartPos];
 	
-	LOG_TRACE(std::to_string(pos.x) + ", " +  std::to_string(pos.y) + ", " + std::to_string(pos.z));
+	//LOG_TRACE(std::to_string(pos.x) + ", " +  std::to_string(pos.y) + ", " + std::to_string(pos.z));
 
 
 }
