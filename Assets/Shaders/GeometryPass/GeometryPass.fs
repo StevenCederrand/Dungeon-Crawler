@@ -8,6 +8,7 @@ in vec2 frag_uv;
 in vec3 frag_normal;
 in vec3 frag_worldPosition;
 
+uniform float shininess = 0.f;
 uniform sampler2D textureSampler;
 
 void main() {
@@ -15,5 +16,6 @@ void main() {
   
   positionBuffer = frag_worldPosition;
   normalBuffer = frag_normal;
-  colourBuffer = color;
+  colourBuffer.rgb = color.rgb;
+  colourBuffer.a = shininess;
 }

@@ -17,6 +17,7 @@ Renderer::Renderer(Camera* camera)
 
 	shader->use();
 	shader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+	shader->unuse();
 }
 
 Renderer::~Renderer()
@@ -50,7 +51,6 @@ void Renderer::render()
 	this->geometryPass(); 
 	this->lightPass();	
 }
-
 
 void Renderer::forwardPass() {
 	if (m_meshes.size() == 0)
@@ -91,7 +91,7 @@ void Renderer::geometryPass() {
 		return;
 	}
 
-	glEnable(GL_DEPTH_TEST);
+	
 	//Use the geometry shader
 	Shader* geometryShader = ShaderMap::getShader("GeometryPass");
 	geometryShader->use();
@@ -99,8 +99,9 @@ void Renderer::geometryPass() {
 	geometryShader->setMat4("viewMatrix", m_camera->getViewMatrix());
 
 	this->m_framebuffer.bindFrameBuffer();
+	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+	
 	for (auto &mesh : this->m_meshes) {
 		bindMesh(mesh.first);
 
@@ -111,19 +112,20 @@ void Renderer::geometryPass() {
 
 		unbindMesh();
 	}
-	this->m_framebuffer.unbindBuffer();
 	geometryShader->unuse();
 	this->m_meshes.clear();
+	
+	this->m_framebuffer.unbindBuffer();
 }
 
 void Renderer::lightPass() {
 	
-	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glDisable(GL_DEPTH_TEST);
+
 	Shader* lightShader = ShaderMap::getShader("LightPass");
 	lightShader->use();
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	glDisable(GL_DEPTH_TEST);
+	lightShader->setVec3("cameraPosition", m_camera->getPosition());
 	drawQuad();
 	lightShader->unuse();
 }
@@ -135,6 +137,7 @@ void Renderer::bindMesh(Mesh * mesh)
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
 
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mesh->getTextureID());
 }
 
@@ -166,11 +169,7 @@ bool Renderer::initRenderQuad() {
 
 void Renderer::drawQuad() {
 	glBindVertexArray(this->m_rQuadVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, this->m_rQuadVBO);
-
 	this->m_framebuffer.bindDeferredTextures();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
-
 	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

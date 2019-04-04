@@ -32,14 +32,14 @@ PlayState::PlayState()
 	goShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
 	goShader->unuse();
 
-	goShader = ShaderMap::getShader("LightPass");
-	goShader->use();
+	Shader* lightShader = ShaderMap::getShader("LightPass");
+	lightShader->use();
 	// Temporary sun creation
 	glm::vec3 sunColor = glm::vec3(1.f, 1.f, 1.f);
 	glm::vec3 sunPosition = glm::vec3(-5.f, 1.5f, 0.f);
-	goShader->setVec3("sunColor", sunColor);
-	goShader->setVec3("sunPosition", sunPosition);
-	goShader->unuse();
+	lightShader->setVec3("sunColor", sunColor);
+	lightShader->setVec3("sunPosition", sunPosition);
+	lightShader->unuse();
 
 	m_lightManager = new LightManager();
 	m_lightManager->addLight(glm::vec3(1.f), glm::vec3(0.f, 1.f, 0.f), 10.f);

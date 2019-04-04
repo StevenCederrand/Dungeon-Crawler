@@ -10,6 +10,7 @@ ShaderInit::ShaderInit() {
 	shader->setInt("positionBuffer", 0);
 	shader->setInt("normalBuffer", 1);
 	shader->setInt("colourBuffer", 2);
+	shader->unuse();
 }
 
 ShaderInit::~ShaderInit()

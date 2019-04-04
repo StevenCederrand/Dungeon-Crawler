@@ -5,7 +5,7 @@
 
 LightManager::LightManager()
 {
-	Shader* deferredShader = ShaderMap::getShader("GameObjectShader");
+	Shader* deferredShader = ShaderMap::getShader("LightPass");
 	if (!deferredShader)
 	{
 		LOG_ERROR("Deferred Shader could not be found in shader map\nInitialize the shader before creating the light manager class!");
