@@ -29,6 +29,7 @@
     <ClCompile Include="Vendor\stb\stb_image.cpp" />
     <ClCompile Include="Audio\AudioEngine.cpp" />
     <ClCompile Include="Graphics\Framebuffer.cpp" />
+    <ClCompile Include="Graphics\ShaderInit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -63,5 +64,6 @@
     <ClInclude Include="GameObjects\GameObjectManager.h" />
     <ClInclude Include="Graphics\Framebuffer.h" />
     <ClInclude Include="Globals\Settings.h" />
+    <ClInclude Include="Graphics\ShaderInit.h" />
   </ItemGroup>
 </Project>

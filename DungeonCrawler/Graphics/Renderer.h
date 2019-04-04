@@ -25,7 +25,7 @@ private:
 	void lightPass();
 
 	bool initRenderQuad();	
-
+	void drawQuad();
 private:
 	Framebuffer m_framebuffer;
 
@@ -35,9 +35,9 @@ private:
 	Camera* m_camera;
 
 
-	unsigned int rQuadVAO;
-	unsigned int rQuadVBO;
-	float rQuadData[24] = {
+	unsigned int m_rQuadVAO;
+	unsigned int m_rQuadVBO;
+	float m_rQuadData[24] = {
 		//VP			UV
 		-1.0f,  1.0f,  0.0f, 1.0f,
 		-1.0f, -1.0f,  0.0f, 0.0f,

@@ -12,10 +12,11 @@ Renderer::Renderer(Camera* camera)
 	if (this->m_framebuffer.genFrameBuffers() != FRAMEBUFFER_OK) {
 		LOG_ERROR("FRAMEBUFFER FAILED");
 	}
+	this->initRenderQuad();
+	Shader* shader = ShaderMap::getShader("GeometryPass");
 
-	if (!this->initRenderQuad()) {
-
-	}
+	shader->use();
+	shader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
 }
 
 Renderer::~Renderer()
@@ -46,13 +47,8 @@ void Renderer::prepareGameObjects(const std::vector<GameObject*>& gameObjects)
 
 void Renderer::render()
 {
-
-	/*
-		Write a geometry pass shader
-	*/
 	this->geometryPass(); 
-	
-	
+	this->lightPass();	
 }
 
 
@@ -80,7 +76,6 @@ void Renderer::forwardPass() {
 		}
 
 		unbindMesh();
-
 	}
 
 	// Unuse shader
@@ -96,15 +91,16 @@ void Renderer::geometryPass() {
 		return;
 	}
 
+	glEnable(GL_DEPTH_TEST);
 	//Use the geometry shader
-	Shader* geometryShader = ShaderMap::getShader("GeometryShader");
+	Shader* geometryShader = ShaderMap::getShader("GeometryPass");
 	geometryShader->use();
 
 	geometryShader->setMat4("viewMatrix", m_camera->getViewMatrix());
-	geometryShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
 
 	this->m_framebuffer.bindFrameBuffer();
-	
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	for (auto &mesh : this->m_meshes) {
 		bindMesh(mesh.first);
 
@@ -116,24 +112,20 @@ void Renderer::geometryPass() {
 		unbindMesh();
 	}
 	this->m_framebuffer.unbindBuffer();
-	
 	geometryShader->unuse();
 	this->m_meshes.clear();
 }
 
 void Renderer::lightPass() {
-	Shader* lightShader = ShaderMap::getShader("LightShader");
+	
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	Shader* lightShader = ShaderMap::getShader("LightPass");
 	lightShader->use();
 	glClear(GL_COLOR_BUFFER_BIT);
-	//Insert light pass code
 
-
-	glBindVertexArray(this->m_rQuadVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, this->m_rQuadVBO);
-	this->m_framebuffer.bindDeferredTextures();
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glDisable(GL_DEPTH_TEST);
+	drawQuad();
+	lightShader->unuse();
 }
 
 void Renderer::bindMesh(Mesh * mesh)
@@ -170,4 +162,15 @@ bool Renderer::initRenderQuad() {
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
 	return false;
+}
+
+void Renderer::drawQuad() {
+	glBindVertexArray(this->m_rQuadVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, this->m_rQuadVBO);
+
+	this->m_framebuffer.bindDeferredTextures();
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

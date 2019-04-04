@@ -26,17 +26,20 @@ PlayState::PlayState()
 
 	Mesh* boxMesh = MeshMap::getMesh("Box");
 
-	ShaderMap::createShader("GameObjectShader", "GameObjectShader.vs", "GameObjectShader.fs");
-	Shader* goShader = ShaderMap::getShader("GameObjectShader");
+	Shader* goShader = ShaderMap::getShader("GeometryPass");
 	goShader->use();
 	goShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
-	
+	goShader->unuse();
+
+	goShader = ShaderMap::getShader("LightPass");
+	goShader->use();
 	// Temporary sun creation
 	glm::vec3 sunColor = glm::vec3(1.f, 1.f, 1.f);
 	glm::vec3 sunPosition = glm::vec3(-5.f, 1.5f, 0.f);
 	goShader->setVec3("sunColor", sunColor);
 	goShader->setVec3("sunPosition", sunPosition);
 	goShader->unuse();
+
 	m_gameObjectManager->addGameObject(new Box(boxMesh));
 	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(0.f,-4.f,0.f)));
 	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(2.f, -4.f, 0.f)));

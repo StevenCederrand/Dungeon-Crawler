@@ -1,8 +1,8 @@
-#version 430		
+#version 430
 
-in vec2 frag_uv;
-in vec3 frag_normal;
-in vec3 frag_worldPosition;
+in vec2 frag_uv; //This will be the renderquad uv
+in vec3 frag_normal; //This will be the normal textuer
+in vec3 frag_worldPosition; //this will be the position texture
 
 out vec4 finalColor;
 
@@ -40,7 +40,7 @@ vec3 getPhongColor(float specularStrength, vec3 lightColor)
 }
 
 void main()
-{	
+{
 	vec4 textureColor = texture(textureSampler, frag_uv);
 
 	vec3 currentColor = getAmbientColor(0.2f) + getDiffuseColor() + getPhongColor(shininess, sunColor);
