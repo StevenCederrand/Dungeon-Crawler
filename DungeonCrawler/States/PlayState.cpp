@@ -18,6 +18,7 @@ PlayState::PlayState()
 	m_parser = new Parser();
 	m_GLinit = new GLinit();
 	m_camera = new Camera();
+	Camera::active = m_camera;
 	m_renderer = new Renderer(m_camera);
 	m_gameObjectManager = new GameObjectManager();
 

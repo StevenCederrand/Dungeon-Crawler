@@ -6,6 +6,8 @@
 #include "System/Input.h"
 #include "System/Log.h"
 
+Camera* Camera::active = nullptr;
+
 Camera::Camera()
 {
 	m_position = glm::vec3(0.f, 10.f, 0.f);

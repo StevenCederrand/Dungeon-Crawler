@@ -3,7 +3,7 @@
 #include <GLM/gtx/transform.hpp>
 #include <GLM/gtc/matrix_transform.hpp>
 #include "System/Log.h"
-
+#include "Utility/Camera.h"
 
 Player::Player(Mesh * mesh) :
 	GameObject(mesh)
@@ -51,8 +51,6 @@ void Player::rotatePlayer(float dt)
 	{
 		this->setTranslateRotation(glm::vec3(0.f, -100.f, 0.f) * dt);
 	}*/
-	
-	glfwGetCursorPos(glfwGetCurrentContext(), &m_mousePos.x, &m_mousePos.y);
 
 	//LOG_ERROR(std::to_string(m_mousePos.x)  +"    "+ std::to_string(m_mousePos.y));
 	//this->translate(this->getPosition());
@@ -64,12 +62,6 @@ void Player::rotatePlayer(float dt)
 	{
 		m_mousePos.y = m_mousePos.y * -1;
 	}*/
-	glm::vec2 direction = glm::vec2(
-		this->getPosition().x - m_mousePos.x,
-		this->getPosition().z - m_mousePos.y);
-	
-	m_angle = glm::degrees(atan2f(direction.x, direction.y));
-	
 	
 
 
@@ -78,9 +70,31 @@ void Player::rotatePlayer(float dt)
 	{
 		m_angle = m_angle * -1;
 	}*/
-	LOG_ERROR(m_angle);
-	
 	//this->setTranslateRotation(glm::vec3(0.f, m_angle, 0.f) * dt);
+	glfwGetCursorPos(glfwGetCurrentContext(), &m_mousePos.x, &m_mousePos.y);
+
+	glm::vec2 direction = glm::vec2(
+		this->getPosition().x - m_mousePos.x,
+		this->getPosition().z - m_mousePos.y);
+	
+	m_angle = glm::degrees(atan2f(direction.x, direction.y));
+	
+	
+	/*glm::vec3 camtest(glm::unProject(
+		glm::vec3(m_mousePos.x, 720.f - m_mousePos.y , 1),
+		Camera::active->getViewMatrix(),
+		Camera::active->getProjectionMatrix(),
+		glm::vec4(0,0, 1280, 720)
+	));*/
+	glm::vec3 camRay(glm::unProject(
+		glm::vec3(m_mousePos.x, 720.f - m_mousePos.y, 0.f),
+		Camera::active->getViewMatrix(),
+		Camera::active->getProjectionMatrix(),
+		glm::vec4(0, 0, 1280, 720)
+	));
+	LOG_ERROR(std::to_string(camRay.x) + "  " + std::to_string(camRay.y) + "  " + std::to_string(camRay.z));
+	
+
 	setRotation(glm::vec3(0.f, m_angle, 0.f));
 }
 
