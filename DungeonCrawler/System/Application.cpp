@@ -88,8 +88,6 @@ bool Application::initialize()
 	m_stateManager = new StateManager();
 	m_stateManager->setState(new MenuState());
 
-
-
 	LOG_INFO("Application successfully initialized");
 	return true;
 }

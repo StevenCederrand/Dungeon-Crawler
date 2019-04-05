@@ -27,8 +27,21 @@ private:
 		ParserData* parserData);
 	void stringClean(std::vector<std::string>& attribs);
 
+	int getFaceIndexIfExist(GLuint vertexIndex, GLuint uvIndex, GLuint normalIndex, GLuint indexCounter);
+
 private:
 	std::vector<ParserData*> m_memoryTracker;
+
+private:
+	// Used for obj indexing
+	struct OBJFace {
+		unsigned int index;
+		unsigned int vertexIndex;
+		unsigned int uvIndex;
+		unsigned int normalIndex;
+	};
+
+	std::vector<OBJFace> m_faces;
 };
 
 #endif

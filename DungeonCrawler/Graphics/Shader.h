@@ -10,8 +10,8 @@
 class Shader
 {
 public:
-	Shader(std::string Vertex, std::string fragment);
-	Shader(std::string Vertex, std::string geometry, std::string fragment);
+	Shader(std::string vertex, std::string fragment);
+	Shader(std::string vertex, std::string geometry, std::string fragment);
 	~Shader();
 	
 	void use();
@@ -31,7 +31,7 @@ private:
 
 	std::string m_name;
 	int m_shaderProg;
-	void m_shaderSetUp(std::string shaderName, unsigned int &shader);
+	void shaderSetup(std::string shaderName, unsigned int &shader);
 
 };
 

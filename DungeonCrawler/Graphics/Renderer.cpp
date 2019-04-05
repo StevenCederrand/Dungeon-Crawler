@@ -48,7 +48,7 @@ void Renderer::render()
 
 	// Set view matrix
 	goShader->setMat4("viewMatrix", m_camera->getViewMatrix());
-	goShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+	goShader->setVec3("cameraPosition", m_camera->getPosition());
 
 	for (auto &currentMesh : m_meshes)
 	{
@@ -57,6 +57,7 @@ void Renderer::render()
 		for (auto object : currentMesh.second)
 		{
 			goShader->setMat4("modelMatrix", object->getModelMatrix());
+			goShader->setFloat("shininess", object->getMesh()->getShininess());
 			glDrawElements(GL_TRIANGLES, object->getMesh()->getNrOfIndices(), GL_UNSIGNED_INT, NULL);
 		}
 
