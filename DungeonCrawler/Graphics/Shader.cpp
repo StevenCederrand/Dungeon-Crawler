@@ -21,8 +21,9 @@ Shader::Shader(std::string vertex, std::string fragment)
 	{
 		memset(buffer, 0, 1024);
 		glGetProgramInfoLog(m_shaderProg, 1024, nullptr, buffer);
-		LOG_WARNING("ERROR WITH SHADER");
+		LOG_ERROR("ERROR WITH SHADER");
 		LOG_INFO(buffer);
+		system("pause");
 	}
 
 	glDetachShader(m_shaderProg, vertexShader);
@@ -70,6 +71,7 @@ Shader::Shader(std::string vertex, std::string geometry, std::string fragment)
 
 Shader::~Shader()
 {
+	glDeleteProgram(m_shaderProg);
 }
 
 void Shader::use()

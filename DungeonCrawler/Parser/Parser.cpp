@@ -52,7 +52,12 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 
 	while (std::getline(objFile, line))
 	{
+
+		if (line[0] == '#')
+			continue;
+		
 		std::vector<std::string> attribs = split(line, ' ');
+		this->stringClean(attribs);
 
 		if (attribs.size() == 0)
 			continue;
@@ -149,7 +154,7 @@ std::vector<std::string> Parser::split(const std::string & line, const char spli
 	
 	while (std::getline(tokenStream, token, splitter))
 	{
-		tokens.emplace_back(token);
+		tokens.emplace_back(token);		
 	}
 
 	return tokens;
@@ -238,11 +243,10 @@ void Parser::processFace(GLuint vertexIndex, GLuint uvIndex, GLuint normalIndex,
 	parserData->addUV(tempUvs[uvStartPos]);
 	parserData->addNormal(tempNormals[normalStartPos]);
 
+	glm::vec3 pos = tempVertices[vertexStartPos];
+	//LOG_TRACE(std::to_string(pos.x) + ", " +  std::to_string(pos.y) + ", " + std::to_string(pos.z));
 	//glm::vec3 pos = tempVertices[vertexStartPos];
 	
-	//LOG_TRACE(std::to_string(pos.x) + ", " +  std::to_string(pos.y) + ", " + std::to_string(pos.z));
-
-
 }
 
 void Parser::parseMaterialFile(const std::string& filename, ParserData* parserData)
@@ -287,6 +291,7 @@ void Parser::parseMaterialFile(const std::string& filename, ParserData* parserDa
 
 	mtlFile.close();
 }
+
 
 void Parser::writeBinaryVecInt(std::ofstream& binaryFile, std::vector<GLuint> vector)
 {
@@ -742,3 +747,14 @@ void Parser::readBinaryFloat(std::ifstream & binaryFile, ParserData * parserData
 	//fill the parserData with the Information
 	parserData->setShininess(tempGL);
 }
+
+void Parser::stringClean(std::vector<std::string>& attribs) {
+	std::vector<std::string> newattribs;
+	for (size_t i = 0; i < attribs.size(); i++){
+		if (attribs.at(i) == "")
+			continue;
+		newattribs.emplace_back(attribs.at(i));
+	}
+	attribs = newattribs;
+}
+
