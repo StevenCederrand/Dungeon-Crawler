@@ -6,8 +6,11 @@ Framebuffer::Framebuffer() {
 
 Framebuffer::~Framebuffer()
 {
+	glDeleteTextures(1, &m_colourBuffer);
+	glDeleteTextures(1, &m_normalBuffer);
+	glDeleteTextures(1, &m_positionBuffer);
+	glDeleteRenderbuffers(1, &m_rbo);
 	glDeleteFramebuffers(1, &this->m_frameBuffer);
-	//glDeleteFramebuffers(1, &this->m_shadowBuffer);
 }
 
 FRAMEBUFFER_RESULT Framebuffer::genFrameBuffers() {

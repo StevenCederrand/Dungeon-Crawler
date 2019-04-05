@@ -15,11 +15,17 @@ vec3 worldPosition;
 vec3 normal;
 vec3 textureColor;
 
-layout (std140, binding = 0) uniform Lights
+uniform int numberOfLights;
+
+struct lightData
 {
 	vec4 position;
 	vec4 color;
-	float radius;
+};
+
+layout (std140, binding = 0) buffer Lights
+{
+	lightData lightBuffer[];
 };
 
 vec3 getAmbientColor(float ambientFactor)
@@ -28,24 +34,45 @@ vec3 getAmbientColor(float ambientFactor)
 	return ambientColor * ambientFactor;
 }
 
-vec3 getDiffuseColor()
+vec3 getDiffuseColor(vec3 lightPosition, vec3 lightColor)
 {
-	vec3 toLight = normalize(sunPosition - worldPosition);
+	vec3 toLight = normalize(lightPosition - worldPosition);
 	float diffuseFactor = dot(toLight, normalize(normal));
 	diffuseFactor = max(diffuseFactor, 0.f);
 
-	return sunColor * diffuseFactor;
+	return lightColor * diffuseFactor;
 }
 
-vec3 getPhongColor(float specularStrength, vec3 lightColor)
+vec3 getPhongColor(vec3 lightPosition, float specularStrength, vec3 lightColor)
 {
-	vec3 toLight = normalize(sunPosition - worldPosition);
+	vec3 toLight = normalize(lightPosition - worldPosition);
 	vec3 viewDirection = normalize(cameraPosition - worldPosition);
 	vec3 reflectDirection = reflect(-toLight, normalize(normal));
 
 	float spec = pow(max(dot(viewDirection, reflectDirection), 0.0f), 32);
 
 	return lightColor * spec * specularStrength;
+
+}
+
+vec3 getSumOfAllColorFromPointLights(float specularStrength, vec3 worldPosition)
+{
+	vec3 finalColor = vec3(0.f);
+	for(int i = 0; i < numberOfLights; i++)
+	{
+		vec3 lightPosition = lightBuffer[i].position.xyz;
+		vec3 lightColor =  lightBuffer[i].color.rgb;
+		float lightRadius =  lightBuffer[i].color.a;
+		vec3 currentColor = getDiffuseColor(lightPosition, lightColor) + getPhongColor(lightPosition, specularStrength, lightColor);
+
+		float dist = length(lightPosition - worldPosition);
+		float strength = clamp((lightRadius - dist) / lightRadius, 0.f, 1.0f);
+
+		finalColor += currentColor * strength;
+
+	}
+	
+	return finalColor;
 
 }
 
@@ -56,7 +83,11 @@ void main() {
 	textureColor = texture(colourBuffer, frag_uv).rgb;
 	float shininess = texture(colourBuffer, frag_uv).a;
 
-	vec3 currentColor = getAmbientColor(0.2f) + getDiffuseColor() + getPhongColor(shininess, sunColor);
+	vec3 currentColor = getAmbientColor(0.2f)+ getDiffuseColor(sunPosition, sunColor) 
+	+ getPhongColor(sunPosition, shininess, sunColor) + getSumOfAllColorFromPointLights(shininess, worldPosition);
+	/*
+ 
+	*/
 
 	// Clamp
 	currentColor = min(currentColor, vec3(1.f));

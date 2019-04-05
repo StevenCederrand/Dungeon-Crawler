@@ -9,11 +9,13 @@ in vec3 frag_normal;
 in vec3 frag_worldPosition;
 
 uniform float shininess = 0.f;
+uniform lowp float hasTexture = -100;
 uniform sampler2D textureSampler;
 
 void main() {
-  vec4 color = texture(textureSampler, frag_uv);
   
+  vec4 color = texture(textureSampler, frag_uv);
+
   positionBuffer = frag_worldPosition;
   normalBuffer = frag_normal;
   colourBuffer.rgb = color.rgb;

@@ -17,13 +17,16 @@ PlayState::PlayState()
 	m_parser = new Parser();
 	m_GLinit = new GLinit();
 	m_camera = new Camera();
-	m_renderer = new Renderer(m_camera);
+	m_lightManager = new LightManager();
+	m_renderer = new Renderer(m_camera, m_lightManager);
 	m_gameObjectManager = new GameObjectManager();
 
 
-	ParserData* data = m_parser->loadFromObj("box.obj");
+	ParserData* boxData = m_parser->loadFromObj("box.obj");
+	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
 
-	m_GLinit->createMesh("Box", data);
+	m_GLinit->createMesh("Box", boxData);
+	m_GLinit->createMesh("Sphere", sphereData);
 
 	Mesh* boxMesh = MeshMap::getMesh("Box");
 
@@ -35,15 +38,16 @@ PlayState::PlayState()
 	Shader* lightShader = ShaderMap::getShader("LightPass");
 	lightShader->use();
 	// Temporary sun creation
-	glm::vec3 sunColor = glm::vec3(1.f, 1.f, 1.f);
+	glm::vec3 sunColor = glm::vec3(0.8f, .8f, 0.8f);
 	glm::vec3 sunPosition = glm::vec3(-5.f, 1.5f, 0.f);
 	lightShader->setVec3("sunColor", sunColor);
 	lightShader->setVec3("sunPosition", sunPosition);
 	lightShader->unuse();
 
-	m_lightManager = new LightManager();
-	m_lightManager->addLight(glm::vec3(1.f), glm::vec3(0.f, 1.f, 0.f), 10.f);
-
+	
+	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
+	m_lightManager->addLight(glm::vec3(0.f, 0.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
+	
 	m_gameObjectManager->addGameObject(new Box(boxMesh));
 	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(0.f,-4.f,0.f)));
 	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(2.f, -4.f, 0.f)));

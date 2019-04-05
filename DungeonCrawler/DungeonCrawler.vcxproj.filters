@@ -31,7 +31,7 @@
     <ClCompile Include="Graphics\Framebuffer.cpp" />
     <ClCompile Include="Graphics\LightManager.cpp" />
     <ClCompile Include="Graphics\ShaderInit.cpp" />
-
+    <ClCompile Include="GameObjects\LightSphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -66,8 +66,8 @@
     <ClInclude Include="GameObjects\GameObjectManager.h" />
     <ClInclude Include="Graphics\Framebuffer.h" />
     <ClInclude Include="Graphics\LightManager.h" />
-
     <ClInclude Include="Globals\Settings.h" />
     <ClInclude Include="Graphics\ShaderInit.h" />
+    <ClInclude Include="GameObjects\LightSphere.h" />
   </ItemGroup>
 </Project>
