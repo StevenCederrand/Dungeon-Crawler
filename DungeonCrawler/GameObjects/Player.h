@@ -13,7 +13,6 @@ public:
 private:
 	glm::dvec2 m_mousePos;
 	float m_angle;
-	float a, b, c, d, e;
 };
 
 

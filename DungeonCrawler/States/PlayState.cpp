@@ -22,7 +22,7 @@ PlayState::PlayState()
 	m_gameObjectManager = new GameObjectManager();
 
 	ParserData* data = m_parser->loadFromObj("box.obj");
-
+	
 
 
 	m_GLinit->createMesh("Box", data);
