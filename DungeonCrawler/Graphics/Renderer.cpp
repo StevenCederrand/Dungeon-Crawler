@@ -9,9 +9,7 @@ Renderer::Renderer(Camera* camera)
 	glEnable(GL_DEPTH_TEST);
 	//Generate framebuffers & textures
 	
-	if (this->m_framebuffer.genFrameBuffers() != FRAMEBUFFER_OK) {
-		LOG_ERROR("FRAMEBUFFER FAILED");
-	}
+	this->m_framebuffer.genFrameBuffers();
 	this->initRenderQuad();
 	Shader* shader = ShaderMap::getShader("GeometryPass");
 
@@ -91,7 +89,6 @@ void Renderer::geometryPass() {
 		return;
 	}
 
-	
 	//Use the geometry shader
 	Shader* geometryShader = ShaderMap::getShader("GeometryPass");
 	geometryShader->use();

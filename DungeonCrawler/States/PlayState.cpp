@@ -10,8 +10,7 @@
 #include "GameObjects/Box.h"
 
 
-PlayState::PlayState()
-{
+PlayState::PlayState() {
 	LOG_INFO("PlayState created");
 	
 	m_parser = new Parser();
@@ -49,8 +48,7 @@ PlayState::PlayState()
 	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(2.f, -4.f, 0.f)));
 }
 
-PlayState::~PlayState()
-{
+PlayState::~PlayState() {
 	LOG_WARNING("PlayState destroyed");
 
 	delete m_parser;
