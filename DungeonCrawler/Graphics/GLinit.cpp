@@ -8,6 +8,17 @@ GLinit::GLinit()
 
 GLinit::~GLinit()
 {
+	for (auto &id : this->m_texIDs) {
+		glDeleteTextures(1, id);
+	}
+
+	for (auto &id : this->m_vbos) {
+		glDeleteBuffers(1, id);
+	}
+
+	for (auto &id : this->m_vaos) {
+		glDeleteVertexArrays(1, id);
+	}
 }
 
 void GLinit::createMesh(std::string name, ParserData* data)

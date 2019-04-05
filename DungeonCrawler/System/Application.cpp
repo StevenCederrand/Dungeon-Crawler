@@ -88,7 +88,7 @@ bool Application::initialize()
 	m_stateManager = new StateManager();
 	m_stateManager->setState(new MenuState());
 
-	ShaderInit init;
+	this->initShaders();
 
 	LOG_INFO("Application successfully initialized");
 	return true;
@@ -101,8 +101,8 @@ void Application::run()
 	LOG_INFO("Running Application loop");
 
 	while (!glfwWindowShouldClose(m_window)) {
-
-		glClearColor(0.f, 0.f, 0.f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 		m_input->clearKeys();
 		glfwPollEvents();
@@ -158,4 +158,16 @@ void Application::renderImGUI()
 		"Used GPU Memory: ", (totalGpuMemory / 1024) - (availableGpuMemory / 1024), " MB");
 
 	ImGui::End();
+}
+
+void Application::initShaders() {
+	Shader* shader = ShaderMap::createShader("GameObjectShader", "GameObjectShader.vs", "GameObjectShader.fs");
+	shader = ShaderMap::createShader("MenuShader", "MainMenu/MainMenu.vs", "MainMenu/MainMenu.fs");
+	shader = ShaderMap::createShader("GeometryPass", "GeometryPass/GeometryPass.vs", "GeometryPass/GeometryPass.fs");
+	shader = ShaderMap::createShader("LightPass", "LightPass/LightPass.vs", "LightPass/LightPass.fs");
+	shader->use();
+	shader->setInt("positionBuffer", 0);
+	shader->setInt("normalBuffer", 1);
+	shader->setInt("colourBuffer", 2);
+	shader->unuse();
 }

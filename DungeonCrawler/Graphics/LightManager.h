@@ -3,7 +3,8 @@
 #include <GL/glew.h>
 #include "GLM/glm.hpp"
 #include <vector>
-
+#include "GameObjects/GameObjectManager.h"
+#include "Shader.h"
 class LightManager {
 
 public:
@@ -12,7 +13,10 @@ public:
 
 	void update(float dt);
 	
-	void addLight(const glm::vec3& position, const glm::vec3& color, const float& radius);
+	void addLight(const glm::vec3& position, const glm::vec3& color, const float& radius, GameObjectManager* gameObjectManager = nullptr);
+	const int getNumberOfLights() const;
+	void setSun(Shader* shader, glm::vec3 position, glm::vec3 color);
+
 private:
 	
 	GLuint m_ubo;
@@ -22,10 +26,9 @@ private:
 	struct Light{
 		glm::vec4 position;
 		glm::vec4 color;
-		float radius;
 	};
 
-	std::vector<Light*> m_lights;
+	std::vector<Light> m_lights;
 };
 
 #endif

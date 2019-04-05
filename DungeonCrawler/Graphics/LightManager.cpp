@@ -2,6 +2,8 @@
 #include "ShaderMap.h"
 #include "System/Log.h"
 #include "Globals/Settings.h"
+#include "MeshMap.h"
+#include "GameObjects/LightSphere.h"
 
 LightManager::LightManager()
 {
@@ -12,42 +14,52 @@ LightManager::LightManager()
 	}
 
 	GLuint uniformBlockIndexDeferred = glGetUniformBlockIndex(deferredShader->getShaderID(), "Lights");
-
 	glUniformBlockBinding(deferredShader->getShaderID(), uniformBlockIndexDeferred, 0);
-	
 	m_lightByteSize = sizeof(Light);
-
-	LOG_TRACE("Byte size of one light " + std::to_string(m_lightByteSize) + "b");
-
-	glGenBuffers(1, &m_ubo);
-	glBindBuffer(GL_UNIFORM_BUFFER, m_ubo);
-	glBufferData(GL_UNIFORM_BUFFER, MaxLights * m_lightByteSize, NULL, GL_DYNAMIC_DRAW);
-	glBindBuffer(GL_UNIFORM_BUFFER, NULL);
-
-	glBindBufferRange(GL_UNIFORM_BUFFER, 0, m_ubo, 0, MaxLights * m_lightByteSize);
-
 }
 
 LightManager::~LightManager()
 {
-	for (size_t i = 0; i < m_lights.size(); i++)
-	{
-		delete m_lights[i];
-	}
+	glDeleteBuffers(1, &m_ubo);
 }
 
 void LightManager::update(float dt)
 {
-	glBindBuffer(GL_UNIFORM_BUFFER, m_ubo);
-	glBufferSubData(GL_UNIFORM_BUFFER, 0, m_lights.size() * m_lightByteSize, *m_lights.data());
-	glBindBuffer(GL_UNIFORM_BUFFER, NULL);
 }
 
-void LightManager::addLight(const glm::vec3 & position, const glm::vec3 & color, const float & radius)
+void LightManager::addLight(const glm::vec3 & position, const glm::vec3 & color, const float & radius, GameObjectManager* gameObjectManager)
 {
-	Light* light = new Light();
-	light->position = glm::vec4(position.x, position.y, position.z, 0.f);
-	light->color = glm::vec4(color.x, color.y, color.z, 1.f);
-	light->radius = radius;
+	Light light;
+	light.position = glm::vec4(position.x, position.y, position.z, 0.f);
+	light.color = glm::vec4(color.x, color.y, color.z, radius);
 	m_lights.emplace_back(light);
+
+	if (gameObjectManager)
+	{
+		Mesh* sphere = MeshMap::getMesh("Sphere");
+		GameObject* obj = new LightSphere(sphere, position);
+		gameObjectManager->addGameObject(obj);
+	}
+
+	if (m_ubo == 0)
+		glDeleteBuffers(1, &m_ubo);
+	
+	glGenBuffers(1, &m_ubo);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ubo);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, MaxLights * m_lightByteSize, (void*)m_lights.data(), GL_STATIC_DRAW);
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_ubo);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+}
+
+const int LightManager::getNumberOfLights() const
+{
+	return m_lights.size();
+}
+
+void LightManager::setSun(Shader* shader, glm::vec3 position, glm::vec3 color) {
+	shader->use();
+	shader->setVec3("sunColor", color);
+	shader->setVec3("sunPosition", position);
+	shader->unuse();
+
 }

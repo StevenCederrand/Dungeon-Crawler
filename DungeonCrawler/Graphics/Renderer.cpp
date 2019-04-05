@@ -3,16 +3,18 @@
 #include "../System/Log.h"
 #define MESH_VECTOR_RESERVE_SIZE 150
 
-Renderer::Renderer(Camera* camera)
+Renderer::Renderer(Camera* camera, LightManager* lightManager)
 {
 	m_camera = camera;
+	m_lightManager = lightManager;
+	m_framebuffer = new Framebuffer();
 	glEnable(GL_DEPTH_TEST);
 	//Generate framebuffers & textures
-	
-	this->m_framebuffer.genFrameBuffers();
-	this->initRenderQuad();
-	Shader* shader = ShaderMap::getShader("GeometryPass");
 
+	this->m_framebuffer->genFrameBuffers();
+	this->initRenderQuad();
+
+	Shader* shader = ShaderMap::getShader("GeometryPass");
 	shader->use();
 	shader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
 	shader->unuse();
@@ -20,6 +22,10 @@ Renderer::Renderer(Camera* camera)
 
 Renderer::~Renderer()
 {
+	glDeleteBuffers(1, &this->m_rQuadVBO);
+	glDeleteVertexArrays(1, &this->m_rQuadVAO);
+	delete m_framebuffer;
+
 }
 
 void Renderer::prepareGameObjects(const std::vector<GameObject*>& gameObjects)
@@ -46,41 +52,41 @@ void Renderer::prepareGameObjects(const std::vector<GameObject*>& gameObjects)
 
 void Renderer::render()
 {
-	this->geometryPass(); 
-	this->lightPass();	
+	this->geometryPass();
+	this->lightPass();
 }
 
 void Renderer::forwardPass() {
-	if (m_meshes.size() == 0)
-		return;
+	//if (m_meshes.size() == 0)
+	//	return;
 
-	// Use shader
-	Shader* goShader = ShaderMap::getShader("GameObjectShader");
-	goShader->use();
+	//// Use shader
+	//Shader* goShader = ShaderMap::getShader("GameObjectShader");
+	//goShader->use();
 
-	// Set view matrix
-	goShader->setMat4("viewMatrix", m_camera->getViewMatrix());
-	goShader->setVec3("cameraPosition", m_camera->getPosition());
+	//// Set view matrix
+	//goShader->setMat4("viewMatrix", m_camera->getViewMatrix());
+	//goShader->setVec3("cameraPosition", m_camera->getPosition());
 
-	for (auto &currentMesh : m_meshes)
-	{
-		bindMesh(currentMesh.first);
+	//for (auto &currentMesh : m_meshes)
+	//{
+	//	bindMesh(currentMesh.first, goShader);
 
-		for (auto object : currentMesh.second)
-		{
-			goShader->setMat4("modelMatrix", object->getModelMatrix());
-			goShader->setFloat("shininess", object->getMesh()->getShininess());
-			glDrawElements(GL_TRIANGLES, object->getMesh()->getNrOfIndices(), GL_UNSIGNED_INT, NULL);
-		}
+	//	for (auto object : currentMesh.second)
+	//	{
+	//		goShader->setMat4("modelMatrix", object->getModelMatrix());
+	//		goShader->setFloat("shininess", object->getMesh()->getShininess());
+	//		glDrawElements(GL_TRIANGLES, object->getMesh()->getNrOfIndices(), GL_UNSIGNED_INT, NULL);
+	//	}
 
-		unbindMesh();
-	}
+	//	unbindMesh();
+	//}
 
-	// Unuse shader
-	goShader->unuse();
+	//// Unuse shader
+	//goShader->unuse();
 
-	// clear mesh map
-	m_meshes.clear();
+	//// clear mesh map
+	//m_meshes.clear();
 
 }
 
@@ -95,12 +101,12 @@ void Renderer::geometryPass() {
 
 	geometryShader->setMat4("viewMatrix", m_camera->getViewMatrix());
 
-	this->m_framebuffer.bindFrameBuffer();
+	m_framebuffer->bindFrameBuffer();
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
+
 	for (auto &mesh : this->m_meshes) {
-		bindMesh(mesh.first);
+		bindMesh(mesh.first, geometryShader);
 
 		for (auto object : mesh.second) {
 			geometryShader->setMat4("modelMatrix", object->getModelMatrix());
@@ -111,23 +117,24 @@ void Renderer::geometryPass() {
 	}
 	geometryShader->unuse();
 	this->m_meshes.clear();
-	
-	this->m_framebuffer.unbindBuffer();
+
+	m_framebuffer->unbindBuffer();
 }
 
 void Renderer::lightPass() {
-	
+
 	glClear(GL_COLOR_BUFFER_BIT);
 	glDisable(GL_DEPTH_TEST);
 
 	Shader* lightShader = ShaderMap::getShader("LightPass");
 	lightShader->use();
+	lightShader->setInt("numberOfLights", m_lightManager->getNumberOfLights());
 	lightShader->setVec3("cameraPosition", m_camera->getPosition());
 	drawQuad();
 	lightShader->unuse();
 }
 
-void Renderer::bindMesh(Mesh * mesh)
+void Renderer::bindMesh(Mesh * mesh, Shader* shader)
 {
 	glBindVertexArray(mesh->getVao());
 	glEnableVertexAttribArray(0);
@@ -136,6 +143,7 @@ void Renderer::bindMesh(Mesh * mesh)
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mesh->getTextureID());
+
 }
 
 void Renderer::unbindMesh()
@@ -166,7 +174,7 @@ bool Renderer::initRenderQuad() {
 
 void Renderer::drawQuad() {
 	glBindVertexArray(this->m_rQuadVAO);
-	this->m_framebuffer.bindDeferredTextures();
+	m_framebuffer->bindDeferredTextures();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glBindVertexArray(0);
 }

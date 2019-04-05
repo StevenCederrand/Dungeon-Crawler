@@ -4,6 +4,7 @@
 #include <GLM/glm.hpp>
 #include <vector>
 #include <string>
+#include <algorithm>
 #include "../Audio/AudioEngine.h"
 
 class Parser {
@@ -24,6 +25,7 @@ private:
 		const std::vector<glm::vec2>& tempUvs,
 		const std::vector<glm::vec3>& tempNormals,
 		ParserData* parserData);
+	void stringClean(std::vector<std::string>& attribs);
 
 	int getFaceIndexIfExist(GLuint vertexIndex, GLuint uvIndex, GLuint normalIndex, GLuint indexCounter);
 

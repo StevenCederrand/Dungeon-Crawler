@@ -11,37 +11,30 @@
 
 
 PlayState::PlayState() {
-	LOG_INFO("PlayState created");
 	
+	#pragma region Init
 	m_parser = new Parser();
 	m_GLinit = new GLinit();
 	m_camera = new Camera();
-	m_renderer = new Renderer(m_camera);
-	m_gameObjectManager = new GameObjectManager();
-
-
-	ParserData* data = m_parser->loadFromObj("box.obj");
-
-	m_GLinit->createMesh("Box", data);
-
-	Mesh* boxMesh = MeshMap::getMesh("Box");
-
-	Shader* goShader = ShaderMap::getShader("GeometryPass");
-	goShader->use();
-	goShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
-	goShader->unuse();
-
-	Shader* lightShader = ShaderMap::getShader("LightPass");
-	lightShader->use();
-	// Temporary sun creation
-	glm::vec3 sunColor = glm::vec3(1.f, 1.f, 1.f);
-	glm::vec3 sunPosition = glm::vec3(-5.f, 1.5f, 0.f);
-	lightShader->setVec3("sunColor", sunColor);
-	lightShader->setVec3("sunPosition", sunPosition);
-	lightShader->unuse();
-
 	m_lightManager = new LightManager();
-	m_lightManager->addLight(glm::vec3(1.f), glm::vec3(0.f, 1.f, 0.f), 10.f);
+	m_renderer = new Renderer(m_camera, m_lightManager);
+	m_gameObjectManager = new GameObjectManager();
+	#pragma endregion
+
+	#pragma region Create_Objects
+	ParserData* boxData = m_parser->loadFromObj("box.obj");
+	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
+
+	m_GLinit->createMesh("Box", boxData);
+	m_GLinit->createMesh("Sphere", sphereData);
+	#pragma endregion
+	
+	Mesh* boxMesh = MeshMap::getMesh("Box");
+	
+	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 1.5f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
+
+	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
+	m_lightManager->addLight(glm::vec3(0.f, 0.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
 
 	m_gameObjectManager->addGameObject(new Box(boxMesh));
 	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(0.f,-4.f,0.f)));
@@ -49,8 +42,6 @@ PlayState::PlayState() {
 }
 
 PlayState::~PlayState() {
-	LOG_WARNING("PlayState destroyed");
-
 	delete m_parser;
 	delete m_GLinit;
 	delete m_camera;

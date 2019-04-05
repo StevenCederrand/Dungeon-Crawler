@@ -158,6 +158,7 @@
     <ClCompile Include="GameObjects\Box.cpp" />
     <ClCompile Include="GameObjects\GameObject.cpp" />
     <ClCompile Include="GameObjects\GameObjectManager.cpp" />
+    <ClCompile Include="GameObjects\LightSphere.cpp" />
     <ClCompile Include="Graphics\Framebuffer.cpp" />
     <ClCompile Include="Graphics\GLinit.cpp" />
     <ClCompile Include="Graphics\LightManager.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="GameObjects\Box.h" />
     <ClInclude Include="GameObjects\GameObject.h" />
     <ClInclude Include="GameObjects\GameObjectManager.h" />
+    <ClInclude Include="GameObjects\LightSphere.h" />
     <ClInclude Include="Globals\Paths.h" />
     <ClInclude Include="Globals\Settings.h" />
     <ClInclude Include="Graphics\Framebuffer.h" />

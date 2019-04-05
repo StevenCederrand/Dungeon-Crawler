@@ -34,6 +34,7 @@
     <ClCompile Include="Main Menu\MainMenu.cpp" />
     <ClCompile Include="Main Menu\MenuButton.cpp" />
     <ClCompile Include="Graphics\UIRenderer.cpp" />
+    <ClCompile Include="GameObjects\LightSphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -73,5 +74,6 @@
     <ClInclude Include="Main Menu\MainMenu.h" />
     <ClInclude Include="Main Menu\MenuButton.h" />
     <ClInclude Include="Graphics\UIRenderer.h" />
+    <ClInclude Include="GameObjects\LightSphere.h" />
   </ItemGroup>
 </Project>

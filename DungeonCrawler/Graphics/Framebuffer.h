@@ -3,8 +3,6 @@
 #include <GL/glew.h>
 #include "../Globals/Settings.h"
 
-
-
 class Framebuffer {
 public:
 	Framebuffer();
@@ -14,7 +12,7 @@ public:
 	void bindShadowBuffer();
 	void bindFrameBuffer();
 	void bindDeferredTextures();
-	
+
 	void unbindBuffer();
 	void unbindDeferredTextures();
 	unsigned int getFrameBuffer() const;
@@ -33,8 +31,6 @@ private:
 	unsigned int m_colourBuffer;
 	unsigned int m_normalBuffer;
 	unsigned int m_positionBuffer;
-
-
 };
 
 

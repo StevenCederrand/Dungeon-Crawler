@@ -2,22 +2,23 @@
 #define _RENDERER_H
 #include "Utility/Camera.h"
 #include "GameObjects/GameObject.h"
+#include "LightManager.h"
 #include "Framebuffer.h"
 #include <vector>
 #include <map>
-
+#include "Shader.h"
 
 class Renderer
 {
 public:
-	Renderer(Camera* camera);
+	Renderer(Camera* camera, LightManager* lightManager);
 	~Renderer();
 
 	void prepareGameObjects(const std::vector<GameObject*>& gameObjects);
 	void render();
 
 private:
-	void bindMesh(Mesh* mesh);
+	void bindMesh(Mesh* mesh, Shader* shader);
 	void unbindMesh();
 	
 	void forwardPass();
@@ -27,11 +28,12 @@ private:
 	bool initRenderQuad();	
 	void drawQuad();
 private:
-	Framebuffer m_framebuffer;
+	Framebuffer* m_framebuffer;
 
-	
 	std::map<Mesh*, std::vector<GameObject*>> m_meshes;
 	std::map<Mesh*, std::vector<GameObject*>>::iterator m_meshIterator;
+	
+	LightManager* m_lightManager;
 	Camera* m_camera;
 
 

@@ -15,10 +15,7 @@ MenuState::MenuState() {
 	this->m_menu->insertButton(glm::vec2(0, 0), 2, 2);
 	this->m_renderer->setupMenuButtons(this->m_menu);
 
-
-
 	AudioEngine::loadSSO("Menu.sso");
-	LOG_INFO("MenuState created");
 }
 
 MenuState::~MenuState()
@@ -26,9 +23,6 @@ MenuState::~MenuState()
 	delete this->m_camera;
 	delete this->m_menu;
 	delete this->m_renderer;
-
-	LOG_INFO("SS");
-	LOG_WARNING("MenuState destroyed");
 }
 
 void MenuState::update(float dt) {

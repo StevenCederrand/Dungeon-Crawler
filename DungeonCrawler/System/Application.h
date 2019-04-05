@@ -16,6 +16,7 @@ public:
 	~Application();
 
 	bool initialize();
+	void initShaders();
 	void run();
 
 	static int windowWidth;
