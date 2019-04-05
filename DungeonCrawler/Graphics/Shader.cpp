@@ -71,6 +71,7 @@ Shader::Shader(std::string vertex, std::string geometry, std::string fragment)
 
 Shader::~Shader()
 {
+	glDeleteProgram(m_shaderProg);
 }
 
 void Shader::use()

@@ -4,7 +4,9 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "Input.h"
+#include "../Globals/Settings.h"
 #include "../Audio/AudioEngine.h"
+#include "../Graphics/ShaderInit.h"
 #include "States/StateManager.h"
 
 class Application
