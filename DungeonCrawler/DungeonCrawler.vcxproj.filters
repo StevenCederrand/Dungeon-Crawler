@@ -71,5 +71,6 @@
     <ClInclude Include="Globals\Settings.h" />
     <ClInclude Include="Graphics\ShaderInit.h" />
     <ClInclude Include="GameObjects\LightSphere.h" />
+    <ClInclude Include="Utility\Ray.h" />
   </ItemGroup>
 </Project>

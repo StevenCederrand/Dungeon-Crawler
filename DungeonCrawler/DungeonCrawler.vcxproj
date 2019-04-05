@@ -215,6 +215,7 @@
     <ClInclude Include="System\Log.h" />
     <ClInclude Include="Parser\Parser.h" />
     <ClInclude Include="Utility\Camera.h" />
+    <ClInclude Include="Utility\Ray.h" />
     <ClInclude Include="Vendor\ImGui\imconfig.h" />
     <ClInclude Include="Vendor\ImGui\imgui.h" />
     <ClInclude Include="Vendor\ImGui\imgui_impl_glfw.h" />

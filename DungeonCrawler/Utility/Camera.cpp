@@ -11,11 +11,11 @@ Camera* Camera::active = nullptr;
 Camera::Camera()
 {
 	m_position = glm::vec3(0.f, 10.f, 0.f);
-	m_lookDirection = glm::vec3(1.f, 0.f, 0.f);
+	m_lookDirection = glm::vec3(1.f, -1.f, 0.f);
 	m_yaw = 0.f;
 	m_pitch = 0.f;
 	m_distanceToOrbitPoint = 5.f;
-	m_cameraRight = glm::vec3(1.f, 0.f, 0.f);
+	m_cameraRight = glm::vec3(-1.f, 0.f, 0.f);
 	m_cameraUp = glm::vec3(0.f, 1.0f, 0.f);
 	m_cameraSpeed = 5.f;
 	m_sensitivity = 0.1f;
@@ -79,7 +79,7 @@ void Camera::move(float dt)
 	if (Input::isKeyHeldDown(GLFW_KEY_W))
 	{
 		m_position.x += m_lookDirection.x * m_cameraSpeed * dt;
-		m_position.y += m_lookDirection.y * m_cameraSpeed * dt;
+		//m_position.y += m_lookDirection.y * m_cameraSpeed * dt;
 		m_position.z += m_lookDirection.z * m_cameraSpeed * dt;
 	}
 
@@ -92,7 +92,7 @@ void Camera::move(float dt)
 	if (Input::isKeyHeldDown(GLFW_KEY_S))
 	{
 		m_position.x -= m_lookDirection.x * m_cameraSpeed * dt;
-		m_position.y -= m_lookDirection.y * m_cameraSpeed * dt;
+		//m_position.y -= m_lookDirection.y * m_cameraSpeed * dt;
 		m_position.z -= m_lookDirection.z * m_cameraSpeed * dt;
 	}
 
@@ -165,4 +165,18 @@ const glm::mat4 Camera::getProjectionMatrix() const
 const glm::vec3 Camera::getPosition() const
 {
 	return m_position;
+}
+
+const Ray Camera::getRayFromScreen(float x, float y, float w, float h) const
+{
+	glm::vec3 mouseWorld(glm::unProject(
+		glm::vec3(x, h - y, 0.f),
+		m_viewMatrix,
+		m_projectionMatrix,
+		glm::vec4(0, 0, w, h)
+	));
+
+	glm::vec3 dir(glm::normalize(mouseWorld - m_position));
+
+	return Ray(m_position, dir);
 }

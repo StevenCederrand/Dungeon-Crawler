@@ -73,27 +73,25 @@ void Player::rotatePlayer(float dt)
 	//this->setTranslateRotation(glm::vec3(0.f, m_angle, 0.f) * dt);
 	glfwGetCursorPos(glfwGetCurrentContext(), &m_mousePos.x, &m_mousePos.y);
 
-	glm::vec2 direction = glm::vec2(
-		this->getPosition().x - m_mousePos.x,
-		this->getPosition().z - m_mousePos.y);
-	
-	m_angle = glm::degrees(atan2f(direction.x, direction.y));
-	
-	
+
 	/*glm::vec3 camtest(glm::unProject(
 		glm::vec3(m_mousePos.x, 720.f - m_mousePos.y , 1),
 		Camera::active->getViewMatrix(),
 		Camera::active->getProjectionMatrix(),
 		glm::vec4(0,0, 1280, 720)
 	));*/
-	glm::vec3 camRay(glm::unProject(
-		glm::vec3(m_mousePos.x, 720.f - m_mousePos.y, 0.f),
-		Camera::active->getViewMatrix(),
-		Camera::active->getProjectionMatrix(),
-		glm::vec4(0, 0, 1280, 720)
-	));
-	LOG_ERROR(std::to_string(camRay.x) + "  " + std::to_string(camRay.y) + "  " + std::to_string(camRay.z));
-	
+	Ray ray = Camera::active->getRayFromScreen(m_mousePos.x, m_mousePos.y, 1280, 720);
+
+	glm::vec3 planeNormal(0.f, 1.f, 0.f);
+	float dis = glm::dot(-ray.pos, planeNormal) / (glm::dot(ray.dir, planeNormal) + 0.001f);
+
+	glm::vec3 pos = ray.calcPoint(dis);
+
+	glm::vec2 direction = glm::vec2(
+		this->getPosition().x - pos.x,
+		this->getPosition().z - pos.z);
+	m_angle = glm::degrees(atan2f(direction.x, direction.y));
+
 
 	setRotation(glm::vec3(0.f, m_angle, 0.f));
 }
