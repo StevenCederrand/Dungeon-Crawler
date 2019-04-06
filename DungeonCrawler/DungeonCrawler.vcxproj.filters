@@ -30,7 +30,6 @@
     <ClCompile Include="Audio\AudioEngine.cpp" />
     <ClCompile Include="Graphics\Framebuffer.cpp" />
     <ClCompile Include="Graphics\LightManager.cpp" />
-    <ClCompile Include="Graphics\ShaderInit.cpp" />
     <ClCompile Include="Main Menu\MainMenu.cpp" />
     <ClCompile Include="Main Menu\MenuButton.cpp" />
     <ClCompile Include="Graphics\UIRenderer.cpp" />
@@ -70,7 +69,6 @@
     <ClInclude Include="Graphics\Framebuffer.h" />
     <ClInclude Include="Graphics\LightManager.h" />
     <ClInclude Include="Globals\Settings.h" />
-    <ClInclude Include="Graphics\ShaderInit.h" />
     <ClInclude Include="Main Menu\MainMenu.h" />
     <ClInclude Include="Main Menu\MenuButton.h" />
     <ClInclude Include="Graphics\UIRenderer.h" />
