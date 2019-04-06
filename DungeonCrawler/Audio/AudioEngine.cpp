@@ -113,6 +113,7 @@ void AudioEngine::update() {
 	for (size_t i = 0; i < m_channels.size(); i++) {
 		FMOD::Channel* temp = m_channels.at(i);
 		temp->isPlaying(&isPlaying);
+
 		if (!isPlaying) {	
 			temp->stop();
 			m_channels.erase(m_channels.begin() + i);
@@ -120,13 +121,14 @@ void AudioEngine::update() {
 	}
 }
 
-void AudioEngine::play(std::string key, float volume) {
+void AudioEngine::playOnce(std::string key, float volume) {
 	if (keyInUse(key)) {
 		FMOD_RESULT res;
 		FMOD::Channel* channel;
 		if (m_sounds.at(key) == nullptr) {
 			return;
 		}
+		//Check to see if a channel is already playing the specific sound
 		if (playingSound(key)) {
 			return;
 		}
@@ -142,11 +144,54 @@ void AudioEngine::play(std::string key, float volume) {
 	}
 }
 
+void AudioEngine::play(std::string key, float volume) {
+	if (keyInUse(key)) {
+		FMOD_RESULT res;
+		FMOD::Channel* channel = getChannel(key.c_str());
+		if (m_sounds.at(key) == nullptr) {
+			return;
+		}
+
+		//Check to see if a channel is already playing the specific sound
+		if (channel != nullptr) {
+			int index;
+			channel->getIndex(&index);
+			LOG_INFO("Playing from: " + std::to_string(index));
+			//Play the sound again from the specific channel. 
+			res = m_soundSystem->playSound(m_sounds.at(key), 0, false, &channel);
+			if (res != FMOD_OK) {
+				LOG_ERROR("ERROR PLAYING SOUND");
+			}
+			return;
+		}
+		res = m_soundSystem->playSound(m_sounds.at(key), 0, false, &channel);
+
+		if (res != FMOD_OK) {
+			LOG_ERROR("ERROR PLAYING SOUND");
+			return;
+		}
+
+		channel->setVolume(volume);
+		m_channels.push_back(channel);
+	}
+}
+
 bool AudioEngine::keyInUse(std::string key) { 
 	if (m_sounds.find(key) != m_sounds.end()) {
 		return true;
 	}
 	return false;
+}
+
+FMOD::Channel* AudioEngine::getChannel(const char* key) {
+	FMOD::Sound *currentSound;
+	for (size_t i = 0; i < m_channels.size(); i++) {
+		m_channels.at(i)->getCurrentSound(&currentSound);
+		if (currentSound == m_sounds[key]) {
+			return m_channels.at(i);
+		}
+	}
+	return nullptr;
 }
 
 bool AudioEngine::playingSound(std::string key) {

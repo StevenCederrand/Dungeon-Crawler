@@ -32,12 +32,12 @@ void MenuState::update(float dt) {
 		m_stateManager->pushTemporaryState(new PlayState());
 	}
 
-	if (Input::isMouseReleased(GLFW_MOUSE_BUTTON_LEFT)) {
+	if (Input::isKeyReleased(GLFW_KEY_S)) {
 		AudioEngine::play("LMouseClick", 1.0f);
 	}
 
 	if (Input::isKeyReleased(GLFW_KEY_ENTER)) {
-		AudioEngine::play("SystemStart", 1.0f);
+		AudioEngine::playOnce("SystemStart", 1.0f);
 	}
 	AudioEngine::update();
 

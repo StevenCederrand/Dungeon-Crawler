@@ -24,12 +24,15 @@ public:
 	static void update();
 	//Play a sound
 	static void play(std::string key, float volume);
-
+	//play the entire sound without being able to replay it
+	static void playOnce(std::string key, float volume);
 private:
 	static FMOD_RESULT init();
 	//Check to see if a key in the hashmap is in use
 	static bool keyInUse(std::string key);
 	static bool playingSound(std::string key);
+	static FMOD::Channel* getChannel(const char* key);
+
 	//Sound effect containers
 	static FMOD::System *m_soundSystem;
 	static std::map<std::string, FMOD::Sound*> m_sounds;	
