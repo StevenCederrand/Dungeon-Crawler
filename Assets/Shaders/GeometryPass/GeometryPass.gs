@@ -12,15 +12,16 @@ in GEOM_DATA {
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
-uniform int hasNormalMap; //Set as float if it doens't work
+
+//uniform int hasNormalMap; //Set as float if it doens't work
 uniform vec3 cameraPosition;
 
 out FRAG_DATA {
     vec3 position; //in world space
     vec3 normal; //this will be the normal map
     vec2 uv; //this will be used in the fs for applying albedo
-    mat3 TBN;
-    int hasNormalMap;
+    //mat3 TBN;
+    //int hasNormalMap;
 } frag_data;
 
 vec3 getNormal() {
@@ -35,7 +36,7 @@ vec3 getNormal() {
     normal = normalize(cross(vec3(edge1), vec3(edge2)));
     return normal;
 }
-
+/*
 mat3 TBN(vec3 normal) {
     if(hasNormalMap <= 0) {
         return Mat3(0);
@@ -43,8 +44,8 @@ mat3 TBN(vec3 normal) {
 
 
     return Mat3(1);
-}
-void backfaceCull() {
+}*/
+void backfaceCulling() {
     vec4 vertex;
     bool drawTriangle = true;
     //Loop through 3 vertices if we are going to draw the triangl
@@ -57,11 +58,14 @@ void backfaceCull() {
         else {
             gl_Position = vertex;
             frag_data.uv = geom_data[i].uv;
-            frag_data.position = vec3(modelMatrix * geom_data[i].position);
-            frag_data.hasNormalMap = hasNormalMap;
-            frag_data.TBN = TBN(geom_data[i].normal);
+            frag_data.position = vec3(modelMatrix * vec4(geom_data[i].position, 1.0f));
             frag_data.normal = mat3(transpose(inverse(modelMatrix))) * geom_data[i].normal;
+
+            EmitVertex();
         }
+    }
+    if(drawTriangle) {
+        EndPrimitive();
     }
 }
 
@@ -69,5 +73,16 @@ void backfaceCull() {
 
 void main() {
     //this will also apply the normal TBN
+    //backfaceCulling();
+    vec4 vertex;
+    for(int i = 0; i < 3; i++) {
+        vertex = projectionMatrix * viewMatrix * modelMatrix * vec4(geom_data[i].position, 1);
+        gl_Position = vertex;
+        frag_data.uv = geom_data[i].uv;
+        frag_data.position = vec3(modelMatrix * vec4(geom_data[i].position, 1.0f));
+        frag_data.normal = geom_data[i].normal; // mat3(transpose(inverse(modelMatrix))) * 
+        EmitVertex();
+    }
+    EndPrimitive();
 
 }
