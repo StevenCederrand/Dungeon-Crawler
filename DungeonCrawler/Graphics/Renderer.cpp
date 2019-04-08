@@ -100,6 +100,9 @@ void Renderer::geometryPass() {
 	geometryShader->use();
 
 	geometryShader->setMat4("viewMatrix", m_camera->getViewMatrix());
+	LOG_INFO("X: " + std::to_string(m_camera->getPosition().x));
+	LOG_INFO("Y: " + std::to_string(m_camera->getPosition().y));
+	LOG_INFO("Z: " + std::to_string(m_camera->getPosition().z));
 	geometryShader->setVec3("cameraPosition", m_camera->getPosition());
 	m_framebuffer->bindFrameBuffer();
 	glEnable(GL_DEPTH_TEST);
@@ -117,7 +120,7 @@ void Renderer::geometryPass() {
 	}
 	geometryShader->unuse();
 	this->m_meshes.clear();
-
+		
 	m_framebuffer->unbindBuffer();
 }
 
