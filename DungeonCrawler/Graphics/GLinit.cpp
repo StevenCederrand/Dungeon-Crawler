@@ -39,7 +39,7 @@ void GLinit::createMesh(std::string name, ParserData* data)
 
 	mesh->setVao(vao);
 	mesh->setTextureID(textureID);
-	mesh->setNrOfIndices(data->getIndices().size());
+	mesh->setNrOfIndices(int(data->getIndices().size()));
 	mesh->setAmbientColor(data->getAmbientColor());
 	mesh->setSpecularColor(data->getSpecularColor());
 	mesh->setDiffuseColor(data->getDiffuseColor());

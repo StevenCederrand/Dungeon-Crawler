@@ -126,7 +126,7 @@ void Parser::parseSSO(const std::string filename) {
 			continue;
 		}
 		
-		int space = line.find(' ');
+		size_t space = line.find(' ');
 		std::string key = line.substr(0, space);
 		std::string filename = line.substr(++space, line.size());
 		AudioEngine::loadSound(filename, key);
