@@ -28,6 +28,7 @@
     <ClCompile Include="Vendor\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Vendor\stb\stb_image.cpp" />
     <ClCompile Include="Audio\AudioEngine.cpp" />
+    <ClCompile Include="GameObjects\Player.cpp" />
     <ClCompile Include="Graphics\Framebuffer.cpp" />
     <ClCompile Include="Graphics\LightManager.cpp" />
     <ClCompile Include="Main Menu\MainMenu.cpp" />
@@ -66,6 +67,7 @@
     <ClInclude Include="GameObjects\Box.h" />
     <ClInclude Include="GameObjects\GameObject.h" />
     <ClInclude Include="GameObjects\GameObjectManager.h" />
+    <ClInclude Include="GameObjects\Player.h" />
     <ClInclude Include="Graphics\Framebuffer.h" />
     <ClInclude Include="Graphics\LightManager.h" />
     <ClInclude Include="Globals\Settings.h" />
@@ -74,5 +76,7 @@
     <ClInclude Include="Graphics\UIRenderer.h" />
     <ClInclude Include="GameObjects\LightSphere.h" />
     <ClInclude Include="Parser\AABB.h" />
+    <ClInclude Include="Utility\Ray.h" />
+
   </ItemGroup>
 </Project>
