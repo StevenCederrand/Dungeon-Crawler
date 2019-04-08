@@ -71,36 +71,17 @@ void backfaceCulling() {
 
 void main() {
     //this will also apply the normal TBN
-    backfaceCulling();
-
-}
-
-
-/*
-
-
-
-
-vec4 vertex;
-bool drawTriangle = true;
-//Loop through 3 vertices if we are going to draw the triangl
-for(int i = 0; i < 3 && drawTriangle; i++) {
-    vertex = projectionMatrix * viewMatrix * modelMatrix * vec4(geom_data[i].position, 1);
-    vec3 cameraToSurface = normalize(vec3(vertex) - cameraPosition);
-    if(dot(cameraPosition, getNormal()) <= 0) {
-        drawTriangle = false;
-    }
-    else {
+    //backfaceCulling();
+    vec4 vertex;
+    for(int i = 0; i < 3; i++) {
+        vertex = projectionMatrix * viewMatrix * modelMatrix * vec4(geom_data[i].position, 1);
         gl_Position = vertex;
         frag_data.uv = geom_data[i].uv;
         frag_data.position = vec3(modelMatrix * vec4(geom_data[i].position, 1.0f));
-        frag_data.normal = mat3(transpose(inverse(modelMatrix))) * geom_data[i].normal;
-
+        frag_data.normal = geom_data[i].normal; // mat3(transpose(inverse(modelMatrix))) *
         EmitVertex();
     }
-}
-if(drawTriangle) {
     EndPrimitive();
-}
 
-*/
+
+}
