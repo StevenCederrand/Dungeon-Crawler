@@ -7,10 +7,13 @@ ParserData::ParserData(int startCapacity)
 	m_vertices.reserve(startCapacity);
 	m_uvs.reserve(startCapacity);
 	m_normals.reserve(startCapacity);
+	m_aabb = nullptr;
 }
 
 ParserData::~ParserData()
 {
+	if (!m_aabb)
+		delete m_aabb;
 }
 
 /* Setters */
@@ -59,6 +62,11 @@ void ParserData::setShininess(GLfloat factor)
 	m_shininess = factor;
 }
 
+void ParserData::setBoundingBox(glm::vec3 min, glm::vec3 max)
+{
+	
+}
+
 /* Getters */
 const std::vector<GLuint>& ParserData::getIndices() const
 {
@@ -104,3 +112,9 @@ const GLfloat & ParserData::getShininess() const
 {
 	return m_shininess;
 }
+
+const std::vector<glm::vec3>& ParserData::getBoundingCoordinates() const
+{
+	// TODO: insert return statement here
+}
+

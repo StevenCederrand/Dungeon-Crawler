@@ -73,5 +73,6 @@
     <ClInclude Include="Main Menu\MenuButton.h" />
     <ClInclude Include="Graphics\UIRenderer.h" />
     <ClInclude Include="GameObjects\LightSphere.h" />
+    <ClInclude Include="Parser\AABB.h" />
   </ItemGroup>
 </Project>

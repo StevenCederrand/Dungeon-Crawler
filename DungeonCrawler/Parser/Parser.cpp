@@ -39,15 +39,25 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 	std::string line;
 	std::string MTLfile = "";
 	GLuint indexCount = 0;
+	bool isParsingCollider = false;
+
+	glm::vec3 min = glm::vec3(100000);
+	glm::vec3 max = glm::vec3(-100000);
+
 
 	while (std::getline(objFile, line))
 	{
-
-		if (line[0] == '#')
-			continue;
-		
 		std::vector<std::string> attribs = split(line, ' ');
 		this->stringClean(attribs);
+
+		if (attribs[0] == "#") {
+
+			if (attribs[1] == "object" && attribs[2] == "collision")
+			{
+				isParsingCollider = true;
+			}
+			continue;
+		}
 
 		if (attribs.size() == 0)
 			continue;
@@ -58,21 +68,39 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 		}
 		else if (attribs[0] == "v")
 		{
-			glm::vec3 vert = glm::vec3(std::stof(attribs[1]), std::stof(attribs[2]), std::stof(attribs[3]));
-			tempVertexBuffer.emplace_back(vert);
+			if (!isParsingCollider) {
+				glm::vec3 vert = glm::vec3(std::stof(attribs[1]), std::stof(attribs[2]), std::stof(attribs[3]));
+				tempVertexBuffer.emplace_back(vert);
+			}
+			else
+			{
+				// Is parsing the collider so only check for the min x,y,z and max x,y,z cooridnates!
+				float x = std::stof(attribs[1]);
+				float y = std::stof(attribs[2]);
+				float z = std::stof(attribs[3]);
+
+				if (min.x > x) min.x = x;
+				if (min.y > y) min.y = y;
+				if (min.z > z) min.z = y;
+
+				if (max.x < x) max.x = x;
+				if (max.y < y) max.y = y;
+				if (max.z < z) max.z = z;
+
+			}
 
 		}
-		else if (attribs[0] == "vt")
+		else if (attribs[0] == "vt" && !isParsingCollider)
 		{
 			glm::vec2 vert = glm::vec2(std::stof(attribs[1]), std::stof(attribs[2]));
 			tempUVBuffer.emplace_back(vert);
 		}
-		else if (attribs[0] == "vn")
+		else if (attribs[0] == "vn" && !isParsingCollider)
 		{
 			glm::vec3 vert = glm::vec3(std::stof(attribs[1]), std::stof(attribs[2]), std::stof(attribs[3]));
 			tempNormalBuffer.emplace_back(vert);
 		}
-		else if (attribs[0] == "f")
+		else if (attribs[0] == "f" && !isParsingCollider)
 		{
 			std::vector<std::string> attributes = split(line, ' ');
 			for (int i = 1; i < attributes.size(); i++)
