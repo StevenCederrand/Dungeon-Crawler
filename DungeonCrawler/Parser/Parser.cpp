@@ -17,7 +17,6 @@ Parser::~Parser()
 
 ParserData * Parser::loadFromObj(const std::string & filename)
 {
-
 	std::vector<std::string> filenameString = split(filename, '.');
 	std::ifstream  binaryExist(Binaries + filenameString[0]);
 	ParserData* data = new ParserData(CAPACITY);
@@ -255,6 +254,12 @@ void Parser::writeToBinary(ParserData* data, const std::string& filename)
 
 	GLfloat shininess = data->getShininess();
 	writeBinaryFloat(binaryFile, shininess);
+
+	glm::vec3 boundingBoxMin = data->getBoundingBoxMin();
+	writeBinaryVec3(binaryFile, boundingBoxMin);
+
+	glm::vec3 boundingBoxMax = data->getBoundingBoxMax();
+	writeBinaryVec3(binaryFile, boundingBoxMax);
 
 	binaryFile.close();
 }
@@ -548,8 +553,6 @@ void Parser::writeBinaryFloat(std::ofstream& binaryFile, GLfloat floatValue)
 
 void Parser::loadFromBinary(ParserData* data, const std::string & filename)
 {
-	//ParserData* data = new ParserData(CAPACITY);
-
 	std::ifstream binaryFile(Binaries + filename, std::ios::binary);
 	readBinaryVecInt(binaryFile, data);
 
@@ -562,6 +565,10 @@ void Parser::loadFromBinary(ParserData* data, const std::string & filename)
 	readBinaryVec3(binaryFile, data, 0);
 	readBinaryVec3(binaryFile, data, 1);
 	readBinaryVec3(binaryFile, data, 2);
+
+	readBinaryFloat(binaryFile, data);
+
+	readBinaryVec3(binaryFile, data, 3);
 
 	binaryFile.close();
 }
@@ -704,7 +711,7 @@ void Parser::readBinaryString(std::ifstream & binaryFile, ParserData * parserDat
 	//write the texture name to the parserData
 	parserData->setTextureFilename(stringText);
 }
-//diffuse==0, specular==1 and ambient==2
+//diffuse==0, specular==1, ambient==2 and boundingBox==3
 void Parser::readBinaryVec3(std::ifstream & binaryFile, ParserData * parserData, int choice)
 {
 	//read the value first (how big the other read should be)
@@ -732,6 +739,7 @@ void Parser::readBinaryVec3(std::ifstream & binaryFile, ParserData * parserData,
 	tempGL.x = std::stof(vecString[0], NULL);
 	tempGL.y = std::stof(vecString[1], NULL);
 	tempGL.y = std::stof(vecString[2], NULL);
+	
 
 	if (choice == 0) 
 	{
@@ -746,6 +754,38 @@ void Parser::readBinaryVec3(std::ifstream & binaryFile, ParserData * parserData,
 	{
 		parserData->setAmbientColor(tempGL.x, tempGL.y, tempGL.z);
 	}
+	else if (choice == 3)
+	{
+		glm::vec3 tempGL2;
+	
+
+		char* textInt = new char[10];
+		binaryFile.read(textInt, 10);
+
+		//convert it  from char* to int
+		char *tempa;
+		int readSize = strtol(textInt, &tempa, 10);
+		delete[] textInt;
+
+		//make a char pointer to read to, readsize is the size
+		char* text = new char[readSize + 1];
+		binaryFile.read(text, readSize);
+
+		//make a vector string and fill it with the split function
+		text[readSize] = '\0';
+		std::string stringText = text;
+		delete[] text;
+		std::vector<std::string> vecString = split(stringText, ' ');
+
+		//fill the parserData with the Information
+
+		tempGL2.x = std::stof(vecString[0], NULL);
+		tempGL2.y = std::stof(vecString[1], NULL);
+		tempGL2.y = std::stof(vecString[2], NULL);
+
+		parserData->setBoundingBox(tempGL, tempGL2);
+	}
+
 	vecString.clear();
 }
 
@@ -769,7 +809,7 @@ void Parser::readBinaryFloat(std::ifstream & binaryFile, ParserData * parserData
 	std::string stringText = text;
 	delete[] text;
 	//std::vector<std::string> vecString = split(stringText, ' ');
-	GLuint tempGL = std::stof(stringText);
+	GLfloat tempGL = std::stof(stringText);
 	//fill the parserData with the Information
 	parserData->setShininess(tempGL);
 }
