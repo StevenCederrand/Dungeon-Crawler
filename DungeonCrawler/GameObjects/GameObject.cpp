@@ -4,7 +4,10 @@
 GameObject::GameObject(Mesh * mesh, const glm::vec3 & position)
 {
 	m_mesh = mesh;
+	m_isCollidable = true;
+	m_boundingBox = new AABB(mesh->getBoundingBoxMin(), mesh->getBoundingBoxMax());
 	m_position = position;
+	m_boundingBox->setPosition(position);
 	m_rotation = glm::vec3(0.f);
 	m_scale = glm::vec3(1.f);
 	updateModelMatrix();
@@ -12,7 +15,7 @@ GameObject::GameObject(Mesh * mesh, const glm::vec3 & position)
 
 GameObject::~GameObject()
 {
-
+	delete m_boundingBox;
 }
 
 void GameObject::updateModelMatrix()
@@ -28,16 +31,23 @@ void GameObject::updateModelMatrix()
 void GameObject::setPosition(const glm::vec3 & position)
 {
 	m_position = position;
+	m_boundingBox->setPosition(position);
 }
 
 void GameObject::translate(const glm::vec3 & translationVector)
 {
 	m_position += translationVector;
+	m_boundingBox->setPosition(m_position);
 }
 
 void GameObject::setTranslateRotation(const glm::vec3 translateRotation)
 {
 	m_rotation += translateRotation;
+}
+
+void GameObject::setCollidable(bool condition)
+{
+	m_isCollidable = condition;
 }
 
 void GameObject::setScale(const glm::vec3 & scale)
@@ -48,6 +58,11 @@ void GameObject::setScale(const glm::vec3 & scale)
 void GameObject::setRotation(const glm::vec3 rotation)
 {
 	m_rotation = rotation;
+}
+
+AABB* GameObject::getBoundingBox() const
+{
+	return m_boundingBox;
 }
 
 const glm::vec3 & GameObject::getPosition() const
@@ -68,6 +83,11 @@ const glm::vec3 & GameObject::getRotation() const
 const glm::mat4 & GameObject::getModelMatrix() const
 {
 	return m_modelMatrix;
+}
+
+const bool GameObject::isCollidable() const
+{
+	return m_isCollidable;
 }
 
 Mesh * GameObject::getMesh() const

@@ -9,7 +9,7 @@ public:
 	static Camera* active;
 
 	const float NEAR_CLIPPING = 0.1f;
-	const float FAR_CLIPPING = 1000.f;
+	const float FAR_CLIPPING = 70.f;
 	const float FOV = 70.f;
 public:
 	Camera();

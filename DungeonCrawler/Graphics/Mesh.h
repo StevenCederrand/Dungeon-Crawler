@@ -2,6 +2,7 @@
 #define _MESH_H
 #include <GL/glew.h>
 #include <GLM/glm.hpp>
+
 class Mesh {
 
 public:
@@ -16,6 +17,7 @@ public:
 	void setAmbientColor(const glm::vec3& ambientColor);
 	void setDiffuseColor(const glm::vec3& diffuseColor);
 	void setShininess(const float& shininess);
+	void setBoundingBoxMinMax(const glm::vec3& min, const glm::vec3& max);
 
 	/* Getters */
 	const unsigned int& getVao() const;
@@ -24,7 +26,10 @@ public:
 	const glm::vec3& getSpecularColor() const;
 	const glm::vec3& getAmbientColor() const;
 	const glm::vec3& getdiffuseColor() const;
+	const glm::vec3& getBoundingBoxMin() const;
+	const glm::vec3& getBoundingBoxMax() const;
 	const float& getShininess() const;
+	
 
 private:
 	unsigned int m_vao;
@@ -33,7 +38,13 @@ private:
 	glm::vec3 m_specularColor;
 	glm::vec3 m_ambientColor;
 	glm::vec3 m_diffuseColor;
+	glm::vec3 m_boundingBoxMin;
+	glm::vec3 m_boundingBoxMax;
 	float m_shininess;
+
+	
+
+
 };
 
 
