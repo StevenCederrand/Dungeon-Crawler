@@ -13,7 +13,7 @@ Framebuffer::~Framebuffer()
 	glDeleteFramebuffers(1, &this->m_frameBuffer);
 }
 
-FRAMEBUFFER_RESULT Framebuffer::genFrameBuffers() {
+void Framebuffer::genFrameBuffers() {
 	
 	//Deferred rendering 
 	glGenFramebuffers(1, &this->m_frameBuffer);
@@ -22,11 +22,12 @@ FRAMEBUFFER_RESULT Framebuffer::genFrameBuffers() {
 	this->genRenderBuffer();
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-		return FRAMEBUFFER_FAILED;
+		LOG_ERROR("FRAMEBUFFER INCOMPLETE");
+		return;
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
-	return FRAMEBUFFER_OK;
+	return;
 	//Used for shadow mapping
 	//glGenFramebuffers(1, &this->m_shadowBuffer);
 	//glBindFramebuffer(GL_FRAMEBUFFER, this->m_shadowBuffer);
@@ -126,11 +127,4 @@ void Framebuffer::unbindDeferredTextures() {
 
 unsigned int Framebuffer::getFrameBuffer() const {
 	return this->m_frameBuffer;
-}
-
-FRAMEBUFFER_RESULT Framebuffer::frameBufferStatus() {
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-		return FRAMEBUFFER_FAILED;
-	}
-	return FRAMEBUFFER_OK;
 }

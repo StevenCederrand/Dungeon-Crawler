@@ -71,27 +71,27 @@ vec3 getSumOfAllColorFromPointLights(float specularStrength, vec3 worldPosition)
 		finalColor += currentColor * strength;
 
 	}
-	
+
 	return finalColor;
 
 }
 
 void main() {
-  
+
 	worldPosition = texture(positionBuffer, frag_uv).rgb;
 	normal = texture(normalBuffer, frag_uv).rgb;
 	textureColor = texture(colourBuffer, frag_uv).rgb;
 	float shininess = texture(colourBuffer, frag_uv).a;
 
-	vec3 currentColor = getAmbientColor(0.2f)+ getDiffuseColor(sunPosition, sunColor) 
+	vec3 currentColor = getAmbientColor(0.2f)+ getDiffuseColor(sunPosition, sunColor)
 	+ getPhongColor(sunPosition, shininess, sunColor) + getSumOfAllColorFromPointLights(shininess, worldPosition);
 	/*
- 
+
 	*/
 
 	// Clamp
 	currentColor = min(currentColor, vec3(1.f));
 
-  	finalColor = textureColor * vec4(currentColor, 1.0f);
+  	finalColor = vec4(textureColor, 1.0f) * vec4(currentColor, 1.0f);
 
 }

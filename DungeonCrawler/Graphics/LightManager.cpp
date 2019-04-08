@@ -46,12 +46,20 @@ void LightManager::addLight(const glm::vec3 & position, const glm::vec3 & color,
 	
 	glGenBuffers(1, &m_ubo);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ubo);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, MaxLights * m_lightByteSize, (void*)m_lights.data(), GL_STATIC_DRAW);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, int(MaxLights * m_lightByteSize), (void*)m_lights.data(), GL_STATIC_DRAW);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_ubo);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }
 
 const int LightManager::getNumberOfLights() const
 {
-	return m_lights.size();
+	return int(m_lights.size());
+}
+
+void LightManager::setSun(Shader* shader, glm::vec3 position, glm::vec3 color) {
+	shader->use();
+	shader->setVec3("sunColor", color);
+	shader->setVec3("sunPosition", position);
+	shader->unuse();
+
 }

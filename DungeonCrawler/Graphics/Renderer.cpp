@@ -10,13 +10,11 @@ Renderer::Renderer(Camera* camera, LightManager* lightManager)
 	m_framebuffer = new Framebuffer();
 	glEnable(GL_DEPTH_TEST);
 	//Generate framebuffers & textures
-	
-	if (m_framebuffer->genFrameBuffers() != FRAMEBUFFER_OK) {
-		LOG_ERROR("FRAMEBUFFER FAILED");
-	}
-	this->initRenderQuad();
-	Shader* shader = ShaderMap::getShader("GeometryPass");
 
+	this->m_framebuffer->genFrameBuffers();
+	this->initRenderQuad();
+
+	Shader* shader = ShaderMap::getShader("GeometryPass");
 	shader->use();
 	shader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
 	shader->unuse();
@@ -24,7 +22,10 @@ Renderer::Renderer(Camera* camera, LightManager* lightManager)
 
 Renderer::~Renderer()
 {
+	glDeleteBuffers(1, &this->m_rQuadVBO);
+	glDeleteVertexArrays(1, &this->m_rQuadVAO);
 	delete m_framebuffer;
+
 }
 
 void Renderer::prepareGameObjects(const std::vector<GameObject*>& gameObjects)
@@ -51,8 +52,8 @@ void Renderer::prepareGameObjects(const std::vector<GameObject*>& gameObjects)
 
 void Renderer::render()
 {
-	this->geometryPass(); 
-	this->lightPass();	
+	this->geometryPass();
+	this->lightPass();
 }
 
 void Renderer::forwardPass() {
@@ -103,7 +104,7 @@ void Renderer::geometryPass() {
 	m_framebuffer->bindFrameBuffer();
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
+
 	for (auto &mesh : this->m_meshes) {
 		bindMesh(mesh.first, geometryShader);
 
@@ -116,12 +117,12 @@ void Renderer::geometryPass() {
 	}
 	geometryShader->unuse();
 	this->m_meshes.clear();
-	
+
 	m_framebuffer->unbindBuffer();
 }
 
 void Renderer::lightPass() {
-	
+
 	glClear(GL_COLOR_BUFFER_BIT);
 	glDisable(GL_DEPTH_TEST);
 
@@ -142,7 +143,7 @@ void Renderer::bindMesh(Mesh * mesh, Shader* shader)
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mesh->getTextureID());
-	
+
 }
 
 void Renderer::unbindMesh()

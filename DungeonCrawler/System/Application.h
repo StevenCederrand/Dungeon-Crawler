@@ -6,7 +6,6 @@
 #include "Input.h"
 #include "../Globals/Settings.h"
 #include "../Audio/AudioEngine.h"
-#include "../Graphics/ShaderInit.h"
 #include "States/StateManager.h"
 
 class Application
@@ -16,6 +15,7 @@ public:
 	~Application();
 
 	bool initialize();
+	void initShaders();
 	void run();
 
 	static int windowWidth;
