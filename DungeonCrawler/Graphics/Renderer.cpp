@@ -10,7 +10,8 @@ Renderer::Renderer(Camera* camera, LightManager* lightManager)
 	m_framebuffer = new Framebuffer();
 	glEnable(GL_DEPTH_TEST);
 	//Generate framebuffers & textures
-
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 	this->m_framebuffer->genFrameBuffers();
 	this->initRenderQuad();
 
@@ -100,10 +101,6 @@ void Renderer::geometryPass() {
 	geometryShader->use();
 
 	geometryShader->setMat4("viewMatrix", m_camera->getViewMatrix());
-	LOG_INFO("X: " + std::to_string(m_camera->getPosition().x));
-	LOG_INFO("Y: " + std::to_string(m_camera->getPosition().y));
-	LOG_INFO("Z: " + std::to_string(m_camera->getPosition().z));
-	geometryShader->setVec3("cameraPosition", m_camera->getPosition());
 	m_framebuffer->bindFrameBuffer();
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -148,7 +145,7 @@ void Renderer::bindMesh(Mesh * mesh, Shader* shader)
 	glBindTexture(GL_TEXTURE_2D, mesh->getTextureID());
 
 	if (mesh->getHasNormalMap()) {
-		shader->setInt("hasNormalMap", 0);
+		shader->setInt("hasNormalMap", 1);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, mesh->getNormalID());	
 	}
