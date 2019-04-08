@@ -6,18 +6,21 @@
 #include "System/Input.h"
 #include "System/Log.h"
 
+Camera* Camera::active = nullptr;
+
 Camera::Camera()
 {
-	m_position = glm::vec3(0.f, 0.f, 5.f);
-	m_lookDirection = glm::vec3(0.f, 0.f, -1.f);
+	m_position = glm::vec3(-10.f, 10.f, 0.f);
+	m_lookDirection = glm::vec3(1.f, -1.f, 0.f);
 	m_yaw = 0.f;
 	m_pitch = 0.f;
 	m_distanceToOrbitPoint = 5.f;
-	m_cameraRight = glm::vec3(1.f, 0.f, 0.f);
+	m_cameraRight = glm::vec3(-1.f, 0.f, 0.f);
 	m_cameraUp = glm::vec3(0.f, 1.0f, 0.f);
 	m_cameraSpeed = 5.f;
 	m_sensitivity = 0.1f;
 	m_locked = false;
+	m_debug = false;
 
 	snapMouseToMiddle();
 	setProjectionMatrix();
@@ -33,8 +36,15 @@ void Camera::update(float dt)
 	{
 		if (!m_locked)
 		{
-			move(dt);
-			lookAround(dt);
+			if (Input::isKeyReleased(GLFW_KEY_Q))
+			{
+				m_debug = !m_debug;
+			}
+			if (m_debug)
+			{
+				move(dt);
+				lookAround(dt);
+			}
 			calculateCameraAxis();
 			setViewMatrix();
 		}
@@ -74,6 +84,8 @@ void Camera::lookAround(float dt)
 
 void Camera::move(float dt)
 {
+	
+
 	if (Input::isKeyHeldDown(GLFW_KEY_W))
 	{
 		m_position.x += m_lookDirection.x * m_cameraSpeed * dt;
@@ -118,9 +130,8 @@ void Camera::move(float dt)
 	{
 		m_cameraSpeed = 5.f;
 	}
-
+	
 	//LOG_TRACE("" + std::to_string(m_position.x) + ", " + std::to_string(m_position.y) + ", " + std::to_string(m_position.z));
-
 }
 
 void Camera::snapMouseToMiddle()
@@ -163,4 +174,29 @@ const glm::mat4 Camera::getProjectionMatrix() const
 const glm::vec3 Camera::getPosition() const
 {
 	return m_position;
+}
+
+const Ray Camera::getRayFromScreen(float x, float y, float w, float h) const
+{
+	glm::vec3 mouseWorld(glm::unProject(
+		glm::vec3(x, h - y, 0.f),
+		m_viewMatrix,
+		m_projectionMatrix,
+		glm::vec4(0, 0, w, h)
+	));
+
+	glm::vec3 dir(glm::normalize(mouseWorld - m_position));
+
+	return Ray(m_position, dir);
+}
+
+void Camera::setToPlayer(glm::vec3 playerPos)
+{
+	if (!m_debug)
+	{
+		m_position.x = playerPos.x - 10.f;
+		m_position.z = playerPos.z;
+		m_position.y = playerPos.y + 10.f;
+		m_lookDirection = glm::vec3(1.f, -1.f, 0.f);
+	}
 }

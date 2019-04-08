@@ -20,7 +20,7 @@ void GameObjectManager::update(float dt)
 		GameObject* object = m_gameObjects[i];
 		object->update(dt);
 		object->updateModelMatrix();
-	}
+	} 
 }
 
 void GameObjectManager::addGameObject(GameObject * gameObject)
