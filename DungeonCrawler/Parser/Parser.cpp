@@ -19,15 +19,15 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 {
 	std::vector<std::string> filenameString = split(filename, '.');
 	std::ifstream  binaryExist(Binaries + filenameString[0]);
+	ParserData* data = new ParserData(CAPACITY);
 	if (binaryExist.good())
 	{
-		//LOG_ERROR(" find Binary file " + filename);
-		//LOG_ERROR(" find Binary file " + filenameString[0]);
-		ParserData* data = loadFromBinary(filenameString[0]);
+		//ParserData* data = loadFromBinary(filenameString[0]);
+		loadFromBinary(data, filenameString[0]);
+		m_memoryTracker.emplace_back(data);
 		return data;
-
 	}
-	LOG_ERROR(" Doing obj parser ");
+	
 	std::vector<glm::vec3> tempVertexBuffer;
 	tempVertexBuffer.reserve(CAPACITY);
 
@@ -45,7 +45,6 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 	}
 
 
-	ParserData* data = new ParserData(CAPACITY);
 	std::string line;
 	std::string MTLfile = "";
 	GLuint indexCount = 0;
@@ -317,10 +316,13 @@ void Parser::writeBinaryVecInt(std::ofstream& binaryFile, std::vector<GLuint> ve
 
 	//make a string of the size ( to write it to the file)
 	std::string indicesStringInt = std::to_string(indicesStringSize);
-	indicesStringInt.append(" ");
+	for (int i = indicesStringInt.size(); i < 10; i++)
+	{
+		indicesStringInt.append(" ");
+	}
 
 	//write to the file
-	binaryFile.write(indicesStringInt.c_str(), sizeof(int));
+	binaryFile.write(indicesStringInt.c_str(), indicesStringInt.size());
 	binaryFile.write(stringvector.c_str(), indicesStringSize);
 
 	//binaryFile.close();
@@ -328,11 +330,10 @@ void Parser::writeBinaryVecInt(std::ofstream& binaryFile, std::vector<GLuint> ve
 
 void Parser::writeBinaryVecVec3(std::ofstream& binaryFile, std::vector<glm::vec3> vector)
 {
-	LOG_ERROR("writeBinaryVecInt ");
-	//std::ofstream binaryFile(Binaries + filename, std::ios::binary);
+	
 	if (!binaryFile.is_open())
 	{
-		//LOG_ERROR("Binary file not found " + filename);
+		
 		return;
 	}
 	//create string to have the data in
@@ -354,10 +355,13 @@ void Parser::writeBinaryVecVec3(std::ofstream& binaryFile, std::vector<glm::vec3
 
 	//make a string of the size ( to write it to the file)
 	std::string indicesStringInt = std::to_string(indicesStringSize);
-	indicesStringInt.append(" ");
+	for (int i = indicesStringInt.size(); i < 10; i++)
+	{
+		indicesStringInt.append(" ");
+	}
 
 	//write to the file
-	binaryFile.write(indicesStringInt.c_str(), sizeof(int));
+	binaryFile.write(indicesStringInt.c_str(), indicesStringInt.size());
 	binaryFile.write(stringvector.c_str(), indicesStringSize);
 
 	//binaryFile.close();
@@ -389,10 +393,13 @@ void Parser::writeBinaryVecVec2(std::ofstream& binaryFile, std::vector<glm::vec2
 
 	//make a string of the size ( to write it to the file)
 	std::string indicesStringInt = std::to_string(indicesStringSize);
-	indicesStringInt.append(" ");
+	for (int i = indicesStringInt.size(); i < 10; i++)
+	{
+		indicesStringInt.append(" ");
+	}
 
 	//write to the file
-	binaryFile.write(indicesStringInt.c_str(), sizeof(int));
+	binaryFile.write(indicesStringInt.c_str(), indicesStringInt.size());
 	binaryFile.write(stringvector.c_str(), indicesStringSize);
 
 	//binaryFile.close();
@@ -412,10 +419,13 @@ void Parser::writeBinaryString(std::ofstream& binaryFile, std::string string)
 
 	//make a string of the size ( to write it to the file)
 	std::string indicesStringInt = std::to_string(indicesStringSize);
-	indicesStringInt.append(" ");
+	for (int i = indicesStringInt.size(); i < 10; i++)
+	{
+		indicesStringInt.append(" ");
+	}
 
 	//write to the file
-	binaryFile.write(indicesStringInt.c_str(), sizeof(int));
+	binaryFile.write(indicesStringInt.c_str(), indicesStringInt.size());
 	binaryFile.write(string.c_str(), indicesStringSize);
 
 	//binaryFile.close();
@@ -448,43 +458,13 @@ void Parser::writeBinaryVec3(std::ofstream& binaryFile, glm::vec3 vector)
 
 	//make a string of the size ( to write it to the file)
 	std::string indicesStringInt = std::to_string(indicesStringSize);
-	indicesStringInt.append(" ");
-
-	//write to the file
-	binaryFile.write(indicesStringInt.c_str(), sizeof(int));
-	binaryFile.write(stringvector.c_str(), indicesStringSize);
-
-	//binaryFile.close();
-}
-
-void Parser::writeBinaryVec2(std::ofstream& binaryFile, glm::vec2 vector)
-{
-	//std::ofstream binaryFile(Binaries + filename, std::ios::binary);
-	if (!binaryFile.is_open())
+	for (int i = indicesStringInt.size(); i < 10; i++)
 	{
-		//LOG_ERROR("Binary file not found " + filename);
-		return;
+		indicesStringInt.append(" ");
 	}
-	//create string to have the data in
-	std::string stringvector;
-
-
-	//the string with the data
-	stringvector.append(std::to_string(vector.x));
-	stringvector.append(" ");
-	stringvector.append(std::to_string(vector.y));
-	stringvector.append(" ");
-
-
-	//size of the string
-	int indicesStringSize = stringvector.size();
-
-	//make a string of the size ( to write it to the file)
-	std::string indicesStringInt = std::to_string(indicesStringSize);
-	indicesStringInt.append(" ");
 
 	//write to the file
-	binaryFile.write(indicesStringInt.c_str(), sizeof(int));
+	binaryFile.write(indicesStringInt.c_str(), indicesStringInt.size());
 	binaryFile.write(stringvector.c_str(), indicesStringSize);
 
 	//binaryFile.close();
@@ -513,19 +493,22 @@ void Parser::writeBinaryFloat(std::ofstream& binaryFile, GLfloat floatValue)
 
 	//make a string of the size ( to write it to the file)
 	std::string indicesStringInt = std::to_string(indicesStringSize);
-	indicesStringInt.append(" ");
+	for (int i = indicesStringInt.size(); i < 10; i++)
+	{
+		indicesStringInt.append(" ");
+	}
 
 	//write to the file
-	binaryFile.write(indicesStringInt.c_str(), sizeof(int));
+	binaryFile.write(indicesStringInt.c_str(), indicesStringInt.size());
 	binaryFile.write(stringvector.c_str(), indicesStringSize);
 
 	//binaryFile.close();
 
 }
 
-ParserData * Parser::loadFromBinary(const std::string & filename)
+void Parser::loadFromBinary(ParserData* data, const std::string & filename)
 {
-	ParserData* data = new ParserData(CAPACITY);
+	//ParserData* data = new ParserData(CAPACITY);
 
 	std::ifstream binaryFile(Binaries + filename, std::ios::binary);
 	readBinaryVecInt(binaryFile, data);
@@ -533,25 +516,27 @@ ParserData * Parser::loadFromBinary(const std::string & filename)
 	readBinaryVecVec3(binaryFile, data, 0);
 	readBinaryVecVec2(binaryFile, data);
 	readBinaryVecVec3(binaryFile, data, 1);
+
 	readBinaryString(binaryFile, data);
+
 	readBinaryVec3(binaryFile, data, 0);
 	readBinaryVec3(binaryFile, data, 1);
 	readBinaryVec3(binaryFile, data, 2);
 
 	binaryFile.close();
-	return data;
 }
 
 void Parser::readBinaryVecInt(std::ifstream & binaryFile, ParserData* parserData)
 {
 	//read the value first (how big the other read should be)
-	char* textInt = new char[sizeof(int)];
-	binaryFile.read(textInt, sizeof(int));
+	char* textInt = new char[10];
+	binaryFile.read(textInt, 10);
 
 	//convert it  from char* to int
 	char *tempa;
 	int readSize = strtol(textInt, &tempa, 10);
 	delete[] textInt;
+
 	//make a char pointer to read to, readsize is the size
 	char* text = new char[readSize + 1];
 	binaryFile.read(text, readSize);
@@ -570,14 +555,14 @@ void Parser::readBinaryVecInt(std::ifstream & binaryFile, ParserData* parserData
 		parserData->addIndex(tempGL);
 
 	}
-	return;
+	vecString.clear();
 }
 //vertex==0, normal==1
 void Parser::readBinaryVecVec3(std::ifstream & binaryFile, ParserData * parserData, int choice)
 {
 	//read the value first (how big the other read should be)
-	char* textInt = new char[sizeof(int)];
-	binaryFile.read(textInt, sizeof(int));
+	char* textInt = new char[10];
+	binaryFile.read(textInt, 10);
 
 	//convert it  from char* to int
 	char *tempa;
@@ -595,32 +580,37 @@ void Parser::readBinaryVecVec3(std::ifstream & binaryFile, ParserData * parserDa
 	std::vector<std::string> vecString = split(stringText, ' ');
 
 	//fill the parserData with the Information
-	for (int i = 0; i < vecString.size(); i)
+	for (int i = 0; (i+2) < vecString.size(); i)
 	{
-		
-		glm::vec3 tempGL;
-		tempGL.x = std::stof(vecString[i], NULL);
-		tempGL.y = std::stof(vecString[i+1], NULL);
-		tempGL.z = std::stof(vecString[i+2], NULL);
-		if (choice == 0) 
+		if (vecString[i] != "") 
 		{
-			parserData->addVertex(tempGL);
+			glm::vec3 tempGL;
+			tempGL.x = std::stof(vecString[i], NULL);
+			tempGL.y = std::stof(vecString[i+1], NULL);
+			tempGL.z = std::stof(vecString[i+2], NULL);
+			if (choice == 0) 
+			{
+				parserData->addVertex(tempGL);
+			}
+			else if (choice == 1)
+			{
+				parserData->addNormal(tempGL);
+			}
+			i += 3;
 		}
-		else if (choice == 1)
+		else
 		{
-			parserData->addNormal(tempGL);
-
+			i++;
 		}
-		i += 3;
 	}
-	return;
+	vecString.clear();
 }
 
 void Parser::readBinaryVecVec2(std::ifstream & binaryFile, ParserData * parserData)
 {
 	//read the value first (how big the other read should be)
-	char* textInt = new char[sizeof(int)];
-	binaryFile.read(textInt, sizeof(int));
+	char* textInt = new char[10];
+	binaryFile.read(textInt, 10);
 
 	//convert it  from char* to int
 	char *tempa;
@@ -638,7 +628,7 @@ void Parser::readBinaryVecVec2(std::ifstream & binaryFile, ParserData * parserDa
 	std::vector<std::string> vecString = split(stringText, ' ');
 
 	//fill the parserData with the Information
-	for (int i = 0; i < vecString.size(); i)
+	for (int i = 0; (i+1) < vecString.size(); i)
 	{
 		glm::vec2 tempGL;
 		tempGL.x = std::stof(vecString[i], NULL);
@@ -648,14 +638,14 @@ void Parser::readBinaryVecVec2(std::ifstream & binaryFile, ParserData * parserDa
 		parserData->addUV(tempGL);
 		i += 2;
 	}
-	return;
+	vecString.clear();
 }
 
 void Parser::readBinaryString(std::ifstream & binaryFile, ParserData * parserData)
 {
 	//read the value first (how big the other read should be)
-	char* textInt = new char[sizeof(int)];
-	binaryFile.read(textInt, sizeof(int));
+	char* textInt = new char[10];
+	binaryFile.read(textInt, 10);
 
 	//convert it  from char* to int
 	char *tempa;
@@ -673,15 +663,13 @@ void Parser::readBinaryString(std::ifstream & binaryFile, ParserData * parserDat
 	
 	//write the texture name to the parserData
 	parserData->setTextureFilename(stringText);
-
-	return;
 }
 //diffuse==0, specular==1 and ambient==2
 void Parser::readBinaryVec3(std::ifstream & binaryFile, ParserData * parserData, int choice)
 {
 	//read the value first (how big the other read should be)
-	char* textInt = new char[sizeof(int)];
-	binaryFile.read(textInt, sizeof(int));
+	char* textInt = new char[10];
+	binaryFile.read(textInt, 10);
 
 	//convert it  from char* to int
 	char *tempa;
@@ -718,16 +706,14 @@ void Parser::readBinaryVec3(std::ifstream & binaryFile, ParserData * parserData,
 	{
 		parserData->setAmbientColor(tempGL.x, tempGL.y, tempGL.z);
 	}
-	
-	return;
-
+	vecString.clear();
 }
 
 void Parser::readBinaryFloat(std::ifstream & binaryFile, ParserData * parserData)
 {
 	//read the value first (how big the other read should be)
-	char* textInt = new char[sizeof(int)];
-	binaryFile.read(textInt, sizeof(int));
+	char* textInt = new char[10];
+	binaryFile.read(textInt, 10);
 
 	//convert it  from char* to int
 	char *tempa;
