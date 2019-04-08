@@ -17,7 +17,6 @@ Parser::~Parser()
 
 ParserData * Parser::loadFromObj(const std::string & filename)
 {
-
 	std::vector<std::string> filenameString = split(filename, '.');
 	std::ifstream  binaryExist(Binaries + filenameString[0]);
 	ParserData* data = new ParserData(CAPACITY);
@@ -554,8 +553,6 @@ void Parser::writeBinaryFloat(std::ofstream& binaryFile, GLfloat floatValue)
 
 void Parser::loadFromBinary(ParserData* data, const std::string & filename)
 {
-	//ParserData* data = new ParserData(CAPACITY);
-
 	std::ifstream binaryFile(Binaries + filename, std::ios::binary);
 	readBinaryVecInt(binaryFile, data);
 
