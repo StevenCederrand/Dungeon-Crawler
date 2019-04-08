@@ -23,6 +23,8 @@ public:
 	const glm::vec3 getPosition() const;
 	const Ray getRayFromScreen(float x, float y, float w, float h) const;
 
+	void setToPlayer(glm::vec3 playerPos);
+
 private:
 	void setProjectionMatrix();
 	void setViewMatrix();
@@ -58,6 +60,7 @@ private:
 	// Free look or is it stuck on player?
 	// (Debug purpose)
 	bool m_locked;
+	bool m_debug;
 };
 
 

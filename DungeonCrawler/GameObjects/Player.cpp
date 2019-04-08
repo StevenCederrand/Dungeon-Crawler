@@ -12,74 +12,46 @@ Player::Player(Mesh * mesh) :
 	this->m_speed = 20.f;
 	this->m_health = 5.f;
 	this->m_damage = 0.f;
+	this->m_debug = false;
 }
 
 void Player::update(float dt)
 {
-	move(dt);
+	if (Input::isKeyReleased(GLFW_KEY_Q))
+	{
+		m_debug = !m_debug;
+	}
+	if (!m_debug)
+	{
+		move(dt);
+	}
 }
 
 void Player::move(float dt)
 {
-	if (Input::isKeyHeldDown(GLFW_KEY_I))
+	if (Input::isKeyHeldDown(GLFW_KEY_W))
 	{
 		this->translate(glm::vec3(this->m_speed, 0.f, 0.f) * dt);
 	}
-	if (Input::isKeyHeldDown(GLFW_KEY_J))
+	if (Input::isKeyHeldDown(GLFW_KEY_A))
 	{
 		this->translate(glm::vec3(0.f, 0.f, -this->m_speed) * dt);
 	}
-	if (Input::isKeyHeldDown(GLFW_KEY_K))
+	if (Input::isKeyHeldDown(GLFW_KEY_S))
 	{
 		this->translate(glm::vec3(-this->m_speed, 0.f, 0.f) * dt);
 	}
-	if (Input::isKeyHeldDown(GLFW_KEY_L))
+	if (Input::isKeyHeldDown(GLFW_KEY_D))
 	{
 		this->translate(glm::vec3(0.f, 0.f, this->m_speed) * dt);
 	}
 	rotatePlayer(dt);
+	Camera::active->setToPlayer(getPosition());
 }
 
 void Player::rotatePlayer(float dt)
 {	
-	/*
-	if (Input::isKeyHeldDown(GLFW_KEY_U))
-	{
-		this->setTranslateRotation(glm::vec3(0.f, 100.f, 0.f) * dt);
-	}
-	if (Input::isKeyHeldDown(GLFW_KEY_O))
-	{
-		this->setTranslateRotation(glm::vec3(0.f, -100.f, 0.f) * dt);
-	}*/
-
-	//LOG_ERROR(std::to_string(m_mousePos.x)  +"    "+ std::to_string(m_mousePos.y));
-	//this->translate(this->getPosition());
-	/*if (m_mousePos.x >  0)
-	{
-		m_mousePos.x = m_mousePos.x * -1;
-	}
-	if (m_mousePos.y > 0)
-	{
-		m_mousePos.y = m_mousePos.y * -1;
-	}*/
-	
-
-
-	//m_angle = this->getRotation().y + m_angle;
-	/*if (m_angle < 0)
-	{
-		m_angle = m_angle * -1;
-	}*/
-	//this->setTranslateRotation(glm::vec3(0.f, m_angle, 0.f) * dt);
 	glfwGetCursorPos(glfwGetCurrentContext(), &m_mousePos.x, &m_mousePos.y);
-
-
-	/*glm::vec3 camtest(glm::unProject(
-		glm::vec3(m_mousePos.x, 720.f - m_mousePos.y , 1),
-		Camera::active->getViewMatrix(),
-		Camera::active->getProjectionMatrix(),
-		glm::vec4(0,0, 1280, 720)
-	));*/
 	Ray ray = Camera::active->getRayFromScreen(m_mousePos.x, m_mousePos.y, 1280, 720);
 
 	glm::vec3 planeNormal(0.f, 1.f, 0.f);

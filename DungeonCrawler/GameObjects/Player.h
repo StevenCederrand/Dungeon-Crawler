@@ -31,6 +31,9 @@ private:
 	float m_speed;
 	float m_health;
 	float m_damage;
+
+	//Debugging Tools
+	bool m_debug;
 };
 
 

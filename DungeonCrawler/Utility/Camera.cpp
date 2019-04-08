@@ -10,7 +10,7 @@ Camera* Camera::active = nullptr;
 
 Camera::Camera()
 {
-	m_position = glm::vec3(0.f, 10.f, 0.f);
+	m_position = glm::vec3(-10.f, 10.f, 0.f);
 	m_lookDirection = glm::vec3(1.f, -1.f, 0.f);
 	m_yaw = 0.f;
 	m_pitch = 0.f;
@@ -20,6 +20,7 @@ Camera::Camera()
 	m_cameraSpeed = 5.f;
 	m_sensitivity = 0.1f;
 	m_locked = false;
+	m_debug = false;
 
 	snapMouseToMiddle();
 	setProjectionMatrix();
@@ -35,8 +36,15 @@ void Camera::update(float dt)
 	{
 		if (!m_locked)
 		{
-			move(dt);
-			//lookAround(dt);
+			if (Input::isKeyReleased(GLFW_KEY_Q))
+			{
+				m_debug = !m_debug;
+			}
+			if (m_debug)
+			{
+				move(dt);
+				lookAround(dt);
+			}
 			calculateCameraAxis();
 			setViewMatrix();
 		}
@@ -76,10 +84,12 @@ void Camera::lookAround(float dt)
 
 void Camera::move(float dt)
 {
+	
+
 	if (Input::isKeyHeldDown(GLFW_KEY_W))
 	{
 		m_position.x += m_lookDirection.x * m_cameraSpeed * dt;
-		//m_position.y += m_lookDirection.y * m_cameraSpeed * dt;
+		m_position.y += m_lookDirection.y * m_cameraSpeed * dt;
 		m_position.z += m_lookDirection.z * m_cameraSpeed * dt;
 	}
 
@@ -92,7 +102,7 @@ void Camera::move(float dt)
 	if (Input::isKeyHeldDown(GLFW_KEY_S))
 	{
 		m_position.x -= m_lookDirection.x * m_cameraSpeed * dt;
-		//m_position.y -= m_lookDirection.y * m_cameraSpeed * dt;
+		m_position.y -= m_lookDirection.y * m_cameraSpeed * dt;
 		m_position.z -= m_lookDirection.z * m_cameraSpeed * dt;
 	}
 
@@ -120,9 +130,8 @@ void Camera::move(float dt)
 	{
 		m_cameraSpeed = 5.f;
 	}
-
+	
 	//LOG_TRACE("" + std::to_string(m_position.x) + ", " + std::to_string(m_position.y) + ", " + std::to_string(m_position.z));
-
 }
 
 void Camera::snapMouseToMiddle()
@@ -179,4 +188,15 @@ const Ray Camera::getRayFromScreen(float x, float y, float w, float h) const
 	glm::vec3 dir(glm::normalize(mouseWorld - m_position));
 
 	return Ray(m_position, dir);
+}
+
+void Camera::setToPlayer(glm::vec3 playerPos)
+{
+	if (!m_debug)
+	{
+		m_position.x = playerPos.x - 10.f;
+		m_position.z = playerPos.z;
+		m_position.y = playerPos.y + 10.f;
+		m_lookDirection = glm::vec3(1.f, -1.f, 0.f);
+	}
 }
