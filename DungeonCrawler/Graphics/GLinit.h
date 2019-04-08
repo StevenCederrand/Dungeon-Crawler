@@ -19,6 +19,7 @@ private:
 	void storeDataInAttributeList(const GLuint& attributeNumber, const GLuint& dataPerAttribute, const std::vector<glm::vec2>& dataVector);
 	GLuint createTexture(std::string filename);
 
+
 private:
 	// Used for memory management
 	std::vector<GLuint*> m_vaos;

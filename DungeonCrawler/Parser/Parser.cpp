@@ -215,13 +215,18 @@ void Parser::parseMaterialFile(const std::string& filename, ParserData* parserDa
 	}
 
 	std::string line;
+	std::string exporterProgram = ""; //Used for interpretting what program exported the .mtl
 	while (std::getline(mtlFile, line))
 	{
-
+		
 		std::vector<std::string> attribs = split(line, ' ');
+		
 		if (attribs.size() == 0)
 			continue;
-
+		else if (attribs[0] == "#" && exporterProgram == "") {
+			exporterProgram = attribs[1];
+			continue;
+		}
 		if (attribs[0] == "Ka")
 		{
 			parserData->setAmbientColor(std::stof(attribs[1]), std::stof(attribs[2]), std::stof(attribs[3]));
@@ -240,9 +245,21 @@ void Parser::parseMaterialFile(const std::string& filename, ParserData* parserDa
 		}
 		else if (attribs[0] == "map_Kd")
 		{
-			parserData->setTextureFilename(TexturePath + attribs[1]);
+			if (exporterProgram == "Blender") {
+				parserData->setTextureFilename(TexturePath + attribs[1]);
+			}
 		}
-
+		if (attribs[0] == "map_Bump") {
+			if (exporterProgram == "Blender") {
+				LOG_INFO("NORMAL MAP EXISTS");
+				parserData->setNormalMapName(TexturePath + attribs[attribs.size() - 1]);
+				parserData->setNormalMapStrength(std::stof(attribs[attribs.size() - 2]));
+				LOG_INFO(parserData->getNormalMapName());
+			}
+			else {
+				LOG_ERROR(exporterProgram + " .MTL FILES NOT SUPPORTED");
+			}
+		}
 	}
 
 	mtlFile.close();
@@ -256,4 +273,8 @@ void Parser::stringClean(std::vector<std::string>& attribs) {
 		newattribs.emplace_back(attribs.at(i));
 	}
 	attribs = newattribs;
+}
+
+void Parser::blenderMTL(const std::vector<std::string>& attribs, ParserData* parserData) {
+
 }

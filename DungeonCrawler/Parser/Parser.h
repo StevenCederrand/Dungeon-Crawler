@@ -31,7 +31,7 @@ private:
 
 private:
 	std::vector<ParserData*> m_memoryTracker;
-
+	void blenderMTL(const std::vector<std::string>& attribs, ParserData* parserData);
 private:
 	// Used for obj indexing
 	struct OBJFace {
@@ -40,7 +40,7 @@ private:
 		unsigned int uvIndex;
 		unsigned int normalIndex;
 	};
-
+	
 	std::vector<OBJFace> m_faces;
 };
 
