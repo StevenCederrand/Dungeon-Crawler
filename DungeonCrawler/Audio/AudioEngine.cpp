@@ -122,6 +122,11 @@ void AudioEngine::update() {
 }
 
 void AudioEngine::playOnce(std::string key, float volume) {
+	if (volume > 1.0f) {
+		LOG_WARNING("CANNOT HANDLE VOLUMES ABOVE 1.0f");
+		LOG_WARNING("SETTING VOLUME TO 1.0f");
+		volume = 1.0f;
+	}
 	if (keyInUse(key)) {
 		FMOD_RESULT res;
 		FMOD::Channel* channel;
@@ -145,6 +150,11 @@ void AudioEngine::playOnce(std::string key, float volume) {
 }
 
 void AudioEngine::play(std::string key, float volume) {
+	if (volume > 1.0f) {
+		LOG_WARNING("CANNOT HANDLE VOLUMES ABOVE 1.0f");
+		LOG_WARNING("SETTING VOLUME TO 1.0f");
+		volume = 1.0f;
+	}
 	if (keyInUse(key)) {
 		FMOD_RESULT res;
 		FMOD::Channel* channel = getChannel(key.c_str());

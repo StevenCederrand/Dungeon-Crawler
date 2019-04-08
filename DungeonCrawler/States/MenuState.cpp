@@ -33,7 +33,7 @@ void MenuState::update(float dt) {
 	}
 
 	if (Input::isKeyReleased(GLFW_KEY_S)) {
-		AudioEngine::play("LMouseClick", 1.0f);
+		AudioEngine::play("LMouseClick", 10.0f);
 	}
 
 	if (Input::isKeyReleased(GLFW_KEY_ENTER)) {
