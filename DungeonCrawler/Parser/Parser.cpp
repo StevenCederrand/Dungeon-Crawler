@@ -17,6 +17,7 @@ Parser::~Parser()
 
 ParserData * Parser::loadFromObj(const std::string & filename)
 {
+
 	std::vector<std::string> filenameString = split(filename, '.');
 	std::ifstream  binaryExist(Binaries + filenameString[0]);
 	ParserData* data = new ParserData(CAPACITY);
@@ -56,20 +57,28 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 
 	while (std::getline(objFile, line))
 	{
+
 		std::vector<std::string> attribs = split(line, ' ');
+
+		if (attribs.size() == 0)
+			continue;
+
 		this->stringClean(attribs);
 
 		if (attribs[0] == "#") {
 
+			if (attribs.size() < 3)
+				continue;
+
 			if (attribs[1] == "object" && attribs[2] == "collision")
 			{
+
 				isParsingCollider = true;
 			}
 			continue;
 		}
 
-		if (attribs.size() == 0)
-			continue;
+		
 
 		if (attribs[0] == "mtllib")
 		{
@@ -90,7 +99,7 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 
 				if (min.x > x) min.x = x;
 				if (min.y > y) min.y = y;
-				if (min.z > z) min.z = y;
+				if (min.z > z) min.z = z;
 
 				if (max.x < x) max.x = x;
 				if (max.y < y) max.y = y;
@@ -122,8 +131,8 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 			}
 		}
 
-
 	}
+	
 	objFile.close();
 	tempVertexBuffer.clear();
 	tempUVBuffer.clear();
@@ -132,9 +141,12 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 	// Parse the material 
 	parseMaterialFile(MTLfile, data);
 
+	data->setBoundingBox(min, max);
+
 	writeToBinary(data, filenameString[0]);
-	m_memoryTracker.emplace_back(data);
 	
+	m_memoryTracker.emplace_back(data);
+
 	return data;
 }
 

@@ -7,13 +7,10 @@ ParserData::ParserData(int startCapacity)
 	m_vertices.reserve(startCapacity);
 	m_uvs.reserve(startCapacity);
 	m_normals.reserve(startCapacity);
-	m_aabb = nullptr;
 }
 
 ParserData::~ParserData()
 {
-	if (!m_aabb)
-		delete m_aabb;
 }
 
 /* Setters */
@@ -64,7 +61,8 @@ void ParserData::setShininess(GLfloat factor)
 
 void ParserData::setBoundingBox(glm::vec3 min, glm::vec3 max)
 {
-	
+	m_boundingBoxMin = min;
+	m_boundingBoxMax = max;
 }
 
 /* Getters */
@@ -113,8 +111,12 @@ const GLfloat & ParserData::getShininess() const
 	return m_shininess;
 }
 
-const std::vector<glm::vec3>& ParserData::getBoundingCoordinates() const
+const glm::vec3 & ParserData::getBoundingBoxMax() const
 {
-	// TODO: insert return statement here
+	return m_boundingBoxMax;
 }
 
+const glm::vec3 & ParserData::getBoundingBoxMin() const
+{
+	return m_boundingBoxMin;
+}

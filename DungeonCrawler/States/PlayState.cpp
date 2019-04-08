@@ -24,7 +24,7 @@ PlayState::PlayState() {
 	#pragma endregion
 
 	#pragma region Create_Objects
-	ParserData* boxData = m_parser->loadFromObj("box.obj");
+	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
 
 	m_GLinit->createMesh("Box", boxData);
@@ -41,6 +41,7 @@ PlayState::PlayState() {
 	m_gameObjectManager->addGameObject(new Box(boxMesh));
 	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(0.f,-4.f,0.f)));
 	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(2.f, -4.f, 0.f)));
+
 	m_gameObjectManager->addGameObject(new Player(boxMesh));
 }
 

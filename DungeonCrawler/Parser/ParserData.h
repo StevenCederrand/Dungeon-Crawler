@@ -5,7 +5,6 @@
 #include <vector>
 #include <string>
 
-
 class ParserData {
 
 public:
@@ -26,7 +25,6 @@ public:
 	void setShininess(GLfloat factor);
 	void setBoundingBox(glm::vec3 min, glm::vec3 max);
 
-
 	/* Getters */
 	const std::vector<GLuint>& getIndices() const;
 	const std::vector<glm::vec3>& getVertices() const;
@@ -40,7 +38,8 @@ public:
 	const glm::vec3& getAmbientColor() const;
 	const GLfloat& getShininess() const;
 	
-	const std::vector<glm::vec3>& getBoundingCoordinates() const;
+	const glm::vec3& getBoundingBoxMax() const;
+	const glm::vec3& getBoundingBoxMin() const;
 
 private:
 	std::vector<GLuint> m_indices;
@@ -58,7 +57,6 @@ private:
 	// Collision coordinates ( layout in the vector)
 	glm::vec3 m_boundingBoxMin;
 	glm::vec3 m_boundingBoxMax;
-
 
 };
 
