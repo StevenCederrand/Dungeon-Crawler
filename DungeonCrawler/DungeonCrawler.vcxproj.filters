@@ -14,7 +14,6 @@
     <ClCompile Include="System\Application.cpp" />
     <ClCompile Include="System\Input.cpp" />
     <ClCompile Include="System\Log.cpp" />
-    <ClCompile Include="System\Main.cpp" />
     <ClCompile Include="States\MenuState.cpp" />
     <ClCompile Include="States\PlayState.cpp" />
     <ClCompile Include="States\StateManager.cpp" />
@@ -35,6 +34,7 @@
     <ClCompile Include="Main Menu\MenuButton.cpp" />
     <ClCompile Include="Graphics\UIRenderer.cpp" />
     <ClCompile Include="GameObjects\LightSphere.cpp" />
+    <ClCompile Include="FBX\FBX.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
