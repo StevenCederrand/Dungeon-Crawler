@@ -204,6 +204,9 @@ void Parser::writeToBinary(ParserData* data, const std::string& filename)
 	std::string textureFilename = data->getTextureFilename();
 	writeBinaryString(binaryFile, textureFilename);
 
+	std::string normalMapName = data->getNormalMapName();
+	writeBinaryString(binaryFile, normalMapName);
+
 	glm::vec3 diffuseColor = data->getDiffuseColor();
 	writeBinaryVec3(binaryFile, diffuseColor);
 
@@ -215,6 +218,9 @@ void Parser::writeToBinary(ParserData* data, const std::string& filename)
 
 	GLfloat shininess = data->getShininess();
 	writeBinaryFloat(binaryFile, shininess);
+
+	GLfloat normalMapStrength = data->getNormalMapStrength();
+	writeBinaryFloat(binaryFile, normalMapStrength);
 
 	binaryFile.close();
 }
@@ -534,11 +540,15 @@ void Parser::loadFromBinary(ParserData* data, const std::string & filename)
 	readBinaryVecVec2(binaryFile, data);
 	readBinaryVecVec3(binaryFile, data, 1);
 
-	readBinaryString(binaryFile, data);
+	readBinaryString(binaryFile, data, 0);
+	readBinaryString(binaryFile, data, 1);
 
 	readBinaryVec3(binaryFile, data, 0);
 	readBinaryVec3(binaryFile, data, 1);
 	readBinaryVec3(binaryFile, data, 2);
+
+	readBinaryFloat(binaryFile, data, 0);
+	readBinaryFloat(binaryFile, data, 1);
 
 	binaryFile.close();
 }
@@ -657,8 +667,8 @@ void Parser::readBinaryVecVec2(std::ifstream & binaryFile, ParserData * parserDa
 	}
 	vecString.clear();
 }
-
-void Parser::readBinaryString(std::ifstream & binaryFile, ParserData * parserData)
+//texture==0 and normalMapName==1
+void Parser::readBinaryString(std::ifstream & binaryFile, ParserData * parserData, int choice)
 {
 	//read the value first (how big the other read should be)
 	char* textInt = new char[10];
@@ -679,7 +689,14 @@ void Parser::readBinaryString(std::ifstream & binaryFile, ParserData * parserDat
 	delete[] text;
 	
 	//write the texture name to the parserData
-	parserData->setTextureFilename(stringText);
+	if (choice == 0)
+	{
+		parserData->setTextureFilename(stringText);
+	}
+	else if (choice == 1)
+	{
+		parserData->setNormalMapName(stringText);
+	}
 }
 //diffuse==0, specular==1 and ambient==2
 void Parser::readBinaryVec3(std::ifstream & binaryFile, ParserData * parserData, int choice)
@@ -708,7 +725,7 @@ void Parser::readBinaryVec3(std::ifstream & binaryFile, ParserData * parserData,
 	glm::vec3 tempGL;
 	tempGL.x = std::stof(vecString[0], NULL);
 	tempGL.y = std::stof(vecString[1], NULL);
-	tempGL.y = std::stof(vecString[2], NULL);
+	tempGL.z = std::stof(vecString[2], NULL);
 
 	if (choice == 0) 
 	{
@@ -726,7 +743,7 @@ void Parser::readBinaryVec3(std::ifstream & binaryFile, ParserData * parserData,
 	vecString.clear();
 }
 
-void Parser::readBinaryFloat(std::ifstream & binaryFile, ParserData * parserData)
+void Parser::readBinaryFloat(std::ifstream & binaryFile, ParserData * parserData, int choice)
 {
 	//read the value first (how big the other read should be)
 	char* textInt = new char[10];
@@ -748,7 +765,14 @@ void Parser::readBinaryFloat(std::ifstream & binaryFile, ParserData * parserData
 	//std::vector<std::string> vecString = split(stringText, ' ');
 	GLuint tempGL = std::stof(stringText);
 	//fill the parserData with the Information
-	parserData->setShininess(tempGL);
+	if (choice == 0)
+	{
+		parserData->setShininess(tempGL);
+	}
+	else if (choice == 1)
+	{
+		parserData->setNormalMapStrength(tempGL);
+	}
 }
 
 void Parser::stringClean(std::vector<std::string>& attribs) {
