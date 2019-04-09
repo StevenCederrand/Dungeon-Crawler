@@ -159,6 +159,8 @@ void PrintNode(FbxNode* pNode)
  */
 int main(int argc, char** argv) 
 {
+	//IGNORE FOR NOW, START WITH FBX FILE
+
 	//HeadersAndStuff
 	MeshHeader h { 100 };
 	Vertex *vArray = new Vertex[h.vertexCount];
@@ -199,6 +201,10 @@ int main(int argc, char** argv)
 	std::cout << "Streams are equal, method 2: " << equal << std::endl;
 
 
+
+
+
+	// 0: FBX SDK, READS THE FBX FILE
 
 	//Loading in my file
 	// Change the following filename to a suitable filename value.
