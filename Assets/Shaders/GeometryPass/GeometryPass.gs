@@ -26,7 +26,7 @@ vec3 getNormal() {
     vec3 normal = vec3(0, 0, 0);
     vec4 vertices[3];
     for(int i = 0; i < 3; i++) {
-        vertices[i] = modelMatrix * vec4(geom_data[i].position, 1);
+        vertices[i] = vec4(geom_data[i].position, 1);
     }
 
     vec4 edge1 = vertices[1] - vertices[0];
@@ -63,15 +63,15 @@ mat3 TBN(vec3 normal) {
 	vec3 tangent;
 	tangent.x = formula * (deltaUVs[1].y * edges[0].x - deltaUVs[0].y * edges[1].x);
 	tangent.y = formula * (deltaUVs[1].y * edges[0].y - deltaUVs[0].y * edges[1].y);
-	tangent.y = formula * (deltaUVs[1].y * edges[0].z - deltaUVs[0].y * edges[1].z);
+	tangent.z = formula * (deltaUVs[1].y * edges[0].z - deltaUVs[0].y * edges[1].z);
 	tangent = normalize(tangent);
 	//Bitangent
 	vec3 bitangent;
 	bitangent.x = formula * (-deltaUVs[1].x * edges[0].x + deltaUVs[0].x * edges[1].x);
 	bitangent.y = formula * (-deltaUVs[1].x * edges[0].y + deltaUVs[0].x * edges[1].y);
-	bitangent.y = formula * (-deltaUVs[1].x * edges[0].z + deltaUVs[0].x * edges[1].z);
+	bitangent.z = formula * (-deltaUVs[1].x * edges[0].z + deltaUVs[0].x * edges[1].z);
 	bitangent = normalize(bitangent);
-
+    //Because the light pass handles everything in world spaceS
 	vec3 T = normalize(vec3(modelMatrix*vec4(tangent, 0.0)));
 	vec3 B = normalize(vec3(modelMatrix*vec4(bitangent, 0.0)));
 	vec3 N = normalize(vec3(modelMatrix*vec4(normal, 0.0)));
@@ -90,7 +90,4 @@ void main() {
         EmitVertex();
     }
     EndPrimitive();
-
-
-
 }
