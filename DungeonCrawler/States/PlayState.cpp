@@ -39,8 +39,14 @@ PlayState::PlayState() {
 	m_lightManager->addLight(glm::vec3(0.f, 0.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
 
 	m_gameObjectManager->addGameObject(new Box(boxMesh));
-	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(0.f,-4.f,0.f)));
+	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(0.f, -4.f, 0.f)));
 	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(2.f, -4.f, 0.f)));
+
+	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(10.f, 0.f, 15.f)));
+	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(10.f, 0.f, -15.f)));
+	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(-10.f, 0.f, 15.f)));
+	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(-10.f, 0.f, -15.f)));
+
 	m_gameObjectManager->addGameObject(new Player(boxMesh));
 }
 

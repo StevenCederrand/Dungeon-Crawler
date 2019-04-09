@@ -7,10 +7,12 @@ class Player : public GameObject {
 public:
 	Player(Mesh* mesh);
 	void update(float dt);
+
 	void move(float dt);
-	void rotatePlayer(float dt);
-
-
+	void rotatePlayer();
+	void camPerspective();
+	void dash();
+	void dashCd();
 
 	void setSpeed(float speed);
 	void setHealth(float health);
@@ -28,9 +30,14 @@ private:
 
 
 	//Player Variables
+	float m_defaultSpeed;
 	float m_speed;
 	float m_health;
 	float m_damage;
+
+	float m_dash;
+	bool m_dashCd;
+	int m_timer;
 
 	//Debugging Tools
 	bool m_debug;
