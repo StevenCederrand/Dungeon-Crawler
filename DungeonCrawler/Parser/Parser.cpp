@@ -738,7 +738,7 @@ void Parser::readBinaryVec3(std::ifstream & binaryFile, ParserData * parserData,
 	glm::vec3 tempGL;
 	tempGL.x = std::stof(vecString[0], NULL);
 	tempGL.y = std::stof(vecString[1], NULL);
-	tempGL.y = std::stof(vecString[2], NULL);
+	tempGL.z = std::stof(vecString[2], NULL);
 	
 
 	if (choice == 0) 
@@ -781,7 +781,7 @@ void Parser::readBinaryVec3(std::ifstream & binaryFile, ParserData * parserData,
 
 		tempGL2.x = std::stof(vecString[0], NULL);
 		tempGL2.y = std::stof(vecString[1], NULL);
-		tempGL2.y = std::stof(vecString[2], NULL);
+		tempGL2.z = std::stof(vecString[2], NULL);
 
 		parserData->setBoundingBox(tempGL, tempGL2);
 	}
