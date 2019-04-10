@@ -147,7 +147,9 @@ const char* loadFbxFile()
 
 void initializeFbxImporter(FbxImporter* lImporter, const char* lFilename, FbxManager* lSdkManager)
 {
-	// Use the first argument as the name for our FBX file. Secon d is fileFormat, leave at -1. Last is what IO Settings to use.
+	// Use the first argument as the name for our FBX file.
+	// Second is fileFormat, leave at -1.
+	// Last is what IO Settings to use, we get it from out manager which in turn gets it from our IOSettingsObject. Default settings are used.
 	if (!lImporter->Initialize(lFilename, -1, lSdkManager->GetIOSettings())) //If initializing failes, go into if statement
 	{
 		printf("Call to FbxImporter::Initialize() failed.\n");
@@ -158,13 +160,14 @@ void initializeFbxImporter(FbxImporter* lImporter, const char* lFilename, FbxMan
 
 void useFbxImporter(FbxImporter* lImporter, FbxScene* lScene)
 {
-	// Import the contents of the file into the scene.
+	// Import the contents of our fbx file into the scene. 
+	// Our fbx is stored in the importer from the initialization of the importer.
 	lImporter->Import(lScene);
 }
 
 void destroyFbxImporter(FbxImporter* lImporter)
 {
-	// The file is imported; so get rid of the importer.
+	// The file is loaded into the scene and the importer is no longer needed, Destroy.
 	lImporter->Destroy();
 }
 
@@ -282,9 +285,7 @@ int main(int argc, char** argv)
 
 	initializeFbxImporter(lImporter, lFilename, lSdkManager); //Importer Lifecycle: Create, Initialize, Use, Destroy.
 	useFbxImporter(lImporter, lScene);
-
-	// The file is imported; so get rid of the importer.
-	lImporter->Destroy();
+	destroyFbxImporter(lImporter);
 
 	// Print the nodes of the scene and their attributes recursively.
 	// Note that we are not printing the root node because it should not contain any attributes.
