@@ -9,6 +9,7 @@
 #include "Graphics/ShaderMap.h"
 #include "GameObjects/Box.h"
 #include "GameObjects/Player.h"
+#include "GameObjects/Projectile.h"
 
 
 PlayState::PlayState() {
@@ -48,6 +49,7 @@ PlayState::PlayState() {
 	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(-10.f, 0.f, -15.f)));
 
 	m_gameObjectManager->addGameObject(new Player(boxMesh));
+	m_gameObjectManager->addGameObject(new Projectile(boxMesh));
 }
 
 PlayState::~PlayState() {
@@ -61,8 +63,9 @@ PlayState::~PlayState() {
 
 void PlayState::update(float dt)
 {
-	m_camera->update(dt);
+	
 	m_gameObjectManager->update(dt);
+	m_camera->update(dt);
 	m_lightManager->update(dt);
 
 	m_renderer->prepareGameObjects(m_gameObjectManager->getGameObjects());

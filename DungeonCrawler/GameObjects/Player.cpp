@@ -27,36 +27,44 @@ void Player::update(float dt)
 	}
 	if (!m_debug)
 	{
-		move(dt);
 		camPerspective();
-		dashCd();
-		if (Input::isKeyPressed(GLFW_KEY_E))
+		if (Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT))
 		{
 			dash();
 		}
+		move(dt);
+		dashCd();
 	}
 }
 
 void Player::move(float dt)
 {
 	rotatePlayer();
-	Camera::active->setToPlayer(getPosition());
 	if (Input::isKeyHeldDown(GLFW_KEY_W))
-	{
-		this->translate(glm::vec3(this->m_speed, 0.f, 0.f) * dt);
-	}
-	if (Input::isKeyHeldDown(GLFW_KEY_A))
 	{
 		this->translate(glm::vec3(0.f, 0.f, -this->m_speed) * dt);
 	}
-	if (Input::isKeyHeldDown(GLFW_KEY_S))
+	if (Input::isKeyHeldDown(GLFW_KEY_A))
 	{
 		this->translate(glm::vec3(-this->m_speed, 0.f, 0.f) * dt);
 	}
-	if (Input::isKeyHeldDown(GLFW_KEY_D))
+	if (Input::isKeyHeldDown(GLFW_KEY_S))
 	{
 		this->translate(glm::vec3(0.f, 0.f, this->m_speed) * dt);
 	}
+	if (Input::isKeyHeldDown(GLFW_KEY_D))
+	{
+		this->translate(glm::vec3(this->m_speed, 0.f, 0.f) * dt);
+	}
+	Camera::active->setToPlayer(getPosition());
+	/*if (Input::isKeyHeldDown(GLFW_KEY_LEFT_SHIFT))
+	{
+		setSpeed(15.f);
+	}
+	else
+	{
+		setSpeed(m_defaultSpeed);
+	}*/
 }
 
 void Player::rotatePlayer()
@@ -129,6 +137,13 @@ void Player::dashCd()
 	{
 		m_timer--;
 	}
+}
+
+void Player::shootProjectile()
+{
+
+
+
 }
 
 void Player::setSpeed(float speed)

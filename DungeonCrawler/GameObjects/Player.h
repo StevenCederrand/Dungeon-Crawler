@@ -14,6 +14,8 @@ public:
 	void dash();
 	void dashCd();
 
+	void shootProjectile();
+
 	void setSpeed(float speed);
 	void setHealth(float health);
 	void setDamage(float damage);
