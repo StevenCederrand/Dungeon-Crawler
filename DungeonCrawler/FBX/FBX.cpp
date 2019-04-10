@@ -159,7 +159,7 @@ FbxImporter* createFbxImporter(FbxManager* lSdkManager)
 const char* loadFbxFile()
 {
 	//Loading in my file
-	const char* lFilename = "\\Assets\\FBX\\boxFreezedTransform.fbx";
+	const char* lFilename = "\\Assets\\FBX\\severalObjects.fbx";
 	return lFilename;
 }
 
@@ -205,34 +205,38 @@ void printAllNodes(FbxScene* lScene)
 //print node, its attributes and its children, recursively.
 void PrintNode(FbxNode* pNode)
 {
-	PrintTabs();
 	const char* nodeName = pNode->GetName();	//The node we get right now is the pCube1 which is the name of the cube in the outliner
 
 	FbxDouble3 translation = pNode->LclTranslation.Get();
 	FbxDouble3 rotation = pNode->LclRotation.Get();
 	FbxDouble3 scaling = pNode->LclScaling.Get();
-
-	// Print the contents of the node. Need to declare spaces for variables first!
-	printf("Name: %s\nTranslation: %f %f %f\nRotation: %f %f %f\nScaling: %f %f %f\n", nodeName,
-		translation[0], translation[1], translation[2],
-		rotation[0], rotation[1], rotation[2],
-		scaling[0], scaling[1], scaling[2]);
-	m_numTabs++;
+	
+	// Print the contents of the node. Need to declare spaces for variables first! Also tabs for formating
+	PrintTabs();
+	printf("Name: %s\n", nodeName);
+	PrintTabs();
+	printf("Translation: %f %f %f\n", translation[0], translation[1], translation[2]);
+	PrintTabs();
+	printf("Rotation: %f %f %f\n", rotation[0], rotation[1], rotation[2]);
+	PrintTabs();
+	printf("Scaling: %f %f %f\n", scaling[0], scaling[1], scaling[2]);
 
 	// Print the node's attributes.
 	for (int i = 0; i < pNode->GetNodeAttributeCount(); i++)
 		PrintAttribute(pNode->GetNodeAttributeByIndex(i));
 
 	// Recursively print the children.
-	for (int j = 0; j < pNode->GetChildCount(); j++)		//our cube has no children
-		PrintNode(pNode->GetChild(j));
+	for (int j = 0; j < pNode->GetChildCount(); j++)
+	{
+		printf("\n");
+		m_numTabs++; //Goes deeper into the nodetree
+		PrintNode(pNode->GetChild(j));	//Deeper in the tree
+	}
 
-	m_numTabs--;
-	PrintTabs();
-	printf("\n");
+	m_numTabs--; //Goes out of the nodetree
 }
 
-//prints tabs dependent on variable
+//prints tabs dependent on variable, just for better reading of info in consol
 void PrintTabs() 
 {
 	for (int i = 0; i < m_numTabs; i++)
@@ -280,19 +284,27 @@ void PrintAttribute(FbxNodeAttribute* pAttribute)
 	std::string typeNameString = typeName.Buffer();
 	std::string attrNameString = attrName.Buffer();
 
-	//prints tabs, unsure why
-	PrintTabs();
-
 	//Check if the strings exist
 	if (typeNameString != "")	//this needs to use the std string
-		printf("\nType Name: %s", typeName.Buffer());	//this needs to use the fbx string
+	{
+		PrintTabs();
+		printf("Type Name: %s\n", typeName.Buffer());	//this needs to use the fbx string
+	}
 	else
-		printf("\nNo type name.");
-	
+	{
+		PrintTabs();
+		printf("No type name\n");
+	}
 	if (attrNameString != "")
-		printf("\nAttribute Name: %s", attrName.Buffer());
+	{
+		PrintTabs();
+		printf("Attribute Name: %s\n", attrName.Buffer());
+	}
 	else
-		printf("\nNo attribute name.");
+	{
+		PrintTabs();
+		printf("No attribute name\n");
+	}
 }
 
 int main(int argc, char** argv) 
@@ -300,7 +312,6 @@ int main(int argc, char** argv)
 	//createCustomFile();
 
 	// 0: Start with this, FBX SDK
-
 	//Create usefull Objects
 	FbxManager* lSdkManager = createFbxManager();
 	FbxIOSettings* ios = createIOSettingsObject(lSdkManager);
