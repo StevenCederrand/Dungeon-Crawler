@@ -112,11 +112,26 @@ void PrintAttribute(FbxNodeAttribute* pAttribute)
 {
 	if (!pAttribute) return;
 
+	//Fbx Strings
 	FbxString typeName = GetAttributeTypeName(pAttribute->GetAttributeType());
 	FbxString attrName = pAttribute->GetName();
+
+	//std Strings
+	std::string typeNameString = typeName.Buffer();
+	std::string attrNameString = attrName.Buffer();
+
 	PrintTabs();
 	// Note: to retrieve the character array of a FbxString, use its Buffer() method.
-	printf("\n", typeName.Buffer(), attrName.Buffer());
+
+	if (typeNameString != "")	//this needs to use the std string
+		printf("\nType Name: %s", typeName.Buffer());	//this needs to use the fbx string
+	else
+		printf("\nNo Type Name.");
+	
+	if (attrNameString != "")
+		printf("\nAttribute Name: %s", attrName.Buffer());
+	else
+		printf("\nNo Attribute Name.");
 }
 
 
