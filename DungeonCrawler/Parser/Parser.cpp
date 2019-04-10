@@ -152,7 +152,7 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 
 	data->setBoundingBox(maxMinVector);
 
-	//writeToBinary(data, filenameString[0]);
+	writeToBinary(data, filenameString[0]);
 	
 	m_memoryTracker.emplace_back(data);
 
@@ -265,11 +265,8 @@ void Parser::writeToBinary(ParserData* data, const std::string& filename)
 	GLfloat shininess = data->getShininess();
 	writeBinaryFloat(binaryFile, shininess);
 
-	//glm::vec3 boundingBoxMin = data->getBoundingBoxMin();
-	//writeBinaryVec3(binaryFile, boundingBoxMin);
-
-	//glm::vec3 boundingBoxMax = data->getBoundingBoxMax();
-	//writeBinaryVec3(binaryFile, boundingBoxMax);
+	std::vector<glm::vec3> maxMinVector = data->getMaxMinVector();
+	writeBinaryVecVec3(binaryFile, maxMinVector);
 
 	binaryFile.close();
 }
@@ -578,7 +575,7 @@ void Parser::loadFromBinary(ParserData* data, const std::string & filename)
 
 	readBinaryFloat(binaryFile, data);
 
-	readBinaryVec3(binaryFile, data, 3);
+	readBinaryVecVec3(binaryFile, data, 2);
 
 	binaryFile.close();
 }
@@ -614,7 +611,7 @@ void Parser::readBinaryVecInt(std::ifstream & binaryFile, ParserData* parserData
 	}
 	vecString.clear();
 }
-//vertex==0, normal==1
+//vertex==0, normal==1, maxMin==2
 void Parser::readBinaryVecVec3(std::ifstream & binaryFile, ParserData * parserData, int choice)
 {
 	//read the value first (how big the other read should be)
@@ -635,7 +632,8 @@ void Parser::readBinaryVecVec3(std::ifstream & binaryFile, ParserData * parserDa
 	std::string stringText = text;
 	delete[] text;
 	std::vector<std::string> vecString = split(stringText, ' ');
-
+	
+	std::vector<glm::vec3> maxMinVec;
 	//fill the parserData with the Information
 	for (int i = 0; (i+2) < vecString.size(); i)
 	{
@@ -645,6 +643,7 @@ void Parser::readBinaryVecVec3(std::ifstream & binaryFile, ParserData * parserDa
 			tempGL.x = std::stof(vecString[i], NULL);
 			tempGL.y = std::stof(vecString[i+1], NULL);
 			tempGL.z = std::stof(vecString[i+2], NULL);
+			maxMinVec.emplace_back(tempGL);
 			if (choice == 0) 
 			{
 				parserData->addVertex(tempGL);
@@ -653,12 +652,17 @@ void Parser::readBinaryVecVec3(std::ifstream & binaryFile, ParserData * parserDa
 			{
 				parserData->addNormal(tempGL);
 			}
+			
 			i += 3;
 		}
 		else
 		{
 			i++;
 		}
+	}
+	if (choice == 2)
+	{
+		parserData->setBoundingBox(maxMinVec);
 	}
 	vecString.clear();
 }
@@ -721,7 +725,7 @@ void Parser::readBinaryString(std::ifstream & binaryFile, ParserData * parserDat
 	//write the texture name to the parserData
 	parserData->setTextureFilename(stringText);
 }
-//diffuse==0, specular==1, ambient==2 and boundingBox==3
+//diffuse==0, specular==1, ambient==2
 void Parser::readBinaryVec3(std::ifstream & binaryFile, ParserData * parserData, int choice)
 {
 	//read the value first (how big the other read should be)
@@ -764,38 +768,6 @@ void Parser::readBinaryVec3(std::ifstream & binaryFile, ParserData * parserData,
 	{
 		parserData->setAmbientColor(tempGL.x, tempGL.y, tempGL.z);
 	}
-	else if (choice == 3)
-	{
-		glm::vec3 tempGL2;
-	
-
-		char* textInt = new char[10];
-		binaryFile.read(textInt, 10);
-
-		//convert it  from char* to int
-		char *tempa;
-		int readSize = strtol(textInt, &tempa, 10);
-		delete[] textInt;
-
-		//make a char pointer to read to, readsize is the size
-		char* text = new char[readSize + 1];
-		binaryFile.read(text, readSize);
-
-		//make a vector string and fill it with the split function
-		text[readSize] = '\0';
-		std::string stringText = text;
-		delete[] text;
-		std::vector<std::string> vecString = split(stringText, ' ');
-
-		//fill the parserData with the Information
-
-		tempGL2.x = std::stof(vecString[0], NULL);
-		tempGL2.y = std::stof(vecString[1], NULL);
-		tempGL2.z = std::stof(vecString[2], NULL);
-
-		//parserData->setBoundingBox(tempGL, tempGL2);
-	}
-
 	vecString.clear();
 }
 
