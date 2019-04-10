@@ -23,7 +23,7 @@ public:
 	void setSpecularColor(GLfloat r, GLfloat g, GLfloat b);
 	void setAmbientColor(GLfloat r, GLfloat g, GLfloat b);
 	void setShininess(GLfloat factor);
-	void setBoundingBox(glm::vec3 min, glm::vec3 max);
+	void setBoundingBox(const std::vector<glm::vec3>& maxMinVector);
 
 	/* Getters */
 	const std::vector<GLuint>& getIndices() const;
@@ -38,9 +38,8 @@ public:
 	const glm::vec3& getAmbientColor() const;
 	const GLfloat& getShininess() const;
 	
-	const glm::vec3& getBoundingBoxMax() const;
-	const glm::vec3& getBoundingBoxMin() const;
-
+	const std::vector<glm::vec3>& getMaxMinVector() const;
+	
 private:
 	std::vector<GLuint> m_indices;
 	std::vector<glm::vec3> m_vertices;
@@ -55,8 +54,7 @@ private:
 	GLfloat m_shininess;
 
 	// Collision coordinates ( layout in the vector)
-	glm::vec3 m_boundingBoxMin;
-	glm::vec3 m_boundingBoxMax;
+	std::vector<glm::vec3> m_maxMinVector;
 
 };
 

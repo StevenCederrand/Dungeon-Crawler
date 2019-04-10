@@ -43,10 +43,9 @@ void Mesh::setShininess(const float & shininess)
 	m_shininess = shininess;
 }
 
-void Mesh::setBoundingBoxMinMax(const glm::vec3 & min, const glm::vec3 & max)
+void Mesh::setBoundingBoxMinMax(std::vector<glm::vec3> maxMinVector)
 {
-	m_boundingBoxMin = min;
-	m_boundingBoxMax = max;
+	m_maxMinVector = maxMinVector;
 }
 
 const unsigned int & Mesh::getVao() const
@@ -79,14 +78,9 @@ const glm::vec3 & Mesh::getdiffuseColor() const
 	return m_diffuseColor;
 }
 
-const glm::vec3 & Mesh::getBoundingBoxMin() const
+const std::vector<glm::vec3>& Mesh::getMaxMinVector() const
 {
-	return m_boundingBoxMin;
-}
-
-const glm::vec3 & Mesh::getBoundingBoxMax() const
-{
-	return m_boundingBoxMax;
+	return m_maxMinVector;
 }
 
 const float & Mesh::getShininess() const

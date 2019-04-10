@@ -11,7 +11,7 @@ public:
 	AABB();
 	~AABB();
 
-	void setPosition(const glm::vec3& position);
+	void setParentPosition(const glm::vec3& position);
 	void setDimensions(const float& width, const float& height, const float& depth);
 	
 	float swepAABB(const glm::vec3& vel, const AABB& other, float& normalX, float& normalZ);
@@ -22,6 +22,7 @@ public:
 	const glm::vec3& getDimensions() const;
 
 private:
+	glm::vec3 m_parentPosition;
 	glm::vec3 m_position;
 	glm::vec3 m_dimensions;
 

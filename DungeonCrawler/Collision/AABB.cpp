@@ -6,6 +6,8 @@
 AABB::AABB(const glm::vec3 & min, const glm::vec3 & max)
 {
 	m_dimensions = (max - min) * 0.5f;
+	m_position = max - (max - min) * 0.5f;
+
 }
 
 AABB::AABB()
@@ -16,9 +18,9 @@ AABB::~AABB()
 {
 }
 
-void AABB::setPosition(const glm::vec3 & position)
+void AABB::setParentPosition(const glm::vec3 & position)
 {
-	m_position = position;
+	m_parentPosition = position;
 }
 
 void AABB::setDimensions(const float & width, const float & height, const float & depth)
@@ -27,8 +29,6 @@ void AABB::setDimensions(const float & width, const float & height, const float 
 	m_dimensions.y = height;
 	m_dimensions.z = depth;
 }
-
-
 
 float AABB::swepAABB(const glm::vec3 & vel, const AABB & other, float & normalX, float & normalZ)
 {
@@ -39,25 +39,25 @@ float AABB::swepAABB(const glm::vec3 & vel, const AABB & other, float & normalX,
 	// X-AXIS
 	if (vel.x > 0.0f)
 	{
-		xInvEntry = (other.m_position.x - other.m_dimensions.x) - (m_position.x + m_dimensions.x);
-		xInvExit = (other.m_position.x + other.m_dimensions.x) - (m_position.x - m_dimensions.x);
+		xInvEntry = (other.m_parentPosition.x - other.m_dimensions.x) - (m_parentPosition.x + m_dimensions.x);
+		xInvExit = (other.m_parentPosition.x + other.m_dimensions.x) - (m_parentPosition.x - m_dimensions.x);
 	}
 	else
 	{
-		xInvEntry = (other.m_position.x + other.m_dimensions.x) - (m_position.x - m_dimensions.x);
-		xInvExit = (other.m_position.x - other.m_dimensions.x) - (m_position.x + m_dimensions.x);
+		xInvEntry = (other.m_parentPosition.x + other.m_dimensions.x) - (m_parentPosition.x - m_dimensions.x);
+		xInvExit = (other.m_parentPosition.x - other.m_dimensions.x) - (m_parentPosition.x + m_dimensions.x);
 	}
 
 	// Z-AXIS
 	if (vel.z > 0.0f)
 	{
-		zInvEntry = (other.m_position.z - other.m_dimensions.z) - (m_position.z + m_dimensions.z);
-		zInvExit = (other.m_position.z + other.m_dimensions.z) - (m_position.z - m_dimensions.z);
+		zInvEntry = (other.m_parentPosition.z - other.m_dimensions.z) - (m_parentPosition.z + m_dimensions.z);
+		zInvExit = (other.m_parentPosition.z + other.m_dimensions.z) - (m_parentPosition.z - m_dimensions.z);
 	}
 	else
 	{
-		zInvEntry = (other.m_position.z + other.m_dimensions.z) - (m_position.z - m_dimensions.z);
-		zInvExit = (other.m_position.z - other.m_dimensions.z) - (m_position.z + m_dimensions.z);
+		zInvEntry = (other.m_parentPosition.z + other.m_dimensions.z) - (m_parentPosition.z - m_dimensions.z);
+		zInvExit = (other.m_parentPosition.z - other.m_dimensions.z) - (m_parentPosition.z + m_dimensions.z);
 	}
 
 
@@ -96,28 +96,18 @@ float AABB::swepAABB(const glm::vec3 & vel, const AABB & other, float & normalX,
 	
 	if (xEntry < 0.0f)
 	{
-		if (m_position.x + m_dimensions.x < other.m_position.x - other.m_dimensions.x ||
-			m_position.x - m_dimensions.x > other.m_position.x + other.m_dimensions.x)
+		if (m_parentPosition.x + m_dimensions.x < other.m_parentPosition.x - other.m_dimensions.x ||
+			m_parentPosition.x - m_dimensions.x > other.m_parentPosition.x + other.m_dimensions.x)
 			return 1.0f;
 	}
 
 	if (zEntry < 0.0f)
 	{
-		if (m_position.z + m_dimensions.z < other.m_position.z - other.m_dimensions.z ||
-			m_position.z - m_dimensions.z > other.m_position.z + other.m_dimensions.z)
+		if (m_parentPosition.z + m_dimensions.z < other.m_parentPosition.z - other.m_dimensions.z ||
+			m_parentPosition.z - m_dimensions.z > other.m_parentPosition.z + other.m_dimensions.z)
 			return 1.0f;
 	}
 
-
-	//// If there is none then return
-	//if (entryTime > exitTime || xEntry < 0.0f && zEntry < 0.0f || xEntry > 1.0f || zEntry > 1.0f)
-	//{
-	//	normalX = 0.0f;
-	//	normalZ = 0.0f;
-	//	return 1.0f;
-	//}
-	//
-	// Else
 	if (xEntry > zEntry)
 	{
 		
@@ -131,8 +121,7 @@ float AABB::swepAABB(const glm::vec3 & vel, const AABB & other, float & normalX,
 			normalX = -1.0f;
 			normalZ = 0.0f;
 		}
-		//LOG_TRACE("NormalX = " + std::to_string(normalX));
-
+	
 	}
 	else
 	{
@@ -146,7 +135,7 @@ float AABB::swepAABB(const glm::vec3 & vel, const AABB & other, float & normalX,
 			normalX = 0.0f;
 			normalZ = -1.0f;
 		}
-		//LOG_TRACE("NormalZ = " + std::to_string(normalZ));
+		
 	}
 
 	return entryTime;
@@ -155,15 +144,15 @@ float AABB::swepAABB(const glm::vec3 & vel, const AABB & other, float & normalX,
 bool AABB::checkCollision(const AABB & other)
 {
 	return 
-		!(m_position.x + m_dimensions.x < other.m_position.x - other.m_dimensions.x || 
-		m_position.x - m_dimensions.x >  other.m_position.x + other.m_dimensions.x || 
-		m_position.z + m_dimensions.z < other.m_position.z - other.m_dimensions.z ||
-		m_position.z - m_dimensions.z > other.m_position.z + other.m_dimensions.z);
+		!(m_parentPosition.x + m_dimensions.x < other.m_parentPosition.x - other.m_dimensions.x || 
+		m_parentPosition.x - m_dimensions.x >  other.m_parentPosition.x + other.m_dimensions.x || 
+		m_parentPosition.z + m_dimensions.z < other.m_parentPosition.z - other.m_dimensions.z ||
+		m_parentPosition.z - m_dimensions.z > other.m_parentPosition.z + other.m_dimensions.z);
 }
 
 const glm::vec3 & AABB::getPosition() const
 {
-	return m_position;
+	return m_parentPosition + m_position;
 }
 
 const glm::vec3 & AABB::getDimensions() const

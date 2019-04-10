@@ -20,7 +20,7 @@ public:
 	void setScale(const glm::vec3& scale);
 	void setRotation(const glm::vec3 rotation);
 
-	AABB* getBoundingBox() const;
+	std::vector<AABB*> getBoundingBoxes() const;
 	const glm::vec3& getPosition() const;
 	const glm::vec3& getScale() const;
 	const glm::vec3& getRotation() const;
@@ -39,8 +39,8 @@ private:
 	glm::vec3 m_velocity;
 	glm::mat4 m_modelMatrix;
 	bool m_isCollidable;
-	AABB* m_boundingBox;
-
+	std::vector<AABB*> m_boundingBoxes;
+	
 };
 
 

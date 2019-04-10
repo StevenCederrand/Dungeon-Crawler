@@ -20,7 +20,7 @@ GameObjectManager::~GameObjectManager()
 void GameObjectManager::update(float dt)
 {	
 	if (m_broadPhaseBox)
-		m_broadPhaseBox->setPosition(m_player->getPosition());
+		m_broadPhaseBox->setParentPosition(m_player->getPosition());
 
 	bool hasCollided = false;
 	glm::vec3 newVel = glm::vec3(0);
@@ -43,25 +43,27 @@ void GameObjectManager::update(float dt)
 		// If the object is collidable then handle collision
 		if (object->isCollidable())
 		{
-			AABB* playerBox = m_player->getBoundingBox();
-			AABB* objectBox = object->getBoundingBox();
+			AABB* playerBox = m_player->getBoundingBoxes()[0];
+			const std::vector<AABB*> objectBoxes = object->getBoundingBoxes();
 			
-			if (m_broadPhaseBox->checkCollision(*objectBox)) 
-			{
-				float nx = 0.f, nz = 0.f;
-				float collisionTime = playerBox->swepAABB(newVel, *objectBox, nx, nz);
-				newVel *= std::min(collisionTime, 1.0f);
-				
-				if (collisionTime < 1.0f)
+			for (int i = 0; i < objectBoxes.size(); i++) {
+				AABB* objectBox = objectBoxes[i];
+
+				if (m_broadPhaseBox->checkCollision(*objectBox))
 				{
-					hasCollided = true;
-					float remainingTime = 1.0f - collisionTime;
-					float dotprod = (newVel.x * nz + newVel.z * nx);
-					newVel.x = dotprod * nz;
-					newVel.z = dotprod * nx;
+					float nx = 0.f, nz = 0.f;
+					float collisionTime = playerBox->swepAABB(newVel, *objectBox, nx, nz);
+					
+
+					if (collisionTime < 1.0f)
+					{
+						hasCollided = true;
+						float dotprod = (newVel.x * nz + newVel.z * nx);
+						newVel.x = dotprod * nz;
+						newVel.z = dotprod * nx;
+					}
 				}
 			}
-			
 		}
 	
 	}
@@ -84,10 +86,10 @@ void GameObjectManager::setPlayerRef(GameObject * player)
 		m_broadPhaseBox = new AABB();
 	
 	m_broadPhaseBox->setDimensions(
-		m_player->getBoundingBox()->getDimensions().x * 2.f,
-		m_player->getBoundingBox()->getDimensions().y * 2.f,
-		m_player->getBoundingBox()->getDimensions().z * 2.f);
-	m_broadPhaseBox->setPosition(m_player->getPosition());
+		m_player->getBoundingBoxes()[0]->getDimensions().x * 2.f,
+		m_player->getBoundingBoxes()[0]->getDimensions().y * 2.f,
+		m_player->getBoundingBoxes()[0]->getDimensions().z * 2.f);
+	m_broadPhaseBox->setParentPosition(m_player->getPosition());
 
 }
 

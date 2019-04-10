@@ -44,7 +44,8 @@ void GLinit::createMesh(std::string name, ParserData* data)
 	mesh->setSpecularColor(data->getSpecularColor());
 	mesh->setDiffuseColor(data->getDiffuseColor());
 	mesh->setShininess(data->getShininess());
-	mesh->setBoundingBoxMinMax(data->getBoundingBoxMin(), data->getBoundingBoxMax());
+
+	mesh->setBoundingBoxMinMax(data->getMaxMinVector());
 
 	MeshMap::addMesh(name, mesh);
 }

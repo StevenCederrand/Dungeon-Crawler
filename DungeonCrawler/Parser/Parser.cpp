@@ -50,9 +50,10 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 	GLuint indexCount = 0;
 	bool isParsingCollider = false;
 
-	glm::vec3 min = glm::vec3(100000);
-	glm::vec3 max = glm::vec3(-100000);
-
+	// Used to save data for the collision boxes in the obj
+	std::vector<glm::vec3> maxMinVector;
+	bool newCollider = false;
+	unsigned int currentBox = -2;
 
 	while (std::getline(objFile, line))
 	{
@@ -73,6 +74,7 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 			{
 
 				isParsingCollider = true;
+				newCollider = true;
 			}
 			continue;
 		}
@@ -91,18 +93,26 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 			}
 			else
 			{
+				if (newCollider == true)
+				{
+					newCollider = false;
+					currentBox += 2;
+					maxMinVector.emplace_back(glm::vec3(100000));
+					maxMinVector.emplace_back(glm::vec3(-100000));
+				}
+
 				// Is parsing the collider so only check for the min x,y,z and max x,y,z cooridnates!
 				float x = std::stof(attribs[1]);
 				float y = std::stof(attribs[2]);
 				float z = std::stof(attribs[3]);
 
-				if (min.x > x) min.x = x;
-				if (min.y > y) min.y = y;
-				if (min.z > z) min.z = z;
+				if (maxMinVector[currentBox].x > x) maxMinVector[currentBox].x = x;
+				if (maxMinVector[currentBox].y > y) maxMinVector[currentBox].y = y;
+				if (maxMinVector[currentBox].z > z) maxMinVector[currentBox].z = z;
 
-				if (max.x < x) max.x = x;
-				if (max.y < y) max.y = y;
-				if (max.z < z) max.z = z;
+				if (maxMinVector[currentBox + 1].x < x) maxMinVector[currentBox + 1].x = x;
+				if (maxMinVector[currentBox + 1].y < y) maxMinVector[currentBox + 1].y = y;
+				if (maxMinVector[currentBox + 1].z < z) maxMinVector[currentBox + 1].z = z;
 
 			}
 
@@ -140,9 +150,9 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 	// Parse the material 
 	parseMaterialFile(MTLfile, data);
 
-	data->setBoundingBox(min, max);
+	data->setBoundingBox(maxMinVector);
 
-	writeToBinary(data, filenameString[0]);
+	//writeToBinary(data, filenameString[0]);
 	
 	m_memoryTracker.emplace_back(data);
 
@@ -255,11 +265,11 @@ void Parser::writeToBinary(ParserData* data, const std::string& filename)
 	GLfloat shininess = data->getShininess();
 	writeBinaryFloat(binaryFile, shininess);
 
-	glm::vec3 boundingBoxMin = data->getBoundingBoxMin();
-	writeBinaryVec3(binaryFile, boundingBoxMin);
+	//glm::vec3 boundingBoxMin = data->getBoundingBoxMin();
+	//writeBinaryVec3(binaryFile, boundingBoxMin);
 
-	glm::vec3 boundingBoxMax = data->getBoundingBoxMax();
-	writeBinaryVec3(binaryFile, boundingBoxMax);
+	//glm::vec3 boundingBoxMax = data->getBoundingBoxMax();
+	//writeBinaryVec3(binaryFile, boundingBoxMax);
 
 	binaryFile.close();
 }
@@ -783,7 +793,7 @@ void Parser::readBinaryVec3(std::ifstream & binaryFile, ParserData * parserData,
 		tempGL2.y = std::stof(vecString[1], NULL);
 		tempGL2.z = std::stof(vecString[2], NULL);
 
-		parserData->setBoundingBox(tempGL, tempGL2);
+		//parserData->setBoundingBox(tempGL, tempGL2);
 	}
 
 	vecString.clear();
