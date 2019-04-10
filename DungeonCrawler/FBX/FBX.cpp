@@ -6,9 +6,8 @@
 
 #define DELTA 0.0001
 #define EQUAL(A,B) (abs((A)-(B)) < DELTA) ? true:false
-/* Tab character ("\t") counter */
-int m_numTabs = 0;
 
+/*
 //Header Structs
 struct MainHeader
 {
@@ -64,20 +63,20 @@ class ShaderOption
 	private:
 		//what shader it should use
 };
+*/
 
+//Tab character ("\t") counter
+int m_numTabs = 0;
 
-/**
- * Print the required number of tabs.
- */
+//prints tabs dependent on variable
 void PrintTabs() 
 {
 	for (int i = 0; i < m_numTabs; i++)
-		printf("\t");
+		printf("\t");	//\t = tab, like several spaces
 }
 
-/**
- * Return a string-based representation based on the attribute type.
- */
+
+// Return a string-based representation based on the attribute type.
 FbxString GetAttributeTypeName(FbxNodeAttribute::EType type) 
 {
 	switch (type) {
@@ -112,17 +111,18 @@ void PrintAttribute(FbxNodeAttribute* pAttribute)
 {
 	if (!pAttribute) return;
 
-	//Fbx Strings
-	FbxString typeName = GetAttributeTypeName(pAttribute->GetAttributeType());
+	//Fbx Strings, to retrieve the character array of a FbxString, use its Buffer() method.
+	FbxString typeName = GetAttributeTypeName(pAttribute->GetAttributeType()); //uses the big list
 	FbxString attrName = pAttribute->GetName();
 
 	//std Strings
 	std::string typeNameString = typeName.Buffer();
 	std::string attrNameString = attrName.Buffer();
 
+	//prints tabs, unsure why
 	PrintTabs();
-	// Note: to retrieve the character array of a FbxString, use its Buffer() method.
 
+	//Check if the strings exist
 	if (typeNameString != "")	//this needs to use the std string
 		printf("\nType Name: %s", typeName.Buffer());	//this needs to use the fbx string
 	else
@@ -168,12 +168,10 @@ void PrintNode(FbxNode* pNode)
 	printf("\n");
 }
 
-/**
- * Main function - loads the hard-coded fbx file,
- * and prints its contents in an xml format to stdout.
- */
+
 int main(int argc, char** argv) 
 {
+	/*
 	//IGNORE FOR NOW, START WITH FBX FILE
 
 	//HeadersAndStuff
@@ -214,7 +212,7 @@ int main(int argc, char** argv)
 		}
 	}
 	std::cout << "Streams are equal, method 2: " << equal << std::endl;
-
+	*/
 
 
 
