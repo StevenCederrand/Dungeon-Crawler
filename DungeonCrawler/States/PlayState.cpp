@@ -4,7 +4,7 @@
 #include "System/Log.h"
 #include "System/Input.h"
 #include "StateManager.h"
-
+#include "../Audio/AudioEngine.h"
 #include "Graphics/MeshMap.h"
 #include "Graphics/ShaderMap.h"
 #include "GameObjects/Box.h"
@@ -36,6 +36,12 @@ PlayState::PlayState() {
 
 	m_GLinit->createMesh("Sphere", sphereData);
 	#pragma endregion
+
+	#pragma region Setup_Sounds
+	AudioEngine::loadSSO("Game.sso");
+
+	#pragma endregion
+
 	
 	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 1.5f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
 	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);

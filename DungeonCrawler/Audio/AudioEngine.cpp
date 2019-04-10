@@ -106,6 +106,25 @@ bool AudioEngine::unloadSound(std::string key) {
 	return true;
 }
 
+bool AudioEngine::unloadSSO(std::string ssoName) {
+
+	std::ifstream ssoFile(SoundPath + ssoName);
+	std::string line;
+
+	if (!ssoFile.is_open()) {
+		LOG_ERROR("ERROR OPENING SSO FILE");
+		return false;
+	}
+	while (std::getline(ssoFile, line)) {
+
+	}
+
+
+
+
+	return true;
+}
+
 void AudioEngine::update() {
 	//Loop through the channels in use and then stop and remove then if they aren't in use
 	bool isPlaying;

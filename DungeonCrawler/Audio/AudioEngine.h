@@ -8,7 +8,7 @@
 #include <map>
 #include <vector>
 #include "../Parser/Parser.h"
-
+#include <fstream>
 class AudioEngine {
 public:
 	AudioEngine();
@@ -21,11 +21,13 @@ public:
 	static FMOD_RESULT loadSound(std::string name, std::string key, bool looping, bool m3DSound, bool stream);
 	//Remove a sound from the map
 	static bool unloadSound(std::string key);
+	static bool unloadSSO(std::string ssoName);
 	static void update();
 	//Play a sound
 	static void play(std::string key, float volume);
 	//play the entire sound without being able to replay it
 	static void playOnce(std::string key, float volume);
+
 private:
 	static FMOD_RESULT init();
 	//Check to see if a key in the hashmap is in use
