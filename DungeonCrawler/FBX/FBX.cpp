@@ -9,14 +9,14 @@
 
 //Declerations of all functions
 void createCustomFile();
-FbxManager* createFbxManager();
-FbxIOSettings* createIOSettingsObject(FbxManager* lSdkManager);
-FbxScene* createFbxScene(FbxManager* lSdkManager);
-FbxImporter* createFbxImporter(FbxManager* lSdkManager);
+FbxManager*& createFbxManager();
+FbxIOSettings*& createIOSettingsObject(FbxManager*& lSdkManager);
+FbxScene*& createFbxScene(FbxManager* lSdkManager);
+FbxImporter*& createFbxImporter(FbxManager* lSdkManager);
 const char* loadFbxFile();
-void initializeFbxImporter(FbxImporter* lImporter, const char* lFilename, FbxManager* lSdkManager);
-void useFbxImporter(FbxImporter* lImporter, FbxScene* lScene);
-void destroyFbxImporter(FbxImporter* lImporter);
+void initializeFbxImporter(FbxImporter*& lImporter, const char* lFilename, FbxManager* lSdkManager);
+void useFbxImporter(FbxImporter*& lImporter, FbxScene*& lScene);
+void destroyFbxImporter(FbxImporter*& lImporter);
 void PrintNode(FbxNode* pNode);
 void printAllNodes(FbxScene* lScene);
 void PrintTabs();
@@ -127,14 +127,14 @@ void createCustomFile()
 	std::cout << "Streams are equal, method 2: " << equal << std::endl;
 	*/
 }
-FbxManager* createFbxManager()
+FbxManager*& createFbxManager()
 {
 	// Initialize the SDK manager. This object handles all our memory management.
 	FbxManager* lSdkManager = FbxManager::Create();
 	return lSdkManager;
 }
 
-FbxIOSettings* createIOSettingsObject(FbxManager* lSdkManager)
+FbxIOSettings*& createIOSettingsObject(FbxManager*& lSdkManager)
 {
 	// Create the IO settings object. This is mostly used when importing and exporting files.
 	FbxIOSettings* ios = FbxIOSettings::Create(lSdkManager, IOSROOT);
@@ -142,14 +142,14 @@ FbxIOSettings* createIOSettingsObject(FbxManager* lSdkManager)
 	return ios;
 }
 
-FbxScene* createFbxScene(FbxManager* lSdkManager)
+FbxScene*& createFbxScene(FbxManager* lSdkManager)
 {
 	// Create a new scene so that it can be populated by the imported file.
 	FbxScene* lScene = FbxScene::Create(lSdkManager, "myScene");
 	return lScene;
 }
 
-FbxImporter* createFbxImporter(FbxManager* lSdkManager)
+FbxImporter*& createFbxImporter(FbxManager* lSdkManager)
 {
 	// Create an importer using the SDK manager.
 	FbxImporter* lImporter = FbxImporter::Create(lSdkManager, "");
@@ -163,7 +163,7 @@ const char* loadFbxFile()
 	return lFilename;
 }
 
-void initializeFbxImporter(FbxImporter* lImporter, const char* lFilename, FbxManager* lSdkManager)
+void initializeFbxImporter(FbxImporter*& lImporter, const char* lFilename, FbxManager* lSdkManager)
 {
 	// Use the first argument as the name for our FBX file.
 	// Second is fileFormat, leave at -1.
@@ -176,14 +176,14 @@ void initializeFbxImporter(FbxImporter* lImporter, const char* lFilename, FbxMan
 	}
 }
 
-void useFbxImporter(FbxImporter* lImporter, FbxScene* lScene)
+void useFbxImporter(FbxImporter*& lImporter, FbxScene*& lScene)
 {
 	// Import the contents of our fbx file into the scene. 
 	// Our fbx is stored in the importer from the initialization of the importer.
 	lImporter->Import(lScene);
 }
 
-void destroyFbxImporter(FbxImporter* lImporter)
+void destroyFbxImporter(FbxImporter*& lImporter)
 {
 	// The file is loaded into the scene and the importer is no longer needed, Destroy.
 	lImporter->Destroy();
