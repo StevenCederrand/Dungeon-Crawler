@@ -118,8 +118,8 @@ FbxManager* createFbxManager()
 
 FbxIOSettings* createIOSettingsObject(FbxManager* lSdkManager)
 {
-	// Create the IO settings object.
-	FbxIOSettings *ios = FbxIOSettings::Create(lSdkManager, IOSROOT);
+	// Create the IO settings object. This is mostly used when importing and exporting files.
+	FbxIOSettings* ios = FbxIOSettings::Create(lSdkManager, IOSROOT);
 	lSdkManager->SetIOSettings(ios);
 	return ios;
 }
@@ -143,6 +143,17 @@ const char* loadFbxFile()
 	//Loading in my file
 	const char* lFilename = "\\Assets\\FBX\\box.fbx";
 	return lFilename;
+}
+
+void initializeImporter(FbxImporter* lImporter, const char* lFilename, FbxManager* lSdkManager)
+{
+	// Use the first argument as the name for our FBX file. Secon d is fileFormat, leave at -1. Last is what IO Settings to use.
+	if (!lImporter->Initialize(lFilename, -1, lSdkManager->GetIOSettings())) //If initializing failes, go into if statement
+	{
+		printf("Call to FbxImporter::Initialize() failed.\n");
+		printf("Error returned: %s\n\n", lImporter->GetStatus().GetErrorString());
+		exit(-1);
+	}
 }
 
 //Tab character ("\t") counter
@@ -247,7 +258,7 @@ int main(int argc, char** argv)
 {
 	//createCustomFile();
 
-	// 0: FBX SDK
+	// 0: Start with this, FBX SDK
 
 	//Create usefull Objects
 	FbxManager* lSdkManager = createFbxManager();
@@ -257,13 +268,7 @@ int main(int argc, char** argv)
 
 	const char* lFilename = loadFbxFile();
 
-	// Use the first argument as the filename for the importer.
-	if (!lImporter->Initialize(lFilename, -1, lSdkManager->GetIOSettings()))
-	{
-		printf("Call to FbxImporter::Initialize() failed.\n");
-		printf("Error returned: %s\n\n", lImporter->GetStatus().GetErrorString());
-		exit(-1);
-	}
+	initializeImporter(lImporter, lFilename, lSdkManager);
 
 	// Import the contents of the file into the scene.
 	lImporter->Import(lScene);
