@@ -10,7 +10,7 @@ public:
 
 	GLinit();
 	~GLinit();
-	void createMesh(std::string name, ParserData* data);
+	Mesh* createMesh(std::string name, ParserData* data);
 
 private:
 	GLuint createAndBindVAO();
