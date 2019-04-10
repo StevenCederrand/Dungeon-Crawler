@@ -21,10 +21,10 @@ GLinit::~GLinit()
 	}
 }
 
-void GLinit::createMesh(std::string name, ParserData* data)
+Mesh* GLinit::createMesh(std::string name, ParserData* data)
 {
 	if (MeshMap::MeshExistWithName(name))
-		return;
+		return nullptr;
 
 	GLuint vao = createAndBindVAO();
 	bindIndices(data->getIndices());
@@ -54,6 +54,7 @@ void GLinit::createMesh(std::string name, ParserData* data)
 	mesh->setShininess(data->getShininess());
 	
 	MeshMap::addMesh(name, mesh);
+	return mesh;
 }
 
 GLuint GLinit::createAndBindVAO()

@@ -27,21 +27,20 @@ PlayState::PlayState() {
 	ParserData* boxData = m_parser->loadFromObj("box.obj");
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
 
-	m_GLinit->createMesh("Box", boxData);
+	Mesh* boxMesh = m_GLinit->createMesh("Box", boxData);
+	m_gameObjectManager->addGameObject(new Box(boxMesh));
+	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(0.f, -4.f, 0.f)));
+	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(2.f, -4.f, 0.f)));
+	m_gameObjectManager->addGameObject(new Player(boxMesh));
+
 	m_GLinit->createMesh("Sphere", sphereData);
 	#pragma endregion
 	
-	Mesh* boxMesh = MeshMap::getMesh("Box");
-	
 	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 1.5f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
-
 	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
 	m_lightManager->addLight(glm::vec3(0.f, 0.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
 
-	m_gameObjectManager->addGameObject(new Box(boxMesh));
-	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(0.f,-4.f,0.f)));
-	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(2.f, -4.f, 0.f)));
-	m_gameObjectManager->addGameObject(new Player(boxMesh));
+	
 }
 
 PlayState::~PlayState() {
