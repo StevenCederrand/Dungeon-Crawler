@@ -24,6 +24,7 @@ public:
 	const Ray getRayFromScreen(float x, float y, float w, float h) const;
 
 	void setToPlayer(glm::vec3 playerPos);
+	void setAngle(int angle);
 
 private:
 	void setProjectionMatrix();
@@ -61,6 +62,7 @@ private:
 	// (Debug purpose)
 	bool m_locked;
 	bool m_debug;
+	int m_angle;
 };
 
 
