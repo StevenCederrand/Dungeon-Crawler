@@ -7,6 +7,24 @@
 #define DELTA 0.0001
 #define EQUAL(A,B) (abs((A)-(B)) < DELTA) ? true:false
 
+//Declerations of all functions
+void createCustomFile();
+FbxManager* createFbxManager();
+FbxIOSettings* createIOSettingsObject(FbxManager* lSdkManager);
+FbxScene* createFbxScene(FbxManager* lSdkManager);
+FbxImporter* createFbxImporter(FbxManager* lSdkManager);
+const char* loadFbxFile();
+void initializeFbxImporter(FbxImporter* lImporter, const char* lFilename, FbxManager* lSdkManager);
+void useFbxImporter(FbxImporter* lImporter, FbxScene* lScene);
+void destroyFbxImporter(FbxImporter* lImporter);
+void PrintNode(FbxNode* pNode);
+void printAllNodes(FbxScene* lScene);
+void PrintTabs();
+FbxString GetAttributeTypeName(FbxNodeAttribute::EType type);
+void PrintAttribute(FbxNodeAttribute* pAttribute);
+
+int m_numTabs = 0; //Tab character ("\t") counter
+
 /*
 //Header Structs
 struct MainHeader
@@ -171,8 +189,48 @@ void destroyFbxImporter(FbxImporter* lImporter)
 	lImporter->Destroy();
 }
 
-//Tab character ("\t") counter
-int m_numTabs = 0;
+//print node, its attributes and its children, recursively.
+void PrintNode(FbxNode* pNode)
+{
+	PrintTabs();
+	const char* nodeName = pNode->GetName();
+
+	FbxDouble3 translation = pNode->LclTranslation.Get();
+	FbxDouble3 rotation = pNode->LclRotation.Get();
+	FbxDouble3 scaling = pNode->LclScaling.Get();
+
+	// Print the contents of the node. Need to declare spaces for variables first!
+	printf("Name: %s\nTranslation: %f %f %f\nRotation: %f %f %f\nScaling: %f %f %f\n", nodeName,
+		translation[0], translation[1], translation[2],
+		rotation[0], rotation[1], rotation[2],
+		scaling[0], scaling[1], scaling[2]);
+	m_numTabs++;
+
+	// Print the node's attributes.
+	for (int i = 0; i < pNode->GetNodeAttributeCount(); i++)
+		PrintAttribute(pNode->GetNodeAttributeByIndex(i));
+
+	// Recursively print the children.
+	for (int j = 0; j < pNode->GetChildCount(); j++)
+		PrintNode(pNode->GetChild(j));
+
+	m_numTabs--;
+	PrintTabs();
+	printf("\n");
+}
+
+void printAllNodes(FbxScene* lScene)
+{
+	// Print the nodes of the scene and their attributes recursively.
+	// Note that we are not printing the root node because it should not contain any attributes.
+	// The root node in a standard maya scene would be?
+	FbxNode* lRootNode = lScene->GetRootNode();
+	if (lRootNode)
+	{
+		for (int i = 0; i < lRootNode->GetChildCount(); i++)
+			PrintNode(lRootNode->GetChild(i));
+	}
+}
 
 //prints tabs dependent on variable
 void PrintTabs() 
@@ -238,37 +296,6 @@ void PrintAttribute(FbxNodeAttribute* pAttribute)
 		printf("\nNo Attribute Name.");
 }
 
-//print node, its attributes and its children, recursively.
-void PrintNode(FbxNode* pNode) 
-{
-	PrintTabs();
-	const char* nodeName = pNode->GetName();
-	
-	FbxDouble3 translation = pNode->LclTranslation.Get();
-	FbxDouble3 rotation = pNode->LclRotation.Get();
-	FbxDouble3 scaling = pNode->LclScaling.Get();
-
-	// Print the contents of the node. Need to declare spaces for variables first!
-	printf("Name: %s\nTranslation: %f %f %f\nRotation: %f %f %f\nScaling: %f %f %f\n", nodeName,
-		translation[0], translation[1], translation[2],
-		rotation[0], rotation[1], rotation[2],
-		scaling[0], scaling[1], scaling[2]);
-	m_numTabs++;
-
-	// Print the node's attributes.
-	for (int i = 0; i < pNode->GetNodeAttributeCount(); i++)
-		PrintAttribute(pNode->GetNodeAttributeByIndex(i));
-
-	// Recursively print the children.
-	for (int j = 0; j < pNode->GetChildCount(); j++)
-		PrintNode(pNode->GetChild(j));
-
-	m_numTabs--;
-	PrintTabs();
-	printf("\n");
-}
-
-
 int main(int argc, char** argv) 
 {
 	//createCustomFile();
@@ -287,15 +314,8 @@ int main(int argc, char** argv)
 	useFbxImporter(lImporter, lScene);
 	destroyFbxImporter(lImporter);
 
-	// Print the nodes of the scene and their attributes recursively.
-	// Note that we are not printing the root node because it should not contain any attributes.
-	FbxNode* lRootNode = lScene->GetRootNode();
-	if (lRootNode) 
-	{
-		for (int i = 0; i < lRootNode->GetChildCount(); i++)
-			PrintNode(lRootNode->GetChild(i));
-	}
-
+	printAllNodes(lScene); //This doesnt work right now
+	
 	// Destroy the SDK manager and all the other objects it was handling.
 	lSdkManager->Destroy();
 	return 0;
