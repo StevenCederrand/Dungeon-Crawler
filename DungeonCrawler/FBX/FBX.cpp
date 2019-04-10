@@ -124,6 +124,20 @@ FbxIOSettings* createIOSettingsObject(FbxManager* lSdkManager)
 	return ios;
 }
 
+FbxScene* createFbxScene(FbxManager* lSdkManager)
+{
+	// Create a new scene so that it can be populated by the imported file.
+	FbxScene* lScene = FbxScene::Create(lSdkManager, "myScene");
+	return lScene;
+}
+
+FbxImporter* createFbxImporter(FbxManager* lSdkManager)
+{
+	// Create an importer using the SDK manager.
+	FbxImporter* lImporter = FbxImporter::Create(lSdkManager, "");
+	return lImporter;
+}
+
 const char* loadFbxFile()
 {
 	//Loading in my file
@@ -239,11 +253,9 @@ int main(int argc, char** argv)
 
 	FbxIOSettings* ios = createIOSettingsObject(lSdkManager);
 
-	// Create a new scene so that it can be populated by the imported file.
-	FbxScene* lScene = FbxScene::Create(lSdkManager, "myScene");
+	FbxScene* lScene = createFbxScene(lSdkManager);
 
-	// Create an importer using the SDK manager.
-	FbxImporter* lImporter = FbxImporter::Create(lSdkManager, "");
+	FbxImporter* lImporter = createFbxImporter(lSdkManager);
 
 	const char* lFilename = loadFbxFile();
 
