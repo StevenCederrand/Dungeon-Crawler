@@ -9,6 +9,7 @@
 #include "Graphics/ShaderMap.h"
 #include "GameObjects/Box.h"
 #include "GameObjects/Player.h"
+#include "GameObjects/Projectile.h"
 
 
 PlayState::PlayState() {
@@ -32,7 +33,7 @@ PlayState::PlayState() {
 	m_gameObjectManager->addGameObject(new Box(boxMesh));
 	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(0.f, -4.f, 0.f)));
 	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(2.f, -4.f, 0.f)));
-	m_gameObjectManager->addGameObject(new Player(boxMesh));
+	
 
 	m_GLinit->createMesh("Sphere", sphereData);
 	#pragma endregion
@@ -47,7 +48,14 @@ PlayState::PlayState() {
 	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
 	m_lightManager->addLight(glm::vec3(0.f, 0.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
 
-	
+
+	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(10.f, 0.f, 15.f)));
+	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(10.f, 0.f, -15.f)));
+	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(-10.f, 0.f, 15.f)));
+	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(-10.f, 0.f, -15.f)));
+
+	m_gameObjectManager->addGameObject(new Player(boxMesh));
+	m_gameObjectManager->addGameObject(new Projectile(boxMesh));
 }
 
 PlayState::~PlayState() {
@@ -61,8 +69,9 @@ PlayState::~PlayState() {
 
 void PlayState::update(float dt)
 {
-	m_camera->update(dt);
+	
 	m_gameObjectManager->update(dt);
+	m_camera->update(dt);
 	m_lightManager->update(dt);
 
 	m_renderer->prepareGameObjects(m_gameObjectManager->getGameObjects());
