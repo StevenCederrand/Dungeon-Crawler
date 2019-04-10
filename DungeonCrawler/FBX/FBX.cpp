@@ -8,15 +8,15 @@
 #define EQUAL(A,B) (abs((A)-(B)) < DELTA) ? true:false
 
 //Declerations of all functions
-void createCustomFile();
-FbxManager*& createFbxManager();
-FbxIOSettings*& createIOSettingsObject(FbxManager*& lSdkManager);
-FbxScene*& createFbxScene(FbxManager* lSdkManager);
-FbxImporter*& createFbxImporter(FbxManager* lSdkManager);
-const char* loadFbxFile();
-void initializeFbxImporter(FbxImporter*& lImporter, const char* lFilename, FbxManager* lSdkManager);
-void useFbxImporter(FbxImporter*& lImporter, FbxScene*& lScene);
-void destroyFbxImporter(FbxImporter*& lImporter);
+void CreateCustomFile();
+FbxManager*& CreateFbxManager();
+FbxIOSettings*& CreateIOSettingsObject(FbxManager*& lSdkManager);
+FbxScene*& CreateFbxScene(FbxManager* lSdkManager);
+FbxImporter*& CreateFbxImporter(FbxManager* lSdkManager);
+const char* LoadFbxFile();
+void InitializeFbxImporter(FbxImporter*& lImporter, const char* lFilename, FbxManager* lSdkManager);
+void UseFbxImporter(FbxImporter*& lImporter, FbxScene*& lScene);
+void DestroyFbxImporter(FbxImporter*& lImporter);
 void PrintNode(FbxNode* pNode);
 void DisplayHierarchy(FbxScene* lScene);
 void PrintTabs();
@@ -82,7 +82,7 @@ class ShaderOption
 		//what shader it should use
 };
 */
-void createCustomFile()
+void CreateCustomFile()
 {
 	/*
 	//IGNORE FOR NOW, START WITH FBX FILE
@@ -127,14 +127,14 @@ void createCustomFile()
 	std::cout << "Streams are equal, method 2: " << equal << std::endl;
 	*/
 }
-FbxManager*& createFbxManager()
+FbxManager*& CreateFbxManager()
 {
 	// Initialize the SDK manager. This object handles all our memory management.
 	FbxManager* lSdkManager = FbxManager::Create();
 	return lSdkManager;
 }
 
-FbxIOSettings*& createIOSettingsObject(FbxManager*& lSdkManager)
+FbxIOSettings*& CreateIOSettingsObject(FbxManager*& lSdkManager)
 {
 	// Create the IO settings object. This is mostly used when importing and exporting files.
 	FbxIOSettings* ios = FbxIOSettings::Create(lSdkManager, IOSROOT);
@@ -142,28 +142,28 @@ FbxIOSettings*& createIOSettingsObject(FbxManager*& lSdkManager)
 	return ios;
 }
 
-FbxScene*& createFbxScene(FbxManager* lSdkManager)
+FbxScene*& CreateFbxScene(FbxManager* lSdkManager)
 {
 	// Create a new scene so that it can be populated by the imported file.
 	FbxScene* lScene = FbxScene::Create(lSdkManager, "myScene");
 	return lScene;
 }
 
-FbxImporter*& createFbxImporter(FbxManager* lSdkManager)
+FbxImporter*& CreateFbxImporter(FbxManager* lSdkManager)
 {
 	// Create an importer using the SDK manager.
 	FbxImporter* lImporter = FbxImporter::Create(lSdkManager, "");
 	return lImporter;
 }
 
-const char* loadFbxFile()
+const char* LoadFbxFile()
 {
 	//Loading in my file
 	const char* lFilename = "\\Assets\\FBX\\severalObjects.fbx";
 	return lFilename;
 }
 
-void initializeFbxImporter(FbxImporter*& lImporter, const char* lFilename, FbxManager* lSdkManager)
+void InitializeFbxImporter(FbxImporter*& lImporter, const char* lFilename, FbxManager* lSdkManager)
 {
 	// Use the first argument as the name for our FBX file.
 	// Second is fileFormat, leave at -1.
@@ -176,14 +176,14 @@ void initializeFbxImporter(FbxImporter*& lImporter, const char* lFilename, FbxMa
 	}
 }
 
-void useFbxImporter(FbxImporter*& lImporter, FbxScene*& lScene)
+void UseFbxImporter(FbxImporter*& lImporter, FbxScene*& lScene)
 {
 	// Import the contents of our fbx file into the scene. 
 	// Our fbx is stored in the importer from the initialization of the importer.
 	lImporter->Import(lScene);
 }
 
-void destroyFbxImporter(FbxImporter*& lImporter)
+void DestroyFbxImporter(FbxImporter*& lImporter)
 {
 	// The file is loaded into the scene and the importer is no longer needed, Destroy.
 	lImporter->Destroy();
@@ -313,16 +313,16 @@ int main(int argc, char** argv)
 
 	// 0: Start with this, FBX SDK
 	//Create usefull Objects
-	FbxManager* lSdkManager = createFbxManager();
-	FbxIOSettings* ios = createIOSettingsObject(lSdkManager);
-	FbxScene* lScene = createFbxScene(lSdkManager);
-	FbxImporter* lImporter = createFbxImporter(lSdkManager);
+	FbxManager* lSdkManager = CreateFbxManager();
+	FbxIOSettings* ios = CreateIOSettingsObject(lSdkManager);
+	FbxScene* lScene = CreateFbxScene(lSdkManager);
+	FbxImporter* lImporter = CreateFbxImporter(lSdkManager);
 
-	const char* lFilename = loadFbxFile();
+	const char* lFilename = LoadFbxFile();
 
-	initializeFbxImporter(lImporter, lFilename, lSdkManager); //Importer Lifecycle: Create, Initialize, Use, Destroy.
-	useFbxImporter(lImporter, lScene);
-	destroyFbxImporter(lImporter);
+	InitializeFbxImporter(lImporter, lFilename, lSdkManager); //Importer Lifecycle: Create, Initialize, Use, Destroy.
+	UseFbxImporter(lImporter, lScene);
+	DestroyFbxImporter(lImporter);
 
 	DisplayHierarchy(lScene);
 	
