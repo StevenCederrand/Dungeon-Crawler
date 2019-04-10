@@ -12,8 +12,8 @@ in GEOM_DATA {
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
-
 uniform int hasNormalMap;
+
 
 out FRAG_DATA {
     vec3 position; //in world space
@@ -35,7 +35,7 @@ vec3 getNormal() {
     return normal;
 }
 
-mat3 TBN(vec3 normal) {
+mat3 TBN() {
     if(hasNormalMap <= 0) {
         return mat3(0);
     }
@@ -74,18 +74,19 @@ mat3 TBN(vec3 normal) {
     //Because the light pass handles everything in world spaceS
 	vec3 T = normalize(vec3(modelMatrix*vec4(tangent, 0.0)));
 	vec3 B = normalize(vec3(modelMatrix*vec4(bitangent, 0.0)));
-	vec3 N = normalize(vec3(modelMatrix*vec4(normal, 0.0)));
+	vec3 N = normalize(vec3(modelMatrix*vec4(normalize(cross(edges[0], edges[1])), 0.0)));
 
 	return mat3(T, B, N);
 }
 void main() {
     vec4 vertex;
     for(int i = 0; i < 3; i++) {
+        mat3 tbn = TBN();
         vertex = projectionMatrix * viewMatrix * modelMatrix * vec4(geom_data[i].position, 1);
         gl_Position = vertex;
         frag_data.uv = geom_data[i].uv;
         frag_data.position = vec3(modelMatrix * vec4(geom_data[i].position, 1.0f));
-        frag_data.TBN = TBN(geom_data[i].normal);
+        frag_data.TBN = tbn;//TBN(geom_data[i].normal);
         frag_data.normal = mat3(transpose(inverse(modelMatrix))) * geom_data[i].normal;
         EmitVertex();
     }
