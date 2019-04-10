@@ -145,7 +145,7 @@ const char* loadFbxFile()
 	return lFilename;
 }
 
-void initializeImporter(FbxImporter* lImporter, const char* lFilename, FbxManager* lSdkManager)
+void initializeFbxImporter(FbxImporter* lImporter, const char* lFilename, FbxManager* lSdkManager)
 {
 	// Use the first argument as the name for our FBX file. Secon d is fileFormat, leave at -1. Last is what IO Settings to use.
 	if (!lImporter->Initialize(lFilename, -1, lSdkManager->GetIOSettings())) //If initializing failes, go into if statement
@@ -154,6 +154,12 @@ void initializeImporter(FbxImporter* lImporter, const char* lFilename, FbxManage
 		printf("Error returned: %s\n\n", lImporter->GetStatus().GetErrorString());
 		exit(-1);
 	}
+}
+
+void useFbxImporter(FbxImporter* lImporter, FbxScene* lScene)
+{
+	// Import the contents of the file into the scene.
+	lImporter->Import(lScene);
 }
 
 //Tab character ("\t") counter
@@ -268,10 +274,10 @@ int main(int argc, char** argv)
 
 	const char* lFilename = loadFbxFile();
 
-	initializeImporter(lImporter, lFilename, lSdkManager);
+	initializeFbxImporter(lImporter, lFilename, lSdkManager); //Importer Lifecycle: Create, Initialize, Use, Destroy.
 
 	// Import the contents of the file into the scene.
-	lImporter->Import(lScene);
+	useFbxImporter(lImporter, lScene);
 
 	// The file is imported; so get rid of the importer.
 	lImporter->Destroy();
