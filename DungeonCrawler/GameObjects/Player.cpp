@@ -9,7 +9,7 @@ Player::Player(Mesh * mesh) :
 	GameObject(mesh)
 {
 	this->setPosition(glm::vec3(0.f, 0.f, 0.f));
-	this->m_speed = 2.f;
+	this->m_speed = 20.f;
 	this->m_health = 5.f;
 	this->m_damage = 0.f;
 	this->m_debug = false;

@@ -39,25 +39,25 @@ float AABB::swepAABB(const glm::vec3 & vel, const AABB & other, float & normalX,
 	// X-AXIS
 	if (vel.x > 0.0f)
 	{
-		xInvEntry = (other.m_parentPosition.x - other.m_dimensions.x) - (m_parentPosition.x + m_dimensions.x);
-		xInvExit = (other.m_parentPosition.x + other.m_dimensions.x) - (m_parentPosition.x - m_dimensions.x);
+		xInvEntry = (other.getPosition().x - other.m_dimensions.x) - (m_parentPosition.x + m_dimensions.x);
+		xInvExit = (other.getPosition().x + other.m_dimensions.x) - (m_parentPosition.x - m_dimensions.x);
 	}
 	else
 	{
-		xInvEntry = (other.m_parentPosition.x + other.m_dimensions.x) - (m_parentPosition.x - m_dimensions.x);
-		xInvExit = (other.m_parentPosition.x - other.m_dimensions.x) - (m_parentPosition.x + m_dimensions.x);
+		xInvEntry = (other.getPosition().x + other.m_dimensions.x) - (m_parentPosition.x - m_dimensions.x);
+		xInvExit = (other.getPosition().x - other.m_dimensions.x) - (m_parentPosition.x + m_dimensions.x);
 	}
 
 	// Z-AXIS
 	if (vel.z > 0.0f)
 	{
-		zInvEntry = (other.m_parentPosition.z - other.m_dimensions.z) - (m_parentPosition.z + m_dimensions.z);
-		zInvExit = (other.m_parentPosition.z + other.m_dimensions.z) - (m_parentPosition.z - m_dimensions.z);
+		zInvEntry = (other.getPosition().z - other.m_dimensions.z) - (m_parentPosition.z + m_dimensions.z);
+		zInvExit = (other.getPosition().z + other.m_dimensions.z) - (m_parentPosition.z - m_dimensions.z);
 	}
 	else
 	{
-		zInvEntry = (other.m_parentPosition.z + other.m_dimensions.z) - (m_parentPosition.z - m_dimensions.z);
-		zInvExit = (other.m_parentPosition.z - other.m_dimensions.z) - (m_parentPosition.z + m_dimensions.z);
+		zInvEntry = (other.getPosition().z + other.m_dimensions.z) - (m_parentPosition.z - m_dimensions.z);
+		zInvExit = (other.getPosition().z - other.m_dimensions.z) - (m_parentPosition.z + m_dimensions.z);
 	}
 
 
@@ -96,15 +96,15 @@ float AABB::swepAABB(const glm::vec3 & vel, const AABB & other, float & normalX,
 	
 	if (xEntry < 0.0f)
 	{
-		if (m_parentPosition.x + m_dimensions.x < other.m_parentPosition.x - other.m_dimensions.x ||
-			m_parentPosition.x - m_dimensions.x > other.m_parentPosition.x + other.m_dimensions.x)
+		if (m_parentPosition.x + m_dimensions.x < other.getPosition().x - other.m_dimensions.x ||
+			m_parentPosition.x - m_dimensions.x > other.getPosition().x + other.m_dimensions.x)
 			return 1.0f;
 	}
 
 	if (zEntry < 0.0f)
 	{
-		if (m_parentPosition.z + m_dimensions.z < other.m_parentPosition.z - other.m_dimensions.z ||
-			m_parentPosition.z - m_dimensions.z > other.m_parentPosition.z + other.m_dimensions.z)
+		if (m_parentPosition.z + m_dimensions.z < other.getPosition().z - other.m_dimensions.z ||
+			m_parentPosition.z - m_dimensions.z > other.getPosition().z + other.m_dimensions.z)
 			return 1.0f;
 	}
 
@@ -144,10 +144,10 @@ float AABB::swepAABB(const glm::vec3 & vel, const AABB & other, float & normalX,
 bool AABB::checkCollision(const AABB & other)
 {
 	return 
-		!(m_parentPosition.x + m_dimensions.x < other.m_parentPosition.x - other.m_dimensions.x || 
-		m_parentPosition.x - m_dimensions.x >  other.m_parentPosition.x + other.m_dimensions.x || 
-		m_parentPosition.z + m_dimensions.z < other.m_parentPosition.z - other.m_dimensions.z ||
-		m_parentPosition.z - m_dimensions.z > other.m_parentPosition.z + other.m_dimensions.z);
+		!(m_parentPosition.x + m_dimensions.x < other.getPosition().x - other.m_dimensions.x ||
+		m_parentPosition.x - m_dimensions.x >  other.getPosition().x + other.m_dimensions.x ||
+		m_parentPosition.z + m_dimensions.z < other.getPosition().z - other.m_dimensions.z ||
+		m_parentPosition.z - m_dimensions.z > other.getPosition().z + other.m_dimensions.z);
 }
 
 const glm::vec3 & AABB::getPosition() const

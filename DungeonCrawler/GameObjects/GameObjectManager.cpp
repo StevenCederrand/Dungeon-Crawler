@@ -39,7 +39,6 @@ void GameObjectManager::update(float dt)
 		object->update(dt);
 		object->updateModelMatrix();
 
-	
 		// If the object is collidable then handle collision
 		if (object->isCollidable())
 		{

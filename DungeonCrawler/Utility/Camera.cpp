@@ -21,10 +21,8 @@ Camera::Camera()
 	m_sensitivity = 0.1f;
 	m_locked = false;
 	m_debug = false;
-
 	snapMouseToMiddle();
 	setProjectionMatrix();
-
 }
 
 Camera::~Camera()
@@ -86,7 +84,6 @@ void Camera::lookAround(float dt)
 void Camera::move(float dt)
 {
 	
-
 	if (Input::isKeyHeldDown(GLFW_KEY_W))
 	{
 		m_position.x += m_lookDirection.x * m_cameraSpeed * dt;
@@ -132,7 +129,6 @@ void Camera::move(float dt)
 		m_cameraSpeed = 5.f;
 	}
 	
-	//LOG_TRACE("" + std::to_string(m_position.x) + ", " + std::to_string(m_position.y) + ", " + std::to_string(m_position.z));
 }
 
 void Camera::snapMouseToMiddle()
