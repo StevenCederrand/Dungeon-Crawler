@@ -162,6 +162,12 @@ void useFbxImporter(FbxImporter* lImporter, FbxScene* lScene)
 	lImporter->Import(lScene);
 }
 
+void destroyFbxImporter(FbxImporter* lImporter)
+{
+	// The file is imported; so get rid of the importer.
+	lImporter->Destroy();
+}
+
 //Tab character ("\t") counter
 int m_numTabs = 0;
 
@@ -275,8 +281,6 @@ int main(int argc, char** argv)
 	const char* lFilename = loadFbxFile();
 
 	initializeFbxImporter(lImporter, lFilename, lSdkManager); //Importer Lifecycle: Create, Initialize, Use, Destroy.
-
-	// Import the contents of the file into the scene.
 	useFbxImporter(lImporter, lScene);
 
 	// The file is imported; so get rid of the importer.
