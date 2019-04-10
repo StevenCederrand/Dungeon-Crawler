@@ -116,12 +116,14 @@ bool AudioEngine::unloadSSO(std::string ssoName) {
 		return false;
 	}
 	while (std::getline(ssoFile, line)) {
-
+		if (line[0] == '#' || line == "") {
+			continue;
+		}
+		size_t space = line.find(' ');
+		std::string key = line.substr(0, space);
+		AudioEngine::unloadSound(key);
 	}
-
-
-
-
+	LOG_INFO("Number of sounds: " + std::to_string(m_sounds.size()));
 	return true;
 }
 
@@ -141,6 +143,7 @@ void AudioEngine::update() {
 }
 
 void AudioEngine::playOnce(std::string key, float volume) {
+	
 	if (volume > 1.0f) {
 		LOG_WARNING("CANNOT HANDLE VOLUMES ABOVE 1.0f");
 		LOG_WARNING("SETTING VOLUME TO 1.0f");

@@ -14,8 +14,9 @@ MenuState::MenuState() {
 	this->m_renderer = new UIRenderer(this->m_camera);
 	this->m_menu->insertButton(glm::vec2(0, 0), 2, 2);
 	this->m_renderer->setupMenuButtons(this->m_menu);
-
+	
 	AudioEngine::loadSSO("Menu.sso");
+	LOG_INFO("CREATED");
 }
 
 MenuState::~MenuState()
@@ -28,12 +29,13 @@ MenuState::~MenuState()
 void MenuState::update(float dt) {
 	if (Input::isMouseReleased(GLFW_MOUSE_BUTTON_RIGHT))
 	{
-		m_stateManager->pushTemporaryState(new PlayState());	
+		AudioEngine::unloadSSO("Menu.sso");
+		m_stateManager->pushTemporaryState(new PlayState());
 		
 	}
 
 	if (Input::isKeyReleased(GLFW_KEY_S)) {
-		AudioEngine::play("LMouseClick", 10.0f);
+		AudioEngine::play("LMouseClick", 1.0f);
 	}
 
 	if (Input::isKeyReleased(GLFW_KEY_ENTER)) {

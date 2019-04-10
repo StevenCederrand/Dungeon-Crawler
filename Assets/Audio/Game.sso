@@ -1,2 +1,4 @@
 #Player walking on wood
 pl_walk pl_walk.wav
+#player dash
+pl_dash Dash.wav

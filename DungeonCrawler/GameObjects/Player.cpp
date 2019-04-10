@@ -4,6 +4,7 @@
 #include <GLM/gtc/matrix_transform.hpp>
 #include "System/Log.h"
 #include "Utility/Camera.h"
+#include "../Audio/AudioEngine.h"
 
 Player::Player(Mesh * mesh) :
 	GameObject(mesh)
@@ -31,6 +32,7 @@ void Player::update(float dt)
 		if (Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT))
 		{
 			dash();
+			AudioEngine::playOnce("pl_dash", 0.5f);
 		}
 		move(dt);
 		dashCd();
@@ -43,18 +45,22 @@ void Player::move(float dt)
 	if (Input::isKeyHeldDown(GLFW_KEY_W))
 	{
 		this->translate(glm::vec3(0.f, 0.f, -this->m_speed) * dt);
+		AudioEngine::playOnce("pl_walk", 0.4f);
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_A))
 	{
 		this->translate(glm::vec3(-this->m_speed, 0.f, 0.f) * dt);
+		AudioEngine::playOnce("pl_walk", 0.4f);
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_S))
 	{
 		this->translate(glm::vec3(0.f, 0.f, this->m_speed) * dt);
+		AudioEngine::playOnce("pl_walk", 0.4f);
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_D))
 	{
 		this->translate(glm::vec3(this->m_speed, 0.f, 0.f) * dt);
+		AudioEngine::playOnce("pl_walk", 0.4f);
 	}
 	Camera::active->setToPlayer(getPosition());
 	/*if (Input::isKeyHeldDown(GLFW_KEY_LEFT_SHIFT))

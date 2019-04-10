@@ -40,7 +40,7 @@ PlayState::PlayState() {
 
 	#pragma region Setup_Sounds
 	AudioEngine::loadSSO("Game.sso");
-
+	LOG_INFO("CREATED DDD");
 	#pragma endregion
 
 	
@@ -77,7 +77,10 @@ void PlayState::update(float dt)
 	m_renderer->prepareGameObjects(m_gameObjectManager->getGameObjects());
 
 	if (Input::isMouseReleased(GLFW_MOUSE_BUTTON_RIGHT)){
+
+		AudioEngine::unloadSSO("Game.sso");
 		m_stateManager->popState();
+		AudioEngine::loadSSO("Menu.sso");
 	}
 }
 

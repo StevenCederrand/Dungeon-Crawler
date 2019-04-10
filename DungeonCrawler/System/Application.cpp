@@ -101,6 +101,7 @@ void Application::run()
 	LOG_INFO("Running Application loop");
 
 	while (!glfwWindowShouldClose(m_window)) {
+		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -130,7 +131,7 @@ void Application::run()
 		m_stateManager->renderImGUI();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
+		
 		glfwSwapBuffers(m_window);
 	}
 
