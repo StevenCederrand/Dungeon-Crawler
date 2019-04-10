@@ -34,7 +34,8 @@
     <ClCompile Include="Main Menu\MenuButton.cpp" />
     <ClCompile Include="Graphics\UIRenderer.cpp" />
     <ClCompile Include="GameObjects\LightSphere.cpp" />
-    <ClCompile Include="FBX\FBX.cpp" />
+    <ClCompile Include="FBX\DisplayCommon.cpp" />
+    <ClCompile Include="FBX\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -76,6 +77,7 @@
     <ClInclude Include="Graphics\UIRenderer.h" />
     <ClInclude Include="GameObjects\LightSphere.h" />
     <ClInclude Include="Utility\Ray.h" />
+    <ClInclude Include="FBX\DisplayCommon.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FBX\box.fbx" />

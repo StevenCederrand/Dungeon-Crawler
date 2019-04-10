@@ -22,6 +22,7 @@ void DisplayHierarchy(FbxScene* lScene);
 void PrintTabs();
 FbxString GetAttributeTypeName(FbxNodeAttribute::EType type);
 void PrintAttribute(FbxNodeAttribute* pAttribute);
+void DisplayControlPoints(FbxMesh* pMesh);
 
 int m_numTabs = 0; //Tab character ("\t") counter
 
@@ -211,6 +212,8 @@ void PrintNode(FbxNode* pNode)
 	FbxDouble3 rotation = pNode->LclRotation.Get();
 	FbxDouble3 scaling = pNode->LclScaling.Get();
 	
+
+
 	// Print the contents of the node. Need to declare spaces for variables first! Also tabs for formating
 	PrintTabs();
 	printf("Name: %s\n", nodeName);
@@ -304,6 +307,22 @@ void PrintAttribute(FbxNodeAttribute* pAttribute)
 	{
 		PrintTabs();
 		printf("No attribute name\n");
+	}
+}
+
+void DisplayControlPoints(FbxMesh* pMesh)
+{
+	//THIS IS NOT DONE, CONTINUTE WITH THIS
+
+	int i = 0;
+	int lControlPointsCount = pMesh->GetControlPointsCount();
+	FbxVector4* lControlPoints = pMesh->GetControlPoints();
+
+	printf("Control Points:\n");
+	for (i = 0; i < lControlPointsCount; i++)
+	{
+		printf("Control Point %i\n", i);
+		printf("Coordinates: ");
 	}
 }
 
