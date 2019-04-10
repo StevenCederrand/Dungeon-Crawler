@@ -10,7 +10,8 @@ Renderer::Renderer(Camera* camera, LightManager* lightManager)
 	m_framebuffer = new Framebuffer();
 	glEnable(GL_DEPTH_TEST);
 	//Generate framebuffers & textures
-
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 	this->m_framebuffer->genFrameBuffers();
 	this->initRenderQuad();
 
@@ -100,7 +101,6 @@ void Renderer::geometryPass() {
 	geometryShader->use();
 
 	geometryShader->setMat4("viewMatrix", m_camera->getViewMatrix());
-
 	m_framebuffer->bindFrameBuffer();
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -110,14 +110,14 @@ void Renderer::geometryPass() {
 
 		for (auto object : mesh.second) {
 			geometryShader->setMat4("modelMatrix", object->getModelMatrix());
-			glDrawElements(GL_TRIANGLES, object->getMesh()->getNrOfIndices(), GL_UNSIGNED_INT, NULL);
+			glDrawElements(GL_TRIANGLES, mesh.first->getNrOfIndices(), GL_UNSIGNED_INT, NULL);
 		}
 
-		unbindMesh();
+		unbindMesh(mesh.first);
 	}
 	geometryShader->unuse();
 	this->m_meshes.clear();
-
+		
 	m_framebuffer->unbindBuffer();
 }
 
@@ -144,14 +144,28 @@ void Renderer::bindMesh(Mesh * mesh, Shader* shader)
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mesh->getTextureID());
 
+	if (mesh->getHasNormalMap()) {
+		shader->setInt("hasNormalMap", 1);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, mesh->getNormalID());	
+	}
+	else {
+		shader->setInt("hasNormalMap", 0);
+	}
 }
 
-void Renderer::unbindMesh()
+void Renderer::unbindMesh(Mesh * mesh)
 {
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, NULL);
+
+	if (mesh->getHasNormalMap()) {
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, NULL);
+	}
 	glBindVertexArray(NULL);
 }
 

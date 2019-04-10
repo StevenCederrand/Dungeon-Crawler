@@ -21,10 +21,10 @@ GLinit::~GLinit()
 	}
 }
 
-void GLinit::createMesh(std::string name, ParserData* data)
+Mesh* GLinit::createMesh(std::string name, ParserData* data)
 {
 	if (MeshMap::MeshExistWithName(name))
-		return;
+		return MeshMap::getMesh(name);
 
 	GLuint vao = createAndBindVAO();
 	bindIndices(data->getIndices());
@@ -37,6 +37,14 @@ void GLinit::createMesh(std::string name, ParserData* data)
 
 	Mesh* mesh = new Mesh();
 
+	mesh->setHasNormalMap(data->hasNormalMap());
+	
+	if (data->hasNormalMap()) {
+		LOG_INFO("HAS NORMALMAP");
+		GLuint normalID = createTexture(data->getNormalMapName());
+		mesh->setNormalID(normalID);
+	}
+
 	mesh->setVao(vao);
 	mesh->setTextureID(textureID);
 	mesh->setNrOfIndices(int(data->getIndices().size()));
@@ -44,8 +52,9 @@ void GLinit::createMesh(std::string name, ParserData* data)
 	mesh->setSpecularColor(data->getSpecularColor());
 	mesh->setDiffuseColor(data->getDiffuseColor());
 	mesh->setShininess(data->getShininess());
-
+	
 	MeshMap::addMesh(name, mesh);
+	return mesh;
 }
 
 GLuint GLinit::createAndBindVAO()

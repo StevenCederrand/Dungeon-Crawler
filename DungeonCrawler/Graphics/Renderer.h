@@ -19,7 +19,7 @@ public:
 
 private:
 	void bindMesh(Mesh* mesh, Shader* shader);
-	void unbindMesh();
+	void unbindMesh(Mesh * mesh);
 	
 	void forwardPass();
 	void geometryPass();

@@ -26,10 +26,10 @@ MenuState::~MenuState()
 }
 
 void MenuState::update(float dt) {
-
 	if (Input::isMouseReleased(GLFW_MOUSE_BUTTON_RIGHT))
 	{
-		m_stateManager->pushTemporaryState(new PlayState());
+		m_stateManager->pushTemporaryState(new PlayState());	
+		
 	}
 
 	if (Input::isKeyReleased(GLFW_KEY_S)) {

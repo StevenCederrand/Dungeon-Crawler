@@ -35,6 +35,11 @@ void GameObject::translate(const glm::vec3 & translationVector)
 	m_position += translationVector;
 }
 
+void GameObject::setTranslateRotation(const glm::vec3 translateRotation)
+{
+	m_rotation += translateRotation;
+}
+
 void GameObject::setScale(const glm::vec3 & scale)
 {
 	m_scale = scale;

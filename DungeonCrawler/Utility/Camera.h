@@ -1,14 +1,16 @@
 #ifndef _CAMERA_H
 #define _CAMERA_H
 #include <GLM/glm.hpp>
+#include "Ray.h"
 
 class Camera {
 
 public:
+	static Camera* active;
+
 	const float NEAR_CLIPPING = 0.1f;
 	const float FAR_CLIPPING = 70.f;
-	const float FOV = 45.f;
-
+	const float FOV = 90.f;
 public:
 	Camera();
 	~Camera();
@@ -19,6 +21,9 @@ public:
 	const glm::mat4 getViewMatrix() const;
 	const glm::mat4 getProjectionMatrix() const;
 	const glm::vec3 getPosition() const;
+	const Ray getRayFromScreen(float x, float y, float w, float h) const;
+
+	void setToPlayer(glm::vec3 playerPos);
 
 private:
 	void setProjectionMatrix();
@@ -55,6 +60,7 @@ private:
 	// Free look or is it stuck on player?
 	// (Debug purpose)
 	bool m_locked;
+	bool m_debug;
 };
 
 

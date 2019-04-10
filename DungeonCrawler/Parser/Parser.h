@@ -28,10 +28,26 @@ private:
 	void stringClean(std::vector<std::string>& attribs);
 
 	int getFaceIndexIfExist(GLuint vertexIndex, GLuint uvIndex, GLuint normalIndex, GLuint indexCounter);
-
+			
+	void writeToBinary(ParserData* data, const std::string& filename);
+	void writeBinaryVecInt(std::ofstream& binaryFile, std::vector<GLuint> vector);
+	void writeBinaryVecVec3(std::ofstream& binaryFile, std::vector<glm::vec3> vector);
+	void writeBinaryVecVec2(std::ofstream& binaryFile, std::vector<glm::vec2> vector);
+	void writeBinaryString(std::ofstream& binaryFile, std::string string);
+	void writeBinaryVec3(std::ofstream& binaryFile, glm::vec3 vector);
+	void writeBinaryFloat(std::ofstream& binaryFile, GLfloat floatValue);
+	
+	void loadFromBinary(ParserData* data, const std::string& filename);
+	void readBinaryVecInt(std::ifstream& binaryFile, ParserData* parserData);
+	void readBinaryVecVec3(std::ifstream& binaryFile, ParserData* parserData, int choice);
+	void readBinaryVecVec2(std::ifstream& binaryFile, ParserData* parserData);
+	void readBinaryString(std::ifstream& binaryFile, ParserData* parserData, int choice);
+	void readBinaryVec3(std::ifstream& binaryFile, ParserData* parserData, int choice);
+	void readBinaryFloat(std::ifstream& binaryFile, ParserData* parserData, int choice);
+		
 private:
 	std::vector<ParserData*> m_memoryTracker;
-
+	void blenderMTL(const std::vector<std::string>& attribs, ParserData* parserData);
 private:
 	// Used for obj indexing
 	struct OBJFace {
@@ -40,7 +56,7 @@ private:
 		unsigned int uvIndex;
 		unsigned int normalIndex;
 	};
-
+	
 	std::vector<OBJFace> m_faces;
 };
 

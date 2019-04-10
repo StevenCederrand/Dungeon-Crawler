@@ -10,7 +10,8 @@ public:
 
 	GLinit();
 	~GLinit();
-	void createMesh(std::string name, ParserData* data);
+	//If we're already have the mesh created then we return the pointer to that mesh.
+	Mesh* createMesh(std::string name, ParserData* data);
 
 private:
 	GLuint createAndBindVAO();
@@ -18,6 +19,7 @@ private:
 	void storeDataInAttributeList(const GLuint& attributeNumber, const GLuint& dataPerAttribute, const std::vector<glm::vec3>& dataVector);
 	void storeDataInAttributeList(const GLuint& attributeNumber, const GLuint& dataPerAttribute, const std::vector<glm::vec2>& dataVector);
 	GLuint createTexture(std::string filename);
+
 
 private:
 	// Used for memory management
