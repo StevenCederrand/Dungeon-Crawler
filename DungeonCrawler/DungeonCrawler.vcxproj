@@ -234,6 +234,9 @@
     <ClInclude Include="Vendor\ImGui\imstb_truetype.h" />
     <ClInclude Include="Vendor\stb\stb_image.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="FBX\box.fbx" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

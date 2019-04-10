@@ -77,4 +77,7 @@
     <ClInclude Include="GameObjects\LightSphere.h" />
     <ClInclude Include="Utility\Ray.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="FBX\box.fbx" />
+  </ItemGroup>
 </Project>

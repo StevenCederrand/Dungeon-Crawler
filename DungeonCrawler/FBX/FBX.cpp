@@ -207,8 +207,7 @@ int main(int argc, char** argv)
 	// 0: FBX SDK, READS THE FBX FILE
 
 	//Loading in my file
-	// Change the following filename to a suitable filename value.
-	const char* lFilename = "box.fbx";	//The box has been placed inside the map with Source 
+	const char* lFilename = "\\Assets\\FBX\\box.fbx";	//The box has been placed inside the map with Source 
 
 	// Initialize the SDK manager. This object handles all our memory management.
 	FbxManager* lSdkManager = FbxManager::Create();
@@ -246,6 +245,7 @@ int main(int argc, char** argv)
 		for (int i = 0; i < lRootNode->GetChildCount(); i++)
 			PrintNode(lRootNode->GetChild(i));
 	}
+
 	// Destroy the SDK manager and all the other objects it was handling.
 	lSdkManager->Destroy();
 	return 0;
