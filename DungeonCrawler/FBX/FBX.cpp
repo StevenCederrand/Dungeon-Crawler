@@ -159,7 +159,7 @@ FbxImporter* createFbxImporter(FbxManager* lSdkManager)
 const char* loadFbxFile()
 {
 	//Loading in my file
-	const char* lFilename = "\\Assets\\FBX\\box.fbx";
+	const char* lFilename = "\\Assets\\FBX\\boxFreezedTransform.fbx";
 	return lFilename;
 }
 
