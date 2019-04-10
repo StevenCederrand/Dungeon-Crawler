@@ -24,7 +24,7 @@ GLinit::~GLinit()
 Mesh* GLinit::createMesh(std::string name, ParserData* data)
 {
 	if (MeshMap::MeshExistWithName(name))
-		return nullptr;
+		return MeshMap::getMesh(name);
 
 	GLuint vao = createAndBindVAO();
 	bindIndices(data->getIndices());

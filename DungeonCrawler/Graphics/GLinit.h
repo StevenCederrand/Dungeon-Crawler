@@ -10,6 +10,7 @@ public:
 
 	GLinit();
 	~GLinit();
+	//If we're already have the mesh created then we return the pointer to that mesh.
 	Mesh* createMesh(std::string name, ParserData* data);
 
 private:

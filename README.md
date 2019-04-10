@@ -7,8 +7,7 @@ Rules of code:
 - Function names are to start with small character. 
 
 Dates: 
-- [x]  Pitch: 2/4
-- [ ] High Concept: 5/4
-- [x]  Codebase: 5/4
-
+We have reached and completed all of our deadlines. 
+Now we're in the midde of production.
+Keep it up!
 You can find the documentation under the wiki page.
