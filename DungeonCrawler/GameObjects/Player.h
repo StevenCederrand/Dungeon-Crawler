@@ -10,8 +10,6 @@ public:
 	void move(float dt);
 	void rotatePlayer(float dt);
 
-
-
 	void setSpeed(float speed);
 	void setHealth(float health);
 	void setDamage(float damage);
@@ -20,13 +18,11 @@ public:
 	float getHealth()const;
 	float getDamage()const;
 
-
 private:
 	glm::dvec2 m_mousePos;
 	float m_angle;
 
-
-
+	glm::vec3 m_movementDirection;
 	//Player Variables
 	float m_speed;
 	float m_health;

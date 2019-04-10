@@ -38,13 +38,13 @@ PlayState::PlayState() {
 	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
 	m_lightManager->addLight(glm::vec3(0.f, 0.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
 
-	
 	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(2.f, 0.f, 0.f)));
+	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(3.f, 0.f, 1.f)));
+	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(2.0f, 0.f, 1.f)));
 
-	Player* player = new Player(boxMesh);
-
-	m_gameObjectManager->addGameObject(player);
-	m_gameObjectManager->setPlayerRef(player);
+	m_player = new Player(boxMesh);
+	m_gameObjectManager->addGameObject(m_player);
+	m_gameObjectManager->setPlayerRef(m_player);
 }
 
 PlayState::~PlayState() {
@@ -75,6 +75,15 @@ void PlayState::renderImGUI()
 	ImGui::Begin("PlayState");
 
 	ImGui::Text("Press right mouse to switch back to menu state");
+
+	ImGui::Text("Player [ %f%s%f%s%f%s"
+		, m_player->getPosition().x
+		, ", " 
+		, m_player->getPosition().y
+		, ", " 
+		, m_player->getPosition().z
+		, " ]");
+
 
 	ImGui::End();
 }

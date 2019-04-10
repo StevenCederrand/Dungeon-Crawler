@@ -9,6 +9,7 @@ GameObject::GameObject(Mesh * mesh, const glm::vec3 & position)
 	m_position = position;
 	m_boundingBox->setPosition(position);
 	m_rotation = glm::vec3(0.f);
+	m_velocity = glm::vec3(0.f);
 	m_scale = glm::vec3(1.f);
 	updateModelMatrix();
 }
@@ -37,7 +38,13 @@ void GameObject::setPosition(const glm::vec3 & position)
 void GameObject::translate(const glm::vec3 & translationVector)
 {
 	m_position += translationVector;
+	m_velocity = glm::vec3(translationVector);
 	m_boundingBox->setPosition(m_position);
+}
+
+void GameObject::setVelocity(const glm::vec3 & velocity)
+{
+	m_velocity = velocity;
 }
 
 void GameObject::setTranslateRotation(const glm::vec3 translateRotation)
@@ -78,6 +85,11 @@ const glm::vec3 & GameObject::getScale() const
 const glm::vec3 & GameObject::getRotation() const
 {
 	return m_rotation;
+}
+
+const glm::vec3 & GameObject::getVelocity() const
+{
+	return m_velocity;
 }
 
 const glm::mat4 & GameObject::getModelMatrix() const

@@ -9,7 +9,7 @@ Player::Player(Mesh * mesh) :
 	GameObject(mesh)
 {
 	this->setPosition(glm::vec3(0.f, 0.f, 0.f));
-	this->m_speed = 20.f;
+	this->m_speed = 2.f;
 	this->m_health = 5.f;
 	this->m_damage = 0.f;
 	this->m_debug = false;
@@ -29,22 +29,31 @@ void Player::update(float dt)
 
 void Player::move(float dt)
 {
+	m_movementDirection = glm::vec3(0.f);
+
 	if (Input::isKeyHeldDown(GLFW_KEY_W))
 	{
-		this->translate(glm::vec3(this->m_speed, 0.f, 0.f) * dt);
+		m_movementDirection.x = m_speed * dt;
+		//this->translate(glm::vec3(this->m_speed, 0.f, 0.f) * dt);
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_A))
 	{
-		this->translate(glm::vec3(0.f, 0.f, -this->m_speed) * dt);
+		m_movementDirection.z = -m_speed * dt;
+		//this->translate(glm::vec3(0.f, 0.f, -this->m_speed) * dt);
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_S))
 	{
-		this->translate(glm::vec3(-this->m_speed, 0.f, 0.f) * dt);
+		m_movementDirection.x = -m_speed * dt;
+		//this->translate(glm::vec3(-this->m_speed, 0.f, 0.f) * dt);
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_D))
 	{
-		this->translate(glm::vec3(0.f, 0.f, this->m_speed) * dt);
+		m_movementDirection.z = m_speed * dt;
+		//this->translate(glm::vec3(0.f, 0.f, this->m_speed) * dt);
 	}
+
+	//translate(m_movementDirection);
+	setVelocity(m_movementDirection);
 	rotatePlayer(dt);
 	Camera::active->setToPlayer(getPosition());
 }
@@ -63,7 +72,6 @@ void Player::rotatePlayer(float dt)
 		this->getPosition().x - pos.x,
 		this->getPosition().z - pos.z);
 	m_angle = glm::degrees(atan2f(direction.x, direction.y));
-
 
 	setRotation(glm::vec3(0.f, m_angle, 0.f));
 }

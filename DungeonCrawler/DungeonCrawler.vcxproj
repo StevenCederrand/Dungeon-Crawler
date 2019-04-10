@@ -209,7 +209,6 @@
     <ClInclude Include="Graphics\UIRenderer.h" />
     <ClInclude Include="Main Menu\MainMenu.h" />
     <ClInclude Include="Main Menu\MenuButton.h" />
-    <ClInclude Include="Parser\AABB.h" />
     <ClInclude Include="Parser\ParserData.h" />
     <ClInclude Include="Graphics\Shader.h" />
     <ClInclude Include="Graphics\ShaderMap.h" />

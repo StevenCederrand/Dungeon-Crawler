@@ -11,11 +11,11 @@ Camera* Camera::active = nullptr;
 Camera::Camera()
 {
 	m_position = glm::vec3(-10.f, 10.f, 0.f);
-	m_lookDirection = glm::vec3(1.f, -1.f, 0.f);
+	m_lookDirection = glm::vec3(0, -1.f, 0.f);
 	m_yaw = 0.f;
 	m_pitch = 0.f;
 	m_distanceToOrbitPoint = 5.f;
-	m_cameraRight = glm::vec3(-1.f, 0.f, 0.f);
+	m_cameraRight = glm::vec3(1.f, 0.f, 0.f);
 	m_cameraUp = glm::vec3(0.f, 1.0f, 0.f);
 	m_cameraSpeed = 5.f;
 	m_sensitivity = 0.1f;
@@ -24,6 +24,7 @@ Camera::Camera()
 
 	snapMouseToMiddle();
 	setProjectionMatrix();
+
 }
 
 Camera::~Camera()
