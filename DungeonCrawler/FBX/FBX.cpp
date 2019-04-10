@@ -18,7 +18,7 @@ void initializeFbxImporter(FbxImporter*& lImporter, const char* lFilename, FbxMa
 void useFbxImporter(FbxImporter*& lImporter, FbxScene*& lScene);
 void destroyFbxImporter(FbxImporter*& lImporter);
 void PrintNode(FbxNode* pNode);
-void printAllNodes(FbxScene* lScene);
+void DisplayHierarchy(FbxScene* lScene);
 void PrintTabs();
 FbxString GetAttributeTypeName(FbxNodeAttribute::EType type);
 void PrintAttribute(FbxNodeAttribute* pAttribute);
@@ -189,7 +189,7 @@ void destroyFbxImporter(FbxImporter*& lImporter)
 	lImporter->Destroy();
 }
 
-void printAllNodes(FbxScene* lScene)
+void DisplayHierarchy(FbxScene* lScene)
 {
 	// Print the nodes of the scene and their attributes recursively.
 	// Note that we are not printing the root node because it should not contain any attributes.
@@ -324,7 +324,7 @@ int main(int argc, char** argv)
 	useFbxImporter(lImporter, lScene);
 	destroyFbxImporter(lImporter);
 
-	printAllNodes(lScene);
+	DisplayHierarchy(lScene);
 	
 	// Destroy the SDK manager and all the other objects it was handling.
 	lSdkManager->Destroy();
