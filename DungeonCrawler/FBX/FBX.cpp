@@ -109,8 +109,14 @@ void createCustomFile()
 	std::cout << "Streams are equal, method 2: " << equal << std::endl;
 	*/
 }
+FbxManager* createFbxManager()
+{
+	// Initialize the SDK manager. This object handles all our memory management.
+	FbxManager* lSdkManager = FbxManager::Create();
+	return lSdkManager;
+}
 
-const char* loadFBXFile()
+const char* loadFbxFile()
 {
 	//Loading in my file
 	const char* lFilename = "\\Assets\\FBX\\box.fbx";
@@ -221,10 +227,7 @@ int main(int argc, char** argv)
 
 	// 0: FBX SDK
 
-	const char* lFilename = loadFBXFile();
-
-	// Initialize the SDK manager. This object handles all our memory management.
-	FbxManager* lSdkManager = FbxManager::Create();
+	FbxManager* lSdkManager = createFbxManager();
 
 	// Create the IO settings object.
 	FbxIOSettings *ios = FbxIOSettings::Create(lSdkManager, IOSROOT);
@@ -235,6 +238,8 @@ int main(int argc, char** argv)
 
 	// Create an importer using the SDK manager.
 	FbxImporter* lImporter = FbxImporter::Create(lSdkManager, "");
+
+	const char* lFilename = loadFbxFile();
 
 	// Use the first argument as the filename for the importer.
 	if (!lImporter->Initialize(lFilename, -1, lSdkManager->GetIOSettings()))
