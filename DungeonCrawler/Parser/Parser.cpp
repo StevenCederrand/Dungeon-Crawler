@@ -152,7 +152,7 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 
 	data->setBoundingBox(maxMinVector);
 
-	writeToBinary(data, filenameString[0]);
+	//writeToBinary(data, filenameString[0]);
 	
 	m_memoryTracker.emplace_back(data);
 
@@ -253,6 +253,9 @@ void Parser::writeToBinary(ParserData* data, const std::string& filename)
 	std::string textureFilename = data->getTextureFilename();
 	writeBinaryString(binaryFile, textureFilename);
 
+	std::string normalMapName = data->getNormalMapName();
+	writeBinaryString(binaryFile, normalMapName);
+
 	glm::vec3 diffuseColor = data->getDiffuseColor();
 	writeBinaryVec3(binaryFile, diffuseColor);
 
@@ -267,6 +270,9 @@ void Parser::writeToBinary(ParserData* data, const std::string& filename)
 
 	std::vector<glm::vec3> maxMinVector = data->getMaxMinVector();
 	writeBinaryVecVec3(binaryFile, maxMinVector);
+
+	GLfloat normalMapStrength = data->getNormalMapStrength();
+	writeBinaryFloat(binaryFile, normalMapStrength);
 
 	binaryFile.close();
 }
@@ -310,13 +316,18 @@ void Parser::parseMaterialFile(const std::string& filename, ParserData* parserDa
 	}
 
 	std::string line;
+	std::string exporterProgram = ""; //Used for interpretting what program exported the .mtl
 	while (std::getline(mtlFile, line))
 	{
-
+		
 		std::vector<std::string> attribs = split(line, ' ');
+		
 		if (attribs.size() == 0)
 			continue;
-
+		else if (attribs[0] == "#" && exporterProgram == "") {
+			exporterProgram = attribs[1];
+			continue;
+		}
 		if (attribs[0] == "Ka")
 		{
 			parserData->setAmbientColor(std::stof(attribs[1]), std::stof(attribs[2]), std::stof(attribs[3]));
@@ -335,9 +346,21 @@ void Parser::parseMaterialFile(const std::string& filename, ParserData* parserDa
 		}
 		else if (attribs[0] == "map_Kd")
 		{
-			parserData->setTextureFilename(TexturePath + attribs[1]);
+			
+				parserData->setTextureFilename(TexturePath + attribs[1]);
+			
 		}
-
+		if (attribs[0] == "map_Bump") {
+			if (exporterProgram == "Blender") {
+				LOG_INFO("NORMAL MAP EXISTS");
+				parserData->setNormalMapName(TexturePath + attribs[attribs.size() - 1]);
+				parserData->setNormalMapStrength(std::stof(attribs[attribs.size() - 2]));
+				LOG_INFO(parserData->getNormalMapName());
+			}
+			else {
+				LOG_ERROR(exporterProgram + " .MTL FILES NOT SUPPORTED");
+			}
+		}
 	}
 
 	mtlFile.close();
@@ -567,15 +590,19 @@ void Parser::loadFromBinary(ParserData* data, const std::string & filename)
 	readBinaryVecVec2(binaryFile, data);
 	readBinaryVecVec3(binaryFile, data, 1);
 
-	readBinaryString(binaryFile, data);
+	readBinaryString(binaryFile, data, 0);
+	readBinaryString(binaryFile, data, 1);
 
 	readBinaryVec3(binaryFile, data, 0);
 	readBinaryVec3(binaryFile, data, 1);
 	readBinaryVec3(binaryFile, data, 2);
 
-	readBinaryFloat(binaryFile, data);
+	readBinaryFloat(binaryFile, data,0);
 
 	readBinaryVecVec3(binaryFile, data, 2);
+
+	readBinaryFloat(binaryFile, data, 0);
+	readBinaryFloat(binaryFile, data, 1);
 
 	binaryFile.close();
 }
@@ -701,8 +728,8 @@ void Parser::readBinaryVecVec2(std::ifstream & binaryFile, ParserData * parserDa
 	}
 	vecString.clear();
 }
-
-void Parser::readBinaryString(std::ifstream & binaryFile, ParserData * parserData)
+//texture==0 and normalMapName==1
+void Parser::readBinaryString(std::ifstream & binaryFile, ParserData * parserData, int choice)
 {
 	//read the value first (how big the other read should be)
 	char* textInt = new char[10];
@@ -723,7 +750,14 @@ void Parser::readBinaryString(std::ifstream & binaryFile, ParserData * parserDat
 	delete[] text;
 	
 	//write the texture name to the parserData
-	parserData->setTextureFilename(stringText);
+	if (choice == 0)
+	{
+		parserData->setTextureFilename(stringText);
+	}
+	else if (choice == 1)
+	{
+		parserData->setNormalMapName(stringText);
+	}
 }
 //diffuse==0, specular==1, ambient==2
 void Parser::readBinaryVec3(std::ifstream & binaryFile, ParserData * parserData, int choice)
@@ -753,7 +787,6 @@ void Parser::readBinaryVec3(std::ifstream & binaryFile, ParserData * parserData,
 	tempGL.x = std::stof(vecString[0], NULL);
 	tempGL.y = std::stof(vecString[1], NULL);
 	tempGL.z = std::stof(vecString[2], NULL);
-	
 
 	if (choice == 0) 
 	{
@@ -771,7 +804,7 @@ void Parser::readBinaryVec3(std::ifstream & binaryFile, ParserData * parserData,
 	vecString.clear();
 }
 
-void Parser::readBinaryFloat(std::ifstream & binaryFile, ParserData * parserData)
+void Parser::readBinaryFloat(std::ifstream & binaryFile, ParserData * parserData, int choice)
 {
 	//read the value first (how big the other read should be)
 	char* textInt = new char[10];
@@ -793,7 +826,14 @@ void Parser::readBinaryFloat(std::ifstream & binaryFile, ParserData * parserData
 	//std::vector<std::string> vecString = split(stringText, ' ');
 	GLfloat tempGL = std::stof(stringText);
 	//fill the parserData with the Information
-	parserData->setShininess(tempGL);
+	if (choice == 0)
+	{
+		parserData->setShininess(tempGL);
+	}
+	else if (choice == 1)
+	{
+		parserData->setNormalMapStrength(tempGL);
+	}
 }
 
 void Parser::stringClean(std::vector<std::string>& attribs) {
@@ -806,3 +846,6 @@ void Parser::stringClean(std::vector<std::string>& attribs) {
 	attribs = newattribs;
 }
 
+void Parser::blenderMTL(const std::vector<std::string>& attribs, ParserData* parserData) {
+
+}

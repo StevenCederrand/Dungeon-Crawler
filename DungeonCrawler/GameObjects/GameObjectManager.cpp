@@ -53,11 +53,16 @@ void GameObjectManager::update(float dt)
 					float nx = 0.f, nz = 0.f;
 					float collisionTime = playerBox->swepAABB(newVel, *objectBox, nx, nz);
 					
+					if(nx == 0)
+						newVel.z *= std::min(collisionTime, 1.0f);
+					else if(nz == 0)
+						newVel.x *= std::min(collisionTime, 1.0f);
 
 					if (collisionTime < 1.0f)
 					{
+						float remainingTime = 1.0f - collisionTime;
 						hasCollided = true;
-						float dotprod = (newVel.x * nz + newVel.z * nx);
+						float dotprod = (newVel.x * nz + newVel.z * nx) * remainingTime;
 						newVel.x = dotprod * nz;
 						newVel.z = dotprod * nx;
 					}
@@ -85,9 +90,9 @@ void GameObjectManager::setPlayerRef(GameObject * player)
 		m_broadPhaseBox = new AABB();
 	
 	m_broadPhaseBox->setDimensions(
-		m_player->getBoundingBoxes()[0]->getDimensions().x * 2.f,
-		m_player->getBoundingBoxes()[0]->getDimensions().y * 2.f,
-		m_player->getBoundingBoxes()[0]->getDimensions().z * 2.f);
+		m_player->getBoundingBoxes()[0]->getDimensions().x * 10.f,
+		m_player->getBoundingBoxes()[0]->getDimensions().y * 10.f,
+		m_player->getBoundingBoxes()[0]->getDimensions().z * 10.f);
 	m_broadPhaseBox->setParentPosition(m_player->getPosition());
 
 }

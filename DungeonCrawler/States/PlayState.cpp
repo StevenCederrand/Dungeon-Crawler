@@ -9,6 +9,7 @@
 #include "Graphics/ShaderMap.h"
 #include "GameObjects/Box.h"
 #include "GameObjects/Player.h"
+#include "GameObjects/Projectile.h"
 
 
 PlayState::PlayState() {
@@ -35,20 +36,21 @@ PlayState::PlayState() {
 	
 	Mesh* roomMesh = MeshMap::getMesh("Room");
 	Mesh* boxMesh = MeshMap::getMesh("Box");
-
+	
+	#pragma endregion
+	
 	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 1.5f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
-
 	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
 	m_lightManager->addLight(glm::vec3(0.f, 0.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
 
 	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(0.f, 0.f, 0.f)));
 	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(-20.f, 0.f, 0.f)));
-	
 	m_gameObjectManager->addGameObject(new Box(roomMesh, glm::vec3(0.f, 0.f, 0.f)));
 	
 	m_player = new Player(boxMesh);
 	m_gameObjectManager->addGameObject(m_player);
 	m_gameObjectManager->setPlayerRef(m_player);
+
 }
 
 PlayState::~PlayState() {
@@ -62,15 +64,12 @@ PlayState::~PlayState() {
 
 void PlayState::update(float dt)
 {
-	m_camera->update(dt);
+	
 	m_gameObjectManager->update(dt);
+	m_camera->update(dt);
 	m_lightManager->update(dt);
 
 	m_renderer->prepareGameObjects(m_gameObjectManager->getGameObjects());
-
-	if (Input::isMouseReleased(GLFW_MOUSE_BUTTON_RIGHT)){
-		m_stateManager->popState();
-	}
 }
 
 
@@ -78,7 +77,7 @@ void PlayState::renderImGUI()
 {
 	ImGui::Begin("PlayState");
 
-	ImGui::Text("Press right mouse to switch back to menu state");
+	ImGui::Text("Press right mouse to DASH");
 
 	ImGui::Text("Player [ %f%s%f%s%f%s"
 		, m_player->getPosition().x

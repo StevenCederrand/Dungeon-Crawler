@@ -36,6 +36,16 @@
     <ClCompile Include="Vendor\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Vendor\stb\stb_image.cpp" />
     <ClCompile Include="Collision\AABB.cpp" />
+    <ClCompile Include="Audio\AudioEngine.cpp" />
+    <ClCompile Include="GameObjects\Player.cpp" />
+    <ClCompile Include="Graphics\Framebuffer.cpp" />
+    <ClCompile Include="Graphics\LightManager.cpp" />
+    <ClCompile Include="Main Menu\MainMenu.cpp" />
+    <ClCompile Include="Main Menu\MenuButton.cpp" />
+    <ClCompile Include="Graphics\UIRenderer.cpp" />
+    <ClCompile Include="GameObjects\LightSphere.cpp" />
+    <ClCompile Include="GameObjects\Projectile.cpp" />
+
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -78,5 +88,18 @@
     <ClInclude Include="Vendor\ImGui\imstb_truetype.h" />
     <ClInclude Include="Vendor\stb\stb_image.h" />
     <ClInclude Include="Collision\AABB.h" />
+    <ClInclude Include="GameObjects\Box.h" />
+    <ClInclude Include="GameObjects\GameObject.h" />
+    <ClInclude Include="GameObjects\GameObjectManager.h" />
+    <ClInclude Include="GameObjects\Player.h" />
+    <ClInclude Include="Graphics\Framebuffer.h" />
+    <ClInclude Include="Graphics\LightManager.h" />
+    <ClInclude Include="Globals\Settings.h" />
+    <ClInclude Include="Main Menu\MainMenu.h" />
+    <ClInclude Include="Main Menu\MenuButton.h" />
+    <ClInclude Include="Graphics\UIRenderer.h" />
+    <ClInclude Include="GameObjects\LightSphere.h" />
+    <ClInclude Include="Utility\Ray.h" />
+    <ClInclude Include="GameObjects\Projectile.h" />
   </ItemGroup>
 </Project>

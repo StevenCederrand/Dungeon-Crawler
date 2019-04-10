@@ -23,6 +23,10 @@ void Mesh::setTextureID(const unsigned int & textureID)
 	m_textureID = textureID;
 }
 
+void Mesh::setNormalID(const unsigned int & normalID) {
+	this->m_normalID = normalID;
+}
+
 void Mesh::setSpecularColor(const glm::vec3 & specularColor)
 {
 	m_specularColor = specularColor;
@@ -48,6 +52,12 @@ void Mesh::setBoundingBoxMinMax(std::vector<glm::vec3> maxMinVector)
 	m_maxMinVector = maxMinVector;
 }
 
+void Mesh::setHasNormalMap(bool hasNormalMap)
+{
+	m_hasNormalMap = hasNormalMap;
+
+}
+
 const unsigned int & Mesh::getVao() const
 {
 	return m_vao;
@@ -61,6 +71,10 @@ const unsigned int & Mesh::getNrOfIndices() const
 const unsigned int & Mesh::getTextureID() const
 {
 	return m_textureID;
+}
+
+const unsigned int & Mesh::getNormalID() const {
+	return this->m_normalID;
 }
 
 const glm::vec3 & Mesh::getSpecularColor() const
@@ -87,3 +101,9 @@ const float & Mesh::getShininess() const
 {
 	return m_shininess;
 }
+
+const bool & Mesh::getHasNormalMap() const
+{
+	return m_hasNormalMap;
+}
+

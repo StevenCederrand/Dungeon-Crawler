@@ -41,13 +41,13 @@ private:
 	void readBinaryVecInt(std::ifstream& binaryFile, ParserData* parserData);
 	void readBinaryVecVec3(std::ifstream& binaryFile, ParserData* parserData, int choice);
 	void readBinaryVecVec2(std::ifstream& binaryFile, ParserData* parserData);
-	void readBinaryString(std::ifstream& binaryFile, ParserData* parserData);
+	void readBinaryString(std::ifstream& binaryFile, ParserData* parserData, int choice);
 	void readBinaryVec3(std::ifstream& binaryFile, ParserData* parserData, int choice);
-	void readBinaryFloat(std::ifstream& binaryFile, ParserData* parserData);
+	void readBinaryFloat(std::ifstream& binaryFile, ParserData* parserData, int choice);
 		
 private:
 	std::vector<ParserData*> m_memoryTracker;
-
+	void blenderMTL(const std::vector<std::string>& attribs, ParserData* parserData);
 private:
 	// Used for obj indexing
 	struct OBJFace {
@@ -56,7 +56,7 @@ private:
 		unsigned int uvIndex;
 		unsigned int normalIndex;
 	};
-
+	
 	std::vector<OBJFace> m_faces;
 };
 

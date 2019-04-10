@@ -15,8 +15,16 @@ Shader* ShaderMap::createShader(std::string name, std::string vertex, std::strin
 	return tempShader;
 }
 
-void ShaderMap::createShader(std::string name, std::string Vertex, std::string geometry, std::string fragment)
-{
+Shader* ShaderMap::createShader(std::string name, std::string vertex, std::string geometry, std::string fragment) {
+	if (m_shaderMap.find(name) != m_shaderMap.end())
+	{
+		LOG_WARNING("Shader already exist: " + name);
+		return nullptr;
+	}
+	Shader* tempShader = new Shader(vertex, geometry, fragment);
+	addShader(name, tempShader);
+	return tempShader;
+
 }
 
 void ShaderMap::addShader(std::string name, Shader * shader)

@@ -40,6 +40,10 @@ void ParserData::setTextureFilename(std::string filename)
 	m_textureFilename = filename;
 }
 
+void ParserData::setNormalMapName(std::string filename) {
+	m_normalMapName = filename;
+}
+
 void ParserData::setDiffuseColor(GLfloat r, GLfloat g, GLfloat b)
 {
 	m_diffuseColor = glm::vec3(r, g, b);
@@ -60,9 +64,16 @@ void ParserData::setShininess(GLfloat factor)
 	m_shininess = factor;
 }
 
+
 void ParserData::setBoundingBox(const std::vector<glm::vec3>& maxMinVector)
 {
 	m_maxMinVector = maxMinVector;
+}
+
+void ParserData::setNormalMapStrength(float str)
+{
+	m_normalMapStrength = str;
+
 }
 
 /* Getters */
@@ -91,6 +102,10 @@ const std::string & ParserData::getTextureFilename() const
 	return m_textureFilename;
 }
 
+const std::string & ParserData::getNormalMapName() const {
+	return m_normalMapName;
+}
+
 const glm::vec3 & ParserData::getDiffuseColor() const
 {
 	return m_diffuseColor;
@@ -111,7 +126,21 @@ const GLfloat & ParserData::getShininess() const
 	return m_shininess;
 }
 
+
 const std::vector<glm::vec3>& ParserData::getMaxMinVector() const
 {
 	return m_maxMinVector;
+}
+
+const GLfloat & ParserData::getNormalMapStrength() const
+{
+	return m_normalMapStrength;
+}
+
+const bool ParserData::hasNormalMap() {
+	if (m_normalMapName != "") {
+		return true;
+	}
+	return false;
+
 }
