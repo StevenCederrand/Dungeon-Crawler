@@ -104,9 +104,7 @@ FbxString GetAttributeTypeName(FbxNodeAttribute::EType type)
 	}
 }
 
-/**
- * Print an attribute.
- */
+//print an attribute
 void PrintAttribute(FbxNodeAttribute* pAttribute) 
 {
 	if (!pAttribute) return;
@@ -134,11 +132,7 @@ void PrintAttribute(FbxNodeAttribute* pAttribute)
 		printf("\nNo Attribute Name.");
 }
 
-
-
-/**
- * Print a node, its attributes, and all its children recursively.
- */
+//print node, its attributes and its children, recursively.
 void PrintNode(FbxNode* pNode) 
 {
 	PrintTabs();
