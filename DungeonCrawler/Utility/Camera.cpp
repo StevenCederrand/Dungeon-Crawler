@@ -191,14 +191,13 @@ const Ray Camera::getRayFromScreen(float x, float y, float w, float h) const
 	return Ray(m_position, dir);
 }
 
-void Camera::setToPlayer(glm::vec3 playerPos)
+void Camera::setToPlayer(glm::vec3 playerPos, float mx)
 {
 	if (!m_debug)
 	{	
-
 		if (m_angle == 1)
 		{
-			m_position.x = playerPos.x;
+			m_position.x = playerPos.x + mx;
 			m_position.z = playerPos.z + 10.f;
 			m_position.y = playerPos.y + 10.f;
 			m_lookDirection = glm::vec3(0.f, -1.f, -1.f);

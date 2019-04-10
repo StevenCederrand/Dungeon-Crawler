@@ -23,7 +23,7 @@ public:
 	const glm::vec3 getPosition() const;
 	const Ray getRayFromScreen(float x, float y, float w, float h) const;
 
-	void setToPlayer(glm::vec3 playerPos);
+	void setToPlayer(glm::vec3 playerPos, float mx);
 	void setAngle(int angle);
 
 private:

@@ -17,6 +17,8 @@ Player::Player(Mesh * mesh) :
 	this->m_dash = 100.f;
 	this->m_dashCd = false;
 	this->m_timer = 0;
+	this->m_shake = 4;
+	this->m_x = 0.f;
 }
 
 void Player::update(float dt)
@@ -32,8 +34,15 @@ void Player::update(float dt)
 		{
 			dash();
 		}
+		if (Input::isMousePressed(GLFW_MOUSE_BUTTON_LEFT))
+		{
+			m_shake = 4;
+			//shootProjectile();
+			
+		}
 		move(dt);
 		dashCd();
+		screenShake();
 	}
 }
 
@@ -56,15 +65,7 @@ void Player::move(float dt)
 	{
 		this->translate(glm::vec3(this->m_speed, 0.f, 0.f) * dt);
 	}
-	Camera::active->setToPlayer(getPosition());
-	/*if (Input::isKeyHeldDown(GLFW_KEY_LEFT_SHIFT))
-	{
-		setSpeed(15.f);
-	}
-	else
-	{
-		setSpeed(m_defaultSpeed);
-	}*/
+	Camera::active->setToPlayer(getPosition(), m_x);
 }
 
 void Player::rotatePlayer()
@@ -141,9 +142,29 @@ void Player::dashCd()
 
 void Player::shootProjectile()
 {
+	//glfwGetCursorPos(glfwGetCurrentContext(), &m_mousePos.x, &m_mousePos.y);
 
+	screenShake();
+}
 
-
+void Player::screenShake()
+{
+	if (m_shake <= 0)
+	{
+		m_x = 0.f;
+	}
+	if (m_shake > 0)
+	{
+		m_x = 0.5f;
+	}
+	if (m_shake > 2)
+	{
+		m_x = -0.5f;
+	}
+	if (m_shake > 0)
+	{
+		m_shake--;
+	}
 }
 
 void Player::setSpeed(float speed)

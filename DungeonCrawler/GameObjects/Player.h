@@ -15,6 +15,7 @@ public:
 	void dashCd();
 
 	void shootProjectile();
+	void screenShake();
 
 	void setSpeed(float speed);
 	void setHealth(float health);
@@ -40,6 +41,9 @@ private:
 	float m_dash;
 	bool m_dashCd;
 	int m_timer;
+
+	int m_shake;
+	float m_x;
 
 	//Debugging Tools
 	bool m_debug;
