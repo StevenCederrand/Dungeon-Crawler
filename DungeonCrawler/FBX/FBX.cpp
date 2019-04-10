@@ -249,12 +249,10 @@ int main(int argc, char** argv)
 
 	// 0: FBX SDK
 
+	//Create usefull Objects
 	FbxManager* lSdkManager = createFbxManager();
-
 	FbxIOSettings* ios = createIOSettingsObject(lSdkManager);
-
 	FbxScene* lScene = createFbxScene(lSdkManager);
-
 	FbxImporter* lImporter = createFbxImporter(lSdkManager);
 
 	const char* lFilename = loadFbxFile();
