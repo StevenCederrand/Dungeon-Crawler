@@ -189,6 +189,19 @@ void destroyFbxImporter(FbxImporter* lImporter)
 	lImporter->Destroy();
 }
 
+void printAllNodes(FbxScene* lScene)
+{
+	// Print the nodes of the scene and their attributes recursively.
+	// Note that we are not printing the root node because it should not contain any attributes.
+	// The root node of our box would be a shell.
+	FbxNode* lRootNode = lScene->GetRootNode();
+	if (lRootNode)
+	{
+		for (int i = 0; i < lRootNode->GetChildCount(); i++)
+			PrintNode(lRootNode->GetChild(i));
+	}
+}
+
 //print node, its attributes and its children, recursively.
 void PrintNode(FbxNode* pNode)
 {
@@ -217,19 +230,6 @@ void PrintNode(FbxNode* pNode)
 	m_numTabs--;
 	PrintTabs();
 	printf("\n");
-}
-
-void printAllNodes(FbxScene* lScene)
-{
-	// Print the nodes of the scene and their attributes recursively.
-	// Note that we are not printing the root node because it should not contain any attributes.
-	// The root node in a standard maya scene would be?
-	FbxNode* lRootNode = lScene->GetRootNode();
-	if (lRootNode)
-	{
-		for (int i = 0; i < lRootNode->GetChildCount(); i++)
-			PrintNode(lRootNode->GetChild(i));
-	}
 }
 
 //prints tabs dependent on variable
@@ -314,7 +314,7 @@ int main(int argc, char** argv)
 	useFbxImporter(lImporter, lScene);
 	destroyFbxImporter(lImporter);
 
-	printAllNodes(lScene); //This doesnt work right now
+	printAllNodes(lScene);
 	
 	// Destroy the SDK manager and all the other objects it was handling.
 	lSdkManager->Destroy();
