@@ -206,7 +206,7 @@ void printAllNodes(FbxScene* lScene)
 void PrintNode(FbxNode* pNode)
 {
 	PrintTabs();
-	const char* nodeName = pNode->GetName();
+	const char* nodeName = pNode->GetName();	//The node we get right now is the pCube1 which is the name of the cube in the outliner
 
 	FbxDouble3 translation = pNode->LclTranslation.Get();
 	FbxDouble3 rotation = pNode->LclRotation.Get();
@@ -224,7 +224,7 @@ void PrintNode(FbxNode* pNode)
 		PrintAttribute(pNode->GetNodeAttributeByIndex(i));
 
 	// Recursively print the children.
-	for (int j = 0; j < pNode->GetChildCount(); j++)
+	for (int j = 0; j < pNode->GetChildCount(); j++)		//our cube has no children
 		PrintNode(pNode->GetChild(j));
 
 	m_numTabs--;
@@ -238,7 +238,6 @@ void PrintTabs()
 	for (int i = 0; i < m_numTabs; i++)
 		printf("\t");	//\t = tab, like several spaces
 }
-
 
 // Return a string-based representation based on the attribute type.
 FbxString GetAttributeTypeName(FbxNodeAttribute::EType type) 
@@ -288,12 +287,12 @@ void PrintAttribute(FbxNodeAttribute* pAttribute)
 	if (typeNameString != "")	//this needs to use the std string
 		printf("\nType Name: %s", typeName.Buffer());	//this needs to use the fbx string
 	else
-		printf("\nNo Type Name.");
+		printf("\nNo type name.");
 	
 	if (attrNameString != "")
 		printf("\nAttribute Name: %s", attrName.Buffer());
 	else
-		printf("\nNo Attribute Name.");
+		printf("\nNo attribute name.");
 }
 
 int main(int argc, char** argv) 
