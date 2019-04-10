@@ -110,6 +110,12 @@ void createCustomFile()
 	*/
 }
 
+const char* loadFBXFile()
+{
+	//Loading in my file
+	const char* lFilename = "\\Assets\\FBX\\box.fbx";
+	return lFilename;
+}
 
 //Tab character ("\t") counter
 int m_numTabs = 0;
@@ -213,13 +219,9 @@ int main(int argc, char** argv)
 {
 	//createCustomFile();
 
+	// 0: FBX SDK
 
-
-
-	// 0: FBX SDK, READS THE FBX FILE
-
-	//Loading in my file
-	const char* lFilename = "\\Assets\\FBX\\box.fbx";
+	const char* lFilename = loadFBXFile();
 
 	// Initialize the SDK manager. This object handles all our memory management.
 	FbxManager* lSdkManager = FbxManager::Create();
