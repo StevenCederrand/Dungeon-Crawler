@@ -2,6 +2,8 @@
 #ifndef _INITIALIZEFBXOBJECT_H
 #define _INITIALIZEFBXOBJECT_H
 
+#include <fbxsdk.h>
+
 class fbxObjectManager
 {
 public:

@@ -1,6 +1,4 @@
-#include <fbxsdk.h>
 #include "fbxObjectManager.h"
-
 
 fbxObjectManager::fbxObjectManager()
 {
