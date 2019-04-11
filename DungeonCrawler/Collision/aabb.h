@@ -16,7 +16,7 @@ public:
 	
 	float swepAABB(const glm::vec3& vel, const AABB& other, float& normalX, float& normalZ);
 	bool checkCollision(const AABB& other);
-
+	bool checkCollisionWithRay(const glm::vec3& rayOrigin, const glm::vec3 rayDirection, float& t);
 
 	const glm::vec3& getPosition() const;
 	const glm::vec3& getDimensions() const;

@@ -18,6 +18,7 @@ public:
 
 private:
 	void handlePlayerCollisionAgainstMap(float dt, GameObject* object, glm::vec3& newVel, bool& hasCollided);
+	void handlePlayerShooting(float dt, GameObject* object, const glm::vec3& rayDir, float& rayLengthUntilCollision);
 
 private:
 	std::vector<GameObject*> m_gameObjects;

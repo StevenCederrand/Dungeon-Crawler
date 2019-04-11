@@ -150,6 +150,35 @@ bool AABB::checkCollision(const AABB & other)
 		m_parentPosition.z - m_dimensions.z > other.getPosition().z + other.m_dimensions.z);
 }
 
+bool AABB::checkCollisionWithRay(const glm::vec3 & rayOrigin, const glm::vec3 rayDirection, float & t)
+{
+	float t1 = 1000, t0 = -t1;
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (rayDirection[i] != 0.0f)
+		{
+			float lo = (m_parentPosition[i] + m_position[i] - m_dimensions[i] - rayOrigin[i]) / rayDirection[i];
+			float hi = (m_parentPosition[i] + m_position[i] + m_dimensions[i] - rayOrigin[i]) / rayDirection[i];
+
+			t0 = std::max(t0, std::min(lo, hi));
+			t1 = std::min(t1, std::max(lo, hi));
+		}
+		else
+		{
+			if (rayOrigin[i] < m_parentPosition[i] + m_position[i] - m_dimensions[i] ||
+				rayOrigin[i] > m_parentPosition[i] + m_position[i] + m_dimensions[i])
+			{
+				return false;
+			}
+		}
+	}
+
+	t = t0;
+
+	return (t0 <= t1) && (t1 > 0);
+}
+
 const glm::vec3 & AABB::getPosition() const
 {
 	return m_parentPosition + m_position;

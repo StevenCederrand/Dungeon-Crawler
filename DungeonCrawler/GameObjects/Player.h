@@ -26,7 +26,8 @@ public:
 	float getDamage()const;
 	bool isShooting() const;
 
-	glm::vec3 shakeDirection()const;
+	const glm::vec3& getLookDirection() const;
+	glm::vec3 shakeDirection() const;
 
 private:
 	float m_angle;
@@ -42,9 +43,16 @@ private:
 	bool m_dashCd;
 	int m_timer;
 
+	// Shooting
 	bool m_shooting;
+	bool m_canShoot;
+	float m_shootingCooldown;
+	glm::vec3 m_lookDirection;
+	
+	
 	int m_shake;
 	glm::vec3 m_shakeDir;
+
 
 
 	//Debugging Tools

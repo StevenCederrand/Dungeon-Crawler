@@ -19,16 +19,31 @@ GameObjectManager::~GameObjectManager()
 
 void GameObjectManager::update(float dt)
 {	
+	//------ Player collision broadphasebox ( Used to speed up collision checking against map ) ------
 	if (m_broadPhaseBox)
 		m_broadPhaseBox->setParentPosition(m_player->getPosition());
 
+
+	//------ Player collision with map ------
 	bool hasCollided = false;
 	glm::vec3 newVel = glm::vec3(0);
+	
 
+	//------ Update player manually ------
 	m_player->update(dt);
 	m_player->updateModelMatrix();
+	
+
+	//------ Player ray used for shooting ------
+	float rayLengthUntilCollision = -1.0f;
+	glm::vec3 rayDirection = m_player->getLookDirection();
+	
+
+	//------ Player current velocity ( Also used for collision ) ------
 	newVel = m_player->getVelocity();
 
+
+	//------ Update all the game objects and check for collision 'n stuff ------
 	for (size_t i = 0; i < m_gameObjects.size(); i++)
 	{
 		// Get the object, just convenient
@@ -42,17 +57,31 @@ void GameObjectManager::update(float dt)
 		}
 
 		// Update the object
+		object->setPlayerPosition(m_player->getPosition());
 		object->update(dt);
 		object->updateModelMatrix();
 
 		// Handle collisions if there is any
 		handlePlayerCollisionAgainstMap(dt, object, newVel, hasCollided);
+
+		// If player is shooting then handle it
+		if (m_player->isShooting())
+			handlePlayerShooting(dt, object, rayDirection, rayLengthUntilCollision);
 	}
 
 	// Lastly we translate the player with the velocity that has been 
 	// modyfied by the collision handling function
 	m_player->translate(newVel);
-	
+
+	// Also here is the length we need to travel to get to the closest object the
+	// player hit if he fired a gun. 
+	// If the length is -1 then there was no intersection
+	if (rayLengthUntilCollision != -1.0f)
+	{
+		glm::vec3 gunshotCollisionPoint = rayDirection * rayLengthUntilCollision;
+		LOG_TRACE(std::to_string(gunshotCollisionPoint.x) + ", " + std::to_string(gunshotCollisionPoint.z));
+
+	}
 }
 
 void GameObjectManager::addGameObject(GameObject * gameObject)
@@ -128,4 +157,23 @@ void GameObjectManager::handlePlayerCollisionAgainstMap(float dt, GameObject * o
 		}
 	}
 
+}
+
+void GameObjectManager::handlePlayerShooting(float dt, GameObject * object, const glm::vec3& rayDir, float& rayLengthUntilCollision)
+{
+	if (object->isCollidable())
+	{
+		const std::vector<AABB*> objectBoxes = object->getBoundingBoxes();
+		
+		for (int i = 0; i < objectBoxes.size(); i++) 
+		{
+			AABB* objectBox = objectBoxes[i];
+			// This function will alter the rayLengthUntilCollision if the ray is intersecting an object
+			if (!objectBox->checkCollisionWithRay(m_player->getPosition(), rayDir, rayLengthUntilCollision))
+			{
+				if(rayLengthUntilCollision < 0.f)
+					rayLengthUntilCollision = -1.0f;
+			}
+		}
+	}
 }

@@ -84,6 +84,11 @@ void GameObject::setRotation(const glm::vec3 rotation)
 	m_rotation = rotation;
 }
 
+void GameObject::setPlayerPosition(const glm::vec3 & position)
+{
+	m_playerPosition = position;
+}
+
 std::vector<AABB*> GameObject::getBoundingBoxes() const
 {
 	return m_boundingBoxes;
@@ -112,6 +117,11 @@ const glm::vec3 & GameObject::getVelocity() const
 const glm::mat4 & GameObject::getModelMatrix() const
 {
 	return m_modelMatrix;
+}
+
+const glm::vec3 & GameObject::getPlayerPosition() const
+{
+	return m_playerPosition;
 }
 
 const bool GameObject::isCollidable() const

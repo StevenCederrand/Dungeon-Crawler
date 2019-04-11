@@ -19,6 +19,7 @@ public:
 	void setCollidable(bool condition);
 	void setScale(const glm::vec3& scale);
 	void setRotation(const glm::vec3 rotation);
+	void setPlayerPosition(const glm::vec3& position);
 
 	std::vector<AABB*> getBoundingBoxes() const;
 	const glm::vec3& getPosition() const;
@@ -26,6 +27,7 @@ public:
 	const glm::vec3& getRotation() const;
 	const glm::vec3& getVelocity() const;
 	const glm::mat4& getModelMatrix() const;
+	const glm::vec3& getPlayerPosition() const;
 	const bool isCollidable() const;
 
 	Mesh* getMesh() const;
@@ -38,6 +40,7 @@ private:
 	glm::vec3 m_rotation;
 	glm::vec3 m_velocity;
 	glm::mat4 m_modelMatrix;
+	glm::vec3 m_playerPosition;
 	bool m_isCollidable;
 	std::vector<AABB*> m_boundingBoxes;
 	
