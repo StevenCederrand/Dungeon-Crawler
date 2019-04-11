@@ -374,24 +374,23 @@ int main(int argc, char** argv)
 
 	// 0: Start with this, FBX SDK
 	//Create usefull Objects
-	FbxManager* lSdkManager = CreateFbxManager();
-	FbxIOSettings* ios = CreateIOSettingsObject(lSdkManager);
-	FbxScene* lScene = CreateFbxScene(lSdkManager);
-	FbxImporter* lImporter = CreateFbxImporter(lSdkManager);
+	//FbxManager* lSdkManager = CreateFbxManager();
+	//FbxIOSettings* ios = CreateIOSettingsObject(lSdkManager);
+	//FbxScene* lScene = CreateFbxScene(lSdkManager);
+	//FbxImporter* lImporter = CreateFbxImporter(lSdkManager);
 
+
+	//const char* lFilename = LoadFbxFile();
+
+	//InitializeFbxImporter(lImporter, lFilename, lSdkManager); //Importer Lifecycle: Create, Initialize, Use, Destroy.
+	//UseFbxImporter(lImporter, lScene);
+	//DestroyFbxImporter(lImporter);
 	
+	InitializeFbxObject lsdkObject = InitializeFbxObject();
 
-	const char* lFilename = LoadFbxFile();
-
-	InitializeFbxImporter(lImporter, lFilename, lSdkManager); //Importer Lifecycle: Create, Initialize, Use, Destroy.
-	UseFbxImporter(lImporter, lScene);
-	DestroyFbxImporter(lImporter);
-
-	DisplayHierarchy(lScene);
+	//DisplayHierarchy();
 	
-
-
 	// Destroy the SDK manager and all the other objects it was handling.
-	lSdkManager->Destroy();
+	//lSdkManager->Destroy();
 	return 0;
 }
