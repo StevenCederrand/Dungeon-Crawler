@@ -194,17 +194,32 @@ const Ray Camera::getRayFromScreen(float x, float y, float w, float h) const
 	return Ray(m_position, dir);
 }
 
-void Camera::setToPlayer(glm::vec3 playerPos)
+const glm::vec3 Camera::getMouseWorldPos()
+{
+	glfwGetCursorPos(glfwGetCurrentContext(), &m_mousePos.x, &m_mousePos.y);
+	Ray ray = Camera::active->getRayFromScreen(m_mousePos.x, m_mousePos.y, 1280, 720);
+
+	glm::vec3 planeNormal(0.f, 1.f, 0.f);
+	float dis = glm::dot(-ray.pos, planeNormal) / (glm::dot(ray.dir, planeNormal) + 0.001f);
+
+	return ray.calcPoint(dis);
+}
+
+void Camera::setToPlayer(glm::vec3 playerPos, glm::vec3 shakeDir)
 {
 	if (!m_debug)
 	{	
-
 		if (m_angle == 1)
 		{
-			m_position.x = playerPos.x;
-			m_position.z = playerPos.z + 10.f;
-			m_position.y = playerPos.y + 10.f;
+			static glm::vec3 cameraOffset(0, 15, 15);
+			m_position = cameraOffset + playerPos + shakeDir;
 			m_lookDirection = glm::vec3(0.f, -1.f, -1.f);
+
+			/*
+			m_position.x = playerPos.x + shakeDir.x;
+			m_position.z = playerPos.z + 10.f + shakeDir.z;
+			m_position.y = playerPos.y + 10.f;
+			m_lookDirection = glm::vec3(0.f, -1.f, -1.f);*/
 		}
 		if (m_angle == 2)
 		{
