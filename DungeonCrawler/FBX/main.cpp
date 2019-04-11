@@ -327,10 +327,10 @@ void DisplayControlPoints(FbxMesh* pMesh)
 	for (i = 0; i < lControlPointsCount; i++)
 	{
 		PrintTabs();
-		printf("Control Point %i\n", i);
-		PrintTabs();
+		printf("Control Point %i ", i);
 		Display3DVector("Coordinates: ", lControlPoints[i]);
 
+		/*
 		for (int j = 0; j < pMesh->GetElementNormalCount(); j++)
 		{
 			FbxGeometryElementNormal* leNormals = pMesh->GetElementNormal(j);
@@ -342,6 +342,7 @@ void DisplayControlPoints(FbxMesh* pMesh)
 					Display3DVector(header, leNormals->GetDirectArray().GetAt(i));
 			}
 		}
+		*/
 	}
 	printf("\n\n");
 }
