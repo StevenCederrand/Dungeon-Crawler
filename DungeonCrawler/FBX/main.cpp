@@ -1,5 +1,6 @@
 #include <fbxsdk.h>
 #include "DisplayCommon.h"
+#include "InitializeFbxObject.h"
 
 #include <string>
 #include <fstream>
@@ -377,6 +378,8 @@ int main(int argc, char** argv)
 	FbxIOSettings* ios = CreateIOSettingsObject(lSdkManager);
 	FbxScene* lScene = CreateFbxScene(lSdkManager);
 	FbxImporter* lImporter = CreateFbxImporter(lSdkManager);
+
+	
 
 	const char* lFilename = LoadFbxFile();
 

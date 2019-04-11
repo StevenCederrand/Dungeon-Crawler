@@ -6,6 +6,7 @@ class InitializeFbxObject
 {
 public:
 	InitializeFbxObject();
+	void initializer();
 	FbxManager*& CreateFbxManager();
 	FbxIOSettings*& CreateIOSettingsObject(FbxManager*& lSdkManager);
 	FbxScene*& CreateFbxScene(FbxManager* lSdkManager);
@@ -16,7 +17,7 @@ public:
 	void DestroyFbxImporter(FbxImporter*& lImporter);
 
 private:
-
+	FbxManager m_manager;
 
 };
 #endif _INITIALIZEFBXOBJECT_H

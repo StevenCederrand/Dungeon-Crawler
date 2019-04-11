@@ -4,6 +4,12 @@
 
 InitializeFbxObject::InitializeFbxObject()
 {
+	initializer();
+}
+
+void InitializeFbxObject::initializer()
+{
+
 }
 
 FbxManager *& InitializeFbxObject::CreateFbxManager()
