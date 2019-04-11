@@ -51,13 +51,16 @@ private:
 	std::vector<glm::vec3> m_vertices;
 	std::vector<glm::vec2> m_uvs;
 	std::vector<glm::vec3> m_normals;
-	
+
 	std::string m_textureFilename;
 	std::string m_normalMapName;
 
 	glm::vec3 m_diffuseColor;
 	glm::vec3 m_specularColor;
 	glm::vec3 m_ambientColor;
+
+
+
 	GLfloat m_shininess;
 	GLfloat m_normalMapStrength;
 
