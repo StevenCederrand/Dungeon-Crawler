@@ -1,7 +1,6 @@
 #ifndef _DISPLAY_HIERARCHY_H
 #define _DISPLAY_HIERARCHY_H
 
-#include <fbxsdk.h>
 #include <string>
 #include "DisplayCommon.h"
 
