@@ -227,7 +227,7 @@ void PrintNode(FbxNode* pNode)
 	FbxDouble3 scaling = pNode->LclScaling.Get();
 	
 
-	/*
+	
 	// Print the contents of the node. Need to declare spaces for variables first! Also tabs for formating
 	PrintTabs();
 	printf("Name: %s\n", nodeName);
@@ -237,7 +237,7 @@ void PrintNode(FbxNode* pNode)
 	printf("Rotation: %f %f %f\n", rotation[0], rotation[1], rotation[2]);
 	PrintTabs();
 	printf("Scaling: %f %f %f\n", scaling[0], scaling[1], scaling[2]);
-	*/
+	
 
 	// Print the node's attributes.
 	for (int i = 0; i < pNode->GetNodeAttributeCount(); i++)
