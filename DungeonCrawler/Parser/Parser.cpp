@@ -130,7 +130,7 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 		else if (attribs[0] == "f" && !isParsingCollider)
 		{
 			std::vector<std::string> attributes = split(line, ' ');
-			for (int i = 1; i < attributes.size(); i++)
+			for (size_t i = 1; i < attributes.size(); i++)
 			{
 				std::vector<std::string> currFace = split(attributes[i], '/');
 				GLuint x = static_cast<GLuint>(std::stoi(currFace[0]));
@@ -380,7 +380,7 @@ void Parser::writeBinaryVecInt(std::ofstream& binaryFile, std::vector<GLuint> ve
 	std::string stringvector;
 
 	//loops to fill the string with the data
-	for (int i = 0; i < vector.size(); i++)
+	for (size_t i = 0; i < vector.size(); i++)
 	{
 		stringvector.append(std::to_string(vector[i]));
 		stringvector.append(" ");
@@ -415,7 +415,7 @@ void Parser::writeBinaryVecVec3(std::ofstream& binaryFile, std::vector<glm::vec3
 	std::string stringvector;
 
 	//loops to fill the string with the data
-	for (int i = 0; i < vector.size(); i++)
+	for (size_t i = 0; i < vector.size(); i++)
 	{
 		stringvector.append(std::to_string(vector[i].x));
 		stringvector.append(" ");
@@ -430,7 +430,7 @@ void Parser::writeBinaryVecVec3(std::ofstream& binaryFile, std::vector<glm::vec3
 
 	//make a string of the size ( to write it to the file)
 	std::string indicesStringInt = std::to_string(indicesStringSize);
-	for (int i = indicesStringInt.size(); i < 10; i++)
+	for (size_t i = indicesStringInt.size(); i < 10; i++)
 	{
 		indicesStringInt.append(" ");
 	}
@@ -454,7 +454,7 @@ void Parser::writeBinaryVecVec2(std::ofstream& binaryFile, std::vector<glm::vec2
 	std::string stringvector;
 
 	//loops to fill the string with the data
-	for (int i = 0; i < vector.size(); i++)
+	for (size_t i = 0; i < vector.size(); i++)
 	{
 		stringvector.append(std::to_string(vector[i].x));
 		stringvector.append(" ");
@@ -468,7 +468,7 @@ void Parser::writeBinaryVecVec2(std::ofstream& binaryFile, std::vector<glm::vec2
 
 	//make a string of the size ( to write it to the file)
 	std::string indicesStringInt = std::to_string(indicesStringSize);
-	for (int i = indicesStringInt.size(); i < 10; i++)
+	for (size_t i = indicesStringInt.size(); i < 10; i++)
 	{
 		indicesStringInt.append(" ");
 	}
@@ -494,7 +494,7 @@ void Parser::writeBinaryString(std::ofstream& binaryFile, std::string string)
 
 	//make a string of the size ( to write it to the file)
 	std::string indicesStringInt = std::to_string(indicesStringSize);
-	for (int i = indicesStringInt.size(); i < 10; i++)
+	for (size_t i = indicesStringInt.size(); i < 10; i++)
 	{
 		indicesStringInt.append(" ");
 	}
@@ -533,7 +533,7 @@ void Parser::writeBinaryVec3(std::ofstream& binaryFile, glm::vec3 vector)
 
 	//make a string of the size ( to write it to the file)
 	std::string indicesStringInt = std::to_string(indicesStringSize);
-	for (int i = indicesStringInt.size(); i < 10; i++)
+	for (size_t i = indicesStringInt.size(); i < 10; i++)
 	{
 		indicesStringInt.append(" ");
 	}
@@ -568,7 +568,7 @@ void Parser::writeBinaryFloat(std::ofstream& binaryFile, GLfloat floatValue)
 
 	//make a string of the size ( to write it to the file)
 	std::string indicesStringInt = std::to_string(indicesStringSize);
-	for (int i = indicesStringInt.size(); i < 10; i++)
+	for (size_t i = indicesStringInt.size(); i < 10; i++)
 	{
 		indicesStringInt.append(" ");
 	}
@@ -629,7 +629,7 @@ void Parser::readBinaryVecInt(std::ifstream & binaryFile, ParserData* parserData
 
 	
 	//fill the parserData with the Information
-	for (int i = 0; i < vecString.size(); i++)
+	for (size_t i = 0; i < vecString.size(); i++)
 	{
 		GLuint tempGL = std::stoi(vecString[i]);
 		parserData->addIndex(tempGL);
@@ -661,7 +661,7 @@ void Parser::readBinaryVecVec3(std::ifstream & binaryFile, ParserData * parserDa
 	
 	std::vector<glm::vec3> maxMinVec;
 	//fill the parserData with the Information
-	for (int i = 0; (i+2) < vecString.size(); i)
+	for (size_t i = 0; (i+2) < vecString.size(); i)
 	{
 		if (vecString[i] != "") 
 		{
@@ -715,7 +715,7 @@ void Parser::readBinaryVecVec2(std::ifstream & binaryFile, ParserData * parserDa
 	std::vector<std::string> vecString = split(stringText, ' ');
 
 	//fill the parserData with the Information
-	for (int i = 0; (i+1) < vecString.size(); i)
+	for (size_t i = 0; (i+1) < vecString.size(); i)
 	{
 		glm::vec2 tempGL;
 		tempGL.x = std::stof(vecString[i], NULL);
