@@ -17,8 +17,8 @@ Player::Player(Mesh * mesh) :
 	this->m_dash = 100.f;
 	this->m_dashCd = false;
 	this->m_timer = 0;
-	this->m_shake = 4;
-	this->m_x = 0.f;
+	this->m_shake = 0;
+	this->m_shakeDir = glm::vec3(0.f, 0.f, 0.f);
 }
 
 void Player::update(float dt)
@@ -31,6 +31,10 @@ void Player::update(float dt)
 	{
 		camPerspective();
 		if (Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT))
+		{
+			dash();
+		}
+		if (Input::isMousePressed(GLFW_MOUSE_BUTTON_RIGHT))
 		{
 			dash();
 		}
@@ -68,18 +72,12 @@ void Player::move(float dt)
 		m_movementDirection.x = this->m_speed * dt;
 	}
 	setVelocity(m_movementDirection);
-	Camera::active->setToPlayer(getPosition(), m_x);
+	Camera::active->setToPlayer(getPosition(), m_shakeDir);
 }
 
 void Player::rotatePlayer()
 {	
-	glfwGetCursorPos(glfwGetCurrentContext(), &m_mousePos.x, &m_mousePos.y);
-	Ray ray = Camera::active->getRayFromScreen(m_mousePos.x, m_mousePos.y, 1280, 720);
-
-	glm::vec3 planeNormal(0.f, 1.f, 0.f);
-	float dis = glm::dot(-ray.pos, planeNormal) / (glm::dot(ray.dir, planeNormal) + 0.001f);
-
-	glm::vec3 pos = ray.calcPoint(dis);
+	glm::vec3 pos = Camera::active->getMouseWorldPos();
 
 	glm::vec2 direction = glm::vec2(
 		this->getPosition().x - pos.x,
@@ -87,6 +85,14 @@ void Player::rotatePlayer()
 	m_angle = glm::degrees(atan2f(direction.x, direction.y));
 
 	setRotation(glm::vec3(0.f, m_angle, 0.f));
+}
+
+glm::vec3 Player::shakeDirection()const
+{
+	glm::vec3 lookDir = Camera::active->getMouseWorldPos() - getPosition();
+	lookDir.y = 0;
+
+	return glm::normalize(lookDir);
 }
 
 void Player::camPerspective()
@@ -154,15 +160,15 @@ void Player::screenShake()
 {
 	if (m_shake <= 0)
 	{
-		m_x = 0.f;
+		m_shakeDir *= 0.f;
 	}
 	if (m_shake > 0)
 	{
-		m_x = 0.5f;
+		m_shakeDir = shakeDirection() * 0.25f;
 	}
 	if (m_shake > 2)
 	{
-		m_x = -0.5f;
+		m_shakeDir = shakeDirection() * -0.25f;
 	}
 	if (m_shake > 0)
 	{

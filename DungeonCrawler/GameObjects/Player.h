@@ -25,8 +25,9 @@ public:
 	float getHealth()const;
 	float getDamage()const;
 
+	glm::vec3 shakeDirection()const;
+
 private:
-	glm::dvec2 m_mousePos;
 	float m_angle;
 
 	glm::vec3 m_movementDirection;
@@ -41,7 +42,7 @@ private:
 	int m_timer;
 
 	int m_shake;
-	float m_x;
+	glm::vec3 m_shakeDir;
 
 	//Debugging Tools
 	bool m_debug;
