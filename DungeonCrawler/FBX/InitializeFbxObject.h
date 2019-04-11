@@ -1,7 +1,7 @@
 #pragma once
-
 #ifndef _INITIALIZEFBXOBJECT_H
 #define _INITIALIZEFBXOBJECT_H
+
 class InitializeFbxObject
 {
 public:
@@ -17,7 +17,9 @@ public:
 	void DestroyFbxImporter(FbxImporter*& lImporter);
 
 private:
-	FbxManager m_manager;
+	FbxManager* m_lsdkManager;
+	FbxScene* m_lsdkScene;
+	FbxImporter* m_lsdkImporter;
 
 };
 #endif _INITIALIZEFBXOBJECT_H

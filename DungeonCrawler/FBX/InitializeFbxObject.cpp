@@ -9,7 +9,14 @@ InitializeFbxObject::InitializeFbxObject()
 
 void InitializeFbxObject::initializer()
 {
-
+	this->m_lsdkManager = CreateFbxManager();
+	CreateIOSettingsObject(m_lsdkManager);
+	this->m_lsdkScene = CreateFbxScene(m_lsdkManager);
+	this->m_lsdkImporter = CreateFbxImporter(m_lsdkManager);
+	LoadFbxFile();
+	InitializeFbxImporter(m_lsdkImporter, "myScene" , m_lsdkManager);
+	UseFbxImporter(m_lsdkImporter, m_lsdkScene);
+	DestroyFbxImporter(m_lsdkImporter);
 }
 
 FbxManager *& InitializeFbxObject::CreateFbxManager()
