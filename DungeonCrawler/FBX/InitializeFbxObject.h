@@ -15,11 +15,13 @@ public:
 	void InitializeFbxImporter(FbxImporter*& lImporter, const char* lFilename, FbxManager* lSdkManager);
 	void UseFbxImporter(FbxImporter*& lImporter, FbxScene*& lScene);
 	void DestroyFbxImporter(FbxImporter*& lImporter);
+	FbxScene* GetScene()const;
 
 private:
 	FbxManager* m_lsdkManager;
 	FbxScene* m_lsdkScene;
 	FbxImporter* m_lsdkImporter;
+	const char* m_lFilename;
 
 };
 #endif _INITIALIZEFBXOBJECT_H
