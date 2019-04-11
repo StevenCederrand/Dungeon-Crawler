@@ -37,7 +37,8 @@ void GameObjectManager::update(float dt)
 	//------ Player ray used for shooting ------
 	float rayLengthUntilCollision = -1.0f;
 	glm::vec3 rayDirection = m_player->getLookDirection();
-	
+	GameObject* objectHit = nullptr;
+
 
 	//------ Player current velocity ( Also used for collision ) ------
 	newVel = m_player->getVelocity();
@@ -58,15 +59,16 @@ void GameObjectManager::update(float dt)
 
 		// Update the object
 		object->setPlayerPosition(m_player->getPosition());
+		object->internalUpdate(dt);
 		object->update(dt);
 		object->updateModelMatrix();
 
 		// Handle collisions if there is any
-		handlePlayerCollisionAgainstMap(dt, object, newVel, hasCollided);
+		handlePlayerCollisionAgainstObjects(dt, object, newVel, hasCollided);
 
 		// If player is shooting then handle it
 		if (m_player->isShooting())
-			handlePlayerShooting(dt, object, rayDirection, rayLengthUntilCollision);
+			handlePlayerShooting(dt, object, rayDirection, rayLengthUntilCollision, objectHit);
 	}
 
 	// Lastly we translate the player with the velocity that has been 
@@ -79,7 +81,13 @@ void GameObjectManager::update(float dt)
 	if (rayLengthUntilCollision != -1.0f)
 	{
 		glm::vec3 gunshotCollisionPoint = rayDirection * rayLengthUntilCollision;
-		LOG_TRACE(std::to_string(gunshotCollisionPoint.x) + ", " + std::to_string(gunshotCollisionPoint.z));
+		if (objectHit)
+		{
+			//LOG_TRACE("Ray intersection! collision point: " + std::to_string(gunshotCollisionPoint.x) + ", " + std::to_string(gunshotCollisionPoint.z));
+
+			// --------MAYBE DYNAMIC CASY HERE TO CHECK IF WE HIT A ENEMY?--------
+			objectHit->setHit();
+		}
 
 	}
 }
@@ -123,9 +131,8 @@ const std::vector<GameObject*>& GameObjectManager::getGameObjects() const
 	return m_gameObjects;
 }
 
-void GameObjectManager::handlePlayerCollisionAgainstMap(float dt, GameObject * object, glm::vec3& newVel, bool& hasCollided)
+void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject * object, glm::vec3& newVel, bool& hasCollided)
 {
-	
 	// If the object is collidable then handle collision
 	if (object->isCollidable())
 	{
@@ -159,7 +166,7 @@ void GameObjectManager::handlePlayerCollisionAgainstMap(float dt, GameObject * o
 
 }
 
-void GameObjectManager::handlePlayerShooting(float dt, GameObject * object, const glm::vec3& rayDir, float& rayLengthUntilCollision)
+void GameObjectManager::handlePlayerShooting(float dt, GameObject * object, const glm::vec3& rayDir, float& rayLengthUntilCollision, GameObject* & hitGameObject)
 {
 	if (object->isCollidable())
 	{
@@ -168,12 +175,21 @@ void GameObjectManager::handlePlayerShooting(float dt, GameObject * object, cons
 		for (int i = 0; i < objectBoxes.size(); i++) 
 		{
 			AABB* objectBox = objectBoxes[i];
+
+			// if this is changed after the collision test then update the hit gameobject pointer (Copy it)
+			float rayLengthBefore = float(rayLengthUntilCollision);
+
 			// This function will alter the rayLengthUntilCollision if the ray is intersecting an object
-			if (!objectBox->checkCollisionWithRay(m_player->getPosition(), rayDir, rayLengthUntilCollision))
-			{
-				if(rayLengthUntilCollision < 0.f)
-					rayLengthUntilCollision = -1.0f;
+			objectBox->checkCollisionWithRay(m_player->getPosition(), rayDir, rayLengthUntilCollision);
+
+			if (rayLengthUntilCollision > 0.0f && (rayLengthBefore > rayLengthUntilCollision || rayLengthBefore < 0.f)) {
+				hitGameObject = object;
 			}
+			else{
+				// Object is further away so set the raylengthUntilCollision to what is was before
+				rayLengthUntilCollision = rayLengthBefore;
+			}
+
 		}
 	}
 }

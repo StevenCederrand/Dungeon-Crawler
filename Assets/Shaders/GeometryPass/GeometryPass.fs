@@ -16,6 +16,8 @@ uniform lowp float hasTexture = -100;
 
 uniform sampler2D textureSampler;
 uniform sampler2D normalSampler;
+uniform vec3 colorTint;
+
 
 void main() {
     vec4 color = texture(textureSampler, frag_data.uv);
@@ -31,7 +33,7 @@ void main() {
         normalBuffer = frag_data.normal;
     }
 
-    colourBuffer.rgb = color.rgb;
+    colourBuffer.rgb = mix(color.rgb, colorTint, 0.75f);
     positionBuffer = frag_data.position;
     colourBuffer.a = shininess;
 }

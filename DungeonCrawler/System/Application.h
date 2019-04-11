@@ -29,6 +29,8 @@ private:
 	Input* m_input;
 	StateManager* m_stateManager;
 	AudioEngine* m_audioEngine;
+
+	bool m_vsync;
 };
 
 #endif

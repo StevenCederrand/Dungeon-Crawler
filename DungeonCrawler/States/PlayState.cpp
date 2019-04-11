@@ -10,7 +10,7 @@
 #include "GameObjects/Box.h"
 #include "GameObjects/Player.h"
 
-
+#include "Utility/Randomizer.h"
 
 PlayState::PlayState() {
 	
@@ -41,12 +41,20 @@ PlayState::PlayState() {
 	
 	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 1.5f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
 	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
-	m_lightManager->addLight(glm::vec3(0.f, 0.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
+	m_lightManager->addLight(glm::vec3(0.f, 5.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
 
-	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(5.f, 0.f, 2.f)));
-	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(-20.f, 0.f, 0.f)));
 	m_gameObjectManager->addGameObject(new Box(roomMesh, glm::vec3(0.f, 0.f, 0.f)));
-	
+
+	for (int i = 0; i < 20; i++)
+	{
+		m_gameObjectManager->addGameObject(new Box(boxMesh, 
+			glm::vec3(
+				Randomizer::single(-15.f, 15.f), 
+				0.f, 
+				Randomizer::single(-15.f, 15.f)
+			)));
+	}
+
 	m_player = new Player(boxMesh);
 	m_gameObjectManager->addGameObject(m_player);
 

@@ -17,8 +17,8 @@ public:
 	const std::vector<GameObject*>& getGameObjects() const;
 
 private:
-	void handlePlayerCollisionAgainstMap(float dt, GameObject* object, glm::vec3& newVel, bool& hasCollided);
-	void handlePlayerShooting(float dt, GameObject* object, const glm::vec3& rayDir, float& rayLengthUntilCollision);
+	void handlePlayerCollisionAgainstObjects(float dt, GameObject* object, glm::vec3& newVel, bool& hasCollided);
+	void handlePlayerShooting(float dt, GameObject* object, const glm::vec3& rayDir, float& rayLengthUntilCollision, GameObject* &hitGameObject);
 
 private:
 	std::vector<GameObject*> m_gameObjects;

@@ -98,5 +98,6 @@
     <ClInclude Include="Graphics\UIRenderer.h" />
     <ClInclude Include="GameObjects\LightSphere.h" />
     <ClInclude Include="Utility\Ray.h" />
+    <ClInclude Include="Utility\Randomizer.h" />
   </ItemGroup>
 </Project>

@@ -110,6 +110,7 @@ void Renderer::geometryPass() {
 
 		for (auto object : mesh.second) {
 			geometryShader->setMat4("modelMatrix", object->getModelMatrix());
+			geometryShader->setVec3("colorTint", object->getColorTint());
 			glDrawElements(GL_TRIANGLES, mesh.first->getNrOfIndices(), GL_UNSIGNED_INT, NULL);
 		}
 
