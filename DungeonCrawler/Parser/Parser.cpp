@@ -152,7 +152,7 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 
 	data->setBoundingBox(maxMinVector);
 
-	//writeToBinary(data, filenameString[0]);
+	writeToBinary(data, filenameString[0]);
 	
 	m_memoryTracker.emplace_back(data);
 
@@ -268,11 +268,11 @@ void Parser::writeToBinary(ParserData* data, const std::string& filename)
 	GLfloat shininess = data->getShininess();
 	writeBinaryFloat(binaryFile, shininess);
 
-	std::vector<glm::vec3> maxMinVector = data->getMaxMinVector();
-	writeBinaryVecVec3(binaryFile, maxMinVector);
-
 	GLfloat normalMapStrength = data->getNormalMapStrength();
 	writeBinaryFloat(binaryFile, normalMapStrength);
+	
+	std::vector<glm::vec3> maxMinVector = data->getMaxMinVector();
+	writeBinaryVecVec3(binaryFile, maxMinVector);
 
 	binaryFile.close();
 }
@@ -598,11 +598,10 @@ void Parser::loadFromBinary(ParserData* data, const std::string & filename)
 	readBinaryVec3(binaryFile, data, 2);
 
 	readBinaryFloat(binaryFile, data,0);
+	readBinaryFloat(binaryFile, data, 1);
 
 	readBinaryVecVec3(binaryFile, data, 2);
 
-	readBinaryFloat(binaryFile, data, 0);
-	readBinaryFloat(binaryFile, data, 1);
 
 	binaryFile.close();
 }
@@ -803,7 +802,7 @@ void Parser::readBinaryVec3(std::ifstream & binaryFile, ParserData * parserData,
 	}
 	vecString.clear();
 }
-
+//shininess==0 and normalMapStrength==1
 void Parser::readBinaryFloat(std::ifstream & binaryFile, ParserData * parserData, int choice)
 {
 	//read the value first (how big the other read should be)
