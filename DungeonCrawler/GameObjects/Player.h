@@ -15,6 +15,7 @@ public:
 	void dashCd();
 
 	void shootProjectile();
+	void screenShake();
 
 	void setSpeed(float speed);
 	void setHealth(float health);
@@ -24,8 +25,9 @@ public:
 	float getHealth()const;
 	float getDamage()const;
 
+	glm::vec3 shakeDirection()const;
+
 private:
-	glm::dvec2 m_mousePos;
 	float m_angle;
 
 	glm::vec3 m_movementDirection;
@@ -38,6 +40,9 @@ private:
 	float m_dash;
 	bool m_dashCd;
 	int m_timer;
+
+	int m_shake;
+	glm::vec3 m_shakeDir;
 
 	//Debugging Tools
 	bool m_debug;

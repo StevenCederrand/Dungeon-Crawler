@@ -77,7 +77,7 @@ void PlayState::renderImGUI()
 {
 	ImGui::Begin("PlayState");
 
-	ImGui::Text("Press right mouse to DASH");
+	ImGui::Text("Press shift to DASH");
 
 	ImGui::Text("Player [ %f%s%f%s%f%s"
 		, m_player->getPosition().x
