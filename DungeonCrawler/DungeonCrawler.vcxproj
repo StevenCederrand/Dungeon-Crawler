@@ -203,7 +203,7 @@
     <ClInclude Include="FBX\DisplayCommon.h" />
     <ClInclude Include="FBX\DisplayHierarchy.h" />
     <ClInclude Include="FBX\fbxObjectManager.h" />
-    <ClInclude Include="FBX\HeaderForFileWriting.h" />
+    <ClInclude Include="FBX\HeaderStructs.h" />
     <ClInclude Include="FBX\MeshData.h" />
     <ClInclude Include="FBX\WriteCustomFile.h" />
     <ClInclude Include="GameObjects\Box.h" />

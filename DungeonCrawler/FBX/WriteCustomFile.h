@@ -6,7 +6,7 @@
 
 #include <iostream>
 #include <fstream>
-#include "HeaderForFileWriting.h"
+#include "HeaderStructs.h"
 //#include "MeshData.h"
 
 class WriteCustomFile
