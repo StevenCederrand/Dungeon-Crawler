@@ -36,7 +36,7 @@
     <ClCompile Include="GameObjects\LightSphere.cpp" />
     <ClCompile Include="FBX\DisplayCommon.cpp" />
     <ClCompile Include="FBX\main.cpp" />
-    <ClCompile Include="FBX\InitializeFbxObject.cpp" />
+    <ClCompile Include="FBX\DisplayHierarchy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -79,7 +79,7 @@
     <ClInclude Include="GameObjects\LightSphere.h" />
     <ClInclude Include="Utility\Ray.h" />
     <ClInclude Include="FBX\DisplayCommon.h" />
-    <ClInclude Include="FBX\InitializeFbxObject.h" />
+    <ClInclude Include="FBX\DisplayHierarchy.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FBX\box.fbx" />

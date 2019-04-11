@@ -160,7 +160,7 @@
   <ItemGroup>
     <ClCompile Include="Audio\AudioEngine.cpp" />
     <ClCompile Include="FBX\DisplayCommon.cpp" />
-    <ClCompile Include="FBX\InitializeFbxObject.cpp" />
+    <ClCompile Include="FBX\DisplayHierarchy.cpp" />
     <ClCompile Include="FBX\main.cpp" />
     <ClCompile Include="GameObjects\Box.cpp" />
     <ClCompile Include="GameObjects\GameObject.cpp" />
@@ -198,7 +198,7 @@
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
     <ClInclude Include="FBX\DisplayCommon.h" />
-    <ClInclude Include="FBX\InitializeFbxObject.h" />
+    <ClInclude Include="FBX\DisplayHierarchy.h" />
     <ClInclude Include="GameObjects\Box.h" />
     <ClInclude Include="GameObjects\GameObject.h" />
     <ClInclude Include="GameObjects\GameObjectManager.h" />
