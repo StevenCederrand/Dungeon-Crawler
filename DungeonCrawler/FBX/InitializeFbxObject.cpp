@@ -7,6 +7,12 @@ InitializeFbxObject::InitializeFbxObject()
 	initializer();
 }
 
+InitializeFbxObject::~InitializeFbxObject()
+{
+	m_lsdkScene->Destroy();
+	m_lsdkManager->Destroy();
+}
+
 void InitializeFbxObject::initializer()
 {
 	this->m_lsdkManager = CreateFbxManager();

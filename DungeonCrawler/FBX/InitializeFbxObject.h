@@ -6,6 +6,7 @@ class InitializeFbxObject
 {
 public:
 	InitializeFbxObject();
+	~InitializeFbxObject();
 	void initializer();
 	FbxManager*& CreateFbxManager();
 	FbxIOSettings*& CreateIOSettingsObject(FbxManager*& lSdkManager);

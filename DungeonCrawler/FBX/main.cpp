@@ -9,16 +9,6 @@
 
 //Declerations of all functions
 void CreateCustomFile();
-FbxManager*& CreateFbxManager();
-FbxIOSettings*& CreateIOSettingsObject(FbxManager*& lSdkManager);
-FbxScene*& CreateFbxScene(FbxManager* lSdkManager);
-FbxImporter*& CreateFbxImporter(FbxManager* lSdkManager);
-const char* LoadFbxFile();
-void InitializeFbxImporter(FbxImporter*& lImporter, const char* lFilename, FbxManager* lSdkManager);
-void UseFbxImporter(FbxImporter*& lImporter, FbxScene*& lScene);
-void DestroyFbxImporter(FbxImporter*& lImporter);
-
-int m_numTabs = 0; //Tab character ("\t") counter
 
 /*
 //Header Structs
@@ -126,16 +116,16 @@ void CreateCustomFile()
 
 int main(int argc, char** argv) 
 {
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	//createCustomFile();
 
 	//Make objects like SDK manager, scene, importer
-	//Import FBX file and cleans importer
+	//Imports FBX file and cleans importer
 	InitializeFbxObject lsdkObject = InitializeFbxObject();
 
+	//Display our FBX file hierarchy
 	DisplayHierarchy displayHierarchyObject;
 	displayHierarchyObject.DisplayEntireHierarchy(lsdkObject.GetScene());
 	
-	// Destroy the SDK manager and all the other objects it was handling.
-	//lSdkManager->Destroy();
 	return 0;
 }
