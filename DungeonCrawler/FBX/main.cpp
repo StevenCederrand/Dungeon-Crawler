@@ -1,11 +1,8 @@
 #include <fbxsdk.h>
+
 #include "DisplayCommon.h"
 #include "InitializeFbxObject.h"
-
-#include <string>
-#include <fstream>
-#include <iostream>
-
+#include "DisplayHierarchy.h"
 
 #define DELTA 0.0001
 #define EQUAL(A,B) (abs((A)-(B)) < DELTA) ? true:false
@@ -20,14 +17,6 @@ const char* LoadFbxFile();
 void InitializeFbxImporter(FbxImporter*& lImporter, const char* lFilename, FbxManager* lSdkManager);
 void UseFbxImporter(FbxImporter*& lImporter, FbxScene*& lScene);
 void DestroyFbxImporter(FbxImporter*& lImporter);
-void PrintNode(FbxNode* pNode);
-void DisplayHierarchy(FbxScene* lScene);
-void PrintTabs();
-FbxString GetAttributeTypeName(FbxNodeAttribute::EType type);
-void PrintAttribute(FbxNodeAttribute* pAttribute);
-void DisplayControlPoints(FbxMesh* pMesh);
-void DisplayMesh(FbxNode* pNode);
-void DisplayMeshName(FbxNode* pNode);
 
 int m_numTabs = 0; //Tab character ("\t") counter
 
@@ -216,7 +205,8 @@ int main(int argc, char** argv)
 	
 	InitializeFbxObject lsdkObject = InitializeFbxObject();
 
-	//DisplayHierarchy();
+	DisplayHierarchy displayHierarchyObject;
+	displayHierarchyObject.DisplayEntireHierarchy(lsdkObject.GetScene());
 	
 	// Destroy the SDK manager and all the other objects it was handling.
 	//lSdkManager->Destroy();

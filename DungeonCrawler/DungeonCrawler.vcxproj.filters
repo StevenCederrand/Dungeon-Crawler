@@ -37,6 +37,7 @@
     <ClCompile Include="FBX\DisplayCommon.cpp" />
     <ClCompile Include="FBX\main.cpp" />
     <ClCompile Include="FBX\DisplayHierarchy.cpp" />
+    <ClCompile Include="FBX\InitializeFbxObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -80,6 +81,7 @@
     <ClInclude Include="Utility\Ray.h" />
     <ClInclude Include="FBX\DisplayCommon.h" />
     <ClInclude Include="FBX\DisplayHierarchy.h" />
+    <ClInclude Include="FBX\InitializeFbxObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FBX\box.fbx" />

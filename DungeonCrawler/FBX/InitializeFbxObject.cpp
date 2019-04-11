@@ -51,7 +51,7 @@ FbxImporter *& InitializeFbxObject::CreateFbxImporter(FbxManager * lSdkManager)
 const char * InitializeFbxObject::LoadFbxFile()
 {
 	//Loading in my file
-	const char* lFilename = "\\Assets\\FBX\\severalObjects.fbx";
+	const char* lFilename = "\\Assets\\FBX\\doubleBox.fbx";
 	return lFilename;
 }
 
@@ -79,4 +79,9 @@ void InitializeFbxObject::DestroyFbxImporter(FbxImporter *& lImporter)
 {
 	// The file is loaded into the scene and the importer is no longer needed, Destroy.
 	lImporter->Destroy();
+}
+
+FbxScene* InitializeFbxObject::GetScene() const
+{
+	return m_lsdkScene;
 }
