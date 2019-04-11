@@ -2,11 +2,11 @@
 #ifndef _INITIALIZEFBXOBJECT_H
 #define _INITIALIZEFBXOBJECT_H
 
-class InitializeFbxObject
+class fbxObjectManager
 {
 public:
-	InitializeFbxObject();
-	~InitializeFbxObject();
+	fbxObjectManager();
+	~fbxObjectManager();
 	void initializer();
 	FbxManager*& CreateFbxManager();
 	FbxIOSettings*& CreateIOSettingsObject(FbxManager*& lSdkManager);

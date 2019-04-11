@@ -1,19 +1,19 @@
 #include <fbxsdk.h>
-#include "InitializeFbxObject.h"
+#include "fbxObjectManager.h"
 
 
-InitializeFbxObject::InitializeFbxObject()
+fbxObjectManager::fbxObjectManager()
 {
 	initializer();
 }
 
-InitializeFbxObject::~InitializeFbxObject()
+fbxObjectManager::~fbxObjectManager()
 {
 	m_lsdkScene->Destroy();
 	m_lsdkManager->Destroy();
 }
 
-void InitializeFbxObject::initializer()
+void fbxObjectManager::initializer()
 {
 	this->m_lsdkManager = CreateFbxManager();
 	CreateIOSettingsObject(m_lsdkManager);
@@ -25,14 +25,14 @@ void InitializeFbxObject::initializer()
 	DestroyFbxImporter(m_lsdkImporter);
 }
 
-FbxManager *& InitializeFbxObject::CreateFbxManager()
+FbxManager *& fbxObjectManager::CreateFbxManager()
 {
 	// Initialize the SDK manager. This object handles all our memory management.
 	FbxManager* lSdkManager = FbxManager::Create();
 	return lSdkManager;
 }
 
-FbxIOSettings *& InitializeFbxObject::CreateIOSettingsObject(FbxManager *& lSdkManager)
+FbxIOSettings *& fbxObjectManager::CreateIOSettingsObject(FbxManager *& lSdkManager)
 {
 	// Create the IO settings object. This is mostly used when importing and exporting files.
 	FbxIOSettings* ios = FbxIOSettings::Create(lSdkManager, IOSROOT);
@@ -40,28 +40,28 @@ FbxIOSettings *& InitializeFbxObject::CreateIOSettingsObject(FbxManager *& lSdkM
 	return ios;
 }
 
-FbxScene *& InitializeFbxObject::CreateFbxScene(FbxManager * lSdkManager)
+FbxScene *& fbxObjectManager::CreateFbxScene(FbxManager * lSdkManager)
 {
 	// Create a new scene so that it can be populated by the imported file.
 	FbxScene* lScene = FbxScene::Create(lSdkManager, "myScene");
 	return lScene;
 }
 
-FbxImporter *& InitializeFbxObject::CreateFbxImporter(FbxManager * lSdkManager)
+FbxImporter *& fbxObjectManager::CreateFbxImporter(FbxManager * lSdkManager)
 {
 	// Create an importer using the SDK manager.
 	FbxImporter* lImporter = FbxImporter::Create(lSdkManager, "");
 	return lImporter;
 }
 
-const char * InitializeFbxObject::LoadFbxFile()
+const char * fbxObjectManager::LoadFbxFile()
 {
 	//Loading in my file
 	const char* lFilename = "\\Assets\\FBX\\doubleBox.fbx";
 	return lFilename;
 }
 
-void InitializeFbxObject::InitializeFbxImporter(FbxImporter *& lImporter, const char * lFilename, FbxManager * lSdkManager)
+void fbxObjectManager::InitializeFbxImporter(FbxImporter *& lImporter, const char * lFilename, FbxManager * lSdkManager)
 {
 	// Use the first argument as the name for our FBX file.
 	// Second is fileFormat, leave at -1.
@@ -74,20 +74,20 @@ void InitializeFbxObject::InitializeFbxImporter(FbxImporter *& lImporter, const 
 	}
 }
 
-void InitializeFbxObject::UseFbxImporter(FbxImporter *& lImporter, FbxScene *& lScene)
+void fbxObjectManager::UseFbxImporter(FbxImporter *& lImporter, FbxScene *& lScene)
 {
 	// Import the contents of our fbx file into the scene. 
 	// Our fbx is stored in the importer from the initialization of the importer.
 	lImporter->Import(lScene);
 }
 
-void InitializeFbxObject::DestroyFbxImporter(FbxImporter *& lImporter)
+void fbxObjectManager::DestroyFbxImporter(FbxImporter *& lImporter)
 {
 	// The file is loaded into the scene and the importer is no longer needed, Destroy.
 	lImporter->Destroy();
 }
 
-FbxScene* InitializeFbxObject::GetScene() const
+FbxScene* fbxObjectManager::GetScene() const
 {
 	return m_lsdkScene;
 }
