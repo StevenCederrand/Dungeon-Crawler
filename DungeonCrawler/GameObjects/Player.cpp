@@ -171,3 +171,8 @@ float Player::getDamage() const
 {
 	return this->m_damage;
 }
+
+bool Player::isShooting() const
+{
+	return m_shooting;
+}

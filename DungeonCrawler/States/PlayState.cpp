@@ -49,11 +49,11 @@ PlayState::PlayState() {
 	
 	m_player = new Player(boxMesh);
 	m_gameObjectManager->addGameObject(m_player);
-	m_gameObjectManager->setPlayerRef(m_player);
 
 }
 
-PlayState::~PlayState() {
+PlayState::~PlayState() 
+{
 	delete m_parser;
 	delete m_GLinit;
 	delete m_camera;

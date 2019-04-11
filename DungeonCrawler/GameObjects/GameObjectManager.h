@@ -1,6 +1,7 @@
 #ifndef _GAMEOBJECTMANAGER_H
 #define _GAMEOBJECTMANAGER_H
 #include <vector>
+#include "Player.h"
 #include "GameObject.h"
 
 class GameObjectManager {
@@ -11,16 +12,16 @@ public:
 
 	void update(float dt);
 	void addGameObject(GameObject* gameObject);
-	void setPlayerRef(GameObject* player);
+	void constructPlayerBroadPhaseBox();
 
 	const std::vector<GameObject*>& getGameObjects() const;
 
 private:
-	void handlePlayerCollision(float dt);
+	void handlePlayerCollisionAgainstMap(float dt, GameObject* object, glm::vec3& newVel, bool& hasCollided);
 
 private:
 	std::vector<GameObject*> m_gameObjects;
-	GameObject* m_player;
+	Player* m_player;
 	AABB* m_broadPhaseBox;
 };
 

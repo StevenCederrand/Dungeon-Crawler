@@ -23,6 +23,7 @@ public:
 	float getSpeed()const;
 	float getHealth()const;
 	float getDamage()const;
+	bool isShooting() const;
 
 private:
 	glm::dvec2 m_mousePos;
@@ -38,6 +39,8 @@ private:
 	float m_dash;
 	bool m_dashCd;
 	int m_timer;
+
+	bool m_shooting;
 
 	//Debugging Tools
 	bool m_debug;
