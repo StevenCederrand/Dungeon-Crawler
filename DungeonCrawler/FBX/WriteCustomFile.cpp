@@ -2,7 +2,7 @@
 
 WriteCustomFile::WriteCustomFile()
 {
-
+	//m_meshDataArr[100];
 }
 
 WriteCustomFile::~WriteCustomFile()
@@ -52,4 +52,9 @@ void WriteCustomFile::CreateCustomFile()
 		}
 	}
 	std::cout << "Streams are equal, method 2: " << equal << std::endl;
+}
+
+void WriteCustomFile::GatherMeshData()
+{
+	//Continue with this
 }

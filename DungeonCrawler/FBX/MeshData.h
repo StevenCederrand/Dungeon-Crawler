@@ -5,6 +5,8 @@ class MeshData
 {
 private:
 
-}
+public:
+	MeshData();
+};
 
 #endif // _MESH_DATA_H

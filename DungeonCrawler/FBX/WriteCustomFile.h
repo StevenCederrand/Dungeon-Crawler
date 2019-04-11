@@ -7,15 +7,17 @@
 #include <iostream>
 #include <fstream>
 #include "HeaderForFileWriting.h"
+//#include "MeshData.h"
 
 class WriteCustomFile
 {
 private:
-
+	//MeshData* m_meshDataArr[];
 public:
 	WriteCustomFile();
 	~WriteCustomFile();
 	void CreateCustomFile();
+	void GatherMeshData();
 };
 
 

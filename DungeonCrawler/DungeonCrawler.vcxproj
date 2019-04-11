@@ -163,6 +163,7 @@
     <ClCompile Include="FBX\DisplayHierarchy.cpp" />
     <ClCompile Include="FBX\fbxObjectManager.cpp" />
     <ClCompile Include="FBX\main.cpp" />
+    <ClCompile Include="FBX\MeshData.cpp" />
     <ClCompile Include="FBX\WriteCustomFile.cpp" />
     <ClCompile Include="GameObjects\Box.cpp" />
     <ClCompile Include="GameObjects\GameObject.cpp" />
@@ -203,6 +204,7 @@
     <ClInclude Include="FBX\DisplayHierarchy.h" />
     <ClInclude Include="FBX\fbxObjectManager.h" />
     <ClInclude Include="FBX\HeaderForFileWriting.h" />
+    <ClInclude Include="FBX\MeshData.h" />
     <ClInclude Include="FBX\WriteCustomFile.h" />
     <ClInclude Include="GameObjects\Box.h" />
     <ClInclude Include="GameObjects\GameObject.h" />
