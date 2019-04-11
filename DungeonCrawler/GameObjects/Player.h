@@ -5,6 +5,8 @@
 
 class Player : public GameObject {
 public:
+	static Player* playerActive;
+
 	Player(Mesh* mesh);
 	void update(float dt);
 
@@ -26,6 +28,8 @@ public:
 	float getDamage()const;
 
 	glm::vec3 shakeDirection()const;
+
+	glm::vec3 getPlayerPosition()const;
 
 private:
 	float m_angle;

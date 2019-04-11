@@ -10,6 +10,7 @@
 #include "GameObjects/Box.h"
 #include "GameObjects/Player.h"
 #include "GameObjects/Projectile.h"
+#include "GameObjects/Enemies/Walker.h"
 
 
 PlayState::PlayState() {
@@ -47,9 +48,12 @@ PlayState::PlayState() {
 	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(-20.f, 0.f, 0.f)));
 	m_gameObjectManager->addGameObject(new Box(roomMesh, glm::vec3(0.f, 0.f, 0.f)));
 	
+	m_gameObjectManager->addGameObject(new Walker(boxMesh));
+
 	m_player = new Player(boxMesh);
 	m_gameObjectManager->addGameObject(m_player);
 	m_gameObjectManager->setPlayerRef(m_player);
+	
 
 }
 

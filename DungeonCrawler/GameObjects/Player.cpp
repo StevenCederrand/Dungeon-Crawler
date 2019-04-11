@@ -5,6 +5,8 @@
 #include "System/Log.h"
 #include "Utility/Camera.h"
 
+Player* Player::playerActive = nullptr;
+
 Player::Player(Mesh * mesh) :
 	GameObject(mesh)
 {
@@ -93,6 +95,11 @@ glm::vec3 Player::shakeDirection()const
 	lookDir.y = 0;
 
 	return glm::normalize(lookDir);
+}
+
+glm::vec3 Player::getPlayerPosition() const
+{
+	return getPosition();
 }
 
 void Player::camPerspective()

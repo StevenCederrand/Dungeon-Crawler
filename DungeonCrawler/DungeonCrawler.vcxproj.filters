@@ -45,7 +45,7 @@
     <ClCompile Include="Graphics\UIRenderer.cpp" />
     <ClCompile Include="GameObjects\LightSphere.cpp" />
     <ClCompile Include="GameObjects\Projectile.cpp" />
-
+    <ClCompile Include="GameObjects\Enemies\Walker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -101,5 +101,6 @@
     <ClInclude Include="GameObjects\LightSphere.h" />
     <ClInclude Include="Utility\Ray.h" />
     <ClInclude Include="GameObjects\Projectile.h" />
+    <ClInclude Include="GameObjects\Enemies\Walker.h" />
   </ItemGroup>
 </Project>
