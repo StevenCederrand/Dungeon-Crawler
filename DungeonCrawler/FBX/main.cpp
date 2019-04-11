@@ -25,6 +25,7 @@ void PrintTabs();
 FbxString GetAttributeTypeName(FbxNodeAttribute::EType type);
 void PrintAttribute(FbxNodeAttribute* pAttribute);
 void DisplayControlPoints(FbxMesh* pMesh);
+void DisplayMesh(FbxNode* pNode);
 
 int m_numTabs = 0; //Tab character ("\t") counter
 
@@ -208,6 +209,17 @@ void DisplayHierarchy(FbxScene* lScene)
 //print node, its attributes and its children, recursively.
 void PrintNode(FbxNode* pNode)
 {
+	FbxNodeAttribute::EType nodeType = pNode->GetNodeAttributeByIndex(0)->GetAttributeType();
+	
+	switch (nodeType)
+	{
+	default:
+		break;
+	case FbxNodeAttribute::eMesh:
+		DisplayMesh(pNode);
+		break;
+	}
+
 	const char* nodeName = pNode->GetName();	//The node we get right now is the pCube1 which is the name of the cube in the outliner
 
 	FbxDouble3 translation = pNode->LclTranslation.Get();
@@ -215,7 +227,7 @@ void PrintNode(FbxNode* pNode)
 	FbxDouble3 scaling = pNode->LclScaling.Get();
 	
 
-
+	/*
 	// Print the contents of the node. Need to declare spaces for variables first! Also tabs for formating
 	PrintTabs();
 	printf("Name: %s\n", nodeName);
@@ -225,6 +237,7 @@ void PrintNode(FbxNode* pNode)
 	printf("Rotation: %f %f %f\n", rotation[0], rotation[1], rotation[2]);
 	PrintTabs();
 	printf("Scaling: %f %f %f\n", scaling[0], scaling[1], scaling[2]);
+	*/
 
 	// Print the node's attributes.
 	for (int i = 0; i < pNode->GetNodeAttributeCount(); i++)
@@ -289,6 +302,7 @@ void PrintAttribute(FbxNodeAttribute* pAttribute)
 	std::string typeNameString = typeName.Buffer();
 	std::string attrNameString = attrName.Buffer();
 
+	/*
 	//Check if the strings exist
 	if (typeNameString != "")	//this needs to use the std string
 	{
@@ -310,6 +324,13 @@ void PrintAttribute(FbxNodeAttribute* pAttribute)
 		PrintTabs();
 		printf("No attribute name\n");
 	}
+	*/
+}
+
+void DisplayMesh(FbxNode* pNode)
+{
+	FbxMesh* lMesh = (FbxMesh*)pNode->GetNodeAttribute();
+	DisplayControlPoints(lMesh);
 }
 
 void DisplayControlPoints(FbxMesh* pMesh)
