@@ -1,7 +1,7 @@
 #include <fbxsdk.h>
 
 #include "DisplayCommon.h"
-#include "InitializeFbxObject.h"
+#include "fbxObjectManager.h"
 #include "DisplayHierarchy.h"
 
 #define DELTA 0.0001
@@ -121,7 +121,7 @@ int main(int argc, char** argv)
 
 	//Make objects like SDK manager, scene, importer
 	//Imports FBX file and cleans importer
-	InitializeFbxObject lsdkObject = InitializeFbxObject();
+	fbxObjectManager lsdkObject = fbxObjectManager();
 
 	//Display our FBX file hierarchy
 	DisplayHierarchy displayHierarchyObject;
