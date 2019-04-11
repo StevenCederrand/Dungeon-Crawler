@@ -122,87 +122,14 @@ void CreateCustomFile()
 	std::cout << "Streams are equal, method 2: " << equal << std::endl;
 	*/
 }
-FbxManager*& CreateFbxManager()
-{
-	// Initialize the SDK manager. This object handles all our memory management.
-	FbxManager* lSdkManager = FbxManager::Create();
-	return lSdkManager;
-}
-
-FbxIOSettings*& CreateIOSettingsObject(FbxManager*& lSdkManager)
-{
-	// Create the IO settings object. This is mostly used when importing and exporting files.
-	FbxIOSettings* ios = FbxIOSettings::Create(lSdkManager, IOSROOT);
-	lSdkManager->SetIOSettings(ios);
-	return ios;
-}
-
-FbxScene*& CreateFbxScene(FbxManager* lSdkManager)
-{
-	// Create a new scene so that it can be populated by the imported file.
-	FbxScene* lScene = FbxScene::Create(lSdkManager, "myScene");
-	return lScene;
-}
-
-FbxImporter*& CreateFbxImporter(FbxManager* lSdkManager)
-{
-	// Create an importer using the SDK manager.
-	FbxImporter* lImporter = FbxImporter::Create(lSdkManager, "");
-	return lImporter;
-}
-
-const char* LoadFbxFile()
-{
-	//Loading in my file
-	const char* lFilename = "\\Assets\\FBX\\doubleBox.fbx";
-	return lFilename;
-}
-
-void InitializeFbxImporter(FbxImporter*& lImporter, const char* lFilename, FbxManager* lSdkManager)
-{
-	// Use the first argument as the name for our FBX file.
-	// Second is fileFormat, leave at -1.
-	// Last is what IO Settings to use, we get it from out manager which in turn gets it from our IOSettingsObject. Default settings are used.
-	if (!lImporter->Initialize(lFilename, -1, lSdkManager->GetIOSettings())) //If initializing failes, go into if statement
-	{
-		printf("Call to FbxImporter::Initialize() failed.\n");
-		printf("Error returned: %s\n\n", lImporter->GetStatus().GetErrorString());
-		exit(-1);
-	}
-}
-
-void UseFbxImporter(FbxImporter*& lImporter, FbxScene*& lScene)
-{
-	// Import the contents of our fbx file into the scene. 
-	// Our fbx is stored in the importer from the initialization of the importer.
-	lImporter->Import(lScene);
-}
-
-void DestroyFbxImporter(FbxImporter*& lImporter)
-{
-	// The file is loaded into the scene and the importer is no longer needed, Destroy.
-	lImporter->Destroy();
-}
 
 
 int main(int argc, char** argv) 
 {
 	//createCustomFile();
 
-	// 0: Start with this, FBX SDK
-	//Create usefull Objects
-	//FbxManager* lSdkManager = CreateFbxManager();
-	//FbxIOSettings* ios = CreateIOSettingsObject(lSdkManager);
-	//FbxScene* lScene = CreateFbxScene(lSdkManager);
-	//FbxImporter* lImporter = CreateFbxImporter(lSdkManager);
-
-
-	//const char* lFilename = LoadFbxFile();
-
-	//InitializeFbxImporter(lImporter, lFilename, lSdkManager); //Importer Lifecycle: Create, Initialize, Use, Destroy.
-	//UseFbxImporter(lImporter, lScene);
-	//DestroyFbxImporter(lImporter);
-	
+	//Make objects like SDK manager, scene, importer
+	//Import FBX file and cleans importer
 	InitializeFbxObject lsdkObject = InitializeFbxObject();
 
 	DisplayHierarchy displayHierarchyObject;
