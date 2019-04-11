@@ -1,8 +1,10 @@
 #include <fbxsdk.h>
+#include "DisplayCommon.h"
 
 #include <string>
 #include <fstream>
 #include <iostream>
+
 
 #define DELTA 0.0001
 #define EQUAL(A,B) (abs((A)-(B)) < DELTA) ? true:false
@@ -312,8 +314,6 @@ void PrintAttribute(FbxNodeAttribute* pAttribute)
 
 void DisplayControlPoints(FbxMesh* pMesh)
 {
-	//THIS IS NOT DONE, CONTINUTE WITH THIS
-
 	int i = 0;
 	int lControlPointsCount = pMesh->GetControlPointsCount();
 	FbxVector4* lControlPoints = pMesh->GetControlPoints();
@@ -322,7 +322,19 @@ void DisplayControlPoints(FbxMesh* pMesh)
 	for (i = 0; i < lControlPointsCount; i++)
 	{
 		printf("Control Point %i\n", i);
-		printf("Coordinates: ");
+		Display3DVector("Coordinates: ", lControlPoints[i]);
+
+		for (int j = 0; j < pMesh->GetElementNormalCount(); j++)
+		{
+			FbxGeometryElementNormal* leNormals = pMesh->GetElementNormal(j);
+			if (leNormals->GetMappingMode() == FbxGeometryElement::eByControlPoint)
+			{
+				char header[100];
+				FBXSDK_sprintf(header, 100, "Normal Vetor: ");
+				if (leNormals->GetReferenceMode() == FbxGeometryElement::eDirect)
+					Display3DVector(header, leNormals->GetDirectArray().GetAt(i));
+			}
+		}
 	}
 }
 
@@ -345,6 +357,8 @@ int main(int argc, char** argv)
 
 	DisplayHierarchy(lScene);
 	
+
+
 	// Destroy the SDK manager and all the other objects it was handling.
 	lSdkManager->Destroy();
 	return 0;
