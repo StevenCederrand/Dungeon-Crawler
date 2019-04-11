@@ -26,6 +26,7 @@ FbxString GetAttributeTypeName(FbxNodeAttribute::EType type);
 void PrintAttribute(FbxNodeAttribute* pAttribute);
 void DisplayControlPoints(FbxMesh* pMesh);
 void DisplayMesh(FbxNode* pNode);
+void DisplayMeshName(FbxNode* pNode);
 
 int m_numTabs = 0; //Tab character ("\t") counter
 
@@ -220,25 +221,6 @@ void PrintNode(FbxNode* pNode)
 		break;
 	}
 
-	const char* nodeName = pNode->GetName();	//The node we get right now is the pCube1 which is the name of the cube in the outliner
-
-	FbxDouble3 translation = pNode->LclTranslation.Get();
-	FbxDouble3 rotation = pNode->LclRotation.Get();
-	FbxDouble3 scaling = pNode->LclScaling.Get();
-	
-
-	
-	// Print the contents of the node. Need to declare spaces for variables first! Also tabs for formating
-	PrintTabs();
-	printf("Name: %s\n", nodeName);
-	PrintTabs();
-	printf("Translation: %f %f %f\n", translation[0], translation[1], translation[2]);
-	PrintTabs();
-	printf("Rotation: %f %f %f\n", rotation[0], rotation[1], rotation[2]);
-	PrintTabs();
-	printf("Scaling: %f %f %f\n", scaling[0], scaling[1], scaling[2]);
-	
-
 	// Print the node's attributes.
 	for (int i = 0; i < pNode->GetNodeAttributeCount(); i++)
 		PrintAttribute(pNode->GetNodeAttributeByIndex(i));
@@ -330,6 +312,7 @@ void PrintAttribute(FbxNodeAttribute* pAttribute)
 void DisplayMesh(FbxNode* pNode)
 {
 	FbxMesh* lMesh = (FbxMesh*)pNode->GetNodeAttribute();
+	DisplayMeshName(pNode);
 	DisplayControlPoints(lMesh);
 }
 
@@ -339,10 +322,13 @@ void DisplayControlPoints(FbxMesh* pMesh)
 	int lControlPointsCount = pMesh->GetControlPointsCount();
 	FbxVector4* lControlPoints = pMesh->GetControlPoints();
 
+	PrintTabs();
 	printf("Control Points:\n");
 	for (i = 0; i < lControlPointsCount; i++)
 	{
+		PrintTabs();
 		printf("Control Point %i\n", i);
+		PrintTabs();
 		Display3DVector("Coordinates: ", lControlPoints[i]);
 
 		for (int j = 0; j < pMesh->GetElementNormalCount(); j++)
@@ -357,6 +343,27 @@ void DisplayControlPoints(FbxMesh* pMesh)
 			}
 		}
 	}
+	printf("\n\n");
+}
+
+void DisplayMeshName(FbxNode* pNode)
+{
+	const char* nodeName = pNode->GetName();	//The node we get right now is the pCube1 which is the name of the cube in the outliner
+
+	FbxDouble3 translation = pNode->LclTranslation.Get();
+	FbxDouble3 rotation = pNode->LclRotation.Get();
+	FbxDouble3 scaling = pNode->LclScaling.Get();
+
+	// Print the contents of the node. Need to declare spaces for variables first! Also tabs for formating
+	PrintTabs();
+	printf("Name: %s\n", nodeName);
+	PrintTabs();
+	printf("Translation: %f %f %f\n", translation[0], translation[1], translation[2]);
+	PrintTabs();
+	printf("Rotation: %f %f %f\n", rotation[0], rotation[1], rotation[2]);
+	PrintTabs();
+	printf("Scaling: %f %f %f\n", scaling[0], scaling[1], scaling[2]);
+	printf("\n");
 }
 
 int main(int argc, char** argv) 
