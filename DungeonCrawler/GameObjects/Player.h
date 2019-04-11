@@ -25,13 +25,11 @@ public:
 	float getHealth()const;
 	float getDamage()const;
 
-
 private:
 	glm::dvec2 m_mousePos;
 	float m_angle;
 
-
-
+	glm::vec3 m_movementDirection;
 	//Player Variables
 	float m_defaultSpeed;
 	float m_speed;

@@ -155,6 +155,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Audio\AudioEngine.cpp" />
+    <ClCompile Include="Collision\AABB.cpp" />
     <ClCompile Include="GameObjects\Box.cpp" />
     <ClCompile Include="GameObjects\GameObject.cpp" />
     <ClCompile Include="GameObjects\GameObjectManager.cpp" />
@@ -192,6 +193,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
+    <ClInclude Include="Collision\AABB.h" />
     <ClInclude Include="GameObjects\Box.h" />
     <ClInclude Include="GameObjects\GameObject.h" />
     <ClInclude Include="GameObjects\GameObjectManager.h" />

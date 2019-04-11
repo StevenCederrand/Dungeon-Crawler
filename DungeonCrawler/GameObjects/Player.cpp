@@ -10,7 +10,7 @@ Player::Player(Mesh * mesh) :
 {
 	this->setPosition(glm::vec3(0.f, 0.f, 0.f));
 	this->m_defaultSpeed = 7.f;
-	this->m_speed = 7.f;
+	this->m_speed = 7.0f;
 	this->m_health = 5.f;
 	this->m_damage = 0.f;
 	this->m_debug = false;
@@ -48,23 +48,26 @@ void Player::update(float dt)
 
 void Player::move(float dt)
 {
+	m_movementDirection = glm::vec3(0.f);
+
 	rotatePlayer();
 	if (Input::isKeyHeldDown(GLFW_KEY_W))
 	{
-		this->translate(glm::vec3(0.f, 0.f, -this->m_speed) * dt);
+		m_movementDirection.z =  -this->m_speed * dt;
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_A))
 	{
-		this->translate(glm::vec3(-this->m_speed, 0.f, 0.f) * dt);
+		m_movementDirection.x = -this->m_speed * dt;
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_S))
 	{
-		this->translate(glm::vec3(0.f, 0.f, this->m_speed) * dt);
+		m_movementDirection.z = this->m_speed * dt;
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_D))
 	{
-		this->translate(glm::vec3(this->m_speed, 0.f, 0.f) * dt);
+		m_movementDirection.x = this->m_speed * dt;
 	}
+	setVelocity(m_movementDirection);
 	Camera::active->setToPlayer(getPosition(), m_x);
 }
 

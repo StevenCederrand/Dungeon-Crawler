@@ -11,12 +11,17 @@ public:
 
 	void update(float dt);
 	void addGameObject(GameObject* gameObject);
+	void setPlayerRef(GameObject* player);
 
 	const std::vector<GameObject*>& getGameObjects() const;
 
 private:
-	std::vector<GameObject*> m_gameObjects;
+	void handlePlayerCollision(float dt);
 
+private:
+	std::vector<GameObject*> m_gameObjects;
+	GameObject* m_player;
+	AABB* m_broadPhaseBox;
 };
 
 #endif

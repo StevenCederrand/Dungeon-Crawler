@@ -7,6 +7,7 @@ ParserData::ParserData(int startCapacity)
 	m_vertices.reserve(startCapacity);
 	m_uvs.reserve(startCapacity);
 	m_normals.reserve(startCapacity);
+	m_maxMinVector.reserve(startCapacity);
 }
 
 ParserData::~ParserData()
@@ -63,9 +64,16 @@ void ParserData::setShininess(GLfloat factor)
 	m_shininess = factor;
 }
 
+
+void ParserData::setBoundingBox(const std::vector<glm::vec3>& maxMinVector)
+{
+	m_maxMinVector = maxMinVector;
+}
+
 void ParserData::setNormalMapStrength(float str)
 {
 	m_normalMapStrength = str;
+
 }
 
 /* Getters */
@@ -118,6 +126,12 @@ const GLfloat & ParserData::getShininess() const
 	return m_shininess;
 }
 
+
+const std::vector<glm::vec3>& ParserData::getMaxMinVector() const
+{
+	return m_maxMinVector;
+}
+
 const GLfloat & ParserData::getNormalMapStrength() const
 {
 	return m_normalMapStrength;
@@ -128,4 +142,5 @@ const bool ParserData::hasNormalMap() {
 		return true;
 	}
 	return false;
+
 }

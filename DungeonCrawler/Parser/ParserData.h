@@ -25,8 +25,9 @@ public:
 	void setSpecularColor(GLfloat r, GLfloat g, GLfloat b);
 	void setAmbientColor(GLfloat r, GLfloat g, GLfloat b);
 	void setShininess(GLfloat factor);
-	void setNormalMapStrength(float str);
+	void setBoundingBox(const std::vector<glm::vec3>& maxMinVector);
 
+	void setNormalMapStrength(float str);
 
 	/* Getters */
 	const std::vector<GLuint>& getIndices() const;
@@ -40,6 +41,8 @@ public:
 	const glm::vec3& getSpecularColor() const;
 	const glm::vec3& getAmbientColor() const;
 	const GLfloat& getShininess() const;
+	const std::vector<glm::vec3>& getMaxMinVector() const;
+	
 	const GLfloat& getNormalMapStrength() const;
 	const bool hasNormalMap();
 
@@ -57,6 +60,9 @@ private:
 	glm::vec3 m_ambientColor;
 	GLfloat m_shininess;
 	GLfloat m_normalMapStrength;
+
+	// Collision coordinates ( layout in the vector)
+	std::vector<glm::vec3> m_maxMinVector;
 
 };
 

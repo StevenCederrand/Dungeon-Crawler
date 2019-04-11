@@ -47,9 +47,15 @@ void Mesh::setShininess(const float & shininess)
 	m_shininess = shininess;
 }
 
+void Mesh::setBoundingBoxMinMax(std::vector<glm::vec3> maxMinVector)
+{
+	m_maxMinVector = maxMinVector;
+}
+
 void Mesh::setHasNormalMap(bool hasNormalMap)
 {
 	m_hasNormalMap = hasNormalMap;
+
 }
 
 const unsigned int & Mesh::getVao() const
@@ -86,6 +92,11 @@ const glm::vec3 & Mesh::getdiffuseColor() const
 	return m_diffuseColor;
 }
 
+const std::vector<glm::vec3>& Mesh::getMaxMinVector() const
+{
+	return m_maxMinVector;
+}
+
 const float & Mesh::getShininess() const
 {
 	return m_shininess;
@@ -95,3 +106,4 @@ const bool & Mesh::getHasNormalMap() const
 {
 	return m_hasNormalMap;
 }
+

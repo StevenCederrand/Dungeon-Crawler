@@ -52,7 +52,8 @@ Mesh* GLinit::createMesh(std::string name, ParserData* data)
 	mesh->setSpecularColor(data->getSpecularColor());
 	mesh->setDiffuseColor(data->getDiffuseColor());
 	mesh->setShininess(data->getShininess());
-	
+	mesh->setBoundingBoxMinMax(data->getMaxMinVector());
+
 	MeshMap::addMesh(name, mesh);
 	return mesh;
 }
@@ -106,6 +107,7 @@ GLuint GLinit::createTexture(std::string filename)
 
 	if (!textureData)
 	{
+
 		LOG_ERROR("Could not find texture " + filename);
 		return -1;
 	}

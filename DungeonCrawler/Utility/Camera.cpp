@@ -10,8 +10,10 @@ Camera* Camera::active = nullptr;
 
 Camera::Camera()
 {
+
 	m_position = glm::vec3(0.f, 10.f, -10.f);
 	m_lookDirection = glm::vec3(0.f, -1.f, 1.f);
+
 	m_yaw = 0.f;
 	m_pitch = 0.f;
 	m_distanceToOrbitPoint = 5.f;
@@ -22,6 +24,7 @@ Camera::Camera()
 
 	m_locked = false;
 	m_debug = false;
+
 	m_angle = 1;
 
 	snapMouseToMiddle();
@@ -87,6 +90,7 @@ void Camera::lookAround(float dt)
 
 void Camera::move(float dt)
 {
+	
 	if (Input::isKeyHeldDown(GLFW_KEY_W))
 	{
 		m_position.x += m_lookDirection.x * m_cameraSpeed * dt;
@@ -132,7 +136,6 @@ void Camera::move(float dt)
 		m_cameraSpeed = 5.f;
 	}
 	
-	//LOG_TRACE("" + std::to_string(m_position.x) + ", " + std::to_string(m_position.y) + ", " + std::to_string(m_position.z));
 }
 
 void Camera::snapMouseToMiddle()

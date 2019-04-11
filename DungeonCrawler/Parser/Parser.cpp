@@ -48,18 +48,38 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 	std::string line;
 	std::string MTLfile = "";
 	GLuint indexCount = 0;
+	bool isParsingCollider = false;
+
+	// Used to save data for the collision boxes in the obj
+	std::vector<glm::vec3> maxMinVector;
+	bool newCollider = false;
+	unsigned int currentBox = -2;
 
 	while (std::getline(objFile, line))
 	{
 
-		if (line[0] == '#')
-			continue;
-		
 		std::vector<std::string> attribs = split(line, ' ');
-		this->stringClean(attribs);
 
 		if (attribs.size() == 0)
 			continue;
+
+		this->stringClean(attribs);
+
+		if (attribs[0] == "#") {
+
+			if (attribs.size() < 3)
+				continue;
+
+			if (attribs[1] == "object" && attribs[2] == "collision")
+			{
+
+				isParsingCollider = true;
+				newCollider = true;
+			}
+			continue;
+		}
+
+		
 
 		if (attribs[0] == "mtllib")
 		{
@@ -67,21 +87,47 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 		}
 		else if (attribs[0] == "v")
 		{
-			glm::vec3 vert = glm::vec3(std::stof(attribs[1]), std::stof(attribs[2]), std::stof(attribs[3]));
-			tempVertexBuffer.emplace_back(vert);
+			if (!isParsingCollider) {
+				glm::vec3 vert = glm::vec3(std::stof(attribs[1]), std::stof(attribs[2]), std::stof(attribs[3]));
+				tempVertexBuffer.emplace_back(vert);
+			}
+			else
+			{
+				if (newCollider == true)
+				{
+					newCollider = false;
+					currentBox += 2;
+					maxMinVector.emplace_back(glm::vec3(100000));
+					maxMinVector.emplace_back(glm::vec3(-100000));
+				}
+
+				// Is parsing the collider so only check for the min x,y,z and max x,y,z cooridnates!
+				float x = std::stof(attribs[1]);
+				float y = std::stof(attribs[2]);
+				float z = std::stof(attribs[3]);
+
+				if (maxMinVector[currentBox].x > x) maxMinVector[currentBox].x = x;
+				if (maxMinVector[currentBox].y > y) maxMinVector[currentBox].y = y;
+				if (maxMinVector[currentBox].z > z) maxMinVector[currentBox].z = z;
+
+				if (maxMinVector[currentBox + 1].x < x) maxMinVector[currentBox + 1].x = x;
+				if (maxMinVector[currentBox + 1].y < y) maxMinVector[currentBox + 1].y = y;
+				if (maxMinVector[currentBox + 1].z < z) maxMinVector[currentBox + 1].z = z;
+
+			}
 
 		}
-		else if (attribs[0] == "vt")
+		else if (attribs[0] == "vt" && !isParsingCollider)
 		{
 			glm::vec2 vert = glm::vec2(std::stof(attribs[1]), std::stof(attribs[2]));
 			tempUVBuffer.emplace_back(vert);
 		}
-		else if (attribs[0] == "vn")
+		else if (attribs[0] == "vn" && !isParsingCollider)
 		{
 			glm::vec3 vert = glm::vec3(std::stof(attribs[1]), std::stof(attribs[2]), std::stof(attribs[3]));
 			tempNormalBuffer.emplace_back(vert);
 		}
-		else if (attribs[0] == "f")
+		else if (attribs[0] == "f" && !isParsingCollider)
 		{
 			std::vector<std::string> attributes = split(line, ' ');
 			for (int i = 1; i < attributes.size(); i++)
@@ -94,8 +140,8 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 			}
 		}
 
-
 	}
+	
 	objFile.close();
 	tempVertexBuffer.clear();
 	tempUVBuffer.clear();
@@ -104,9 +150,12 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 	// Parse the material 
 	parseMaterialFile(MTLfile, data);
 
+	data->setBoundingBox(maxMinVector);
+
 	writeToBinary(data, filenameString[0]);
-	m_memoryTracker.emplace_back(data);
 	
+	m_memoryTracker.emplace_back(data);
+
 	return data;
 }
 
@@ -221,6 +270,9 @@ void Parser::writeToBinary(ParserData* data, const std::string& filename)
 
 	GLfloat normalMapStrength = data->getNormalMapStrength();
 	writeBinaryFloat(binaryFile, normalMapStrength);
+	
+	std::vector<glm::vec3> maxMinVector = data->getMaxMinVector();
+	writeBinaryVecVec3(binaryFile, maxMinVector);
 
 	binaryFile.close();
 }
@@ -294,9 +346,9 @@ void Parser::parseMaterialFile(const std::string& filename, ParserData* parserDa
 		}
 		else if (attribs[0] == "map_Kd")
 		{
-			if (exporterProgram == "Blender") {
+			
 				parserData->setTextureFilename(TexturePath + attribs[1]);
-			}
+			
 		}
 		if (attribs[0] == "map_Bump") {
 			if (exporterProgram == "Blender") {
@@ -531,8 +583,6 @@ void Parser::writeBinaryFloat(std::ofstream& binaryFile, GLfloat floatValue)
 
 void Parser::loadFromBinary(ParserData* data, const std::string & filename)
 {
-	//ParserData* data = new ParserData(CAPACITY);
-
 	std::ifstream binaryFile(Binaries + filename, std::ios::binary);
 	readBinaryVecInt(binaryFile, data);
 
@@ -547,8 +597,11 @@ void Parser::loadFromBinary(ParserData* data, const std::string & filename)
 	readBinaryVec3(binaryFile, data, 1);
 	readBinaryVec3(binaryFile, data, 2);
 
-	readBinaryFloat(binaryFile, data, 0);
+	readBinaryFloat(binaryFile, data,0);
 	readBinaryFloat(binaryFile, data, 1);
+
+	readBinaryVecVec3(binaryFile, data, 2);
+
 
 	binaryFile.close();
 }
@@ -584,7 +637,7 @@ void Parser::readBinaryVecInt(std::ifstream & binaryFile, ParserData* parserData
 	}
 	vecString.clear();
 }
-//vertex==0, normal==1
+//vertex==0, normal==1, maxMin==2
 void Parser::readBinaryVecVec3(std::ifstream & binaryFile, ParserData * parserData, int choice)
 {
 	//read the value first (how big the other read should be)
@@ -605,7 +658,8 @@ void Parser::readBinaryVecVec3(std::ifstream & binaryFile, ParserData * parserDa
 	std::string stringText = text;
 	delete[] text;
 	std::vector<std::string> vecString = split(stringText, ' ');
-
+	
+	std::vector<glm::vec3> maxMinVec;
 	//fill the parserData with the Information
 	for (int i = 0; (i+2) < vecString.size(); i)
 	{
@@ -615,6 +669,7 @@ void Parser::readBinaryVecVec3(std::ifstream & binaryFile, ParserData * parserDa
 			tempGL.x = std::stof(vecString[i], NULL);
 			tempGL.y = std::stof(vecString[i+1], NULL);
 			tempGL.z = std::stof(vecString[i+2], NULL);
+			maxMinVec.emplace_back(tempGL);
 			if (choice == 0) 
 			{
 				parserData->addVertex(tempGL);
@@ -623,12 +678,17 @@ void Parser::readBinaryVecVec3(std::ifstream & binaryFile, ParserData * parserDa
 			{
 				parserData->addNormal(tempGL);
 			}
+			
 			i += 3;
 		}
 		else
 		{
 			i++;
 		}
+	}
+	if (choice == 2)
+	{
+		parserData->setBoundingBox(maxMinVec);
 	}
 	vecString.clear();
 }
@@ -698,7 +758,7 @@ void Parser::readBinaryString(std::ifstream & binaryFile, ParserData * parserDat
 		parserData->setNormalMapName(stringText);
 	}
 }
-//diffuse==0, specular==1 and ambient==2
+//diffuse==0, specular==1, ambient==2
 void Parser::readBinaryVec3(std::ifstream & binaryFile, ParserData * parserData, int choice)
 {
 	//read the value first (how big the other read should be)
@@ -742,7 +802,7 @@ void Parser::readBinaryVec3(std::ifstream & binaryFile, ParserData * parserData,
 	}
 	vecString.clear();
 }
-
+//shininess==0 and normalMapStrength==1
 void Parser::readBinaryFloat(std::ifstream & binaryFile, ParserData * parserData, int choice)
 {
 	//read the value first (how big the other read should be)
@@ -763,7 +823,7 @@ void Parser::readBinaryFloat(std::ifstream & binaryFile, ParserData * parserData
 	std::string stringText = text;
 	delete[] text;
 	//std::vector<std::string> vecString = split(stringText, ' ');
-	GLuint tempGL = std::stof(stringText);
+	GLfloat tempGL = std::stof(stringText);
 	//fill the parserData with the Information
 	if (choice == 0)
 	{

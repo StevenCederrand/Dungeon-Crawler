@@ -25,31 +25,32 @@ PlayState::PlayState() {
 	#pragma endregion
 
 	#pragma region Create_Objects
-	ParserData* boxData = m_parser->loadFromObj("box.obj");
+	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
+	ParserData* roomData = m_parser->loadFromObj("collisionroomtest.obj");
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
 
-	Mesh* boxMesh = m_GLinit->createMesh("Box", boxData);
-
-	m_gameObjectManager->addGameObject(new Box(boxMesh));
-	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(0.f, -4.f, 0.f)));
-	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(2.f, -4.f, 0.f)));
-	
-
+	m_GLinit->createMesh("Box", boxData);
+	m_GLinit->createMesh("Room", roomData);
 	m_GLinit->createMesh("Sphere", sphereData);
+	#pragma endregion
+	
+	Mesh* roomMesh = MeshMap::getMesh("Room");
+	Mesh* boxMesh = MeshMap::getMesh("Box");
+	
 	#pragma endregion
 	
 	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 1.5f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
 	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
 	m_lightManager->addLight(glm::vec3(0.f, 0.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
 
+	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(0.f, 0.f, 0.f)));
+	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(-20.f, 0.f, 0.f)));
+	m_gameObjectManager->addGameObject(new Box(roomMesh, glm::vec3(0.f, 0.f, 0.f)));
+	
+	m_player = new Player(boxMesh);
+	m_gameObjectManager->addGameObject(m_player);
+	m_gameObjectManager->setPlayerRef(m_player);
 
-	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(15.f, 0.f, 10.f)));
-	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(15.f, 0.f, -10.f)));
-	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(-15.f, 0.f, 10.f)));
-	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(-15.f, 0.f, -10.f)));
-
-	m_gameObjectManager->addGameObject(new Player(boxMesh));
-	m_gameObjectManager->addGameObject(new Projectile(boxMesh));
 }
 
 PlayState::~PlayState() {
@@ -69,10 +70,6 @@ void PlayState::update(float dt)
 	m_lightManager->update(dt);
 
 	m_renderer->prepareGameObjects(m_gameObjectManager->getGameObjects());
-
-	if (Input::isMouseReleased(GLFW_MOUSE_BUTTON_RIGHT)){
-		m_stateManager->popState();
-	}
 }
 
 
@@ -80,7 +77,16 @@ void PlayState::renderImGUI()
 {
 	ImGui::Begin("PlayState");
 
-	ImGui::Text("Press right mouse to switch back to menu state");
+	ImGui::Text("Press shift to DASH");
+
+	ImGui::Text("Player [ %f%s%f%s%f%s"
+		, m_player->getPosition().x
+		, ", " 
+		, m_player->getPosition().y
+		, ", " 
+		, m_player->getPosition().z
+		, " ]");
+
 
 	ImGui::End();
 }
