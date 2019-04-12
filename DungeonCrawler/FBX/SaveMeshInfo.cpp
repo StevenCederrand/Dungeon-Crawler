@@ -28,7 +28,8 @@ void SaveMeshInfo::TraverseNodeTree(FbxScene* lScene)
 			printf("Child %i\n", i);
 			//PrintNode(lRootNode->GetChild(i));
 		}
-		//MER JOBB ÄR MOTHER FUCKER
+
+
 	}
 }
 
