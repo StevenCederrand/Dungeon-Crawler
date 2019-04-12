@@ -19,14 +19,25 @@ void WriteCustomFile::CreateCustomFile()
 
 	//Creates a scope of 100 meshheaders
 	MeshHeader h { 100 };
+	BoundingBoxHeader bh { 100 };
+
+	//Creates a vertex pointer to a new vertex array
 	Vertex *vArray = new Vertex[h.vertexCount];
+	BoundingBoxVertex *bbvArray = new BoundingBoxVertex[bh.vertexCount];
 
 	//Write to file
 	std::ofstream outfile("testCustomBin.bin", std::ofstream::binary); //make a new file, make sure to write binary
+	
+	//add info to header	
 	outfile.write((const char*)&h, sizeof(MeshHeader));
-
 	//add info to header
 	outfile.write((const char*)vArray, sizeof(Vertex)*h.vertexCount);
+
+	//add info to header
+	outfile.write((const char*)&bh, sizeof(BoundingBoxHeader));
+	//add info to header
+	outfile.write((const char*)bbvArray, sizeof(BoundingBoxVertex)*h.vertexCount);
+
 	outfile.close();
 
 	//Read from file

@@ -15,5 +15,4 @@ public:
 	WriteCustomFile();
 	~WriteCustomFile();
 	void CreateCustomFile();
-	void GatherMeshData();
 };
