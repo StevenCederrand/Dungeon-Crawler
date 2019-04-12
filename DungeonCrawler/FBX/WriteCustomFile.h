@@ -7,12 +7,12 @@
 #include <iostream>
 #include <fstream>
 #include "HeaderStructs.h"
-//#include "MeshData.h"
+#include "MeshData.h"
 
 class WriteCustomFile
 {
 private:
-	//MeshData* m_meshDataArr[];
+	MeshData m_meshDataArr[];
 public:
 	WriteCustomFile();
 	~WriteCustomFile();

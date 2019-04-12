@@ -2,12 +2,12 @@
 
 WriteCustomFile::WriteCustomFile()
 {
-	//m_meshDataArr[100];
+	MeshData m_meshDataArr[5]; //Should be dynamic, maybe pointers?
 }
 
 WriteCustomFile::~WriteCustomFile()
 {
-
+	
 }
 
 void WriteCustomFile::CreateCustomFile()
