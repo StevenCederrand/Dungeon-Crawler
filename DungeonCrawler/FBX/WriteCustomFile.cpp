@@ -14,6 +14,9 @@ void WriteCustomFile::CreateCustomFile()
 {
 	//IGNORE FOR NOW, START WITH FBX FILE
 
+	//Version Header
+	unsigned int version = 0; //on top of file, once
+
 	//HeadersAndStuff
 	MeshHeader h { 100 };
 	Vertex *vArray = new Vertex[h.vertexCount];
