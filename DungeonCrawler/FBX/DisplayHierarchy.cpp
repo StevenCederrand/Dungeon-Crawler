@@ -44,7 +44,7 @@ void DisplayHierarchy::PrintNode(FbxNode* pNode)
 
 	// Print the node's attributes.
 	for (int i = 0; i < pNode->GetNodeAttributeCount(); i++)
-		PrintAttribute(pNode->GetNodeAttributeByIndex(i));
+		//PrintAttribute(pNode->GetNodeAttributeByIndex(i));
 
 	// Recursively print the children.
 	for (int j = 0; j < pNode->GetChildCount(); j++)
@@ -92,48 +92,12 @@ FbxString DisplayHierarchy::GetAttributeTypeName(FbxNodeAttribute::EType type)
 	}
 }
 
-//print an attribute
-void DisplayHierarchy::PrintAttribute(FbxNodeAttribute* pAttribute)
-{
-	if (!pAttribute) return;
-
-	//Fbx Strings, to retrieve the character array of a FbxString, use its Buffer() method.
-	FbxString typeName = GetAttributeTypeName(pAttribute->GetAttributeType()); //uses the big list
-	FbxString attrName = pAttribute->GetName();
-
-	//std Strings
-	std::string typeNameString = typeName.Buffer();
-	std::string attrNameString = attrName.Buffer();
-
-	/*
-	//Check if the strings exist
-	if (typeNameString != "")	//this needs to use the std string
-	{
-		PrintTabs();
-		printf("Type Name: %s\n", typeName.Buffer());	//this needs to use the fbx string
-	}
-	else
-	{
-		PrintTabs();
-		printf("No type name\n");
-	}
-	if (attrNameString != "")
-	{
-		PrintTabs();
-		printf("Attribute Name: %s\n", attrName.Buffer());
-	}
-	else
-	{
-		PrintTabs();
-		printf("No attribute name\n");
-	}
-	*/
-}
-
 void DisplayHierarchy::DisplayMesh(FbxNode* pNode)
 {
 	FbxMesh* lMesh = (FbxMesh*)pNode->GetNodeAttribute();
+	DisplayAttribute(pNode);
 	DisplayMeshName(pNode);
+	printf("\n");
 	DisplayControlPoints(lMesh);
 }
 
@@ -185,6 +149,20 @@ void DisplayHierarchy::DisplayMeshName(FbxNode* pNode)
 	printf("Rotation: %f %f %f\n", rotation[0], rotation[1], rotation[2]);
 	PrintTabs();
 	printf("Scaling: %f %f %f\n", scaling[0], scaling[1], scaling[2]);
-	printf("\n");
+}
+
+void DisplayHierarchy::DisplayAttribute(FbxNode* pNode)
+{
+	if (!pNode->GetNodeAttribute()->GetAttributeType())
+	{
+		printf("No type name\n");
+		return;
+	}
+	//Fbx Strings, to retrieve the character array of a FbxString, use its Buffer() method.
+	FbxString typeName = GetAttributeTypeName(pNode->GetNodeAttribute()->GetAttributeType()); //uses the big list
+	std::string typeNameString = typeName.Buffer();
+
+	PrintTabs();
+	printf("Type: %s\n", typeName.Buffer());	//this needs to use the fbx string
 }
 

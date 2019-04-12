@@ -17,10 +17,10 @@ public:
 	void PrintNode(FbxNode* pNode);
 	void PrintTabs();
 	FbxString GetAttributeTypeName(FbxNodeAttribute::EType type);
-	void PrintAttribute(FbxNodeAttribute* pAttribute);
 	void DisplayMesh(FbxNode* pNode);
 	void DisplayControlPoints(FbxMesh* pMesh);
 	void DisplayMeshName(FbxNode* pNode);
+	void DisplayAttribute(FbxNode* pNode);
 };
 
 
