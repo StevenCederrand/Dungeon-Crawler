@@ -47,7 +47,7 @@ void Player::update(float dt)
 		{
 			if (m_canShoot) 
 			{
-				shootProjectile();
+				shootProjectile(dt);
 				m_shake = 4;
 			}
 		}
@@ -63,8 +63,8 @@ void Player::update(float dt)
 
 
 		move(dt);
-		dashCd();
-		screenShake();
+		dashCd(dt);
+		screenShake(dt);
 	}
 }
 
@@ -162,7 +162,7 @@ void Player::dash()
 	}
 }
 
-void Player::dashCd()
+void Player::dashCd(float dt)
 {
 	if (m_timer <= 0 && m_dashCd)
 	{
@@ -174,19 +174,19 @@ void Player::dashCd()
 	}
 	if (m_timer > 0)
 	{
-		m_timer--;
+		m_timer -= dt;
 	}
 }
 
-void Player::shootProjectile()
+void Player::shootProjectile(float dt)
 {
 	m_shootingCooldown = 0.10f;
 	m_canShoot = false;
 	m_shooting = true;
-	screenShake();
+	screenShake(dt);
 }
 
-void Player::screenShake()
+void Player::screenShake(float dt)
 {
 	if (m_shake <= 0)
 	{
@@ -202,7 +202,7 @@ void Player::screenShake()
 	}
 	if (m_shake > 0)
 	{
-		m_shake--;
+		m_shake -= dt;
 	}
 }
 

@@ -14,10 +14,10 @@ public:
 	void rotatePlayer();
 	void camPerspective();
 	void dash();
-	void dashCd();
+	void dashCd(float dt);
 
-	void shootProjectile();
-	void screenShake();
+	void shootProjectile(float dt);
+	void screenShake(float dt);
 
 	void setSpeed(float speed);
 	void setHealth(float health);
