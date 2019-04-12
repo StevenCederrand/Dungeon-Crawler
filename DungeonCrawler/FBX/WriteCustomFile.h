@@ -1,5 +1,4 @@
-#ifndef _WRITE_CUSTOM_FILE_H
-#define _WRITE_CUSTOM_FILE_H
+#pragma once
 
 #define DELTA 0.0001
 #define EQUAL(A,B) (abs((A)-(B)) < DELTA) ? true:false
@@ -18,7 +17,3 @@ public:
 	void CreateCustomFile();
 	void GatherMeshData();
 };
-
-
-
-#endif

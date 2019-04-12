@@ -1,5 +1,4 @@
-#ifndef _DISPLAY_HIERARCHY_H
-#define _DISPLAY_HIERARCHY_H
+#pragma once
 
 #include <string>
 #include "DisplayCommon.h"
@@ -22,12 +21,3 @@ public:
 	void DisplayMeshName(FbxNode* pNode);
 	void DisplayAttribute(FbxNode* pNode);
 };
-
-
-
-
-
-
-
-
-#endif // ! _DISPLAY_HIERARCHY_H

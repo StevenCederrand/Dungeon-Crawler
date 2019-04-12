@@ -1,6 +1,4 @@
 #pragma once
-#ifndef _INITIALIZEFBXOBJECT_H
-#define _INITIALIZEFBXOBJECT_H
 
 #include <fbxsdk.h>
 
@@ -27,4 +25,3 @@ private:
 	const char* m_lFilename;
 
 };
-#endif _INITIALIZEFBXOBJECT_H
