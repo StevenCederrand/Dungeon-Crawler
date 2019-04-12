@@ -1,5 +1,6 @@
 #include "GameObjectManager.h"
 #include "System/Log.h"
+#include "Box.h"
 
 GameObjectManager::GameObjectManager()
 {
@@ -86,7 +87,8 @@ void GameObjectManager::update(float dt)
 			//LOG_TRACE("Ray intersection! collision point: " + std::to_string(gunshotCollisionPoint.x) + ", " + std::to_string(gunshotCollisionPoint.z));
 
 			// --------MAYBE DYNAMIC CASY HERE TO CHECK IF WE HIT A ENEMY?--------
-			objectHit->setHit();
+			if(dynamic_cast<Box*>(objectHit))
+				objectHit->setHit();
 		}
 
 	}
