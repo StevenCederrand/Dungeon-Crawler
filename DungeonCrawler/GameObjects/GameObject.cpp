@@ -9,6 +9,7 @@ GameObject::GameObject(Mesh * mesh, const glm::vec3 & position)
 	m_rotation = glm::vec3(0.f);
 	m_velocity = glm::vec3(0.f);
 	m_scale = glm::vec3(1.f);
+	m_colorTint = glm::vec3(1.f);
 	updateModelMatrix();
 
 	if (!mesh->getMaxMinVector().empty())
@@ -28,6 +29,21 @@ GameObject::~GameObject()
 {
 	for(int i = 0; i < m_boundingBoxes.size(); i++)
 		delete m_boundingBoxes[i];
+}
+
+void GameObject::internalUpdate(float dt)
+{
+	if (m_colorTintFadeDuration > 0.0f) {
+		m_colorTintFadeDuration -= dt;
+		float colorAttr = 1.0f - (m_colorTintFadeDuration / 4.0f);
+		m_colorTint.g = colorAttr;
+		m_colorTint.b = colorAttr;
+	}
+	else {
+		m_colorTint = glm::vec3(1.f);
+		m_colorTintFadeDuration = 0.f;
+	}
+
 }
 
 void GameObject::updateModelMatrix()
@@ -84,6 +100,16 @@ void GameObject::setRotation(const glm::vec3 rotation)
 	m_rotation = rotation;
 }
 
+void GameObject::setPlayerPosition(const glm::vec3 & position)
+{
+	m_playerPosition = position;
+}
+
+void GameObject::setHit()
+{
+	m_colorTintFadeDuration = 2.f;
+}
+
 std::vector<AABB*> GameObject::getBoundingBoxes() const
 {
 	return m_boundingBoxes;
@@ -112,6 +138,16 @@ const glm::vec3 & GameObject::getVelocity() const
 const glm::mat4 & GameObject::getModelMatrix() const
 {
 	return m_modelMatrix;
+}
+
+const glm::vec3 & GameObject::getPlayerPosition() const
+{
+	return m_playerPosition;
+}
+
+const glm::vec3 & GameObject::getColorTint() const
+{
+	return m_colorTint;
 }
 
 const bool GameObject::isCollidable() const

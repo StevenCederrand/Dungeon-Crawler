@@ -196,7 +196,7 @@ const Ray Camera::getRayFromScreen(float x, float y, float w, float h) const
 const glm::vec3 Camera::getMouseWorldPos()
 {
 	glfwGetCursorPos(glfwGetCurrentContext(), &m_mousePos.x, &m_mousePos.y);
-	Ray ray = Camera::active->getRayFromScreen(m_mousePos.x, m_mousePos.y, 1280, 720);
+	Ray ray = Camera::active->getRayFromScreen(static_cast<float>(m_mousePos.x), static_cast<float>(m_mousePos.y), 1280, 720);
 
 	glm::vec3 planeNormal(0.f, 1.f, 0.f);
 	float dis = glm::dot(-ray.pos, planeNormal) / (glm::dot(ray.dir, planeNormal) + 0.001f);

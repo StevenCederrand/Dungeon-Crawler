@@ -10,9 +10,6 @@
 #include "Graphics/MeshMap.h"
 #include "Graphics/ShaderMap.h"
 
-#define GL_GPU_MEM_INFO_TOTAL_AVAILABLE_MEM_NVX 0x9048
-#define GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX 0x9049
-
 int Application::windowWidth = 1280;
 int Application::windowHeight = 720;
 
@@ -69,6 +66,7 @@ bool Application::initialize()
 	}
 
 	// Vsync
+	m_vsync = true;
 	glfwSwapInterval(1);
 
 	// Setup Dear ImGui context
@@ -138,24 +136,19 @@ void Application::run()
 
 void Application::renderImGUI()
 {
-	int totalGpuMemory;
-	glGetIntegerv(GL_GPU_MEM_INFO_TOTAL_AVAILABLE_MEM_NVX,
-		&totalGpuMemory);
-
-	int availableGpuMemory;
-	glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX,
-		&availableGpuMemory);
-
 	ImGui::Begin("System (Esc to exit application)");
 
 	// fps
 	float fps = ImGui::GetIO().Framerate;
 	ImGui::TextColored(ImVec4(1.f, 1.0f, 1.f, 1.0f), "FPS: %.1f", fps);
 
-	// Gpu data
-	ImGui::TextColored(ImVec4(204.f / 255.f, 102.f / 255.f, 0.f, 1.0f),
-		"Total GPU Memory: %i%s\n%s%i%s\n%s%i%s", totalGpuMemory / 1024, " MB", "Available GPU Memory: ", availableGpuMemory / 1024, " MB",
-		"Used GPU Memory: ", (totalGpuMemory / 1024) - (availableGpuMemory / 1024), " MB");
+	ImGui::Checkbox("Vsync ", &m_vsync);
+
+	if (m_vsync)
+		glfwSwapInterval(1);
+	else
+		glfwSwapInterval(0);
+	
 
 	ImGui::End();
 }

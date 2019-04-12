@@ -44,7 +44,7 @@
     <ClCompile Include="Main Menu\MenuButton.cpp" />
     <ClCompile Include="Graphics\UIRenderer.cpp" />
     <ClCompile Include="GameObjects\LightSphere.cpp" />
-    <ClCompile Include="GameObjects\Projectile.cpp" />
+    <ClCompile Include="GameObjects\Room.cpp" />
     <ClCompile Include="GameObjects\Enemies\Walker.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -100,7 +100,8 @@
     <ClInclude Include="Graphics\UIRenderer.h" />
     <ClInclude Include="GameObjects\LightSphere.h" />
     <ClInclude Include="Utility\Ray.h" />
-    <ClInclude Include="GameObjects\Projectile.h" />
+    <ClInclude Include="Utility\Randomizer.h" />
+    <ClInclude Include="GameObjects\Room.h" />
     <ClInclude Include="GameObjects\Enemies\Walker.h" />
   </ItemGroup>
 </Project>

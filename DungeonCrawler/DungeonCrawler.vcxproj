@@ -162,7 +162,7 @@
     <ClCompile Include="GameObjects\GameObjectManager.cpp" />
     <ClCompile Include="GameObjects\Player.cpp" />
     <ClCompile Include="GameObjects\LightSphere.cpp" />
-    <ClCompile Include="GameObjects\Projectile.cpp" />
+    <ClCompile Include="GameObjects\Room.cpp" />
     <ClCompile Include="Graphics\Framebuffer.cpp" />
     <ClCompile Include="Graphics\GLinit.cpp" />
     <ClCompile Include="Graphics\LightManager.cpp" />
@@ -201,7 +201,7 @@
     <ClInclude Include="GameObjects\GameObjectManager.h" />
     <ClInclude Include="GameObjects\Player.h" />
     <ClInclude Include="GameObjects\LightSphere.h" />
-    <ClInclude Include="GameObjects\Projectile.h" />
+    <ClInclude Include="GameObjects\Room.h" />
     <ClInclude Include="Globals\Paths.h" />
     <ClInclude Include="Globals\Settings.h" />
     <ClInclude Include="Graphics\Framebuffer.h" />
@@ -225,6 +225,7 @@
     <ClInclude Include="System\Log.h" />
     <ClInclude Include="Parser\Parser.h" />
     <ClInclude Include="Utility\Camera.h" />
+    <ClInclude Include="Utility\Randomizer.h" />
     <ClInclude Include="Utility\Ray.h" />
     <ClInclude Include="Vendor\ImGui\imconfig.h" />
     <ClInclude Include="Vendor\ImGui\imgui.h" />

@@ -25,6 +25,9 @@ Player::Player(Mesh * mesh) :
 
 void Player::update(float dt)
 {
+	// Start of by saying that the player is not shooting
+	m_shooting = false;
+
 	if (Input::isKeyReleased(GLFW_KEY_Q))
 	{
 		m_debug = !m_debug;
@@ -40,12 +43,25 @@ void Player::update(float dt)
 		{
 			dash();
 		}
-		if (Input::isMousePressed(GLFW_MOUSE_BUTTON_LEFT))
+		if (Input::isMouseHeldDown(GLFW_MOUSE_BUTTON_LEFT))
 		{
-			m_shake = 4;
-			//shootProjectile();
-			
+			if (m_canShoot) 
+			{
+				shootProjectile();
+				m_shake = 4;
+			}
 		}
+
+		if (!m_canShoot)
+		{
+			m_shootingCooldown -= dt;
+
+			if (m_shootingCooldown <= 0.f) {
+				m_canShoot = true;
+			}
+		}
+
+
 		move(dt);
 		dashCd();
 		screenShake();
@@ -81,12 +97,18 @@ void Player::rotatePlayer()
 {	
 	glm::vec3 pos = Camera::active->getMouseWorldPos();
 
-	glm::vec2 direction = glm::vec2(
-		this->getPosition().x - pos.x,
-		this->getPosition().z - pos.z);
-	m_angle = glm::degrees(atan2f(direction.x, direction.y));
+	m_lookDirection = glm::vec3(
+		pos.x - this->getPosition().x,
+		0.0f,
+		pos.z - this->getPosition().z);
+	m_angle = glm::degrees(atan2f(m_lookDirection.z, m_lookDirection.x));
+	
+	setRotation(glm::vec3(0.f, -m_angle, 0.f));
+}
 
-	setRotation(glm::vec3(0.f, m_angle, 0.f));
+const glm::vec3 & Player::getLookDirection() const
+{
+	return glm::normalize(m_lookDirection);
 }
 
 glm::vec3 Player::shakeDirection()const
@@ -158,8 +180,9 @@ void Player::dashCd()
 
 void Player::shootProjectile()
 {
-	//glfwGetCursorPos(glfwGetCurrentContext(), &m_mousePos.x, &m_mousePos.y);
-
+	m_shootingCooldown = 0.10f;
+	m_canShoot = false;
+	m_shooting = true;
 	screenShake();
 }
 
@@ -211,4 +234,9 @@ float Player::getHealth() const
 float Player::getDamage() const
 {
 	return this->m_damage;
+}
+
+bool Player::isShooting() const
+{
+	return m_shooting;
 }
