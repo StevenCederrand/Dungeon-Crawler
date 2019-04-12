@@ -1,6 +1,5 @@
 #include <fbxsdk.h>
 
-#include "DisplayCommon.h"
 #include "fbxObjectManager.h"
 #include "DisplayHierarchy.h"
 #include "WriteCustomFile.h"
