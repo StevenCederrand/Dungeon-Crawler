@@ -9,5 +9,7 @@ private:
 public:
 	SaveMeshInfo();
 	~SaveMeshInfo();
+	void ExtractMeshData(FbxScene* lScene);
 	void SaveControlPoints(FbxMesh* pMesh);
+	void TraverseNodeTree(FbxScene* lScene);
 };

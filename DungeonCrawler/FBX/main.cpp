@@ -20,6 +20,10 @@ int main(int argc, char** argv)
 	//Create our custom file
 	WriteCustomFile writeCustomFileObject;
 	writeCustomFileObject.CreateCustomFile();
+
+	//extract data
+	SaveMeshInfo saveMeshInfoObject;
+	saveMeshInfoObject.ExtractMeshData(lsdkObject.GetScene());
 	
 	return 0;
 }

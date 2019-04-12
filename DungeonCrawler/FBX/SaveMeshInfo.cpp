@@ -10,6 +10,28 @@ SaveMeshInfo::~SaveMeshInfo()
 
 }
 
+void SaveMeshInfo::ExtractMeshData(FbxScene* lScene)
+{
+	TraverseNodeTree(lScene);
+}
+
+void SaveMeshInfo::TraverseNodeTree(FbxScene* lScene)
+{
+	// Print the nodes of the scene and their attributes recursively.
+	// Note that we are not printing the root node because it should not contain any attributes.
+	// The root node of our box would be a shell.
+	FbxNode* lRootNode = lScene->GetRootNode();
+	if (lRootNode)
+	{
+		for (int i = 0; i < lRootNode->GetChildCount(); i++)
+		{
+			printf("Child %i\n", i);
+			//PrintNode(lRootNode->GetChild(i));
+		}
+		//MER JOBB ÄR MOTHER FUCKER
+	}
+}
+
 void SaveMeshInfo::SaveControlPoints(FbxMesh* pMesh)
 {
 	int i = 0;
