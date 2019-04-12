@@ -3,6 +3,7 @@
 #include "fbxObjectManager.h"
 #include "DisplayHierarchy.h"
 #include "WriteCustomFile.h"
+#include "SaveMeshInfo.h"
 
 int main(int argc, char** argv) 
 {
