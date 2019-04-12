@@ -28,7 +28,7 @@ PlayState::PlayState() {
 
 	#pragma region Create_Objects
 	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
-	ParserData* roomData = m_parser->loadFromObj("collisionroomtest.obj");
+	ParserData* roomData = m_parser->loadFromObj("basementleveltest.obj");
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
 
 	m_GLinit->createMesh("Box", boxData);
