@@ -5,8 +5,7 @@
 class SaveMeshInfo
 {
 private:
-
-
+	
 public:
 	SaveMeshInfo();
 	~SaveMeshInfo();
