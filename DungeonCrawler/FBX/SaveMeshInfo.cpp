@@ -25,6 +25,7 @@ void SaveMeshInfo::TraverseNodeTree(FbxScene* lScene)
 	{
 		for (int i = 0; i < lRootNode->GetChildCount(); i++)
 		{
+			//PRINT THE CHILD HERE WITH PRINT CHILD NAME
 			printf("Child %i\n", i);
 			//PrintNode(lRootNode->GetChild(i));
 		}
@@ -60,4 +61,9 @@ void SaveMeshInfo::SaveControlPoints(FbxMesh* pMesh)
 		*/
 	}
 	printf("\n\n");
+}
+
+void SaveMeshInfo::PrintChildName(FbxMesh* pMesh)
+{
+	printf("%s", pMesh->GetName());
 }
