@@ -60,16 +60,17 @@ vec3 getSumOfAllColorFromPointLights(float specularStrength, vec3 worldPosition)
 	vec3 finalColor = vec3(0.f);
 	for(int i = 0; i < numberOfLights; i++)
 	{
-		vec3 lightPosition = lightBuffer[i].position.xyz;
+		vec3 lightPosition = lightBuffer[i].position.xyz;	
 		vec3 lightColor =  lightBuffer[i].color.rgb;
 		float lightRadius =  lightBuffer[i].color.a;
-		vec3 currentColor = getDiffuseColor(lightPosition, lightColor) + getPhongColor(lightPosition, specularStrength, lightColor);
-
 		float dist = length(lightPosition - worldPosition);
+		
+		if(dist >= lightRadius)
+			continue;
+
+		vec3 currentColor = getDiffuseColor(lightPosition, lightColor) + getPhongColor(lightPosition, specularStrength, lightColor);
 		float strength = clamp((lightRadius - dist) / lightRadius, 0.f, 1.0f);
-
 		finalColor += currentColor * strength;
-
 	}
 
 	return finalColor;

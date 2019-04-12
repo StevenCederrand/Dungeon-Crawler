@@ -33,7 +33,7 @@ void main() {
         normalBuffer = frag_data.normal;
     }
 
-    colourBuffer.rgb = mix(color.rgb, colorTint, 0.75f);
+    colourBuffer.rgb = mix(color.rgb, colorTint, 1.0f - colorTint.g);
     positionBuffer = frag_data.position;
     colourBuffer.a = shininess;
 }
