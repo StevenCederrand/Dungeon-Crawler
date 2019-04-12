@@ -17,18 +17,20 @@ void WriteCustomFile::CreateCustomFile()
 	//Version Header
 	unsigned int version = 0; //on top of file, once
 
-	//HeadersAndStuff
+	//Creates a scope of 100 meshheaders
 	MeshHeader h { 100 };
 	Vertex *vArray = new Vertex[h.vertexCount];
+
 	//Write to file
-	std::ofstream outfile("testBin.bin", std::ofstream::binary); //make a new file, make sure to write binary
+	std::ofstream outfile("testCustomBin.bin", std::ofstream::binary); //make a new file, make sure to write binary
 	outfile.write((const char*)&h, sizeof(MeshHeader));
+
 	//add info to header
 	outfile.write((const char*)vArray, sizeof(Vertex)*h.vertexCount);
 	outfile.close();
 
 	//Read from file
-	std::ifstream infile("testBin.bin", std::ifstream::binary); //make sure to read binary
+	std::ifstream infile("testCustomBin.bin", std::ifstream::binary); //make sure to read binary
 
 	//read the first 4 bytes and put into h2
 	MeshHeader h2;
@@ -38,6 +40,7 @@ void WriteCustomFile::CreateCustomFile()
 	h2.vertexCount; //- a lot
 	//Default construction of Vertex struct
 	Vertex *vertices = new Vertex[h2.vertexCount];
+
 	//Read all the vertices on the file
 	infile.read((char*)vertices, h2.vertexCount * sizeof(Vertex));
 	infile.close();
@@ -55,9 +58,4 @@ void WriteCustomFile::CreateCustomFile()
 		}
 	}
 	std::cout << "Streams are equal, method 2: " << equal << std::endl;
-}
-
-void WriteCustomFile::GatherMeshData()
-{
-	//Continue with this
 }
