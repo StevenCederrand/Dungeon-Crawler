@@ -3,7 +3,7 @@
 #include "fbxObjectManager.h"
 #include "DisplayHierarchy.h"
 #include "WriteCustomFile.h"
-#include "SaveMeshInfo.h"
+#include "SaveHierarchy.h"
 
 int main(int argc, char** argv) 
 {
@@ -22,8 +22,8 @@ int main(int argc, char** argv)
 	writeCustomFileObject.CreateCustomFile();
 
 	//extract data
-	SaveMeshInfo saveMeshInfoObject;
-	saveMeshInfoObject.SaveEntireHierarchy(lsdkObject.GetScene());
+	SaveHierarchy saveHierarchyObject;
+	saveHierarchyObject.SaveEntireHierarchy(lsdkObject.GetScene());
 	
 	return 0;
 }

@@ -2,13 +2,13 @@
 
 #include "MeshData.h"
 
-class SaveMeshInfo
+class SaveHierarchy
 {
 private:
 	
 public:
-	SaveMeshInfo();
-	~SaveMeshInfo();
+	SaveHierarchy();
+	~SaveHierarchy();
 	void SaveEntireHierarchy(FbxScene* lScene);
 	void SaveNode(FbxNode* pNode);
 	void SaveMesh(FbxNode* pNode);

@@ -1,16 +1,16 @@
-#include "SaveMeshInfo.h"
+#include "SaveHierarchy.h"
 
-SaveMeshInfo::SaveMeshInfo()
+SaveHierarchy::SaveHierarchy()
 {
 	
 }
 
-SaveMeshInfo::~SaveMeshInfo()
+SaveHierarchy::~SaveHierarchy()
 {
 
 }
 
-void SaveMeshInfo::SaveEntireHierarchy(FbxScene* lScene)
+void SaveHierarchy::SaveEntireHierarchy(FbxScene* lScene)
 {
 	// Print the nodes of the scene and their attributes recursively.
 	// Note that we are not printing the root node because it should not contain any attributes.
@@ -25,7 +25,7 @@ void SaveMeshInfo::SaveEntireHierarchy(FbxScene* lScene)
 	}
 }
 
-void SaveMeshInfo::SaveNode(FbxNode* pNode)
+void SaveHierarchy::SaveNode(FbxNode* pNode)
 {
 	FbxNodeAttribute::EType nodeType = pNode->GetNodeAttributeByIndex(0)->GetAttributeType();
 
@@ -50,7 +50,7 @@ void SaveMeshInfo::SaveNode(FbxNode* pNode)
 		}
 }
 
-void SaveMeshInfo::SaveMesh(FbxNode* pNode)
+void SaveHierarchy::SaveMesh(FbxNode* pNode)
 {
 	FbxMesh* lMesh = (FbxMesh*)pNode->GetNodeAttribute();
 
@@ -59,7 +59,7 @@ void SaveMeshInfo::SaveMesh(FbxNode* pNode)
 	SaveControlPoints(lMesh);
 }
 
-void SaveMeshInfo::SaveControlPoints(FbxMesh* pMesh)
+void SaveHierarchy::SaveControlPoints(FbxMesh* pMesh)
 {
 	int i = 0;
 	int lControlPointsCount = pMesh->GetControlPointsCount();
@@ -88,12 +88,12 @@ void SaveMeshInfo::SaveControlPoints(FbxMesh* pMesh)
 	printf("\n\n");
 }
 
-void SaveMeshInfo::SaveMeshName(FbxNode* pNode)
+void SaveHierarchy::SaveMeshName(FbxNode* pNode)
 {
 	const char* nodeName = pNode->GetName();	//The node we get right now is the pCube1 which is the name of the cube in the outliner
 }
 
-void SaveMeshInfo::PrintChildName(FbxMesh* pMesh)
+void SaveHierarchy::PrintChildName(FbxMesh* pMesh)
 {
 	printf("%s", pMesh->GetName());
 }
