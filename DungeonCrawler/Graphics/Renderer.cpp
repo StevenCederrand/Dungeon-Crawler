@@ -142,9 +142,10 @@ void Renderer::bindMesh(Mesh * mesh, Shader* shader)
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
 
+	//Diffuse texture
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mesh->getTextureID());
-
+	//Bind normal texture
 	if (mesh->hasNormalMap()) {
 		shader->setInt("hasNormalMap", 1);
 		glActiveTexture(GL_TEXTURE1);
@@ -153,10 +154,14 @@ void Renderer::bindMesh(Mesh * mesh, Shader* shader)
 	else {
 		shader->setInt("hasNormalMap", 0);
 	}
+	//Bind AO texture
 	if (mesh->hasAmbientMap()) {
-		LOG_INFO("Ambient map");
-		//glActiveTexture(GL_TEXTURE2);
-		//glBindTexture(GL_TEXTURE_2D, mesh->getAmbientID());
+		shader->setInt("hasAO", 1);
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, mesh->getAmbientID());
+	}
+	else {
+		shader->setInt("hasAO", 0);
 	}
 }
 
@@ -170,6 +175,10 @@ void Renderer::unbindMesh(Mesh * mesh)
 
 	if (mesh->hasNormalMap()) {
 		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, NULL);
+	}
+	if (mesh->hasAmbientMap()) {
+		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_2D, NULL);
 	}
 	glBindVertexArray(NULL);

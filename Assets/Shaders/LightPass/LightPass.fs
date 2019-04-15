@@ -3,9 +3,9 @@
 in vec2 frag_uv;
 out vec4 finalColor;
 
-layout (location = 0) uniform sampler2D positionBuffer;
-layout (location = 1) uniform sampler2D normalBuffer;
-layout (location = 2) uniform sampler2D colourBuffer;
+layout (location = 0, binding = 0) uniform sampler2D positionBuffer;
+layout (location = 1, binding = 1) uniform sampler2D normalBuffer;
+layout (location = 2, binding = 2) uniform sampler2D colourBuffer;
 
 uniform vec3 sunColor;
 uniform vec3 sunPosition;
@@ -60,11 +60,11 @@ vec3 getSumOfAllColorFromPointLights(float specularStrength, vec3 worldPosition)
 	vec3 finalColor = vec3(0.f);
 	for(int i = 0; i < numberOfLights; i++)
 	{
-		vec3 lightPosition = lightBuffer[i].position.xyz;	
+		vec3 lightPosition = lightBuffer[i].position.xyz;
 		vec3 lightColor =  lightBuffer[i].color.rgb;
 		float lightRadius =  lightBuffer[i].color.a;
 		float dist = length(lightPosition - worldPosition);
-		
+
 		if(dist >= lightRadius)
 			continue;
 
