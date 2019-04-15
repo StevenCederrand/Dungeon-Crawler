@@ -67,7 +67,7 @@ void SaveHierarchy::SaveControlPoints(FbxMesh* pMesh)
 
 	for (i = 0; i < lControlPointsCount; i++)
 	{
-		meshBois.AddMeshPoint(lControlPoints[i]);
+		m_mesh.AddMeshPoint(lControlPoints[i]);
 
 		/*
 		for (int j = 0; j < pMesh->GetElementNormalCount(); j++)
@@ -83,7 +83,7 @@ void SaveHierarchy::SaveControlPoints(FbxMesh* pMesh)
 		}
 		*/
 	}
-	meshBois.CheckMesh();
+	m_mesh.CheckMesh();
 	printf("\n\n");
 }
 
@@ -95,4 +95,9 @@ void SaveHierarchy::SaveMeshName(FbxNode* pNode)
 void SaveHierarchy::PrintChildName(FbxMesh* pMesh)
 {
 	printf("%s", pMesh->GetName());
+}
+
+MeshData SaveHierarchy::getMeshObjects()
+{
+	return m_mesh;
 }

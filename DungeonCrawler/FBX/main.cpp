@@ -3,7 +3,6 @@
 #include "fbxObjectManager.h"
 #include "DisplayHierarchy.h"
 #include "WriteCustomFile.h"
-#include "SaveHierarchy.h"
 
 int main(int argc, char** argv) 
 {
@@ -20,10 +19,6 @@ int main(int argc, char** argv)
 	//Create our custom file
 	WriteCustomFile writeCustomFileObject;
 	writeCustomFileObject.CreateCustomFile();
-
-	//extract data
-	SaveHierarchy saveHierarchyObject;
-	saveHierarchyObject.SaveEntireHierarchy(lsdkObject.GetScene());
 	
 	return 0;
 }
