@@ -12,11 +12,13 @@ public:
 
 	void move(float dt);
 	void rotatePlayer();
-	void camPerspective();
 	void dash();
 	void dashCd(float dt);
-
+	
+	void weaponSwap();
 	void shootProjectile(float dt);
+	void chargeProjectile(float dt);
+	void releaseChargedProjectile(float dt);
 	void screenShake(float dt);
 
 	void setSpeed(float speed);
@@ -48,10 +50,14 @@ private:
 	int m_timer;
 
 	// Shooting
+	int m_weaponSlot;
 	bool m_shooting;
 	bool m_canShoot;
 	float m_shootingCooldown;
 	glm::vec3 m_lookDirection;
+	bool m_chargeStance;
+	float m_shakeIntensity;
+	int m_chargeTimer;
 	
 	
 	int m_shake;

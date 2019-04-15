@@ -14,13 +14,17 @@ Player::Player(Mesh * mesh) :
 	this->m_defaultSpeed = 7.f;
 	this->m_speed = 7.0f;
 	this->m_health = 5.f;
-	this->m_damage = 0.f;
+	this->m_damage = 1.f;
 	this->m_debug = false;
 	this->m_dash = 100.f;
 	this->m_dashCd = false;
 	this->m_timer = 0;
 	this->m_shake = 0;
 	this->m_shakeDir = glm::vec3(0.f, 0.f, 0.f);
+	this->m_chargeStance = false;
+	this->m_shakeIntensity = 0.10f;
+	this->m_chargeTimer = 100;
+	this->m_weaponSlot = 1;
 }
 
 void Player::update(float dt)
@@ -34,34 +38,60 @@ void Player::update(float dt)
 	}
 	if (!m_debug)
 	{
-		camPerspective();
-		if (Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT))
+		weaponSwap();
+		if (m_weaponSlot == 2)
 		{
-			dash();
-		}
-		if (Input::isMousePressed(GLFW_MOUSE_BUTTON_RIGHT))
-		{
-			dash();
-		}
-		if (Input::isMouseHeldDown(GLFW_MOUSE_BUTTON_LEFT))
-		{
-			if (m_canShoot) 
+			if (Input::isMouseHeldDown(GLFW_MOUSE_BUTTON_LEFT))
 			{
-				shootProjectile(dt);
-				m_shake = 4;
+				chargeProjectile(dt);
+			}
+			if (Input::isMouseReleased(GLFW_MOUSE_BUTTON_LEFT))
+			{
+				releaseChargedProjectile(dt);
+			}
+			if (!m_chargeStance)
+			{
+				if (Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT))
+				{
+					dash();
+				}
+				if (Input::isMousePressed(GLFW_MOUSE_BUTTON_RIGHT))
+				{
+					dash();
+				}
 			}
 		}
+		
 
-		if (!m_canShoot)
+
+		if (m_weaponSlot == 1)
 		{
-			m_shootingCooldown -= dt;
+			if (Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT))
+			{
+				dash();
+			}
+			if (Input::isMousePressed(GLFW_MOUSE_BUTTON_RIGHT))
+			{
+				dash();
+			}
+			if (Input::isMouseHeldDown(GLFW_MOUSE_BUTTON_LEFT))
+			{
+				if (m_canShoot)
+				{
+					shootProjectile(dt);
+					m_shake = 4;
+				}
+			}
 
-			if (m_shootingCooldown <= 0.f) {
-				m_canShoot = true;
+			if (!m_canShoot)
+			{
+				m_shootingCooldown -= dt;
+
+				if (m_shootingCooldown <= 0.f) {
+					m_canShoot = true;
+				}
 			}
 		}
-
-
 		move(dt);
 		dashCd(dt);
 		screenShake(dt);
@@ -124,31 +154,15 @@ glm::vec3 Player::getPlayerPosition() const
 	return getPosition();
 }
 
-void Player::camPerspective()
+void Player::weaponSwap()
 {
 	if (Input::isKeyPressed(GLFW_KEY_1))
 	{
-		Camera::active->setAngle(1);
+		m_weaponSlot = 1;
 	}
 	if (Input::isKeyPressed(GLFW_KEY_2))
 	{
-		Camera::active->setAngle(2);
-	}
-	if (Input::isKeyPressed(GLFW_KEY_3))
-	{
-		Camera::active->setAngle(3);
-	}
-	if (Input::isKeyPressed(GLFW_KEY_4))
-	{
-		Camera::active->setAngle(4);
-	}
-	if (Input::isKeyPressed(GLFW_KEY_5))
-	{
-		Camera::active->setAngle(5);
-	}
-	if (Input::isKeyPressed(GLFW_KEY_6))
-	{
-		Camera::active->setAngle(6);
+		m_weaponSlot = 2;
 	}
 }
 
@@ -158,7 +172,7 @@ void Player::dash()
 	{
 		setSpeed(m_dash);
 		m_dashCd = !m_dashCd;
-		m_timer = 30;
+		m_timer = 50;
 	}
 }
 
@@ -168,7 +182,7 @@ void Player::dashCd(float dt)
 	{
 		m_dashCd = !m_dashCd;
 	}
-	if (m_timer <= 28)
+	if (m_timer <= 48)
 	{
 		setSpeed(m_defaultSpeed);
 	}
@@ -186,6 +200,30 @@ void Player::shootProjectile(float dt)
 	screenShake(dt);
 }
 
+void Player::chargeProjectile(float dt)
+{
+	m_chargeStance = true;
+	m_speed = 1.f;
+	if (m_chargeTimer <= 0)
+	{
+		m_damage = 3.f;
+	}
+	if (m_chargeTimer >= 0)
+	{
+		m_chargeTimer -= dt;
+	}
+}
+
+void Player::releaseChargedProjectile(float dt)
+{
+	m_chargeStance = false;
+	shootProjectile(dt);
+	m_shake = 4;
+	m_speed = m_defaultSpeed;
+	m_damage = 1.f;
+	m_chargeTimer = 100.f;
+}
+
 void Player::screenShake(float dt)
 {
 	if (m_shake <= 0)
@@ -194,11 +232,11 @@ void Player::screenShake(float dt)
 	}
 	if (m_shake > 0)
 	{
-		m_shakeDir = shakeDirection() * 0.25f;
+		m_shakeDir = shakeDirection() * m_shakeIntensity;
 	}
 	if (m_shake > 2)
 	{
-		m_shakeDir = shakeDirection() * -0.25f;
+		m_shakeDir = shakeDirection() * -m_shakeIntensity;
 	}
 	if (m_shake > 0)
 	{

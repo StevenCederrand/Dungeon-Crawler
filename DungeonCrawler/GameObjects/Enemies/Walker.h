@@ -9,6 +9,8 @@ public:
 	void update(float dt);
 	void move(float dt);
 	void moveToPlayer(float dt);
+	void findPath(glm::vec3 startPos, glm::vec3 targetPos);
+
 
 private:
 	float m_health;

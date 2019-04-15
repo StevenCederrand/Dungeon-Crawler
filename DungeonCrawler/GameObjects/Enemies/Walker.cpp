@@ -1,6 +1,7 @@
 #include "Walker.h"
 #include "../GameObjectManager.h"
 #include "../Player.h"
+#include <list>
 
 Walker::Walker(Mesh * mesh)	:
 	GameObject(mesh)
@@ -27,5 +28,10 @@ void Walker::moveToPlayer(float dt)
 	glm::vec3 direction = getPlayerPosition() - getPosition();
 	direction = glm::normalize(direction);
 	 
+}
+
+void Walker::findPath(glm::vec3 startPos, glm::vec3 targetPos)
+{
+
 }
 
