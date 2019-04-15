@@ -18,6 +18,7 @@ public:
 	FbxString GetAttributeTypeName(FbxNodeAttribute::EType type);
 	void DisplayMesh(FbxNode* pNode);
 	void DisplayControlPoints(FbxMesh* pMesh);
+	void DisplayPolygons(FbxMesh* pMesh);
 	void DisplayMeshName(FbxNode* pNode);
 	void DisplayAttribute(FbxNode* pNode);
 };
