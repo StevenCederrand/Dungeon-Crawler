@@ -11,9 +11,9 @@
 class WriteCustomFile
 {
 private:
-	SaveHierarchy m_saveHierarchy;
+
 public:
 	WriteCustomFile();
 	~WriteCustomFile();
-	void CreateCustomFile(FbxScene* lScene);
+	void CreateCustomFile();
 };

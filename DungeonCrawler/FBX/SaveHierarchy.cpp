@@ -55,7 +55,7 @@ void SaveHierarchy::SaveMesh(FbxNode* pNode)
 	FbxMesh* lMesh = (FbxMesh*)pNode->GetNodeAttribute();
 
 	SaveMeshName(pNode);
-	printf("oneMesh\n");
+	printf("\n");
 	SaveControlPoints(lMesh);
 }
 

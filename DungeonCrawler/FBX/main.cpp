@@ -17,13 +17,11 @@ int main(int argc, char** argv)
 
 	//Display our FBX file hierarchy
 	DisplayHierarchy displayHierarchyObject;
-	//displayHierarchyObject.DisplayEntireHierarchy(lsdkObject.GetScene());
+	displayHierarchyObject.DisplayEntireHierarchy(lsdkObject.GetScene());
 
 	//Create our custom file
 	WriteCustomFile writeCustomFileObject;
-	writeCustomFileObject.CreateCustomFile(lsdkObject.GetScene());
-
-	int pause = 0;
-
+	writeCustomFileObject.CreateCustomFile();
+	
 	return 0;
 }
