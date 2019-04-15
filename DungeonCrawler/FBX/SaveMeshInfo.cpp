@@ -10,12 +10,7 @@ SaveMeshInfo::~SaveMeshInfo()
 
 }
 
-void SaveMeshInfo::ExtractMeshData(FbxScene* lScene)
-{
-	TraverseNodeTree(lScene);
-}
-
-void SaveMeshInfo::TraverseNodeTree(FbxScene* lScene)
+void SaveMeshInfo::SaveEntireHierarchy(FbxScene* lScene)
 {
 	// Print the nodes of the scene and their attributes recursively.
 	// Note that we are not printing the root node because it should not contain any attributes.
@@ -25,13 +20,43 @@ void SaveMeshInfo::TraverseNodeTree(FbxScene* lScene)
 	{
 		for (int i = 0; i < lRootNode->GetChildCount(); i++)
 		{
-			//PRINT THE CHILD HERE WITH PRINT CHILD NAME
-			printf("Child %i\n", i);
-			//PrintNode(lRootNode->GetChild(i));
+			SaveNode(lRootNode->GetChild(i));
 		}
-
-
 	}
+}
+
+void SaveMeshInfo::SaveNode(FbxNode* pNode)
+{
+	FbxNodeAttribute::EType nodeType = pNode->GetNodeAttributeByIndex(0)->GetAttributeType();
+
+	switch (nodeType)
+	{
+	default:
+		break;
+	case FbxNodeAttribute::eMesh:
+		SaveMesh(pNode);
+		break;
+	}
+
+	// Print the node's attributes.
+	for (int i = 0; i < pNode->GetNodeAttributeCount(); i++)
+		//PrintAttribute(pNode->GetNodeAttributeByIndex(i));
+
+	// Recursively print the children.
+	for (int j = 0; j < pNode->GetChildCount(); j++)
+		{
+			printf("\n");
+			SaveNode(pNode->GetChild(j));	//Deeper in the tree
+		}
+}
+
+void SaveMeshInfo::SaveMesh(FbxNode* pNode)
+{
+	FbxMesh* lMesh = (FbxMesh*)pNode->GetNodeAttribute();
+
+	SaveMeshName(pNode);
+	printf("\n");
+	SaveControlPoints(lMesh);
 }
 
 void SaveMeshInfo::SaveControlPoints(FbxMesh* pMesh)
@@ -61,6 +86,11 @@ void SaveMeshInfo::SaveControlPoints(FbxMesh* pMesh)
 		*/
 	}
 	printf("\n\n");
+}
+
+void SaveMeshInfo::SaveMeshName(FbxNode* pNode)
+{
+	const char* nodeName = pNode->GetName();	//The node we get right now is the pCube1 which is the name of the cube in the outliner
 }
 
 void SaveMeshInfo::PrintChildName(FbxMesh* pMesh)

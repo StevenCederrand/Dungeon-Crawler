@@ -68,5 +68,5 @@ void WriteCustomFile::CreateCustomFile()
 			break;
 		}
 	}
-	std::cout << "Streams are equal, method 2: " << equal << std::endl;
+	std::cout << "Streams are equal, method 2: " << equal << "\n" << std::endl;
 }
