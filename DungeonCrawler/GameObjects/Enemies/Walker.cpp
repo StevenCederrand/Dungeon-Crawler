@@ -19,11 +19,13 @@ void Walker::update(float dt)
 void Walker::move(float dt)
 {
 	
-
+	
 }
 
 void Walker::moveToPlayer(float dt)
 {
-	glm::vec3 playerPos = Player::playerActive->getPlayerPosition();
+	glm::vec3 direction = getPlayerPosition() - getPosition();
+	direction = glm::normalize(direction);
+	 
 }
 
