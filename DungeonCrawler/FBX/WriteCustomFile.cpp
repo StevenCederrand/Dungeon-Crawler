@@ -10,8 +10,9 @@ WriteCustomFile::~WriteCustomFile()
 	
 }
 
-void WriteCustomFile::CreateCustomFile()
+void WriteCustomFile::CreateCustomFile(FbxScene* lScene)
 {
+	m_saveHierarchy.SaveEntireHierarchy(lScene); //fix mesh objects with mesh data
 	//IGNORE FOR NOW, START WITH FBX FILE
 
 	//Version Header

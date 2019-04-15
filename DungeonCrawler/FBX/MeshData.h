@@ -7,7 +7,7 @@ class MeshData
 private:
 	int m_nrOfControlPoints;
 	int m_currentControlPoint;
-	FbxVector4* m_controlPoints;
+	//FbxVector4* m_controlPoints;
 public:
 	MeshData();
 	~MeshData();
