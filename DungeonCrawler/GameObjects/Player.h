@@ -16,6 +16,8 @@ public:
 	void dashCd(float dt);
 	
 	void weaponSwap();
+	void shootAutomatic(float dt);
+	void shootChargeShot(float dt);
 	void shootProjectile(float dt);
 	void chargeProjectile(float dt);
 	void releaseChargedProjectile(float dt);
@@ -53,6 +55,7 @@ private:
 	int m_weaponSlot;
 	bool m_shooting;
 	bool m_canShoot;
+	bool m_spraying;
 	float m_shootingCooldown;
 	glm::vec3 m_lookDirection;
 	bool m_chargeStance;

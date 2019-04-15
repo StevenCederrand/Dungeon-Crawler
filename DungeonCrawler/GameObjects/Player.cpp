@@ -25,6 +25,7 @@ Player::Player(Mesh * mesh) :
 	this->m_shakeIntensity = 0.10f;
 	this->m_chargeTimer = 100;
 	this->m_weaponSlot = 1;
+	this->m_spraying = false;
 }
 
 void Player::update(float dt)
@@ -39,48 +40,13 @@ void Player::update(float dt)
 	if (!m_debug)
 	{
 		weaponSwap();
-		if (m_weaponSlot == 2)
-		{
-			if (Input::isMouseHeldDown(GLFW_MOUSE_BUTTON_LEFT))
-			{
-				chargeProjectile(dt);
-			}
-			if (Input::isMouseReleased(GLFW_MOUSE_BUTTON_LEFT))
-			{
-				releaseChargedProjectile(dt);
-			}
-			if (!m_chargeStance)
-			{
-				if (Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT) || Input::isMousePressed(GLFW_MOUSE_BUTTON_RIGHT))
-				{
-					dash();
-				}
-			}
-		}
-
 		if (m_weaponSlot == 1)
 		{
-			if (Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT) || Input::isMousePressed(GLFW_MOUSE_BUTTON_RIGHT))
-			{
-				dash();
-			}
-			if (Input::isMouseHeldDown(GLFW_MOUSE_BUTTON_LEFT))
-			{
-				if (m_canShoot)
-				{
-					shootProjectile(dt);
-					m_shake = 4;
-				}
-			}
-
-			if (!m_canShoot)
-			{
-				m_shootingCooldown -= dt;
-
-				if (m_shootingCooldown <= 0.f) {
-					m_canShoot = true;
-				}
-			}
+			shootAutomatic(dt);
+		}
+		if (m_weaponSlot == 2)
+		{
+			shootChargeShot(dt);
 		}
 		move(dt);
 		dashCd(dt);
@@ -153,6 +119,52 @@ void Player::weaponSwap()
 	if (Input::isKeyPressed(GLFW_KEY_2))
 	{
 		m_weaponSlot = 2;
+	}
+}
+
+void Player::shootAutomatic(float dt)
+{
+	if (Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT) && !m_spraying || Input::isMousePressed(GLFW_MOUSE_BUTTON_RIGHT && !m_spraying))
+	{
+		dash();
+	}
+	if (Input::isMouseHeldDown(GLFW_MOUSE_BUTTON_LEFT))
+	{
+		if (m_canShoot)
+		{
+			shootProjectile(dt);
+			m_shake = 4;
+			m_spraying = true;
+		}
+	}
+	if (Input::isMouseReleased(GLFW_MOUSE_BUTTON_LEFT))
+	{
+		m_spraying = false;
+	}
+
+	if (!m_canShoot)
+	{
+		m_shootingCooldown -= dt;
+
+		if (m_shootingCooldown <= 0.f) {
+			m_canShoot = true;
+		}
+	}
+}
+
+void Player::shootChargeShot(float dt)
+{
+	if (Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT) && !m_chargeStance || Input::isMousePressed(GLFW_MOUSE_BUTTON_RIGHT && !m_chargeStance))
+	{
+		dash();
+	}
+	if (Input::isMouseHeldDown(GLFW_MOUSE_BUTTON_LEFT))
+	{
+		chargeProjectile(dt);
+	}
+	if (Input::isMouseReleased(GLFW_MOUSE_BUTTON_LEFT))
+	{
+		releaseChargedProjectile(dt);
 	}
 }
 
