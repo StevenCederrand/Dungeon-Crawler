@@ -17,24 +17,30 @@ void WriteCustomFile::CreateCustomFile()
 	//Version Header
 	unsigned int version = 0; //on top of file, once
 
-	//Creates a scope of 100 meshheaders
-	MeshHeader h { 100 };
-	BoundingBoxHeader bh { 100 };
+	//Creates one mainheader
+	MainHeader mh{ 1 };
+
+	//Creates a scope of meshes based on the amount the ones counted in the mainheader scene
+	MeshHeader h { mh.meshCount };
+	BoundingBoxHeader bbh { mh.boundingBoxCount };
 
 	//Creates a vertex pointer to a new vertex array
 	Vertex *vArray = new Vertex[h.vertexCount];
-	BoundingBoxVertex *bbvArray = new BoundingBoxVertex[bh.vertexCount];
+	BoundingBoxVertex *bbvArray = new BoundingBoxVertex[bbh.vertexCount];
 
 	//Write to file
 	std::ofstream outfile("testCustomBin.bin", std::ofstream::binary); //make a new file, make sure to write binary
 	
+	//add info to header	
+	outfile.write((const char*)&mh, sizeof(MainHeader));
+
 	//add info to header	
 	outfile.write((const char*)&h, sizeof(MeshHeader));
 	//add info to header
 	outfile.write((const char*)vArray, sizeof(Vertex)*h.vertexCount);
 
 	//add info to header
-	outfile.write((const char*)&bh, sizeof(BoundingBoxHeader));
+	outfile.write((const char*)&bbh, sizeof(BoundingBoxHeader));
 	//add info to header
 	outfile.write((const char*)bbvArray, sizeof(BoundingBoxVertex)*h.vertexCount);
 
