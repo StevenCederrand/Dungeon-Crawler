@@ -1,5 +1,7 @@
 #include <fbxsdk.h>
 
+//Some of DisplayCommon functions have memory leaks, be wary of activating them!
+
 #include "fbxObjectManager.h"
 #include "DisplayHierarchy.h"
 #include "WriteCustomFile.h"
@@ -8,6 +10,7 @@ int main(int argc, char** argv)
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
+	
 	//Make objects like SDK manager, scene, importer
 	//Imports FBX file and cleans importer
 	fbxObjectManager lsdkObject = fbxObjectManager();

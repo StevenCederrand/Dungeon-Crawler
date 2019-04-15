@@ -9,7 +9,11 @@ MeshData::MeshData()
 
 MeshData::~MeshData()
 {
-	//clean m_lControlPoints
+	for (int i = 0; i < m_nrOfControlPoints; i++)
+	{
+		delete m_controlPoints[i];
+	}
+	delete m_controlPoints;
 }
 
 void MeshData::AddMeshPoint(FbxVector4 controlPoint)

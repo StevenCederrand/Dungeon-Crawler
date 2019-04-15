@@ -1,20 +1,12 @@
-/****************************************************************************************
-
-   Copyright (C) 2015 Autodesk, Inc.
-   All rights reserved.
-
-   Use of this software is subject to the terms of the Autodesk license agreement
-   provided at the time of installation or download, or which otherwise accompanies
-   this software in either electronic or hard copy form.
-
-****************************************************************************************/
-
 #include "DisplayCommon.h"
+
 #if defined (FBXSDK_ENV_MAC)
 // disable the “format not a string literal and no format arguments” warning since
 // the FBXSDK_printf calls made here are all valid calls and there is no secuity risk
 #pragma GCC diagnostic ignored "-Wformat-security"
 #endif
+
+/*
 
 void DisplayMetaDataConnections(FbxObject* pObject)
 {
@@ -28,6 +20,7 @@ void DisplayMetaDataConnections(FbxObject* pObject)
 		DisplayString("        Name: ", (char*)metaData->GetName());
 	}
 }
+*/
 
 void DisplayString(const char* pHeader, const char* pValue /* = "" */, const char* pSuffix /* = "" */)
 {
@@ -65,8 +58,8 @@ void DisplayInt(const char* pHeader, int pValue, const char* pSuffix /* = "" */)
 }
 
 
-void DisplayDouble(const char* pHeader, double pValue, const char* pSuffix /* = "" */)
-{
+//void DisplayDouble(const char* pHeader, double pValue, const char* pSuffix /* = "" */)
+/*{
 	FbxString lString;
 	FbxString lFloatValue = (float)pValue;
 
@@ -79,7 +72,7 @@ void DisplayDouble(const char* pHeader, double pValue, const char* pSuffix /* = 
 	lString += "\n";
 	FBXSDK_printf(lString);
 }
-
+*/
 
 void Display2DVector(const char* pHeader, FbxVector2 pValue, const char* pSuffix  /* = "" */)
 {
@@ -127,8 +120,9 @@ void Display3DVector(const char* pHeader, FbxVector4 pValue, const char* pSuffix
 	FBXSDK_printf(lString);
 }
 
-void Display4DVector(const char* pHeader, FbxVector4 pValue, const char* pSuffix /* = "" */)
-{
+
+//void Display4DVector(const char* pHeader, FbxVector4 pValue, const char* pSuffix /* = "" */)
+/*{
 	FbxString lString;
 	FbxString lFloatValue1 = (float)pValue[0];
 	FbxString lFloatValue2 = (float)pValue[1];
@@ -156,10 +150,9 @@ void Display4DVector(const char* pHeader, FbxVector4 pValue, const char* pSuffix
 	lString += "\n";
 	FBXSDK_printf(lString);
 }
-
+*/
 
 void DisplayColor(const char* pHeader, FbxPropertyT<FbxDouble3> pValue, const char* pSuffix /* = "" */)
-
 {
 	FbxString lString;
 

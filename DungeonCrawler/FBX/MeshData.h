@@ -8,7 +8,6 @@ private:
 	int m_nrOfControlPoints;
 	int m_currentControlPoint;
 	FbxVector4* m_controlPoints;
-	int intArr[];
 public:
 	MeshData();
 	~MeshData();
