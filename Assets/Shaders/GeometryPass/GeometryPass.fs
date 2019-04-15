@@ -1,7 +1,7 @@
 #version 430
 
 layout(location = 0) out vec3 positionBuffer;
-layout(location = 1) out vec3 normalBuffer;
+layout(location = 1) out vec4 normalBuffer;
 layout(location = 2) out vec4 colourBuffer;
 
 in FRAG_DATA {
@@ -17,29 +17,43 @@ uniform lowp float hasTexture = -100;
 layout(binding=0) uniform sampler2D textureSampler;
 layout(binding=1) uniform sampler2D normalSampler;
 layout(binding=2) uniform sampler2D AOSampler;
-uniform int hasAO;
+uniform vec3 cameraPosition;
 uniform vec3 colorTint;
 
+vec2 parallaxMapping(vec2 textureCoords, vec3 cameraPosition);
 
 void main() {
-    vec4 color = texture(textureSampler, frag_data.uv);
+    //Ambient Color
     vec4 aCol = vec4(0);
-
-    vec3 normalCol = vec3(0);
-    if(hasAO >= 1) {
-      aCol = texture(AOSampler, frag_data.uv);
-    }
+    //Basic normal Color
+    vec3 normalCol = frag_data.normal;
+    vec2 UVs = frag_data.uv;
+    //If we have a normal map, then we assume as well that we have a
+    //parallax occlusion map
     if(frag_data.TBN != mat3(0)) {
-        normalCol = texture(normalSampler, frag_data.uv).rgb;
+        mat3 TBN = transpose(frag_data.TBN);
+        //Parallax Mapping
+        //aCol = texture(AOSampler, frag_data.uv);
+        vec3 viewDirection = normalize((TBN * cameraPosition) - (TBN * frag_data.position));
+        UVs = parallaxMapping(UVs, viewDirection);
+        if(UVs.x > 1.0 || UVs.y > 1.0 || UVs.x < 0.0 || UVs.y < 0.0)
+            discard;
+        //Normal Mapping
+        normalCol = texture(normalSampler, UVs).rgb;
         normalCol = normalize(normalCol * 2 - 1);
         normalCol = normalize(vec3(frag_data.TBN * normalCol));
-        normalBuffer = normalCol;
-    } //use the default normals if there is no TBN
-    else {
-        normalBuffer = frag_data.normal;
     }
-    colourBuffer += aCol;
+    vec4 color = texture(textureSampler, UVs);
+    normalBuffer.rgb = normalCol.rgb;
+    normalBuffer.a = aCol.r;
     colourBuffer.rgb = mix(color.rgb, colorTint, 1.0f - colorTint.g);
     positionBuffer = frag_data.position;
     colourBuffer.a = shininess;
+}
+
+
+vec2 parallaxMapping(vec2 textureCoords, vec3 cameraPosition) {
+    float h = 1.0 - texture(AOSampler, textureCoords).r; //Get the color value
+    vec2 p = cameraPosition.xy  * (h * 0.05); //0.5 is a height scale
+    return textureCoords - p;
 }
