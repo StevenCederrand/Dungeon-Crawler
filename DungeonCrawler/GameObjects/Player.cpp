@@ -51,26 +51,16 @@ void Player::update(float dt)
 			}
 			if (!m_chargeStance)
 			{
-				if (Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT))
-				{
-					dash();
-				}
-				if (Input::isMousePressed(GLFW_MOUSE_BUTTON_RIGHT))
+				if (Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT) || Input::isMousePressed(GLFW_MOUSE_BUTTON_RIGHT))
 				{
 					dash();
 				}
 			}
 		}
-		
-
 
 		if (m_weaponSlot == 1)
 		{
-			if (Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT))
-			{
-				dash();
-			}
-			if (Input::isMousePressed(GLFW_MOUSE_BUTTON_RIGHT))
+			if (Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT) || Input::isMousePressed(GLFW_MOUSE_BUTTON_RIGHT))
 			{
 				dash();
 			}
@@ -219,6 +209,10 @@ void Player::releaseChargedProjectile(float dt)
 	m_chargeStance = false;
 	shootProjectile(dt);
 	m_shake = 4;
+	if (m_damage == 3)
+	{
+		m_shakeIntensity = 1.f;
+	}
 	m_speed = m_defaultSpeed;
 	m_damage = 1.f;
 	m_chargeTimer = 100.f;
@@ -229,6 +223,7 @@ void Player::screenShake(float dt)
 	if (m_shake <= 0)
 	{
 		m_shakeDir *= 0.f;
+		m_shakeIntensity = 0.1f;
 	}
 	if (m_shake > 0)
 	{
