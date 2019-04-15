@@ -160,6 +160,7 @@ void Application::initShaders() {
 	shader->use();
 	shader->setInt("textureSampler", 0);
 	shader->setInt("normalSampler", 1);
+	shader->setInt("ambientSampler", 2);
 	shader->unuse();
 	shader = ShaderMap::createShader("LightPass", "LightPass/LightPass.vs", "LightPass/LightPass.fs");
 	shader->use();

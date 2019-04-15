@@ -33,8 +33,8 @@ public:
 	const glm::vec3& getdiffuseColor() const;
 	const std::vector<glm::vec3>& getMaxMinVector() const;
 	const float& getShininess() const;
-	const bool& getHasNormalMap() const;
-
+	const bool& hasNormalMap() const;
+	const bool& hasAmbientMap() const;
 
 private:
 	unsigned int m_vao;
@@ -49,6 +49,7 @@ private:
 	float m_shininess;
 
 	bool m_hasNormalMap;
+	bool m_hasAmbientMap;
 	
 };
 

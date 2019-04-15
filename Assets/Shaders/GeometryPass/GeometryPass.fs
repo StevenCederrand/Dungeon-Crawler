@@ -16,6 +16,7 @@ uniform lowp float hasTexture = -100;
 
 uniform sampler2D textureSampler;
 uniform sampler2D normalSampler;
+uniform sampler2D ambientSampler;
 uniform vec3 colorTint;
 
 

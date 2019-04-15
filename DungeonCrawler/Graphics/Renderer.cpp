@@ -145,13 +145,18 @@ void Renderer::bindMesh(Mesh * mesh, Shader* shader)
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mesh->getTextureID());
 
-	if (mesh->getHasNormalMap()) {
+	if (mesh->hasNormalMap()) {
 		shader->setInt("hasNormalMap", 1);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, mesh->getNormalID());	
 	}
 	else {
 		shader->setInt("hasNormalMap", 0);
+	}
+	if (mesh->hasAmbientMap()) {
+		LOG_INFO("Ambient map");
+		//glActiveTexture(GL_TEXTURE2);
+		//glBindTexture(GL_TEXTURE_2D, mesh->getAmbientID());
 	}
 }
 
@@ -163,7 +168,7 @@ void Renderer::unbindMesh(Mesh * mesh)
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, NULL);
 
-	if (mesh->getHasNormalMap()) {
+	if (mesh->hasNormalMap()) {
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, NULL);
 	}

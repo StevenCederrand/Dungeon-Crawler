@@ -28,6 +28,7 @@ void Mesh::setNormalID(const unsigned int & normalID) {
 }
 
 void Mesh::setAmbientID(const unsigned int & ambientID) {
+	m_hasAmbientMap = true;
 	m_ambientID = ambientID;
 }
 
@@ -111,8 +112,13 @@ const float & Mesh::getShininess() const
 	return m_shininess;
 }
 
-const bool & Mesh::getHasNormalMap() const
+const bool & Mesh::hasNormalMap() const
 {
 	return m_hasNormalMap;
+}
+
+const bool & Mesh::hasAmbientMap() const
+{
+	return m_hasAmbientMap;
 }
 

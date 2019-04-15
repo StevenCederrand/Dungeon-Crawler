@@ -249,12 +249,15 @@ void Parser::writeToBinary(ParserData* data, const std::string& filename)
 
 	std::vector<glm::vec3> normals = data->getNormals();
 	writeBinaryVecVec3(binaryFile, normals);
-
+	//Diffuse map
 	std::string textureFilename = data->getTextureFilename();
 	writeBinaryString(binaryFile, textureFilename);
-
-	std::string normalMapName = data->getNormalMapName();
-	writeBinaryString(binaryFile, normalMapName);
+	//Normal Map
+	textureFilename = data->getNormalMapName();
+	writeBinaryString(binaryFile, textureFilename);
+	//Ambient Map
+	textureFilename = data->getAmbientMapName();
+	writeBinaryString(binaryFile, textureFilename);
 
 	glm::vec3 diffuseColor = data->getDiffuseColor();
 	writeBinaryVec3(binaryFile, diffuseColor);
@@ -301,8 +304,6 @@ void Parser::processFace(GLuint vertexIndex, GLuint uvIndex, GLuint normalIndex,
 	parserData->addNormal(tempNormals[normalStartPos]);
 
 	glm::vec3 pos = tempVertices[vertexStartPos];
-	//LOG_TRACE(std::to_string(pos.x) + ", " +  std::to_string(pos.y) + ", " + std::to_string(pos.z));
-	//glm::vec3 pos = tempVertices[vertexStartPos];
 	
 }
 
@@ -595,6 +596,7 @@ void Parser::loadFromBinary(ParserData* data, const std::string & filename)
 
 	readBinaryString(binaryFile, data, 0);
 	readBinaryString(binaryFile, data, 1);
+	readBinaryString(binaryFile, data, 2);
 
 	readBinaryVec3(binaryFile, data, 0);
 	readBinaryVec3(binaryFile, data, 1);
@@ -759,6 +761,9 @@ void Parser::readBinaryString(std::ifstream & binaryFile, ParserData * parserDat
 	else if (choice == 1)
 	{
 		parserData->setNormalMapName(stringText);
+	}
+	else if (choice == 2) {
+		parserData->setAmbientMapName(stringText);
 	}
 }
 //diffuse==0, specular==1, ambient==2
