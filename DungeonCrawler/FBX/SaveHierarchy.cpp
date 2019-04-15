@@ -87,6 +87,11 @@ void SaveHierarchy::SaveControlPoints(FbxMesh* pMesh)
 	printf("\n\n");
 }
 
+void SaveHierarchy::SavePolygons(FbxMesh* pMesh)
+{
+	pMesh->GetPolygonCount();
+}
+
 void SaveHierarchy::SaveMeshName(FbxNode* pNode)
 {
 	const char* nodeName = pNode->GetName();	//The node we get right now is the pCube1 which is the name of the cube in the outliner
