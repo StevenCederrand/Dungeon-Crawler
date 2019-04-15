@@ -346,9 +346,12 @@ void Parser::parseMaterialFile(const std::string& filename, ParserData* parserDa
 		}
 		else if (attribs[0] == "map_Kd")
 		{
-			
-				parserData->setTextureFilename(TexturePath + attribs[1]);
-			
+			parserData->setTextureFilename(TexturePath + attribs[1]);
+		}
+		else if (attribs[0] == "map_Ka") {
+			LOG_INFO("FOUND AMBIENT MAP");
+			parserData->setAmbientMapName(TexturePath + attribs[attribs.size() - 1]);
+
 		}
 		if (attribs[0] == "map_Bump") {
 			if (exporterProgram == "Blender") {

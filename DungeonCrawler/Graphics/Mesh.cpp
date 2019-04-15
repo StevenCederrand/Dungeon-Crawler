@@ -27,6 +27,10 @@ void Mesh::setNormalID(const unsigned int & normalID) {
 	this->m_normalID = normalID;
 }
 
+void Mesh::setAmbientID(const unsigned int & ambientID) {
+	m_ambientID = ambientID;
+}
+
 void Mesh::setSpecularColor(const glm::vec3 & specularColor)
 {
 	m_specularColor = specularColor;
@@ -75,6 +79,11 @@ const unsigned int & Mesh::getTextureID() const
 
 const unsigned int & Mesh::getNormalID() const {
 	return this->m_normalID;
+}
+
+const unsigned int & Mesh::getAmbientID() const
+{	
+	return m_ambientID;
 }
 
 const glm::vec3 & Mesh::getSpecularColor() const

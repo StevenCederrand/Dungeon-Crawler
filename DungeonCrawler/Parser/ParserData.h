@@ -20,6 +20,7 @@ public:
 	
 	void setTextureFilename(std::string filename);
 	void setNormalMapName(std::string filename);
+	void setAmbientMapName(std::string filename);
 
 	void setDiffuseColor(GLfloat r, GLfloat g, GLfloat b);
 	void setSpecularColor(GLfloat r, GLfloat g, GLfloat b);
@@ -37,6 +38,7 @@ public:
 
 	const std::string& getTextureFilename() const;
 	const std::string& getNormalMapName() const;
+	const std::string& getAmbientMapName() const;
 	const glm::vec3& getDiffuseColor() const;
 	const glm::vec3& getSpecularColor() const;
 	const glm::vec3& getAmbientColor() const;
@@ -45,6 +47,7 @@ public:
 	
 	const GLfloat& getNormalMapStrength() const;
 	const bool hasNormalMap();
+	const bool hasAmbientMap();
 
 private:
 	std::vector<GLuint> m_indices;
@@ -54,6 +57,7 @@ private:
 
 	std::string m_textureFilename;
 	std::string m_normalMapName;
+	std::string m_ambientMapName;
 
 	glm::vec3 m_diffuseColor;
 	glm::vec3 m_specularColor;

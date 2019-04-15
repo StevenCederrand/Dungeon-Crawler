@@ -9,4 +9,5 @@ Ks 0.8 0.8 0.8
 d 1
 illum 2
 map_Kd RTS_Crate.png
+map_Ka RTS_CRATE_OCC.png
 map_Bump -bm 0.341807 RTS_Crate_NRM.png
