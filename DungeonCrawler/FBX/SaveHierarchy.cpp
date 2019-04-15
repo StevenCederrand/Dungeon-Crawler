@@ -65,11 +65,9 @@ void SaveHierarchy::SaveControlPoints(FbxMesh* pMesh)
 	int lControlPointsCount = pMesh->GetControlPointsCount();
 	FbxVector4* lControlPoints = pMesh->GetControlPoints();
 
-	printf("Control Points:\n");
 	for (i = 0; i < lControlPointsCount; i++)
 	{
-		printf("Control Point %i ", i);
-		Display3DVector("Coordinates: ", lControlPoints[i]);
+		meshBois.AddMeshPoint(lControlPoints[i]);
 
 		/*
 		for (int j = 0; j < pMesh->GetElementNormalCount(); j++)
@@ -85,6 +83,7 @@ void SaveHierarchy::SaveControlPoints(FbxMesh* pMesh)
 		}
 		*/
 	}
+	meshBois.CheckMesh();
 	printf("\n\n");
 }
 

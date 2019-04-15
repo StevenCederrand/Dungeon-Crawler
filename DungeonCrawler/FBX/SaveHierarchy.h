@@ -5,7 +5,8 @@
 class SaveHierarchy
 {
 private:
-	
+	MeshData meshBois;
+
 public:
 	SaveHierarchy();
 	~SaveHierarchy();

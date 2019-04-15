@@ -6,7 +6,11 @@ class MeshData
 {
 private:
 	int m_nrOfControlPoints;
-	FbxVector4* m_lControlPoints[];
+	int m_currentControlPoint;
+	FbxVector4 m_controlPoints[];
 public:
 	MeshData();
+	~MeshData();
+	void AddMeshPoint(FbxVector4 controlPoint);
+	void CheckMesh();
 };
