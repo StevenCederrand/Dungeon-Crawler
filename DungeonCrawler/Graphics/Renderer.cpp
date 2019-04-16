@@ -1,9 +1,10 @@
 #include "Renderer.h"
 #include "ShaderMap.h"
 #include "../System/Log.h"
+#include "Globals/Settings.h"
 #define MESH_VECTOR_RESERVE_SIZE 150
 
-Renderer::Renderer(Camera* camera, LightManager* lightManager)
+Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects)
 {
 	m_camera = camera;
 	m_lightManager = lightManager;
@@ -12,13 +13,17 @@ Renderer::Renderer(Camera* camera, LightManager* lightManager)
 	//Generate framebuffers & textures
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	this->m_framebuffer->genFrameBuffers();
 	this->initRenderQuad();
 
-	Shader* shader = ShaderMap::getShader("GeometryPass");
-	shader->use();
-	shader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
-	shader->unuse();
+	m_effects = effects; // Point to effect class
+
+	Shader* geomShader = ShaderMap::getShader("GeometryPass");
+	geomShader->use();
+	geomShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+	geomShader->unuse();
+
 }
 
 Renderer::~Renderer()
@@ -55,40 +60,17 @@ void Renderer::render()
 {
 	this->geometryPass();
 	this->lightPass();
-}
 
-void Renderer::forwardPass() {
-	//if (m_meshes.size() == 0)
-	//	return;
-
-	//// Use shader
-	//Shader* goShader = ShaderMap::getShader("GameObjectShader");
-	//goShader->use();
-
-	//// Set view matrix
-	//goShader->setMat4("viewMatrix", m_camera->getViewMatrix());
-	//goShader->setVec3("cameraPosition", m_camera->getPosition());
-
-	//for (auto &currentMesh : m_meshes)
-	//{
-	//	bindMesh(currentMesh.first, goShader);
-
-	//	for (auto object : currentMesh.second)
-	//	{
-	//		goShader->setMat4("modelMatrix", object->getModelMatrix());
-	//		goShader->setFloat("shininess", object->getMesh()->getShininess());
-	//		glDrawElements(GL_TRIANGLES, object->getMesh()->getNrOfIndices(), GL_UNSIGNED_INT, NULL);
-	//	}
-
-	//	unbindMesh();
-	//}
-
-	//// Unuse shader
-	//goShader->unuse();
-
-	//// clear mesh map
-	//m_meshes.clear();
-
+	// Copy over the depthbuffer from the previous passes.
+	glEnable(GL_DEPTH_TEST);
+	m_framebuffer->bindFrameBuffer();
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); // write to default framebuffer
+	glBlitFramebuffer(
+		0, 0, ScreenResolutionX, ScreenResolutionY, 0, 0, ScreenResolutionX, ScreenResolutionY, GL_DEPTH_BUFFER_BIT, GL_NEAREST
+	);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	
+	this->renderEffects();
 }
 
 void Renderer::geometryPass() {
@@ -120,6 +102,26 @@ void Renderer::geometryPass() {
 	this->m_meshes.clear();
 		
 	m_framebuffer->unbindBuffer();
+}
+
+void Renderer::renderEffects()
+{
+	glEnable(GL_BLEND);
+	Shader* laserShader = ShaderMap::getShader("LaserShader");
+	laserShader->use();
+	laserShader->setMat4("viewMatrix", m_camera->getViewMatrix());
+	laserShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+	glBindVertexArray(m_effects->getVAO());
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, m_effects->getNrOfAliveLasers());
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
+	glBindVertexArray(0);
+	laserShader->unuse();
+	glDisable(GL_BLEND);
 }
 
 void Renderer::lightPass() {

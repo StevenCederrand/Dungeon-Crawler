@@ -2,8 +2,9 @@
 #include "System/Log.h"
 #include "Box.h"
 
-GameObjectManager::GameObjectManager()
+GameObjectManager::GameObjectManager(Effects* effects)
 {
+	m_effects = effects;
 }
 
 GameObjectManager::~GameObjectManager()
@@ -81,7 +82,7 @@ void GameObjectManager::update(float dt)
 	// If the length is -1 then there was no intersection
 	if (rayLengthUntilCollision != -1.0f)
 	{
-		glm::vec3 gunshotCollisionPoint = rayDirection * rayLengthUntilCollision;
+		glm::vec3 gunshotCollisionPoint = m_player->getPosition() + rayDirection * rayLengthUntilCollision;
 		if (objectHit)
 		{
 			//LOG_TRACE("Ray intersection! collision point: " + std::to_string(gunshotCollisionPoint.x) + ", " + std::to_string(gunshotCollisionPoint.z));
@@ -89,6 +90,9 @@ void GameObjectManager::update(float dt)
 			// --------MAYBE DYNAMIC CASY HERE TO CHECK IF WE HIT A ENEMY?--------
 			if(dynamic_cast<Box*>(objectHit))
 				objectHit->setHit();
+
+			m_effects->addLaser(m_player->getPosition(), gunshotCollisionPoint, 0.5f);
+
 		}
 
 	}
