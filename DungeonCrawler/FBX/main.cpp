@@ -5,6 +5,9 @@
 #include "fbxObjectManager.h"
 #include "DisplayHierarchy.h"
 #include "WriteCustomFile.h"
+#include "SaveHierarchy.h"
+
+//#include "MeshData2.h" //WARNING
 
 int main(int argc, char** argv) 
 {
@@ -17,11 +20,21 @@ int main(int argc, char** argv)
 
 	//Display our FBX file hierarchy
 	DisplayHierarchy displayHierarchyObject;
-	displayHierarchyObject.DisplayEntireHierarchy(lsdkObject.GetScene());
+	//displayHierarchyObject.DisplayEntireHierarchy(lsdkObject.GetScene());
 
 	//Create our custom file
 	WriteCustomFile writeCustomFileObject;
-	writeCustomFileObject.CreateCustomFile();
+	//writeCustomFileObject.CreateCustomFile();
 	
+	SaveHierarchy saveHierarchy;
+	//saveHierarchy.SaveEntireHierarchy(lsdkObject.GetScene());
+
+
+
+
+	int stop = 1;
+
+	//MESHDATA2 IS CORRUPTED
+
 	return 0;
 }

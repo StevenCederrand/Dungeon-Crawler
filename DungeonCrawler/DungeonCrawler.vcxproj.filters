@@ -36,11 +36,11 @@
     <ClCompile Include="GameObjects\LightSphere.cpp" />
     <ClCompile Include="FBX\main.cpp" />
     <ClCompile Include="FBX\DisplayCommon.cpp" />
-    <ClCompile Include="FBX\MeshData.cpp" />
     <ClCompile Include="FBX\SaveHierarchy.cpp" />
     <ClCompile Include="FBX\DisplayHierarchy.cpp" />
     <ClCompile Include="FBX\fbxObjectManager.cpp" />
     <ClCompile Include="FBX\WriteCustomFile.cpp" />
+    <ClCompile Include="FBX\MeshData2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -83,12 +83,12 @@
     <ClInclude Include="GameObjects\LightSphere.h" />
     <ClInclude Include="Utility\Ray.h" />
     <ClInclude Include="FBX\DisplayCommon.h" />
-    <ClInclude Include="FBX\MeshData.h" />
     <ClInclude Include="FBX\SaveHierarchy.h" />
     <ClInclude Include="FBX\HeaderStructs.h" />
     <ClInclude Include="FBX\DisplayHierarchy.h" />
     <ClInclude Include="FBX\fbxObjectManager.h" />
     <ClInclude Include="FBX\WriteCustomFile.h" />
+    <ClInclude Include="FBX\MeshData2.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FBX\box.fbx" />

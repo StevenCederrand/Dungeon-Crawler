@@ -133,7 +133,7 @@ void DisplayHierarchy::DisplayControlPoints(FbxMesh* pMesh)
 	printf("\n\n");
 }
 
-void DisplayHierarchy::DisplayPolygons(FbxMesh* pMesh) //polygons = 4 control points
+void DisplayHierarchy::DisplayPolygons(FbxMesh* pMesh) //polygon = 4 vertices, Not control points!
 {
 	int i, j, lPolygonCount = pMesh->GetPolygonCount();
 	FbxVector4* lControlPoints = pMesh->GetControlPoints();
@@ -276,7 +276,7 @@ void DisplayHierarchy::DisplayPolygons(FbxMesh* pMesh) //polygons = 4 control po
 
 				case FbxGeometryElement::eByPolygon: // doesn't make much sense for UVs
 				case FbxGeometryElement::eAllSame:   // doesn't make much sense for UVs
-				case FbxGeometryElement::eNone:       // doesn't make much sense for UVs
+				case FbxGeometryElement::eNone:      // doesn't make much sense for UVs
 					break;
 				}
 			}

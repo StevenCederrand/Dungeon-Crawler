@@ -2,12 +2,13 @@
 
 //Has memory leaks
 
-#include "MeshData.h"
+//#include "MeshData2.h"
+#include "DisplayCommon.h"
 
 class SaveHierarchy
 {
 private:
-	MeshData m_mesh;
+	//MeshData2 m_mesh;
 
 public:
 	SaveHierarchy();
@@ -19,5 +20,4 @@ public:
 	void SavePolygons(FbxMesh* pMesh);
 	void SaveMeshName(FbxNode* pNode);
 	void PrintChildName(FbxMesh* pMesh);
-	MeshData getMeshObjects();
 };
