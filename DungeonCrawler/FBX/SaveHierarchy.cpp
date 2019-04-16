@@ -96,6 +96,7 @@ void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, Not con
 	m_mesh.setNrOfPolygons(lPolygonCount);
 	FbxVector4* lControlPoints = pMesh->GetControlPoints();
 	char header[100];
+	int vertexCounter = 0; //just a counter, keeps track of which vertex is current
 
 	//how many polygons in mesh
 	for (int i = 0; i < lPolygonCount; i++)
@@ -113,7 +114,7 @@ void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, Not con
 			int lControlPointIndex = pMesh->GetPolygonVertex(i, j);
 			m_mesh.AddIndexPoint(lControlPointIndex);
 
-			//how many UV coordinates the polygon has
+			//how many UV coordinates the polygon has, 1 right now
 			for (int k = 0; k < pMesh->GetElementUVCount(); ++k)
 			{
 				int boi = pMesh->GetElementUVCount();
@@ -167,6 +168,7 @@ void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, Not con
 					break;
 				}
 			}
+			//How many normals per Polygon, 1 right now
 			for (int k = 0; k < pMesh->GetElementNormalCount(); ++k)
 			{
 				FbxVector4 lNormalCoordinates;
@@ -177,8 +179,9 @@ void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, Not con
 					switch (leNormal->GetReferenceMode())
 					{
 					case FbxGeometryElement::eDirect: //currently used
-						lNormalCoordinates = leNormal->GetDirectArray().GetAt(k);
+						lNormalCoordinates = leNormal->GetDirectArray().GetAt(vertexCounter);
 						m_mesh.AddNormalCoordinate(lNormalCoordinates);
+						vertexCounter++;
 
 						//Display3DVector(header, leNormal->GetDirectArray().GetAt(vertexId));
 						break;
