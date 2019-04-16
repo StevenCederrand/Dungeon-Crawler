@@ -7,7 +7,7 @@ MeshData2::MeshData2()
 	m_currentUVCoordinate = 0;
 	m_currentUVIndex = 0;
 	m_currentNormalCoordinate = 0;
-	m_currentNormalIndex = 0;
+	//m_currentNormalIndex = 0;
 
 	m_nrOfPolygons = 0;
 	m_nrOfVerticesPerPolygon = 0;
