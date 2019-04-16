@@ -54,6 +54,6 @@ void main() {
 
 vec2 parallaxMapping(vec2 textureCoords, vec3 cameraPosition) {
     float h = 1.0 - texture(AOSampler, textureCoords).r; //Get the color value
-    vec2 p = cameraPosition.xy  * (h * 0.05); //0.5 is a height scale
+    vec2 p = cameraPosition.xy * (h * 0.1); //0.5 is a height scale
     return textureCoords - p;
 }

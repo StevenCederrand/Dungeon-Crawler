@@ -40,12 +40,10 @@ Mesh* GLinit::createMesh(std::string name, ParserData* data)
 	mesh->setHasNormalMap(data->hasNormalMap());
 	
 	if (data->hasNormalMap()) {
-		LOG_INFO("HAS NORMALMAP");
 		GLuint normalID = createTexture(data->getNormalMapName());
 		mesh->setNormalID(normalID);
 	}
 	if (data->hasAmbientMap()) {
-		LOG_INFO("HAS AMBIENTMAP");
 		GLuint ambientID = createTexture(data->getAmbientMapName());
 		mesh->setAmbientID(ambientID);
 	}

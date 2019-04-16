@@ -3,9 +3,9 @@
 in vec2 frag_uv;
 out vec4 finalColor;
 
-layout (location = 0, binding = 0) uniform sampler2D positionBuffer;
-layout (location = 1, binding = 1) uniform sampler2D normalBuffer;
-layout (location = 2, binding = 2) uniform sampler2D colourBuffer;
+layout (binding = 0) uniform sampler2D positionBuffer;
+layout (binding = 1) uniform sampler2D normalBuffer;
+layout (binding = 2) uniform sampler2D colourBuffer;
 
 uniform vec3 sunColor;
 uniform vec3 sunPosition;
