@@ -17,26 +17,34 @@ void WriteCustomFile::CreateCustomFile()
 	//Version Header
 	unsigned int version = 0; //on top of file, once
 
-	//Creates a scope of 100 meshheaders
-	MeshHeader h { 100 };
-	BoundingBoxHeader bh { 100 };
+	//Creates one mainheader
+	MainHeader mh{ 1 };
 
+	//Creates a scope of meshes based on the amount the ones counted in the mainheader scene
+	MeshHeader h { mh.meshCount };
 	//Creates a vertex pointer to a new vertex array
 	Vertex *vArray = new Vertex[h.vertexCount];
-	BoundingBoxVertex *bbvArray = new BoundingBoxVertex[bh.vertexCount];
+
+	//Creates a scope of boundingboxheader classes based on the amount of boundingbox counted
+	BoundingBoxHeader bbh { mh.boundingBoxCount };
+	//Creates a boundingboxvertex pointer to a new boundingboxvertex array
+	BoundingBoxVertex *bbvArray = new BoundingBoxVertex[bbh.vertexCount];
 
 	//Write to file
 	std::ofstream outfile("testCustomBin.bin", std::ofstream::binary); //make a new file, make sure to write binary
 	
+	//add info to header	
+	outfile.write((const char*)&mh, sizeof(MainHeader));
+
 	//add info to header	
 	outfile.write((const char*)&h, sizeof(MeshHeader));
 	//add info to header
 	outfile.write((const char*)vArray, sizeof(Vertex)*h.vertexCount);
 
 	//add info to header
-	outfile.write((const char*)&bh, sizeof(BoundingBoxHeader));
+	outfile.write((const char*)&bbh, sizeof(BoundingBoxHeader));
 	//add info to header
-	outfile.write((const char*)bbvArray, sizeof(BoundingBoxVertex)*h.vertexCount);
+	outfile.write((const char*)bbvArray, sizeof(BoundingBoxVertex)*bbh.vertexCount);
 
 	outfile.close();
 
@@ -47,13 +55,20 @@ void WriteCustomFile::CreateCustomFile()
 	MeshHeader h2;
 	infile.read((char*)&h2, sizeof(MeshHeader));
 
-
-	h2.vertexCount; //- a lot
 	//Default construction of Vertex struct
 	Vertex *vertices = new Vertex[h2.vertexCount];
 
+	//read the first 4 bytes and put into bbh2
+	BoundingBoxHeader bbh2;
+	infile.read((char*)&bbh2, sizeof(MeshHeader));
+
+	//Default construction of Vertex struct
+	BoundingBoxVertex *bbvertices = new BoundingBoxVertex[bbh2.vertexCount];
+
+
 	//Read all the vertices on the file
 	infile.read((char*)vertices, h2.vertexCount * sizeof(Vertex));
+	infile.read((char*)bbvertices, bbh2.vertexCount * sizeof(Vertex));
 	infile.close();
 
 	//comparison:

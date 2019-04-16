@@ -2,9 +2,10 @@
 
 struct MainHeader
 {
-	unsigned int meshCount;
-	unsigned int materialCount;
 	unsigned int characterCount;
+	unsigned int meshCount;
+	unsigned int boundingBoxCount;
+	unsigned int materialCount;
 };
 
 struct MeshHeader
