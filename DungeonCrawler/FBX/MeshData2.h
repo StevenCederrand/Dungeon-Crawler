@@ -7,7 +7,7 @@ class MeshData2
 private:
 	
 	int m_currentControlPoint;
-	//FbxVector4 m_controlPointArr[100];
+	FbxVector4 m_controlPointArr[100];
 
 	int m_currentControlPointIndex;
 	int m_controlPointIndexArr[100];
@@ -24,7 +24,6 @@ private:
 public:
 	MeshData2();
 	~MeshData2();
-	/*
 	void AddControlPoint(FbxVector4 controlPoint);
 	void AddIndexPoint(int index);
 	void AddUVCoordinate(FbxVector2 uVCoordinate);
@@ -32,5 +31,4 @@ public:
 
 	void setNrOfPolygons(int nrOfPolygons);
 	void setNrOfVerticesPerPolygon(int nrOfVerticesPerPolygon);
-	*/
 };

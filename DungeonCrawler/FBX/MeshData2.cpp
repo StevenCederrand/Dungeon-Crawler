@@ -25,12 +25,10 @@ MeshData2::~MeshData2()
 
 void MeshData2::initiateArrays()
 {
-	/*
 	for (int i = 0; i < 100; i++)
 	{
 		m_controlPointArr[i].Set(0, 0, 0, 0);
 	}
-	*/
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -43,7 +41,6 @@ void MeshData2::initiateArrays()
 	}
 }
 
-/*
 void MeshData2::AddControlPoint(FbxVector4 controlPoint)
 {
 	m_controlPointArr[m_currentControlPoint] = controlPoint;
@@ -110,4 +107,3 @@ void MeshData2::setNrOfVerticesPerPolygon(int nrOfVerticesPerPolygon)
 {
 	m_nrOfVerticesPerPolygon = nrOfVerticesPerPolygon;
 }
-*/
