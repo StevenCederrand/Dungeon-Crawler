@@ -5,8 +5,6 @@
 #include "System/Log.h"
 #include "Utility/Camera.h"
 
-Player* Player::playerActive = nullptr;
-
 Player::Player(Mesh * mesh) :
 	GameObject(mesh)
 {
@@ -264,6 +262,11 @@ void Player::setHealth(float health)
 void Player::setDamage(float damage)
 {
 	this->m_damage = damage;
+}
+
+void Player::takeDamage(float damageRecieved)
+{
+	m_health = m_health - damageRecieved;
 }
 
 float Player::getSpeed() const

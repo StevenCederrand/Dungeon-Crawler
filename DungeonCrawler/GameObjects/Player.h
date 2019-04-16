@@ -5,8 +5,6 @@
 
 class Player : public GameObject {
 public:
-	static Player* playerActive;
-
 	Player(Mesh* mesh);
 	void update(float dt);
 
@@ -26,6 +24,8 @@ public:
 	void setSpeed(float speed);
 	void setHealth(float health);
 	void setDamage(float damage);
+
+	void takeDamage(float damageRecieved);
 
 	float getSpeed()const;
 	float getHealth()const;
