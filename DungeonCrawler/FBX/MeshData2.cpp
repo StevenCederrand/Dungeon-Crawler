@@ -106,16 +106,16 @@ void MeshData2::CheckMesh()
 			{
 				printf("Vertex %i:\n", j);
 				//Position
-				//Stor currentPlaceInVerticeIndexArr if load more than 1 mesh, needs to be added for other start location
-				int currentPlaceInVerticeIndexArr = (m_nrOfVerticesPerPolygon * i) + j;
+				//Store currentPlaceInVerticeIndexArr if load more than 1 mesh, needs to be added for other start location
+				int lCurrentVertex = (m_nrOfVerticesPerPolygon * i) + j;
 				printf("Position: %.2f %.2f %.2f\n",
-					m_controlPointArr[m_controlPointIndexArr[currentPlaceInVerticeIndexArr]][0],
-					m_controlPointArr[m_controlPointIndexArr[currentPlaceInVerticeIndexArr]][1],
-					m_controlPointArr[m_controlPointIndexArr[currentPlaceInVerticeIndexArr]][2]);
+					m_controlPointArr[m_controlPointIndexArr[lCurrentVertex]][0],
+					m_controlPointArr[m_controlPointIndexArr[lCurrentVertex]][1],
+					m_controlPointArr[m_controlPointIndexArr[lCurrentVertex]][2]);
 				//UV
-				printf("UV: %.2f %.2f\n", i,
-					m_UVCoordinates[m_UVCoordinateIndexArr[i]][0],
-					m_UVCoordinates[m_UVCoordinateIndexArr[i]][1]);
+				printf("UV: %.2f %.2f\n",
+					m_UVCoordinates[m_UVCoordinateIndexArr[lCurrentVertex]][0],
+					m_UVCoordinates[m_UVCoordinateIndexArr[lCurrentVertex]][1]);
 			}
 		}
 		else if (m_nrOfVerticesPerPolygon == 4)
