@@ -101,6 +101,7 @@ void Renderer::geometryPass() {
 	geometryShader->use();
 
 	geometryShader->setMat4("viewMatrix", m_camera->getViewMatrix());
+
 	m_framebuffer->bindFrameBuffer();
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -142,16 +143,23 @@ void Renderer::bindMesh(Mesh * mesh, Shader* shader)
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
 
+	//Diffuse texture
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mesh->getTextureID());
-
-	if (mesh->getHasNormalMap()) {
+	//Bind normal texture
+	if (mesh->hasNormalMap()) {
 		shader->setInt("hasNormalMap", 1);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, mesh->getNormalID());	
 	}
 	else {
 		shader->setInt("hasNormalMap", 0);
+	}
+	//Bind AO texture
+	if (mesh->hasAmbientMap()) {
+		shader->setVec3("cameraPosition", m_camera->getPosition());
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, mesh->getAmbientID());
 	}
 }
 
@@ -163,8 +171,12 @@ void Renderer::unbindMesh(Mesh * mesh)
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, NULL);
 
-	if (mesh->getHasNormalMap()) {
+	if (mesh->hasNormalMap()) {
 		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, NULL);
+	}
+	if (mesh->hasAmbientMap()) {
+		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_2D, NULL);
 	}
 	glBindVertexArray(NULL);

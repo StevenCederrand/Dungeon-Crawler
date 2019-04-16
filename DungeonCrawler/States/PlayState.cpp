@@ -42,10 +42,27 @@ PlayState::PlayState() {
 	#pragma endregion
 	
 	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 1.5f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
-	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
+	
 	m_lightManager->addLight(glm::vec3(0.f, 5.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
 
 	m_gameObjectManager->addGameObject(new Room(roomMesh, glm::vec3(0.f, 0.f, 0.f)));
+
+	for (int i = 0; i < 5; i++)
+	{
+		m_lightManager->addLight(
+			// Position
+			glm::vec3(
+				Randomizer::single(-20.f, 20.f),
+				5.f,
+				Randomizer::single(-20.f, 20.f)),
+			// Color
+			glm::vec3(
+				Randomizer::single(0.f, 255.f) / 255.f,
+				Randomizer::single(0.f, 255.f) / 255.f,
+				Randomizer::single(0.f, 255.f) / 255.f),
+			25.f, m_gameObjectManager);
+
+	}
 
 	for (int i = 0; i < 20; i++)
 	{
@@ -53,7 +70,7 @@ PlayState::PlayState() {
 			glm::vec3(
 				Randomizer::single(-15.f, 15.f), 
 				0.f, 
-				Randomizer::single(-15.f, 15.f)
+				Randomizer::single(-30.f, 30.f)
 			)));
 	}
 
