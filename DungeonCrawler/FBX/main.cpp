@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 	//writeCustomFileObject.CreateCustomFile();
 	
 	SaveHierarchy saveHierarchy;
-	//saveHierarchy.SaveEntireHierarchy(lsdkObject.GetScene());
+	saveHierarchy.SaveEntireHierarchy(lsdkObject.GetScene());
 
 	MeshData2 corruptingMesh;
 

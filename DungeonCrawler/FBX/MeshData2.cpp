@@ -6,7 +6,8 @@ MeshData2::MeshData2()
 	m_currentControlPoint = 0;
 	m_currentControlPointIndex = 0;
 	m_nrOfPolygons = 0;
-	m_nrOfVerticesPerPolygon = 3;
+	m_nrOfVerticesPerPolygon = 0;
+	m_currentUVIndex = 0;
 	m_currentUVCoordinate = 0;
 	initiateArrays();
 	
@@ -30,7 +31,7 @@ void MeshData2::initiateArrays()
 		m_controlPointArr[i].Set(0, 0, 0, 0);
 	}
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 100; i++)
 	{
 		m_UVCoordinates[i].Set(0, 0);
 	}
@@ -38,6 +39,7 @@ void MeshData2::initiateArrays()
 	for (int i = 0; i < 100; i++)
 	{
 		m_controlPointIndexArr[i] = 0;
+		m_UVCoordinateIndexArr[i] = 0;
 	}
 }
 
@@ -57,6 +59,12 @@ void MeshData2::AddIndexPoint(int index)
 {
 	m_controlPointIndexArr[m_currentControlPointIndex] = index;
 	m_currentControlPointIndex++;
+}
+
+void MeshData2::AddUVCoordinate(int index)
+{
+	m_UVCoordinateIndexArr[m_currentUVIndex] = index;
+	m_currentUVIndex++;
 }
 
 void MeshData2::CheckMesh()
@@ -94,6 +102,8 @@ void MeshData2::CheckMesh()
 		}
 		printf("\n");
 	}
+
+	
 	printf("\n\n");
 
 }

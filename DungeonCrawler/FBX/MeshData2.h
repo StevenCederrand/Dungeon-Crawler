@@ -15,8 +15,11 @@ private:
 	int m_nrOfPolygons;
 	int m_nrOfVerticesPerPolygon; //3 if triangulated
 
+	int m_currentUVIndex;
+	int m_UVCoordinateIndexArr[100];
+
 	int m_currentUVCoordinate;
-	FbxVector2 m_UVCoordinates[10];
+	FbxVector2 m_UVCoordinates[100];
 
 
 	void initiateArrays();
@@ -26,6 +29,7 @@ public:
 	~MeshData2();
 	void AddControlPoint(FbxVector4 controlPoint);
 	void AddIndexPoint(int index);
+	void AddUVCoordinate(int index);
 	void AddUVCoordinate(FbxVector2 uVCoordinate);
 	void CheckMesh();
 

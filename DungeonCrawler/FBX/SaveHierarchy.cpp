@@ -59,7 +59,7 @@ void SaveHierarchy::SaveMesh(FbxNode* pNode)
 	SaveControlPoints(lMesh);
 	SavePolygons(lMesh);
 
-	//m_mesh.CheckMesh(); !MESH
+	m_mesh.CheckMesh();
 }
 
 void SaveHierarchy::SaveControlPoints(FbxMesh* pMesh)
@@ -70,7 +70,7 @@ void SaveHierarchy::SaveControlPoints(FbxMesh* pMesh)
 
 	for (i = 0; i < lControlPointsCount; i++)
 	{
-		//m_mesh.AddControlPoint(lControlPoints[i]); !MESH
+		m_mesh.AddControlPoint(lControlPoints[i]);
 
 		/*
 		for (int j = 0; j < pMesh->GetElementNormalCount(); j++)
@@ -93,7 +93,7 @@ void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, Not con
 {
 	//How many polygons there are in the current mesh
 	int lPolygonCount = pMesh->GetPolygonCount();
-	//m_mesh.setNrOfPolygons(lPolygonCount); !MESH
+	m_mesh.setNrOfPolygons(lPolygonCount);
 	FbxVector4* lControlPoints = pMesh->GetControlPoints();
 	char header[100];
 
@@ -101,7 +101,7 @@ void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, Not con
 	for (int i = 0; i < lPolygonCount; i++)
 	{
 		int lPolygonSize = pMesh->GetPolygonSize(i);
-		//m_mesh.setNrOfVerticesPerPolygon(lPolygonSize); // if triangulated = 3 !MESH
+		m_mesh.setNrOfVerticesPerPolygon(lPolygonSize); // if triangulated = 3
 
 		//where the i polygon start to read vertices from GetPolygonVertex
 		int lStartIndex = pMesh->GetPolygonVertexIndex(i);
@@ -109,8 +109,9 @@ void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, Not con
 		//how many vertices in polygon, depends if triangulated
 		for (int j = 0; j < lPolygonSize; j++)
 		{
-			int lControlPointIndex = pMesh->GetPolygonVertex(i, j); //i = what polygon, j = vertice in polygon
-			//m_mesh.AddIndexPoint(lControlPointIndex); !MESH
+			//i = what polygon, j = vertice in polygon
+			int lControlPointIndex = pMesh->GetPolygonVertex(i, j);
+			m_mesh.AddIndexPoint(lControlPointIndex);
 
 			//how many UV coordinates the polygon has
 			for (int k = 0; k < pMesh->GetElementUVCount(); ++k)
@@ -142,11 +143,15 @@ void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, Not con
 				case FbxGeometryElement::eByPolygonVertex:	//or by vertex
 				{
 					int lTextureUVIndex = pMesh->GetTextureUVIndex(i, j);
+					m_mesh.AddUVCoordinate(lTextureUVIndex);
+
 					switch (lEUV->GetReferenceMode())
 					{
 					case FbxGeometryElement::eDirect:
 					case FbxGeometryElement::eIndexToDirect:
 					{
+						//Save UV coorcinates in meshdata !MESH
+						//DESTROYS EVERYTHING !MESH
 						//m_mesh.AddUVCoordinate(lEUV->GetDirectArray().GetAt(lTextureUVIndex)); !MESH
 					}
 					break;

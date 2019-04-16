@@ -2,13 +2,12 @@
 
 //Has memory leaks
 
-//#include "MeshData2.h"
-#include "DisplayCommon.h"
+#include "MeshData2.h"
 
 class SaveHierarchy
 {
 private:
-	//MeshData2 m_mesh;
+	MeshData2 m_mesh;
 
 public:
 	SaveHierarchy();
