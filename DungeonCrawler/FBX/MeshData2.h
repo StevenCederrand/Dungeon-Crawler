@@ -5,22 +5,22 @@
 class MeshData2
 {
 private:
-	
 	int m_currentControlPoint;
-	FbxVector4 m_controlPointArr[100];
-
 	int m_currentControlPointIndex;
+	FbxVector4 m_controlPointArr[100];
 	int m_controlPointIndexArr[100];
+
+	int m_currentUVCoordinate;
+	int m_currentUVIndex;
+	FbxVector2 m_UVCoordinates[100];
+	int m_UVCoordinateIndexArr[100];
+
+	int m_currentNormalCoordinate;
+	int m_currentNormalIndex;
+	FbxVector4 m_normalCoordinateArr[100];
 
 	int m_nrOfPolygons;
 	int m_nrOfVerticesPerPolygon; //3 if triangulated
-
-	int m_currentUVIndex;
-	int m_UVCoordinateIndexArr[100];
-
-	int m_currentUVCoordinate;
-	FbxVector2 m_UVCoordinates[100];
-
 
 	void initiateArrays();
 	
@@ -29,8 +29,9 @@ public:
 	~MeshData2();
 	void AddControlPoint(FbxVector4 controlPoint);
 	void AddIndexPoint(int index);
-	void AddUVCoordinate(int index);
 	void AddUVCoordinate(FbxVector2 uVCoordinate);
+	void AddUVIndex(int index);
+	void AddNormalCoordinate(FbxVector4 normalCoordinate);
 	void CheckMesh();
 
 	void setNrOfPolygons(int nrOfPolygons);

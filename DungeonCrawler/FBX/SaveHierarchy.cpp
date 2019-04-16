@@ -140,21 +140,19 @@ void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, Not con
 					}
 					break;
 
-				case FbxGeometryElement::eByPolygonVertex:	//or by vertex
+				case FbxGeometryElement::eByPolygonVertex:	//or by vertex, used right now
 				{
 					int lTextureUVIndex = pMesh->GetTextureUVIndex(i, j);
-					m_mesh.AddUVCoordinate(lTextureUVIndex);
+					m_mesh.AddUVIndex(lTextureUVIndex);
 
 					switch (lEUV->GetReferenceMode())
 					{
 					case FbxGeometryElement::eDirect:
-					case FbxGeometryElement::eIndexToDirect:
+					case FbxGeometryElement::eIndexToDirect: 
 					{
+						//actually does something, corrupted before, but is probably fine now.
 						FbxVector2 textureUvCoordinates = lEUV->GetDirectArray().GetAt(lTextureUVIndex);
 						m_mesh.AddUVCoordinate(textureUvCoordinates);
-						//Save UV coorcinates in meshdata !MESH
-						//DESTROYS EVERYTHING !MESH
-						//m_mesh.AddUVCoordinate(lEUV->GetDirectArray().GetAt(lTextureUVIndex)); !MESH
 					}
 					break;
 					default:
@@ -169,7 +167,33 @@ void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, Not con
 					break;
 				}
 			}
-			//normalcount
+			for (int k = 0; k < pMesh->GetElementNormalCount(); ++k)
+			{
+				FbxVector4 lNormalCoordinates;
+				FbxGeometryElementNormal* leNormal = pMesh->GetElementNormal(k);
+
+				if (leNormal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+				{
+					switch (leNormal->GetReferenceMode())
+					{
+					case FbxGeometryElement::eDirect: //currently used
+						lNormalCoordinates = leNormal->GetDirectArray().GetAt(k);
+						m_mesh.AddNormalCoordinate(lNormalCoordinates);
+
+						//Display3DVector(header, leNormal->GetDirectArray().GetAt(vertexId));
+						break;
+					case FbxGeometryElement::eIndexToDirect:
+					{
+						//int id = leNormal->GetIndexArray().GetAt(vertexId);
+						//Display3DVector(header, leNormal->GetDirectArray().GetAt(id));
+					}
+					break;
+					default:
+						break; // other reference modes not shown here!
+					}
+				}
+
+			}
 		}
 	}
 }

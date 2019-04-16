@@ -2,15 +2,17 @@
 
 MeshData2::MeshData2()
 {
-	
 	m_currentControlPoint = 0;
 	m_currentControlPointIndex = 0;
+	m_currentUVCoordinate = 0;
+	m_currentUVIndex = 0;
+	m_currentNormalCoordinate = 0;
+	m_currentNormalIndex = 0;
+
 	m_nrOfPolygons = 0;
 	m_nrOfVerticesPerPolygon = 0;
-	m_currentUVIndex = 0;
-	m_currentUVCoordinate = 0;
+
 	initiateArrays();
-	
 }
 
 MeshData2::~MeshData2()
@@ -41,6 +43,11 @@ void MeshData2::initiateArrays()
 		m_controlPointIndexArr[i] = 0;
 		m_UVCoordinateIndexArr[i] = 0;
 	}
+
+	for (int i = 0; i < 100; i++)
+	{
+		m_normalCoordinateArr[i].Set(0, 0, 0, 0);
+	}
 }
 
 void MeshData2::AddControlPoint(FbxVector4 controlPoint)
@@ -49,22 +56,28 @@ void MeshData2::AddControlPoint(FbxVector4 controlPoint)
 	m_currentControlPoint++;
 }
 
-void MeshData2::AddUVCoordinate(FbxVector2 uVCoordinate)
-{
-	m_UVCoordinates[m_currentUVCoordinate] = uVCoordinate;
-	m_currentUVCoordinate++;
-}
-
 void MeshData2::AddIndexPoint(int index)
 {
 	m_controlPointIndexArr[m_currentControlPointIndex] = index;
 	m_currentControlPointIndex++;
 }
 
-void MeshData2::AddUVCoordinate(int index)
+void MeshData2::AddUVCoordinate(FbxVector2 uVCoordinate)
+{
+	m_UVCoordinates[m_currentUVCoordinate] = uVCoordinate;
+	m_currentUVCoordinate++;
+}
+
+void MeshData2::AddUVIndex(int index)
 {
 	m_UVCoordinateIndexArr[m_currentUVIndex] = index;
 	m_currentUVIndex++;
+}
+
+void MeshData2::AddNormalCoordinate(FbxVector4 normalCoordinate)
+{
+	m_normalCoordinateArr[m_currentNormalCoordinate] = normalCoordinate;
+	m_currentNormalCoordinate++;
 }
 
 void MeshData2::CheckMesh()
@@ -116,6 +129,11 @@ void MeshData2::CheckMesh()
 				printf("UV: %.2f %.2f\n",
 					m_UVCoordinates[m_UVCoordinateIndexArr[lCurrentVertex]][0],
 					m_UVCoordinates[m_UVCoordinateIndexArr[lCurrentVertex]][1]);
+				//Normals, doesnt use Index right now
+				printf("Normal: %.2f %.2f %.2f\n",
+					m_normalCoordinateArr[lCurrentVertex][0],
+					m_normalCoordinateArr[lCurrentVertex][1],
+					m_normalCoordinateArr[lCurrentVertex][2]);
 			}
 		}
 		else if (m_nrOfVerticesPerPolygon == 4)
