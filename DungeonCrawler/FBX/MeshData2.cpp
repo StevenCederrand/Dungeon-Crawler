@@ -69,6 +69,7 @@ void MeshData2::AddUVCoordinate(int index)
 
 void MeshData2::CheckMesh()
 {
+	/*
 	for (int i = 0; i < m_currentControlPoint; i++)
 	{
 		printf("Control Point %i Coordinates: %.2f %.2f %.2f\n", i,
@@ -88,22 +89,42 @@ void MeshData2::CheckMesh()
 	}
 	printf("\n\n");
 
+	for (int i = 0; i < m_currentUVIndex; i++)
+	{
+		printf("UV Coordinate Index %i: %i\n", i, m_UVCoordinateIndexArr[i]);
+	}
+	printf("\n\n");
+	*/
+
+	//Only works for triangulated Meshes
 	for (int i = 0; i < m_nrOfPolygons; i++)
 	{
-		printf("Polygon %i: ", i);
-		for (int j = 0; j < m_nrOfVerticesPerPolygon; j++)
+		printf("Polygon %i:\n", i);
+		if (m_nrOfVerticesPerPolygon == 3)
 		{
-			int currentPlaceInVerticeIndexArr = (m_nrOfVerticesPerPolygon * i) + j;
-			//add nr of vetrices per polugon here in for
-			printf("V%i: %.2f %.2f %.2f  ", j, 
-				m_controlPointArr[m_controlPointIndexArr[currentPlaceInVerticeIndexArr]][0],
-				m_controlPointArr[m_controlPointIndexArr[currentPlaceInVerticeIndexArr]][1],
-				m_controlPointArr[m_controlPointIndexArr[currentPlaceInVerticeIndexArr]][2]);
+			for (int j = 0; j < m_nrOfVerticesPerPolygon; j++) //Per Vertex Stuff
+			{
+				printf("Vertex %i:\n", j);
+				//Position
+				//Stor currentPlaceInVerticeIndexArr if load more than 1 mesh, needs to be added for other start location
+				int currentPlaceInVerticeIndexArr = (m_nrOfVerticesPerPolygon * i) + j;
+				printf("Position: %.2f %.2f %.2f\n",
+					m_controlPointArr[m_controlPointIndexArr[currentPlaceInVerticeIndexArr]][0],
+					m_controlPointArr[m_controlPointIndexArr[currentPlaceInVerticeIndexArr]][1],
+					m_controlPointArr[m_controlPointIndexArr[currentPlaceInVerticeIndexArr]][2]);
+				//UV
+				printf("UV: %.2f %.2f\n", i,
+					m_UVCoordinates[m_UVCoordinateIndexArr[i]][0],
+					m_UVCoordinates[m_UVCoordinateIndexArr[i]][1]);
+			}
 		}
-		printf("\n");
+		else if (m_nrOfVerticesPerPolygon == 4)
+		{
+			//Not used right now, use if mesh is not triangulated
+			printf("ERROR: MESH NOT TRIANGULATED");
+		}
+		printf("\n");		
 	}
-
-	
 	printf("\n\n");
 
 }

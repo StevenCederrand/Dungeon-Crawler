@@ -150,6 +150,8 @@ void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, Not con
 					case FbxGeometryElement::eDirect:
 					case FbxGeometryElement::eIndexToDirect:
 					{
+						FbxVector2 textureUvCoordinates = lEUV->GetDirectArray().GetAt(lTextureUVIndex);
+						m_mesh.AddUVCoordinate(textureUvCoordinates);
 						//Save UV coorcinates in meshdata !MESH
 						//DESTROYS EVERYTHING !MESH
 						//m_mesh.AddUVCoordinate(lEUV->GetDirectArray().GetAt(lTextureUVIndex)); !MESH

@@ -7,8 +7,6 @@
 #include "WriteCustomFile.h"
 #include "SaveHierarchy.h"
 
-#include "MeshData2.h" //WARNING
-
 int main(int argc, char** argv) 
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -20,7 +18,7 @@ int main(int argc, char** argv)
 
 	//Display our FBX file hierarchy
 	DisplayHierarchy displayHierarchyObject;
-	//displayHierarchyObject.DisplayEntireHierarchy(lsdkObject.GetScene());
+	displayHierarchyObject.DisplayEntireHierarchy(lsdkObject.GetScene());
 
 	//Create our custom file
 	WriteCustomFile writeCustomFileObject;
@@ -29,12 +27,7 @@ int main(int argc, char** argv)
 	SaveHierarchy saveHierarchy;
 	saveHierarchy.SaveEntireHierarchy(lsdkObject.GetScene());
 
-	MeshData2 corruptingMesh;
-
-
 	int stop = 1;
-
-	//MESHDATA2 IS CORRUPTED
 
 	return 0;
 }
