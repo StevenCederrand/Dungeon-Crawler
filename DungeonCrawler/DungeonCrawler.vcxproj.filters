@@ -1,13 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="Audio\AudioEngine.cpp" />
     <ClCompile Include="GameObjects\Box.cpp" />
     <ClCompile Include="GameObjects\GameObject.cpp" />
     <ClCompile Include="GameObjects\GameObjectManager.cpp" />
+    <ClCompile Include="GameObjects\Player.cpp" />
+    <ClCompile Include="GameObjects\LightSphere.cpp" />
+    <ClCompile Include="Graphics\Framebuffer.cpp" />
     <ClCompile Include="Graphics\GLinit.cpp" />
+    <ClCompile Include="Graphics\LightManager.cpp" />
     <ClCompile Include="Graphics\Mesh.cpp" />
     <ClCompile Include="Graphics\MeshMap.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
+    <ClCompile Include="Graphics\UIRenderer.cpp" />
+    <ClCompile Include="Main Menu\MainMenu.cpp" />
+    <ClCompile Include="Main Menu\MenuButton.cpp" />
     <ClCompile Include="Parser\ParserData.cpp" />
     <ClCompile Include="Graphics\Shader.cpp" />
     <ClCompile Include="Graphics\ShaderMap.cpp" />
@@ -27,6 +35,7 @@
     <ClCompile Include="Vendor\ImGui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Vendor\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Vendor\stb\stb_image.cpp" />
+    <ClCompile Include="Collision\AABB.cpp" />
     <ClCompile Include="Audio\AudioEngine.cpp" />
     <ClCompile Include="GameObjects\Player.cpp" />
     <ClCompile Include="Graphics\Framebuffer.cpp" />
@@ -35,15 +44,26 @@
     <ClCompile Include="Main Menu\MenuButton.cpp" />
     <ClCompile Include="Graphics\UIRenderer.cpp" />
     <ClCompile Include="GameObjects\LightSphere.cpp" />
-    <ClCompile Include="GameObjects\Projectile.cpp" />
+    <ClCompile Include="GameObjects\Room.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
+    <ClInclude Include="GameObjects\Box.h" />
+    <ClInclude Include="GameObjects\GameObject.h" />
+    <ClInclude Include="GameObjects\GameObjectManager.h" />
+    <ClInclude Include="GameObjects\Player.h" />
+    <ClInclude Include="GameObjects\LightSphere.h" />
     <ClInclude Include="Globals\Paths.h" />
+    <ClInclude Include="Globals\Settings.h" />
+    <ClInclude Include="Graphics\Framebuffer.h" />
     <ClInclude Include="Graphics\GLinit.h" />
+    <ClInclude Include="Graphics\LightManager.h" />
     <ClInclude Include="Graphics\Mesh.h" />
     <ClInclude Include="Graphics\MeshMap.h" />
     <ClInclude Include="Graphics\Renderer.h" />
+    <ClInclude Include="Graphics\UIRenderer.h" />
+    <ClInclude Include="Main Menu\MainMenu.h" />
+    <ClInclude Include="Main Menu\MenuButton.h" />
     <ClInclude Include="Parser\ParserData.h" />
     <ClInclude Include="Graphics\Shader.h" />
     <ClInclude Include="Graphics\ShaderMap.h" />
@@ -56,6 +76,7 @@
     <ClInclude Include="System\Log.h" />
     <ClInclude Include="Parser\Parser.h" />
     <ClInclude Include="Utility\Camera.h" />
+    <ClInclude Include="Utility\Ray.h" />
     <ClInclude Include="Vendor\ImGui\imconfig.h" />
     <ClInclude Include="Vendor\ImGui\imgui.h" />
     <ClInclude Include="Vendor\ImGui\imgui_impl_glfw.h" />
@@ -65,6 +86,7 @@
     <ClInclude Include="Vendor\ImGui\imstb_textedit.h" />
     <ClInclude Include="Vendor\ImGui\imstb_truetype.h" />
     <ClInclude Include="Vendor\stb\stb_image.h" />
+    <ClInclude Include="Collision\AABB.h" />
     <ClInclude Include="GameObjects\Box.h" />
     <ClInclude Include="GameObjects\GameObject.h" />
     <ClInclude Include="GameObjects\GameObjectManager.h" />
@@ -77,6 +99,7 @@
     <ClInclude Include="Graphics\UIRenderer.h" />
     <ClInclude Include="GameObjects\LightSphere.h" />
     <ClInclude Include="Utility\Ray.h" />
-    <ClInclude Include="GameObjects\Projectile.h" />
+    <ClInclude Include="Utility\Randomizer.h" />
+    <ClInclude Include="GameObjects\Room.h" />
   </ItemGroup>
 </Project>

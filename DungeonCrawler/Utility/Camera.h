@@ -10,7 +10,7 @@ public:
 
 	const float NEAR_CLIPPING = 0.1f;
 	const float FAR_CLIPPING = 70.f;
-	const float FOV = 90.f;
+	const float FOV = 70.f;
 public:
 	Camera();
 	~Camera();
@@ -22,8 +22,9 @@ public:
 	const glm::mat4 getProjectionMatrix() const;
 	const glm::vec3 getPosition() const;
 	const Ray getRayFromScreen(float x, float y, float w, float h) const;
+	const glm::vec3 getMouseWorldPos();
 
-	void setToPlayer(glm::vec3 playerPos);
+	void setToPlayer(glm::vec3 playerPos, glm::vec3 shakeDir);
 	void setAngle(int angle);
 
 private:
@@ -40,6 +41,8 @@ private:
 private:
 	glm::mat4 m_viewMatrix;
 	glm::mat4 m_projectionMatrix;
+
+	glm::dvec2 m_mousePos;
 
 	glm::vec3 m_position;
 	glm::vec3 m_cameraUp;

@@ -40,11 +40,13 @@ Mesh* GLinit::createMesh(std::string name, ParserData* data)
 	mesh->setHasNormalMap(data->hasNormalMap());
 	
 	if (data->hasNormalMap()) {
-		LOG_INFO("HAS NORMALMAP");
 		GLuint normalID = createTexture(data->getNormalMapName());
 		mesh->setNormalID(normalID);
 	}
-
+	if (data->hasAmbientMap()) {
+		GLuint ambientID = createTexture(data->getAmbientMapName());
+		mesh->setAmbientID(ambientID);
+	}
 	mesh->setVao(vao);
 	mesh->setTextureID(textureID);
 	mesh->setNrOfIndices(int(data->getIndices().size()));
@@ -52,7 +54,8 @@ Mesh* GLinit::createMesh(std::string name, ParserData* data)
 	mesh->setSpecularColor(data->getSpecularColor());
 	mesh->setDiffuseColor(data->getDiffuseColor());
 	mesh->setShininess(data->getShininess());
-	
+	mesh->setBoundingBoxMinMax(data->getMaxMinVector());
+
 	MeshMap::addMesh(name, mesh);
 	return mesh;
 }
@@ -106,6 +109,7 @@ GLuint GLinit::createTexture(std::string filename)
 
 	if (!textureData)
 	{
+
 		LOG_ERROR("Could not find texture " + filename);
 		return -1;
 	}

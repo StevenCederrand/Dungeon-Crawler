@@ -11,17 +11,22 @@ Player::Player(Mesh * mesh) :
 {
 	this->setPosition(glm::vec3(0.f, 0.f, 0.f));
 	this->m_defaultSpeed = 7.f;
-	this->m_speed = 7.f;
+	this->m_speed = 7.0f;
 	this->m_health = 5.f;
 	this->m_damage = 0.f;
 	this->m_debug = false;
 	this->m_dash = 100.f;
 	this->m_dashCd = false;
 	this->m_timer = 0;
+	this->m_shake = 0;
+	this->m_shakeDir = glm::vec3(0.f, 0.f, 0.f);
 }
 
 void Player::update(float dt)
 {
+	// Start of by saying that the player is not shooting
+	m_shooting = false;
+
 	if (Input::isKeyReleased(GLFW_KEY_Q))
 	{
 		m_debug = !m_debug;
@@ -34,61 +39,88 @@ void Player::update(float dt)
 			dash();
 			AudioEngine::playOnce("pl_dash", 0.5f);
 		}
+		if (Input::isMousePressed(GLFW_MOUSE_BUTTON_RIGHT))
+		{
+			dash();
+		}
+		if (Input::isMouseHeldDown(GLFW_MOUSE_BUTTON_LEFT))
+		{
+			if (m_canShoot)
+			{
+				shootProjectile();
+				m_shake = 4;
+			}
+		}
+
+		if (!m_canShoot)
+		{
+			m_shootingCooldown -= dt;
+
+			if (m_shootingCooldown <= 0.f) {
+				m_canShoot = true;
+			}
+		}
+
+
 		move(dt);
 		dashCd();
+		screenShake();
 	}
 }
 
 void Player::move(float dt)
 {
+	m_movementDirection = glm::vec3(0.f);
+
 	rotatePlayer();
 	if (Input::isKeyHeldDown(GLFW_KEY_W))
 	{
-		this->translate(glm::vec3(0.f, 0.f, -this->m_speed) * dt);
+		m_movementDirection.z =  -this->m_speed * dt;
 		AudioEngine::playOnce("pl_walk", 0.4f);
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_A))
 	{
-		this->translate(glm::vec3(-this->m_speed, 0.f, 0.f) * dt);
-		AudioEngine::playOnce("pl_walk", 0.4f);
+		m_movementDirection.x = -this->m_speed * dt;
+			AudioEngine::playOnce("pl_walk", 0.4f);
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_S))
 	{
-		this->translate(glm::vec3(0.f, 0.f, this->m_speed) * dt);
-		AudioEngine::playOnce("pl_walk", 0.4f);
+		m_movementDirection.z = this->m_speed * dt;
+			AudioEngine::playOnce("pl_walk", 0.4f);
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_D))
 	{
-		this->translate(glm::vec3(this->m_speed, 0.f, 0.f) * dt);
-		AudioEngine::playOnce("pl_walk", 0.4f);
+		m_movementDirection.x = this->m_speed * dt;
+			AudioEngine::playOnce("pl_walk", 0.4f);
 	}
-	Camera::active->setToPlayer(getPosition());
-	/*if (Input::isKeyHeldDown(GLFW_KEY_LEFT_SHIFT))
-	{
-		setSpeed(15.f);
-	}
-	else
-	{
-		setSpeed(m_defaultSpeed);
-	}*/
+	setVelocity(m_movementDirection);
+	Camera::active->setToPlayer(getPosition(), m_shakeDir);
 }
 
 void Player::rotatePlayer()
-{	
-	glfwGetCursorPos(glfwGetCurrentContext(), &m_mousePos.x, &m_mousePos.y);
-	Ray ray = Camera::active->getRayFromScreen(m_mousePos.x, m_mousePos.y, 1280, 720);
+{
+	glm::vec3 pos = Camera::active->getMouseWorldPos();
 
-	glm::vec3 planeNormal(0.f, 1.f, 0.f);
-	float dis = glm::dot(-ray.pos, planeNormal) / (glm::dot(ray.dir, planeNormal) + 0.001f);
+	m_lookDirection = glm::vec3(
+		pos.x - this->getPosition().x,
+		0.0f,
+		pos.z - this->getPosition().z);
+	m_angle = glm::degrees(atan2f(m_lookDirection.z, m_lookDirection.x));
 
-	glm::vec3 pos = ray.calcPoint(dis);
+	setRotation(glm::vec3(0.f, -m_angle, 0.f));
+}
 
-	glm::vec2 direction = glm::vec2(
-		this->getPosition().x - pos.x,
-		this->getPosition().z - pos.z);
-	m_angle = glm::degrees(atan2f(direction.x, direction.y));
+const glm::vec3 & Player::getLookDirection() const
+{
+	return glm::normalize(m_lookDirection);
+}
 
-	setRotation(glm::vec3(0.f, m_angle, 0.f));
+glm::vec3 Player::shakeDirection()const
+{
+	glm::vec3 lookDir = Camera::active->getMouseWorldPos() - getPosition();
+	lookDir.y = 0;
+
+	return glm::normalize(lookDir);
 }
 
 void Player::camPerspective()
@@ -147,9 +179,30 @@ void Player::dashCd()
 
 void Player::shootProjectile()
 {
+	m_shootingCooldown = 0.10f;
+	m_canShoot = false;
+	m_shooting = true;
+	screenShake();
+}
 
-
-
+void Player::screenShake()
+{
+	if (m_shake <= 0)
+	{
+		m_shakeDir *= 0.f;
+	}
+	if (m_shake > 0)
+	{
+		m_shakeDir = shakeDirection() * 0.25f;
+	}
+	if (m_shake > 2)
+	{
+		m_shakeDir = shakeDirection() * -0.25f;
+	}
+	if (m_shake > 0)
+	{
+		m_shake--;
+	}
 }
 
 void Player::setSpeed(float speed)
@@ -180,4 +233,9 @@ float Player::getHealth() const
 float Player::getDamage() const
 {
 	return this->m_damage;
+}
+
+bool Player::isShooting() const
+{
+	return m_shooting;
 }

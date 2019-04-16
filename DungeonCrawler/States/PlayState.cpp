@@ -8,12 +8,13 @@
 #include "Graphics/MeshMap.h"
 #include "Graphics/ShaderMap.h"
 #include "GameObjects/Box.h"
+#include "GameObjects/Room.h"
 #include "GameObjects/Player.h"
-#include "GameObjects/Projectile.h"
 
+#include "Utility/Randomizer.h"
 
 PlayState::PlayState() {
-	
+
 	#pragma region Init
 	m_parser = new Parser();
 	m_GLinit = new GLinit();
@@ -25,16 +26,12 @@ PlayState::PlayState() {
 	#pragma endregion
 
 	#pragma region Create_Objects
-	ParserData* boxData = m_parser->loadFromObj("box.obj");
+	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
+	ParserData* roomData = m_parser->loadFromObj("basementleveltest.obj");
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
 
-	Mesh* boxMesh = m_GLinit->createMesh("Box", boxData);
-
-	m_gameObjectManager->addGameObject(new Box(boxMesh));
-	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(0.f, -4.f, 0.f)));
-	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(2.f, -4.f, 0.f)));
-	
-
+	m_GLinit->createMesh("Box", boxData);
+	m_GLinit->createMesh("Room", roomData);
 	m_GLinit->createMesh("Sphere", sphereData);
 	#pragma endregion
 
@@ -43,22 +40,52 @@ PlayState::PlayState() {
 	LOG_INFO("CREATED DDD");
 	#pragma endregion
 
-	
+
+	Mesh* roomMesh = MeshMap::getMesh("Room");
+	Mesh* boxMesh = MeshMap::getMesh("Box");
+
+	#pragma endregion
+
 	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 1.5f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
-	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
-	m_lightManager->addLight(glm::vec3(0.f, 0.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
 
+	m_lightManager->addLight(glm::vec3(0.f, 5.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
 
-	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(10.f, 0.f, 15.f)));
-	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(10.f, 0.f, -15.f)));
-	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(-10.f, 0.f, 15.f)));
-	m_gameObjectManager->addGameObject(new Box(boxMesh, glm::vec3(-10.f, 0.f, -15.f)));
+	m_gameObjectManager->addGameObject(new Room(roomMesh, glm::vec3(0.f, 0.f, 0.f)));
 
-	m_gameObjectManager->addGameObject(new Player(boxMesh));
-	m_gameObjectManager->addGameObject(new Projectile(boxMesh));
+	for (int i = 0; i < 5; i++)
+	{
+		m_lightManager->addLight(
+			// Position
+			glm::vec3(
+				Randomizer::single(-20.f, 20.f),
+				5.f,
+				Randomizer::single(-20.f, 20.f)),
+			// Color
+			glm::vec3(
+				Randomizer::single(0.f, 255.f) / 255.f,
+				Randomizer::single(0.f, 255.f) / 255.f,
+				Randomizer::single(0.f, 255.f) / 255.f),
+			25.f, m_gameObjectManager);
+
+	}
+
+	for (int i = 0; i < 20; i++)
+	{
+		m_gameObjectManager->addGameObject(new Box(boxMesh,
+			glm::vec3(
+				Randomizer::single(-15.f, 15.f),
+				0.f,
+				Randomizer::single(-30.f, 30.f)
+			)));
+	}
+
+	m_player = new Player(boxMesh);
+	m_gameObjectManager->addGameObject(m_player);
+
 }
 
-PlayState::~PlayState() {
+PlayState::~PlayState()
+{
 	delete m_parser;
 	delete m_GLinit;
 	delete m_camera;
@@ -69,19 +96,18 @@ PlayState::~PlayState() {
 
 void PlayState::update(float dt)
 {
-	
+
 	m_gameObjectManager->update(dt);
 	m_camera->update(dt);
 	m_lightManager->update(dt);
 
 	m_renderer->prepareGameObjects(m_gameObjectManager->getGameObjects());
+	//if (Input::isMouseReleased(GLFW_MOUSE_BUTTON_RIGHT)){
 
-	if (Input::isMouseReleased(GLFW_MOUSE_BUTTON_RIGHT)){
-
-		AudioEngine::unloadSSO("Game.sso");
-		m_stateManager->popState();
-		AudioEngine::loadSSO("Menu.sso");
-	}
+	//	AudioEngine::unloadSSO("Game.sso");
+	//	m_stateManager->popState();
+	//	AudioEngine::loadSSO("Menu.sso");
+	//}
 }
 
 
@@ -89,7 +115,16 @@ void PlayState::renderImGUI()
 {
 	ImGui::Begin("PlayState");
 
-	ImGui::Text("Press right mouse to switch back to menu state");
+	ImGui::Text("Press shift to DASH");
+
+	ImGui::Text("Player [ %f%s%f%s%f%s"
+		, m_player->getPosition().x
+		, ", "
+		, m_player->getPosition().y
+		, ", "
+		, m_player->getPosition().z
+		, " ]");
+
 
 	ImGui::End();
 }

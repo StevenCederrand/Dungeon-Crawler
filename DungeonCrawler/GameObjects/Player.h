@@ -15,6 +15,7 @@ public:
 	void dashCd();
 
 	void shootProjectile();
+	void screenShake();
 
 	void setSpeed(float speed);
 	void setHealth(float health);
@@ -23,14 +24,15 @@ public:
 	float getSpeed()const;
 	float getHealth()const;
 	float getDamage()const;
+	bool isShooting() const;
 
+	const glm::vec3& getLookDirection() const;
+	glm::vec3 shakeDirection() const;
 
 private:
-	glm::dvec2 m_mousePos;
 	float m_angle;
 
-
-
+	glm::vec3 m_movementDirection;
 	//Player Variables
 	float m_defaultSpeed;
 	float m_speed;
@@ -40,6 +42,18 @@ private:
 	float m_dash;
 	bool m_dashCd;
 	int m_timer;
+
+	// Shooting
+	bool m_shooting;
+	bool m_canShoot;
+	float m_shootingCooldown;
+	glm::vec3 m_lookDirection;
+	
+	
+	int m_shake;
+	glm::vec3 m_shakeDir;
+
+
 
 	//Debugging Tools
 	bool m_debug;

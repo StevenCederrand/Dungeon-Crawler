@@ -27,6 +27,11 @@ void Mesh::setNormalID(const unsigned int & normalID) {
 	this->m_normalID = normalID;
 }
 
+void Mesh::setAmbientID(const unsigned int & ambientID) {
+	m_hasAmbientMap = true;
+	m_ambientID = ambientID;
+}
+
 void Mesh::setSpecularColor(const glm::vec3 & specularColor)
 {
 	m_specularColor = specularColor;
@@ -47,9 +52,15 @@ void Mesh::setShininess(const float & shininess)
 	m_shininess = shininess;
 }
 
+void Mesh::setBoundingBoxMinMax(std::vector<glm::vec3> maxMinVector)
+{
+	m_maxMinVector = maxMinVector;
+}
+
 void Mesh::setHasNormalMap(bool hasNormalMap)
 {
 	m_hasNormalMap = hasNormalMap;
+
 }
 
 const unsigned int & Mesh::getVao() const
@@ -71,6 +82,11 @@ const unsigned int & Mesh::getNormalID() const {
 	return this->m_normalID;
 }
 
+const unsigned int & Mesh::getAmbientID() const
+{	
+	return m_ambientID;
+}
+
 const glm::vec3 & Mesh::getSpecularColor() const
 {
 	return m_specularColor;
@@ -86,12 +102,23 @@ const glm::vec3 & Mesh::getdiffuseColor() const
 	return m_diffuseColor;
 }
 
+const std::vector<glm::vec3>& Mesh::getMaxMinVector() const
+{
+	return m_maxMinVector;
+}
+
 const float & Mesh::getShininess() const
 {
 	return m_shininess;
 }
 
-const bool & Mesh::getHasNormalMap() const
+const bool & Mesh::hasNormalMap() const
 {
 	return m_hasNormalMap;
 }
+
+const bool & Mesh::hasAmbientMap() const
+{
+	return m_hasAmbientMap;
+}
+

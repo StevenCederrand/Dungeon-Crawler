@@ -24,7 +24,8 @@ private:
 	Renderer* m_renderer;
 	GameObjectManager* m_gameObjectManager;
 	LightManager* m_lightManager;
-	
+	GameObject* m_player;
+
 };
 
 #endif

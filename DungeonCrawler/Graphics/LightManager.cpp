@@ -16,6 +16,13 @@ LightManager::LightManager()
 	GLuint uniformBlockIndexDeferred = glGetUniformBlockIndex(deferredShader->getShaderID(), "Lights");
 	glUniformBlockBinding(deferredShader->getShaderID(), uniformBlockIndexDeferred, 0);
 	m_lightByteSize = sizeof(Light);
+
+	
+	glGenBuffers(1, &m_ubo);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ubo);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, int(MaxLights * m_lightByteSize), NULL, GL_DYNAMIC_DRAW);
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_ubo);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }
 
 LightManager::~LightManager()
@@ -38,17 +45,16 @@ void LightManager::addLight(const glm::vec3 & position, const glm::vec3 & color,
 	{
 		Mesh* sphere = MeshMap::getMesh("Sphere");
 		GameObject* obj = new LightSphere(sphere, position);
+		obj->setCollidable(false);
 		gameObjectManager->addGameObject(obj);
+
 	}
 
-	if (m_ubo == 0)
-		glDeleteBuffers(1, &m_ubo);
-	
-	glGenBuffers(1, &m_ubo);
+	//(void*)m_lights.data()
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ubo);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, int(MaxLights * m_lightByteSize), (void*)m_lights.data(), GL_STATIC_DRAW);
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_ubo);
+	glBufferSubData(GL_SHADER_STORAGE_BUFFER, (m_lights.size() - 1) * m_lightByteSize, m_lightByteSize, (void*)&light);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
 }
 
 const int LightManager::getNumberOfLights() const
