@@ -2,12 +2,14 @@
 
 MeshData2::MeshData2()
 {
+	
 	m_currentControlPoint = 0;
 	m_currentControlPointIndex = 0;
 	m_nrOfPolygons = 0;
 	m_nrOfVerticesPerPolygon = 3;
 	m_currentUVCoordinate = 0;
 	initiateArrays();
+	
 }
 
 MeshData2::~MeshData2()
@@ -23,12 +25,14 @@ MeshData2::~MeshData2()
 
 void MeshData2::initiateArrays()
 {
+	/*
 	for (int i = 0; i < 100; i++)
 	{
 		m_controlPointArr[i].Set(0, 0, 0, 0);
 	}
+	*/
 
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		m_UVCoordinates[i].Set(0, 0);
 	}
@@ -39,6 +43,7 @@ void MeshData2::initiateArrays()
 	}
 }
 
+/*
 void MeshData2::AddControlPoint(FbxVector4 controlPoint)
 {
 	m_controlPointArr[m_currentControlPoint] = controlPoint;
@@ -105,3 +110,4 @@ void MeshData2::setNrOfVerticesPerPolygon(int nrOfVerticesPerPolygon)
 {
 	m_nrOfVerticesPerPolygon = nrOfVerticesPerPolygon;
 }
+*/

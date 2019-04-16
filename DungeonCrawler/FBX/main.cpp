@@ -7,7 +7,7 @@
 #include "WriteCustomFile.h"
 #include "SaveHierarchy.h"
 
-//#include "MeshData2.h" //WARNING
+#include "MeshData2.h" //WARNING
 
 int main(int argc, char** argv) 
 {
@@ -29,7 +29,7 @@ int main(int argc, char** argv)
 	SaveHierarchy saveHierarchy;
 	//saveHierarchy.SaveEntireHierarchy(lsdkObject.GetScene());
 
-
+	MeshData2 corruptingMesh;
 
 
 	int stop = 1;
