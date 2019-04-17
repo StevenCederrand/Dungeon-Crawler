@@ -33,16 +33,14 @@ void SaveHierarchy::SaveNode(FbxNode* pNode)
 	//Then hitboxes
 	//then dynamic meshes
 	//then material
+
 	bool collisionBool = false;
 	FbxProperty collision = pNode->FindProperty("Collision", true);
 	if (collision.IsValid())
 	{
-		//collisionBool 
 		FbxBool collisionBoolFbx = collision.Get<bool>();
 		collisionBool = collisionBoolFbx;
 		m_mesh.setCollision(collisionBool);
-		//bool kek = boi;
-		//bool kek2 = 2;
 	}
 	else
 	{
