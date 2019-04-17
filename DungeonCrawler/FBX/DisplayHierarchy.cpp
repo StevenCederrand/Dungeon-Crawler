@@ -260,6 +260,7 @@ void DisplayHierarchy::DisplayPolygons(FbxMesh* pMesh) //polygon = 4 vertices, N
 				case FbxGeometryElement::eByPolygonVertex:
 				{
 					int lTextureUVIndex = pMesh->GetTextureUVIndex(i, j);
+
 					switch (leUV->GetReferenceMode())
 					{
 					case FbxGeometryElement::eDirect:
