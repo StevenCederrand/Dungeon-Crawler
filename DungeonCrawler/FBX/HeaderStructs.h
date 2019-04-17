@@ -12,7 +12,6 @@ struct MeshHeader
 {
 	unsigned int vertexCount;
 	unsigned int materialID; //our different morph characters will use the same material
-	float UV[2]; //should this be here?
 	char nameOfCustomAttribute[100]; //might not be needed
 	bool collision; //custom maya attribute
 };
@@ -29,6 +28,7 @@ struct Vertex
 	float normal[3];
 	float tangent[3];
 	float biTangent[3];
+	float UV[2]; //here?
 };
 
 struct BoundingBoxVertex

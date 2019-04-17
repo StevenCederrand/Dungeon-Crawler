@@ -141,7 +141,7 @@ void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, Not con
 			int lControlPointIndex = pMesh->GetPolygonVertex(i, j);
 			m_mesh.AddIndexPoint(lControlPointIndex);
 
-			//how many UV coordinates the polygon has, 1 right now
+			//how many UV coordinates the vertice has, 1 right now
 			for (int k = 0; k < pMesh->GetElementUVCount(); ++k)
 			{
 				int boi = pMesh->GetElementUVCount();
@@ -195,7 +195,7 @@ void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, Not con
 					break;
 				}
 			}
-			//How many normals per Polygon, 1 right now
+			//How many normals per vertice, 1 right now
 			for (int k = 0; k < pMesh->GetElementNormalCount(); ++k)
 			{
 				FbxVector4 lNormalCoordinates;
@@ -207,8 +207,7 @@ void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, Not con
 					{
 					case FbxGeometryElement::eDirect: //currently used
 						lNormalCoordinates = leNormal->GetDirectArray().GetAt(vertexCounter);
-						m_mesh.AddNormalCoordinate(lNormalCoordinates);
-						vertexCounter++;
+						m_mesh.AddNormalCoordinate(lNormalCoordinates); //save normals
 
 						//Display3DVector(header, leNormal->GetDirectArray().GetAt(vertexId));
 						break;
@@ -222,8 +221,54 @@ void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, Not con
 						break; // other reference modes not shown here!
 					}
 				}
-
 			}
+			//How many Tangents per vertice, 0 right now
+			for (int k = 0; k < pMesh->GetElementTangentCount(); ++k)
+			{
+				FbxGeometryElementTangent* leTangent = pMesh->GetElementTangent(k);
+
+				if (leTangent->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+				{
+					switch (leTangent->GetReferenceMode())
+					{
+					case FbxGeometryElement::eDirect:
+						Display3DVector(header, leTangent->GetDirectArray().GetAt(vertexCounter));
+						break;
+					case FbxGeometryElement::eIndexToDirect:
+					{
+						int id = leTangent->GetIndexArray().GetAt(vertexCounter);
+						Display3DVector(header, leTangent->GetDirectArray().GetAt(id));
+					}
+					break;
+					default:
+						break; // other reference modes not shown here!
+					}
+				}
+			}
+			//How many BiTangents per vertice, 0 right now
+			for (int k = 0; k < pMesh->GetElementBinormalCount(); ++k)
+			{
+				FbxGeometryElementBinormal* leBinormal = pMesh->GetElementBinormal(k);
+
+				if (leBinormal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+				{
+					switch (leBinormal->GetReferenceMode())
+					{
+					case FbxGeometryElement::eDirect:
+						Display3DVector(header, leBinormal->GetDirectArray().GetAt(vertexCounter));
+						break;
+					case FbxGeometryElement::eIndexToDirect:
+					{
+						int id = leBinormal->GetIndexArray().GetAt(vertexCounter);
+						Display3DVector(header, leBinormal->GetDirectArray().GetAt(id));
+					}
+					break;
+					default:
+						break; // other reference modes not shown here!
+					}
+				}
+			}
+			vertexCounter++;
 		}
 	}
 }
