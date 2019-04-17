@@ -45,7 +45,21 @@ void SaveHierarchy::SaveNode(FbxNode* pNode)
 	}
 	else
 	{
-		printf("Collision not found");
+		printf("Collision Bool not found");
+	}
+
+	FbxProperty staticMesh = pNode->FindProperty("StaticMesh", true);
+	if (staticMesh.IsValid())
+	{
+		bool staticMeshBool = staticMesh.GetFbxObject();
+		if (staticMeshBool)
+		{
+			m_mesh.setStaticMesh(staticMeshBool);
+		}
+	}
+	else
+	{
+		printf("Static Mesh Bool not found");
 	}
 
 	//another property for static/dynamic mesh
