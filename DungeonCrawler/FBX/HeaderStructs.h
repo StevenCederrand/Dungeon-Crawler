@@ -2,8 +2,8 @@
 
 struct MainHeader
 {
-	unsigned int characterCount;
-	unsigned int meshCount;
+	unsigned int dynamicMeshCount; //morph	/custom attribute for dynamic mesh?
+	unsigned int staticMeshCount;  //regular
 	unsigned int boundingBoxCount;
 	unsigned int materialCount;
 };
@@ -11,8 +11,8 @@ struct MainHeader
 struct MeshHeader
 {
 	unsigned int vertexCount;
-	unsigned int materialID; //our different morph bois will use the same material
-	unsigned int UV[2]; //should this be here? int?
+	unsigned int materialID; //our different morph characters will use the same material
+	float UV[2]; //should this be here?
 	char nameOfCustomAttribute[100]; //might not be needed
 	bool collision; //custom maya attribute
 };

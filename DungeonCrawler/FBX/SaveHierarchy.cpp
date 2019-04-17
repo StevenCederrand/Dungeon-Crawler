@@ -29,18 +29,19 @@ void SaveHierarchy::SaveNode(FbxNode* pNode)
 {
 	FbxNodeAttribute::EType nodeType = pNode->GetNodeAttributeByIndex(0)->GetAttributeType();
 
+	//Check all if they are static meshes first, put them in the file first.
+	//Then hitboxes
+	//then dynamic meshes
+	//then material
+
 	switch (nodeType)
 	{
 	default:
 		break;
-	case FbxNodeAttribute::eMesh:
+	case FbxNodeAttribute::eMesh:	//if its a mesh
 		SaveMesh(pNode);
 		break;
 	}
-
-	// Print the node's attributes.
-	for (int i = 0; i < pNode->GetNodeAttributeCount(); i++)
-		//PrintAttribute(pNode->GetNodeAttributeByIndex(i));
 
 	// Recursively print the children.
 	for (int j = 0; j < pNode->GetChildCount(); j++)
