@@ -51,6 +51,14 @@ void Renderer::prepareGameObjects(const std::vector<GameObject*>& gameObjects)
 	}
 }
 
+void Renderer::prepareFlashlight(Player* player) {
+
+
+
+	m_spotlight = player->getSpotlight();
+
+}
+
 void Renderer::render()
 {
 	this->geometryPass();
@@ -130,6 +138,12 @@ void Renderer::lightPass() {
 
 	Shader* lightShader = ShaderMap::getShader("LightPass");
 	lightShader->use();
+	if (m_spotlight != nullptr) {
+		lightShader->setVec3("spotlight.position", m_spotlight->position);
+		lightShader->setVec3("spotlight.direction", m_spotlight->direction);
+		lightShader->setFloat("spotlight.radius", m_spotlight->radius);
+	}
+
 	lightShader->setInt("numberOfLights", m_lightManager->getNumberOfLights());
 	lightShader->setVec3("cameraPosition", m_camera->getPosition());
 	drawQuad();

@@ -101,5 +101,6 @@
     <ClInclude Include="Utility\Ray.h" />
     <ClInclude Include="Utility\Randomizer.h" />
     <ClInclude Include="GameObjects\Room.h" />
+    <ClInclude Include="Globals\LightTypes.h" />
   </ItemGroup>
 </Project>

@@ -74,9 +74,10 @@ mat3 TBN() {
 	vec3 T = normalize(vec3(modelMatrix*vec4(tangent, 0.0)));
 	vec3 B = normalize(vec3(modelMatrix*vec4(bitangent, 0.0)));
 	vec3 N = normalize(vec3(modelMatrix*vec4(normalize(cross(edges[0], edges[1])), 0.0)));
-
 	return mat3(T, B, N);
 }
+
+
 void main() {
     vec4 vertex;
     for(int i = 0; i < 3; i++) {

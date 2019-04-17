@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "GameObject.h"
 
+
 class GameObjectManager {
 
 public:
@@ -14,6 +15,7 @@ public:
 	void addGameObject(GameObject* gameObject);
 	void constructPlayerBroadPhaseBox();
 
+	Player* getPlayer() const;
 	const std::vector<GameObject*>& getGameObjects() const;
 
 private:

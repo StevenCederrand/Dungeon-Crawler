@@ -128,6 +128,11 @@ void GameObjectManager::constructPlayerBroadPhaseBox()
 
 }
 
+Player * GameObjectManager::getPlayer() const {
+
+	return m_player;
+}
+
 const std::vector<GameObject*>& GameObjectManager::getGameObjects() const
 {
 	return m_gameObjects;

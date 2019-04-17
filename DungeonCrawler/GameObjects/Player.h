@@ -1,11 +1,11 @@
-#pragma once
-#ifndef _PLAYER_H
-#define _PLAYER_H
+#ifndef PLAYER_h
+#define PLAYER_h
 #include "GameObject.h"
 
 class Player : public GameObject {
 public:
 	Player(Mesh* mesh);
+	~Player();
 	void update(float dt);
 
 	void move(float dt);
@@ -28,9 +28,13 @@ public:
 
 	const glm::vec3& getLookDirection() const;
 	glm::vec3 shakeDirection() const;
+	Spotlight* getSpotlight();
 
 private:
+	void spotlightHandler();
+private:
 	float m_angle;
+	Spotlight* m_spotlight;
 
 	glm::vec3 m_movementDirection;
 	//Player Variables
@@ -52,9 +56,7 @@ private:
 	
 	int m_shake;
 	glm::vec3 m_shakeDir;
-
-
-
+	
 	//Debugging Tools
 	bool m_debug;
 };

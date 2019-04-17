@@ -8,6 +8,7 @@
 #include <map>
 #include "Shader.h"
 
+
 class Renderer
 {
 public:
@@ -15,6 +16,7 @@ public:
 	~Renderer();
 
 	void prepareGameObjects(const std::vector<GameObject*>& gameObjects);
+	void prepareFlashlight(Player* player);
 	void render();
 
 private:
@@ -29,7 +31,7 @@ private:
 	void drawQuad();
 private:
 	Framebuffer* m_framebuffer;
-
+	Spotlight* m_spotlight;
 	std::map<Mesh*, std::vector<GameObject*>> m_meshes;
 	std::map<Mesh*, std::vector<GameObject*>>::iterator m_meshIterator;
 	

@@ -15,6 +15,12 @@ vec3 worldPosition;
 vec3 normal;
 vec3 textureColor;
 
+uniform struct Spotlight {
+	vec3 position;
+	vec3 direction;
+	float radius;
+} spotlight;
+
 uniform int numberOfLights;
 
 struct lightData
@@ -74,9 +80,20 @@ vec3 getSumOfAllColorFromPointLights(float specularStrength, vec3 worldPosition)
 	}
 
 	return finalColor;
-
 }
 
+vec3 getSumOfSpotlights(vec3 worldPosition) {
+	vec3 lightDirection = normalize(spotlight.position - worldPosition);
+	float radialVal = dot(lightDirection, normalize(-spotlight.direction));
+
+	if(radialVal > spotlight.radius) {
+		//Do Something
+		return vec3(1);
+	}
+	else {
+		return vec3(0);
+	}
+}
 void main() {
 
 	worldPosition = texture(positionBuffer, frag_uv).rgb;
@@ -85,7 +102,7 @@ void main() {
 	float shininess = texture(colourBuffer, frag_uv).a;
 
 	vec3 currentColor = getAmbientColor(0.2f)+ getDiffuseColor(sunPosition, sunColor)
-	+ getPhongColor(sunPosition, shininess, sunColor) + getSumOfAllColorFromPointLights(shininess, worldPosition);
+	+ getPhongColor(sunPosition, shininess, sunColor) + getSumOfAllColorFromPointLights(shininess, worldPosition) + getSumOfSpotlights(worldPosition);
 	/*
 
 	*/

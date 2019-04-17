@@ -200,6 +200,7 @@
     <ClInclude Include="GameObjects\Player.h" />
     <ClInclude Include="GameObjects\LightSphere.h" />
     <ClInclude Include="GameObjects\Room.h" />
+    <ClInclude Include="Globals\LightTypes.h" />
     <ClInclude Include="Globals\Paths.h" />
     <ClInclude Include="Globals\Settings.h" />
     <ClInclude Include="Graphics\Framebuffer.h" />

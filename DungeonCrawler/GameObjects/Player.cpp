@@ -20,6 +20,15 @@ Player::Player(Mesh * mesh) :
 	this->m_timer = 0;
 	this->m_shake = 0;
 	this->m_shakeDir = glm::vec3(0.f, 0.f, 0.f);
+
+	this->m_spotlight = new Spotlight();
+	this->m_spotlight->position = this->getPlayerPosition();
+	this->m_spotlight->radius = glm::radians(55.0f);
+
+}
+
+Player::~Player() {
+	delete this->m_spotlight;
 }
 
 void Player::update(float dt)
@@ -61,7 +70,7 @@ void Player::update(float dt)
 			}
 		}
 
-
+		spotlightHandler();
 		move(dt);
 		dashCd();
 		screenShake();
@@ -121,6 +130,20 @@ glm::vec3 Player::shakeDirection()const
 	lookDir.y = 0;
 
 	return glm::normalize(lookDir);
+}
+
+Spotlight* Player::getSpotlight() {
+	return m_spotlight;
+}
+
+void Player::spotlightHandler() {
+	this->m_spotlight->direction = this->getLookDirection();
+	this->m_spotlight->position = this->getPosition();
+
+	LOG_INFO(std::to_string(m_spotlight->position.x) + " " +
+		std::to_string(m_spotlight->position.y) + " " +
+		std::to_string(m_spotlight->position.z));//std::to_string(m_spotlight->direction.x) + " " +  std::to_string(m_spotlight->direction.y) + " " std::to_string(m_spotlight->direction.z));
+
 }
 
 void Player::camPerspective()

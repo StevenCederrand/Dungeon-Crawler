@@ -81,7 +81,6 @@ PlayState::PlayState() {
 
 	m_player = new Player(boxMesh);
 	m_gameObjectManager->addGameObject(m_player);
-
 }
 
 PlayState::~PlayState()
@@ -94,14 +93,14 @@ PlayState::~PlayState()
 	delete m_lightManager;
 }
 
-void PlayState::update(float dt)
-{
+void PlayState::update(float dt) {
 
 	m_gameObjectManager->update(dt);
 	m_camera->update(dt);
 	m_lightManager->update(dt);
 
 	m_renderer->prepareGameObjects(m_gameObjectManager->getGameObjects());
+	m_renderer->prepareFlashlight(m_gameObjectManager->getPlayer());
 	//if (Input::isMouseReleased(GLFW_MOUSE_BUTTON_RIGHT)){
 
 	//	AudioEngine::unloadSSO("Game.sso");

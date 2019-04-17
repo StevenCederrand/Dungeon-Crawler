@@ -3,6 +3,12 @@
 #include <GLM/glm.hpp>
 #include "Graphics/Mesh.h"
 #include "Collision/AABB.h"
+#include "../Globals/LightTypes.h"
+//struct Spotlight {
+//	glm::vec3 position;
+//	glm::vec3 direction;
+//	float radius;
+//};
 
 class GameObject {
 public:
