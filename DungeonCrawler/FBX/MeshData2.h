@@ -18,7 +18,7 @@ private:
 	int m_UVCoordinateIndexArr[100];
 
 	int m_currentNormalCoordinate;
-	FbxVector4 m_normalCoordinateArr[100];	//change to a vector 3
+	float m_normalCoordinateArr[3][100];	//change to a vector 3
 	//Should normals also use an index array?
 
 	//Will not save tangents or bitangents, they will be calculated in the shader

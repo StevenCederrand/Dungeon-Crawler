@@ -46,7 +46,8 @@ void MeshData2::initiateArrays()
 
 	for (int i = 0; i < 100; i++)
 	{
-		m_normalCoordinateArr[i].Set(0, 0, 0, 0);
+		for (int j = 0; j < 3; j++)
+			m_normalCoordinateArr[j][i] = 0.f;
 	}
 }
 
@@ -88,7 +89,14 @@ void MeshData2::AddUVIndex(int index)
 
 void MeshData2::AddNormalCoordinate(FbxVector4 normalCoordinate)
 {
-	m_normalCoordinateArr[m_currentNormalCoordinate] = normalCoordinate;
+	float lx = normalCoordinate.mData[0];
+	float ly = normalCoordinate.mData[1];
+	float lz = normalCoordinate.mData[2];
+	
+	m_normalCoordinateArr[0][m_currentNormalCoordinate] = lx;
+	m_normalCoordinateArr[1][m_currentNormalCoordinate] = ly;
+	m_normalCoordinateArr[2][m_currentNormalCoordinate] = lz;
+
 	m_currentNormalCoordinate++;
 }
 
@@ -99,33 +107,6 @@ void MeshData2::increaseVertexCount()
 
 void MeshData2::CheckMesh()
 {
-	/*
-	for (int i = 0; i < m_currentControlPoint; i++)
-	{
-		printf("Control Point %i Coordinates: %.2f %.2f %.2f\n", i,
-			m_controlPointArr[i][0], m_controlPointArr[i][1], m_controlPointArr[i][2]);
-	}
-	printf("\n\n");
-
-	for (int i = 0; i < 100; i++)
-	{
-		printf("Control Point Index %i: %i\n", i, m_controlPointIndexArr[i]);
-	}
-	printf("\n\n");
-
-	for (int i = 0; i < m_currentUVCoordinate; i++)
-	{
-		printf("UV Coordinate %i: %.2f %.2f\n", i, m_UVCoordinates[i][0], m_UVCoordinates[i][1]);
-	}
-	printf("\n\n");
-
-	for (int i = 0; i < m_currentUVIndex; i++)
-	{
-		printf("UV Coordinate Index %i: %i\n", i, m_UVCoordinateIndexArr[i]);
-	}
-	printf("\n\n");
-	*/
-
 	//Only works for triangulated Meshes
 	for (int i = 0; i < m_nrOfPolygons; i++)
 	{
@@ -148,9 +129,9 @@ void MeshData2::CheckMesh()
 					m_UVCoordinates[1][m_UVCoordinateIndexArr[lCurrentVertex]]);
 				//Normals, doesnt use Index right now
 				printf("Normal: %.2f %.2f %.2f\n",
-					m_normalCoordinateArr[lCurrentVertex][0],
-					m_normalCoordinateArr[lCurrentVertex][1],
-					m_normalCoordinateArr[lCurrentVertex][2]);
+					m_normalCoordinateArr[0][lCurrentVertex],
+					m_normalCoordinateArr[1][lCurrentVertex],
+					m_normalCoordinateArr[2][lCurrentVertex]);
 			}
 		}
 		else if (m_nrOfVerticesPerPolygon == 4)
@@ -175,7 +156,6 @@ void MeshData2::CheckMesh()
 	printf("\n\n");
 
 	printf("Nr of vertices: %i\n\n", m_vertexCount);
-
 }
 
 void MeshData2::setNrOfPolygons(int nrOfPolygons)
