@@ -16,10 +16,10 @@ private:
 	int m_UVCoordinateIndexArr[100];
 
 	int m_currentNormalCoordinate;
-	//int m_currentNormalIndex;
 	FbxVector4 m_normalCoordinateArr[100];
-
 	//Should normals also use an index array?
+
+	int m_collision;
 
 	int m_nrOfPolygons;
 	int m_nrOfVerticesPerPolygon; //3 if triangulated
@@ -38,4 +38,5 @@ public:
 
 	void setNrOfPolygons(int nrOfPolygons);
 	void setNrOfVerticesPerPolygon(int nrOfVerticesPerPolygon);
+	void setCollision(int collision);
 };

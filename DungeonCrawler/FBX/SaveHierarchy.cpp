@@ -34,6 +34,22 @@ void SaveHierarchy::SaveNode(FbxNode* pNode)
 	//then dynamic meshes
 	//then material
 
+	FbxProperty collision = pNode->FindProperty("Collision", true);
+	if (collision.IsValid())
+	{
+		bool collisionBool = collision.GetFbxObject();
+		if (collisionBool)
+		{ 
+			m_mesh.setCollision(collisionBool);
+		}
+	}
+	else
+	{
+		printf("Collision not found");
+	}
+
+	//another property for static/dynamic mesh
+
 	switch (nodeType)
 	{
 	default:
