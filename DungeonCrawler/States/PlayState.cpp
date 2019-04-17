@@ -45,7 +45,7 @@ PlayState::PlayState() {
 	
 	m_lightManager->addLight(glm::vec3(0.f, 5.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
 
-	m_gameObjectManager->addGameObject(new Room(roomMesh, glm::vec3(0.f, 0.f, 0.f)));
+	m_gameObjectManager->addGameObject(new Room(roomMesh, ROOM, glm::vec3(0.f, 0.f, 0.f)));
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -66,7 +66,7 @@ PlayState::PlayState() {
 
 	for (int i = 0; i < 20; i++)
 	{
-		m_gameObjectManager->addGameObject(new Box(boxMesh, 
+		m_gameObjectManager->addGameObject(new Box(boxMesh, BOX,
 			glm::vec3(
 				Randomizer::single(-15.f, 15.f), 
 				0.f, 
@@ -74,7 +74,8 @@ PlayState::PlayState() {
 			)));
 	}
 
-	m_player = new Player(boxMesh);
+	m_gameObjectManager->addGameObject(new Walker(boxMesh, WALKER));
+	m_player = new Player(boxMesh, PLAYER);
 	m_gameObjectManager->addGameObject(m_player);
 
 }

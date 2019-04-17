@@ -4,9 +4,10 @@
 #include <GLM/gtc/matrix_transform.hpp>
 #include "System/Log.h"
 #include "Utility/Camera.h"
+#include "Enemies/Walker.h"
 
-Player::Player(Mesh * mesh) :
-	GameObject(mesh)
+Player::Player(Mesh* mesh, Type type) :
+	GameObject(mesh, type)
 {
 	this->setPosition(glm::vec3(0.f, 0.f, 0.f));
 	this->m_defaultSpeed = 7.f;
@@ -24,6 +25,7 @@ Player::Player(Mesh * mesh) :
 	this->m_chargeTimer = 100;
 	this->m_weaponSlot = 1;
 	this->m_spraying = false;
+	this->m_type = type;
 }
 
 void Player::update(float dt)
@@ -49,6 +51,16 @@ void Player::update(float dt)
 		move(dt);
 		dashCd(dt);
 		screenShake(dt);
+	}
+}
+
+void Player::hit(const HitDescription & desc)
+{
+	Type type = desc.owner->getType();
+	if (type == Type::WALKER)
+	{
+		Walker* walker = dynamic_cast<Walker*>(desc.owner);
+		m_health -= walker->getDamage();
 	}
 }
 
@@ -225,7 +237,7 @@ void Player::releaseChargedProjectile(float dt)
 	}
 	m_speed = m_defaultSpeed;
 	m_damage = 1.f;
-	m_chargeTimer = 100.f;
+	m_chargeTimer = 100;
 }
 
 void Player::screenShake(float dt)

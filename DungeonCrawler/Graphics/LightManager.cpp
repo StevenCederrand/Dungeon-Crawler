@@ -44,7 +44,7 @@ void LightManager::addLight(const glm::vec3 & position, const glm::vec3 & color,
 	if (gameObjectManager)
 	{
 		Mesh* sphere = MeshMap::getMesh("Sphere");
-		GameObject* obj = new LightSphere(sphere, position);
+		GameObject* obj = new LightSphere(sphere, LIGHTSPHERE, position);
 		obj->setCollidable(false);
 		gameObjectManager->addGameObject(obj);
 

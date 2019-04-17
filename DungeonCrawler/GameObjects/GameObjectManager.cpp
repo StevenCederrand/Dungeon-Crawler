@@ -40,7 +40,7 @@ void GameObjectManager::update(float dt)
 	glm::vec3 rayDirection = m_player->getLookDirection();
 	GameObject* objectHit = nullptr;
 
-
+	
 	//------ Player current velocity ( Also used for collision ) ------
 	newVel = m_player->getVelocity();
 
@@ -87,10 +87,17 @@ void GameObjectManager::update(float dt)
 			//LOG_TRACE("Ray intersection! collision point: " + std::to_string(gunshotCollisionPoint.x) + ", " + std::to_string(gunshotCollisionPoint.z));
 
 			// --------MAYBE DYNAMIC CASY HERE TO CHECK IF WE HIT A ENEMY?--------
-			if(dynamic_cast<Box*>(objectHit))
+			Box* box = dynamic_cast<Box*>(objectHit);
+			if (box) {
 				objectHit->setHit();
+			}
+			if (dynamic_cast<Walker*>(objectHit))
+				objectHit->setHit();
+			
+			HitDescription desc;
+			desc.player = m_player;
+			objectHit->hit(desc);
 		}
-
 	}
 }
 

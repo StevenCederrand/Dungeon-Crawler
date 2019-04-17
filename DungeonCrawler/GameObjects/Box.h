@@ -4,12 +4,11 @@
 
 class Box : public GameObject {
 public:
-	Box(Mesh* mesh, const glm::vec3& position = glm::vec3(0.f));
+	Box(Mesh* mesh, Type type, const glm::vec3& position = glm::vec3(0.f));
 	void update(float dt);
-
 private:
 
-
+	Type m_type;
 };
 
 

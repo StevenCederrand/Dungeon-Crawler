@@ -5,8 +5,9 @@
 
 class Player : public GameObject {
 public:
-	Player(Mesh* mesh);
+	Player(Mesh* mesh, Type type);
 	void update(float dt);
+	void hit(const HitDescription& desc);
 
 	void move(float dt);
 	void rotatePlayer();
@@ -46,6 +47,7 @@ private:
 	float m_speed;
 	float m_health;
 	float m_damage;
+	Type m_type;
 
 	float m_dash;
 	bool m_dashCd;
