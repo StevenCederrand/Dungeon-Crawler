@@ -26,8 +26,8 @@ struct Vertex
 {
 	float position[3];
 	float normal[3];
-	float tangent[3];
-	float biTangent[3];
+	//float tangent[3];		put in later
+	//float biTangent[3];	put in later
 	float UV[2]; //here?
 };
 

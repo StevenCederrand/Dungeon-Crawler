@@ -222,6 +222,7 @@ void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, Not con
 					}
 				}
 			}
+			//Tangent and biTangent not in yet
 			//How many Tangents per vertice, 0 right now
 			for (int k = 0; k < pMesh->GetElementTangentCount(); ++k)
 			{
@@ -248,19 +249,19 @@ void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, Not con
 			//How many BiTangents per vertice, 0 right now
 			for (int k = 0; k < pMesh->GetElementBinormalCount(); ++k)
 			{
-				FbxGeometryElementBinormal* leBinormal = pMesh->GetElementBinormal(k);
+				FbxGeometryElementBinormal* leBiTangent = pMesh->GetElementBinormal(k);
 
-				if (leBinormal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+				if (leBiTangent->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
 				{
-					switch (leBinormal->GetReferenceMode())
+					switch (leBiTangent->GetReferenceMode())
 					{
 					case FbxGeometryElement::eDirect:
-						Display3DVector(header, leBinormal->GetDirectArray().GetAt(vertexCounter));
+						Display3DVector(header, leBiTangent->GetDirectArray().GetAt(vertexCounter));
 						break;
 					case FbxGeometryElement::eIndexToDirect:
 					{
-						int id = leBinormal->GetIndexArray().GetAt(vertexCounter);
-						Display3DVector(header, leBinormal->GetDirectArray().GetAt(id));
+						int id = leBiTangent->GetIndexArray().GetAt(vertexCounter);
+						Display3DVector(header, leBiTangent->GetDirectArray().GetAt(id));
 					}
 					break;
 					default:
