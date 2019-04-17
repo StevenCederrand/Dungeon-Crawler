@@ -2,6 +2,8 @@
 
 MeshData2::MeshData2()
 {
+	m_vertexCount = 0;
+
 	m_currentControlPoint = 0;
 	m_currentControlPointIndex = 0;
 	m_currentUVCoordinate = 0;
@@ -82,6 +84,11 @@ void MeshData2::AddNormalCoordinate(FbxVector4 normalCoordinate)
 	m_currentNormalCoordinate++;
 }
 
+void MeshData2::increaseVertexCount()
+{
+	m_vertexCount++;
+}
+
 void MeshData2::CheckMesh()
 {
 	/*
@@ -159,6 +166,7 @@ void MeshData2::CheckMesh()
 		printf("This mesh is dynamic");
 	printf("\n\n");
 
+	printf("Nr of vertices: %i\n\n", m_vertexCount);
 
 }
 

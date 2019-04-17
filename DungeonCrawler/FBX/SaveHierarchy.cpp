@@ -116,6 +116,7 @@ void SaveHierarchy::SaveControlPoints(FbxMesh* pMesh)
 	printf("\n\n");
 }
 
+//saves UV, normal and later tangent and bitangent
 void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, Not control points!
 {
 	//How many polygons there are in the current mesh
@@ -222,54 +223,8 @@ void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, Not con
 					}
 				}
 			}
-			//Tangent and biTangent not in yet
-			//How many Tangents per vertice, 0 right now
-			for (int k = 0; k < pMesh->GetElementTangentCount(); ++k)
-			{
-				FbxGeometryElementTangent* leTangent = pMesh->GetElementTangent(k);
-
-				if (leTangent->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
-				{
-					switch (leTangent->GetReferenceMode())
-					{
-					case FbxGeometryElement::eDirect:
-						Display3DVector(header, leTangent->GetDirectArray().GetAt(vertexCounter));
-						break;
-					case FbxGeometryElement::eIndexToDirect:
-					{
-						int id = leTangent->GetIndexArray().GetAt(vertexCounter);
-						Display3DVector(header, leTangent->GetDirectArray().GetAt(id));
-					}
-					break;
-					default:
-						break; // other reference modes not shown here!
-					}
-				}
-			}
-			//How many BiTangents per vertice, 0 right now
-			for (int k = 0; k < pMesh->GetElementBinormalCount(); ++k)
-			{
-				FbxGeometryElementBinormal* leBiTangent = pMesh->GetElementBinormal(k);
-
-				if (leBiTangent->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
-				{
-					switch (leBiTangent->GetReferenceMode())
-					{
-					case FbxGeometryElement::eDirect:
-						Display3DVector(header, leBiTangent->GetDirectArray().GetAt(vertexCounter));
-						break;
-					case FbxGeometryElement::eIndexToDirect:
-					{
-						int id = leBiTangent->GetIndexArray().GetAt(vertexCounter);
-						Display3DVector(header, leBiTangent->GetDirectArray().GetAt(id));
-					}
-					break;
-					default:
-						break; // other reference modes not shown here!
-					}
-				}
-			}
 			vertexCounter++;
+			m_mesh.increaseVertexCount();
 		}
 	}
 }

@@ -5,9 +5,11 @@
 class MeshData2
 {
 private:
+	int m_vertexCount;
+
 	int m_currentControlPoint;
 	int m_currentControlPointIndex;
-	FbxVector4 m_controlPointArr[100];
+	FbxVector4 m_controlPointArr[100]; //change to a vector 3
 	int m_controlPointIndexArr[100];
 
 	int m_currentUVCoordinate;
@@ -16,8 +18,10 @@ private:
 	int m_UVCoordinateIndexArr[100];
 
 	int m_currentNormalCoordinate;
-	FbxVector4 m_normalCoordinateArr[100];
+	FbxVector4 m_normalCoordinateArr[100];	//change to a vector 3
 	//Should normals also use an index array?
+
+	//Will not save tangents or bitangents, they will be calculated in the shader
 
 	bool m_collision;
 	bool m_isStatic;
@@ -35,6 +39,7 @@ public:
 	void AddUVCoordinate(FbxVector2 uVCoordinate);
 	void AddUVIndex(int index);
 	void AddNormalCoordinate(FbxVector4 normalCoordinate);
+	void increaseVertexCount();
 	void CheckMesh();
 
 	void setNrOfPolygons(int nrOfPolygons);
