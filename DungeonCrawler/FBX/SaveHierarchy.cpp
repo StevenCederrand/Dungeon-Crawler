@@ -145,7 +145,6 @@ void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, Not con
 			//how many UV coordinates the vertice has, 1 right now
 			for (int k = 0; k < pMesh->GetElementUVCount(); ++k)
 			{
-				int boi = pMesh->GetElementUVCount();
 				FbxGeometryElementUV* lEUV = pMesh->GetElementUV(k);
 
 				switch (lEUV->GetMappingMode())

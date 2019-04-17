@@ -29,12 +29,13 @@ void MeshData2::initiateArrays()
 	for (int i = 0; i < 100; i++)
 	{
 		for (int j = 0; j < 3; j++)
-			m_controlPointArrFloat[j][i] = 0.f;
+			m_controlPoints[j][i] = 0.f;
 	}
 
 	for (int i = 0; i < 100; i++)
 	{
-		m_UVCoordinates[i].Set(0, 0);
+		for (int j = 0; j < 2; j++)
+			m_UVCoordinates[j][i] = 0.f;
 	}
 
 	for (int i = 0; i < 100; i++)
@@ -55,9 +56,9 @@ void MeshData2::AddControlPoint(FbxVector4 controlPoint)
 	float ly = controlPoint.mData[1];
 	float lz = controlPoint.mData[2];
 
-	m_controlPointArrFloat[0][m_currentControlPoint] = lx;
-	m_controlPointArrFloat[1][m_currentControlPoint] = ly;
-	m_controlPointArrFloat[2][m_currentControlPoint] = lz;
+	m_controlPoints[0][m_currentControlPoint] = lx;
+	m_controlPoints[1][m_currentControlPoint] = ly;
+	m_controlPoints[2][m_currentControlPoint] = lz;
 
 	m_currentControlPoint++;
 }
@@ -70,7 +71,12 @@ void MeshData2::AddIndexPoint(int index)
 
 void MeshData2::AddUVCoordinate(FbxVector2 uVCoordinate)
 {
-	m_UVCoordinates[m_currentUVCoordinate] = uVCoordinate;
+	float lx = uVCoordinate.mData[0];
+	float ly = uVCoordinate.mData[1];
+
+	m_UVCoordinates[0][m_currentUVCoordinate] = lx;
+	m_UVCoordinates[1][m_currentUVCoordinate] = ly;
+
 	m_currentUVCoordinate++;
 }
 
@@ -133,13 +139,13 @@ void MeshData2::CheckMesh()
 				//Store currentPlaceInVerticeIndexArr if load more than 1 mesh, needs to be added for other start location
 				int lCurrentVertex = (m_nrOfVerticesPerPolygon * i) + j;
 				printf("Position: %.2f %.2f %.2f\n",
-					m_controlPointArrFloat[0][m_controlPointIndexArr[lCurrentVertex]],
-					m_controlPointArrFloat[1][m_controlPointIndexArr[lCurrentVertex]],
-					m_controlPointArrFloat[2][m_controlPointIndexArr[lCurrentVertex]]);
+					m_controlPoints[0][m_controlPointIndexArr[lCurrentVertex]],
+					m_controlPoints[1][m_controlPointIndexArr[lCurrentVertex]],
+					m_controlPoints[2][m_controlPointIndexArr[lCurrentVertex]]);
 				//UV
 				printf("UV: %.2f %.2f\n",
-					m_UVCoordinates[m_UVCoordinateIndexArr[lCurrentVertex]][0],
-					m_UVCoordinates[m_UVCoordinateIndexArr[lCurrentVertex]][1]);
+					m_UVCoordinates[0][m_UVCoordinateIndexArr[lCurrentVertex]],
+					m_UVCoordinates[1][m_UVCoordinateIndexArr[lCurrentVertex]]);
 				//Normals, doesnt use Index right now
 				printf("Normal: %.2f %.2f %.2f\n",
 					m_normalCoordinateArr[lCurrentVertex][0],

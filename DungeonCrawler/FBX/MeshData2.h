@@ -9,12 +9,12 @@ private:
 
 	int m_currentControlPoint;
 	int m_currentControlPointIndex;
-	float m_controlPointArrFloat[3][100];
+	float m_controlPoints[3][100];
 	int m_controlPointIndexArr[100];
 
 	int m_currentUVCoordinate;
 	int m_currentUVIndex;
-	FbxVector2 m_UVCoordinates[100];
+	float m_UVCoordinates[2][100];
 	int m_UVCoordinateIndexArr[100];
 
 	int m_currentNormalCoordinate;
