@@ -8,7 +8,6 @@ class SaveHierarchy
 {
 private:
 	MeshData2 m_mesh; //will only be one, load one at a time
-
 public:
 	SaveHierarchy();
 	~SaveHierarchy();

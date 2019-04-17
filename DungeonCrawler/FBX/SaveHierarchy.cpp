@@ -2,7 +2,7 @@
 
 SaveHierarchy::SaveHierarchy()
 {
-	
+	//m_mesh = MeshData2();
 }
 
 SaveHierarchy::~SaveHierarchy()
@@ -98,26 +98,12 @@ void SaveHierarchy::SaveControlPoints(FbxMesh* pMesh)
 	for (i = 0; i < lControlPointsCount; i++)
 	{
 		m_mesh.AddControlPoint(lControlPoints[i]);
-
-		/*
-		for (int j = 0; j < pMesh->GetElementNormalCount(); j++)
-		{
-			FbxGeometryElementNormal* leNormals = pMesh->GetElementNormal(j);
-			if (leNormals->GetMappingMode() == FbxGeometryElement::eByControlPoint)
-			{
-				char header[100];
-				FBXSDK_sprintf(header, 100, "Normal Vetor: ");
-				if (leNormals->GetReferenceMode() == FbxGeometryElement::eDirect)
-					Display3DVector(header, leNormals->GetDirectArray().GetAt(i));
-			}
-		}
-		*/
 	}
 	printf("\n\n");
 }
 
-//saves UV, normal and later tangent and bitangent
-void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, Not control points!
+//saves UV, UVIndex, normal, controlpointIndex
+void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, 3 if triangulated. Not control points!
 {
 	//How many polygons there are in the current mesh
 	int lPolygonCount = pMesh->GetPolygonCount();
@@ -170,8 +156,7 @@ void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, Not con
 
 				case FbxGeometryElement::eByPolygonVertex:	//or by vertex, used right now
 				{
-					int lTextureUVIndex = pMesh->GetTextureUVIndex(i, j);
-					m_mesh.AddUVIndex(lTextureUVIndex);
+					int lTextureUVIndex = pMesh->GetTextureUVIndex(i, j); //CORRECT
 
 					switch (lEUV->GetReferenceMode())
 					{
@@ -179,8 +164,9 @@ void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, Not con
 					case FbxGeometryElement::eIndexToDirect: 
 					{
 						//actually does something, corrupted before, but is probably fine now.
-						FbxVector2 textureUvCoordinates = lEUV->GetDirectArray().GetAt(lTextureUVIndex);
+						FbxVector2 textureUvCoordinates = lEUV->GetDirectArray().GetAt(vertexCounter);
 						m_mesh.AddUVCoordinate(textureUvCoordinates);
+						m_mesh.AddUVIndex(lTextureUVIndex);
 					}
 					break;
 					default:

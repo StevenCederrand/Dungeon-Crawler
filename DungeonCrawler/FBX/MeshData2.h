@@ -14,7 +14,7 @@ private:
 
 	int m_currentUVCoordinate;
 	int m_currentUVIndex;
-	float m_UVCoordinates[2][100]; //These are wrong? FIX!!
+	float m_UVCoordinates[2][100]; //They are 0 to 1, dont need to convert
 	int m_UVCoordinateIndexArr[100];
 
 	int m_currentNormalCoordinate;

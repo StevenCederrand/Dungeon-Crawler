@@ -83,7 +83,7 @@ void MeshData2::AddUVCoordinate(FbxVector2 uVCoordinate)
 
 void MeshData2::AddUVIndex(int index)
 {
-	m_UVCoordinateIndexArr[m_currentUVIndex] = index;
+	m_UVCoordinateIndexArr[m_currentUVIndex] = index; //CORRECT
 	m_currentUVIndex++;
 }
 
@@ -125,7 +125,7 @@ void MeshData2::CheckMesh()
 					m_controlPoints[2][m_controlPointIndexArr[lCurrentVertex]]);
 				//UV
 				printf("UV: %.2f %.2f\n",
-					m_UVCoordinates[0][m_UVCoordinateIndexArr[lCurrentVertex]],
+					m_UVCoordinates[0][m_UVCoordinateIndexArr[lCurrentVertex]], //Reads the index correctly, but the answer is wrong
 					m_UVCoordinates[1][m_UVCoordinateIndexArr[lCurrentVertex]]);
 				//Normals, doesnt use Index right now
 				printf("Normal: %.2f %.2f %.2f\n",
