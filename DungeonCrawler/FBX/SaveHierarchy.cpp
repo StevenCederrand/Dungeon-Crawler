@@ -43,6 +43,10 @@ void SaveHierarchy::SaveNode(FbxNode* pNode)
 		break;
 	}
 
+	// Print the node's attributes.
+	for (int i = 0; i < pNode->GetNodeAttributeCount(); i++)
+		//PrintAttribute(pNode->GetNodeAttributeByIndex(i));
+
 	// Recursively print the children.
 	for (int j = 0; j < pNode->GetChildCount(); j++)
 	{

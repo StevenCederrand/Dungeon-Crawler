@@ -21,7 +21,7 @@ void WriteCustomFile::CreateCustomFile()
 	MainHeader mh{ 1 };
 
 	//Creates a scope of meshes based on the amount the ones counted in the mainheader scene
-	MeshHeader h { mh.meshCount };
+	MeshHeader h { mh.staticMeshCount };
 	//Creates a vertex pointer to a new vertex array
 	Vertex *vArray = new Vertex[h.vertexCount];
 
