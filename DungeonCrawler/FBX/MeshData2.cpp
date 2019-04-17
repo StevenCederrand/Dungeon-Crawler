@@ -171,12 +171,12 @@ void MeshData2::setNrOfVerticesPerPolygon(int nrOfVerticesPerPolygon)
 	m_nrOfVerticesPerPolygon = nrOfVerticesPerPolygon;
 }
 
-void MeshData2::setCollision(int collision)
+void MeshData2::setCollision(bool collision)
 {
 	m_collision = collision;
 }
 
-void MeshData2::setStaticMesh(int staticMesh)
+void MeshData2::setStaticMesh(bool staticMesh)
 {
 	m_staticMesh = staticMesh;
 }

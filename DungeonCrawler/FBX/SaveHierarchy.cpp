@@ -33,36 +33,34 @@ void SaveHierarchy::SaveNode(FbxNode* pNode)
 	//Then hitboxes
 	//then dynamic meshes
 	//then material
-
+	bool collisionBool = false;
 	FbxProperty collision = pNode->FindProperty("Collision", true);
 	if (collision.IsValid())
 	{
-		bool collisionBool = collision.GetFbxObject();
-		if (collisionBool)
-		{ 
-			m_mesh.setCollision(collisionBool);
-		}
+		//collisionBool 
+		FbxBool collisionBoolFbx = collision.Get<bool>();
+		collisionBool = collisionBoolFbx;
+		m_mesh.setCollision(collisionBool);
+		//bool kek = boi;
+		//bool kek2 = 2;
 	}
 	else
 	{
 		printf("Collision Bool not found");
 	}
 
+	bool staticMeshBool = false;
 	FbxProperty staticMesh = pNode->FindProperty("StaticMesh", true);
 	if (staticMesh.IsValid())
 	{
-		bool staticMeshBool = staticMesh.GetFbxObject();
-		if (staticMeshBool)
-		{
-			m_mesh.setStaticMesh(staticMeshBool);
-		}
+		FbxBool staticMeshBoolFbx = staticMesh.Get<bool>();
+		staticMeshBool = staticMeshBoolFbx;
+		m_mesh.setStaticMesh(staticMeshBool);
 	}
 	else
 	{
 		printf("Static Mesh Bool not found");
 	}
-
-	//another property for static/dynamic mesh
 
 	switch (nodeType)
 	{
