@@ -14,7 +14,7 @@ public:
 	~SaveHierarchy();
 	void SaveEntireHierarchy(FbxScene* lScene);
 	void SaveNode(FbxNode* pNode);
-	void SaveMesh(FbxNode* pNode);
+	void SaveStaticMesh(FbxNode* pNode);
 	void SaveControlPoints(FbxMesh* pMesh);
 	void SavePolygons(FbxMesh* pMesh);
 	void SaveMeshName(FbxNode* pNode);

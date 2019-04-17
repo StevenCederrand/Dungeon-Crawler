@@ -65,13 +65,10 @@ void SaveHierarchy::SaveNode(FbxNode* pNode)
 	default:
 		break;
 	case FbxNodeAttribute::eMesh:	//if its a mesh
-		SaveMesh(pNode);
+		if (m_mesh.getIsStatic())	//if its static
+			SaveStaticMesh(pNode);
 		break;
 	}
-
-	// Print the node's attributes.
-	for (int i = 0; i < pNode->GetNodeAttributeCount(); i++)
-		//PrintAttribute(pNode->GetNodeAttributeByIndex(i));
 
 	// Recursively print the children.
 	for (int j = 0; j < pNode->GetChildCount(); j++)
@@ -81,12 +78,11 @@ void SaveHierarchy::SaveNode(FbxNode* pNode)
 	}
 }
 
-void SaveHierarchy::SaveMesh(FbxNode* pNode)
+void SaveHierarchy::SaveStaticMesh(FbxNode* pNode)
 {
 	FbxMesh* lMesh = (FbxMesh*)pNode->GetNodeAttribute();
 
 	SaveMeshName(pNode);
-	printf("\n");
 	SaveControlPoints(lMesh);
 	SavePolygons(lMesh);
 

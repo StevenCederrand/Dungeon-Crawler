@@ -9,6 +9,7 @@ MeshData2::MeshData2()
 	m_currentNormalCoordinate = 0;
 
 	m_collision = 0;
+	m_isStatic = 0;
 
 	m_nrOfPolygons = 0;
 	m_nrOfVerticesPerPolygon = 0;
@@ -152,7 +153,7 @@ void MeshData2::CheckMesh()
 		printf("This mesh has no collision");
 	printf("\n");
 
-	if (m_staticMesh)
+	if (m_isStatic)
 		printf("This mesh is static");
 	else
 		printf("This mesh is dynamic");
@@ -178,5 +179,15 @@ void MeshData2::setCollision(bool collision)
 
 void MeshData2::setStaticMesh(bool staticMesh)
 {
-	m_staticMesh = staticMesh;
+	m_isStatic = staticMesh;
+}
+
+bool MeshData2::getCollision()const
+{
+	return m_collision;
+}
+
+bool MeshData2::getIsStatic()const
+{
+	return m_isStatic;
 }

@@ -20,7 +20,7 @@ private:
 	//Should normals also use an index array?
 
 	bool m_collision;
-	bool m_staticMesh;
+	bool m_isStatic;
 
 	int m_nrOfPolygons;
 	int m_nrOfVerticesPerPolygon; //3 if triangulated
@@ -41,4 +41,7 @@ public:
 	void setNrOfVerticesPerPolygon(int nrOfVerticesPerPolygon);
 	void setCollision(bool collision);
 	void setStaticMesh(bool staticMesh);
+
+	bool getCollision()const;
+	bool getIsStatic()const;
 };
