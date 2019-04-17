@@ -2,61 +2,69 @@
 #define _EFFECTS_H
 #include <GLM/glm.hpp>
 #include <vector>
-#include <array>
-#include <GL/glew.h>
+#include "Graphics/GLinit.h"
+
 class Effects
 {
-#define MAX_LASERS 100
+#define MAX_PARTICLES 100
 
 public:
-	Effects();
+	Effects(GLinit* glInit);
 	~Effects();
 
 	void update(float dt);
 
-	void addLaser(const glm::vec3& startpos, const glm::vec3& endpos, float lifetime);
+	void bindSparkTetxures();
+	void unbindSparkTextures();
+	void addParticle(const glm::vec3& startpos, const glm::vec3& endpos, float speed, float lifetime);
 	const GLuint getVAO() const;
-	unsigned int getNrOfAliveLasers() const;
-
+	unsigned int getNrOfAliveParticles() const;
 
 private:
-
+	float size = 0.5f;
 	GLfloat m_vertex_buffer_data[12] = {
-	   -0.5f, -0.5f, 0.5f,
-		0.5f, -0.5f, -0.5f,
-	   -0.5f,  0.5f, 0.5f,
-		0.5f,  0.5f, -0.5f,
+		-size, -size, 0.0f,
+		 size, -size, 0.0f,
+		-size,  size, 0.0f,
+		 size,  size, 0.0f,
+	};
+	
+	GLfloat m_uv_buffer_data[8] = {
+		0.0f, 1.0f,
+		1.0f, 1.0f,
+		0.0f, 0.0f,
+		1.0f, 0.0f
 	};
 
-	//--------- LASER  ---------
-	struct LaserStruct {
-		glm::vec3 centerpos;
-		// first two values is the length of the two axis (x,z) 
-		// and the other two is the scale ( how much of each length should be applied, depends on angle )
-		glm::vec4 lengthsAndScales; 
-		float currentLifetime; // Current life time
-		float initialLifetime; // The life time it was given
-	};
+	struct Particle {
+		glm::vec3 velocity;
+		glm::vec3 center;
+		glm::vec4 color;
+		float lifetime;
+		float initialLifetime;
+		Particle()
+			: center(0.0f), velocity(0.0f), color(1.0f), lifetime(0.0f), initialLifetime(0.f) { }
 
-	std::array<LaserStruct, MAX_LASERS> m_lasers;
-	unsigned int m_nrAliveLasers;
+	};
+	std::vector<Particle> m_particles;
+	unsigned int m_aliveParticles;
 
 	// Used to render it in the renderer class (vao, vbo)
 	GLuint m_vao;
 	
 	GLuint m_verticesVBO;
+	GLuint m_uvVBO;
 	GLuint m_centerVBO;
-	GLuint m_lengthsAndScaleVBO;
+	GLuint m_colorVBO;
 	void setupGraphicBuffers();
 
-	std::vector<glm::vec3> m_positionBuffer;
-	std::vector<glm::vec4> m_lengthsAndScaleBuffer;
-
+	std::vector<glm::vec3> m_centerPosBuffer;
+	std::vector<glm::vec4> m_colorBuffer;
+	std::vector<GLuint> m_sparksIDS;
 private:
 	void updateBuffers();
-	void swap(LaserStruct& l1, LaserStruct& l2);
-
-
+	size_t m_lastUnusedParticle;
+	size_t getFirstUnusedParticle();
 };
 
 

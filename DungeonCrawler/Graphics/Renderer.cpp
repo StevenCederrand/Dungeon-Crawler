@@ -13,7 +13,9 @@ Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects)
 	//Generate framebuffers & textures
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
+	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDisable(GL_BLEND);
 	this->m_framebuffer->genFrameBuffers();
 	this->initRenderQuad();
 
@@ -112,13 +114,17 @@ void Renderer::renderEffects()
 	laserShader->setMat4("viewMatrix", m_camera->getViewMatrix());
 	laserShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
 	glBindVertexArray(m_effects->getVAO());
+	m_effects->bindSparkTetxures();
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
-	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, m_effects->getNrOfAliveLasers());
+	glEnableVertexAttribArray(3);
+	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, m_effects->getNrOfAliveParticles());
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
+	glDisableVertexAttribArray(3);
+	m_effects->unbindSparkTextures();
 	glBindVertexArray(0);
 	laserShader->unuse();
 	glDisable(GL_BLEND);

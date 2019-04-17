@@ -19,7 +19,7 @@ PlayState::PlayState() {
 	m_parser = new Parser();
 	m_GLinit = new GLinit();
 	m_camera = new Camera();
-	m_effects = new Effects();
+	m_effects = new Effects(m_GLinit);
 	Camera::active = m_camera;
 	m_lightManager = new LightManager();
 	m_renderer = new Renderer(m_camera, m_lightManager, m_effects);
@@ -117,7 +117,7 @@ void PlayState::renderImGUI()
 		, " ]");
 
 	ImGui::NewLine();
-	ImGui::Text("Nr of lasers: %i" , m_effects->getNrOfAliveLasers());
+	ImGui::Text("Nr of lasers: %i" , m_effects->getNrOfAliveParticles());
 
 	ImGui::End();
 }

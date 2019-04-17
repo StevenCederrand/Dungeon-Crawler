@@ -1,11 +1,16 @@
 #version 430
 
-in float frag_lifetime;
-in float frag_initialLifetime;
+in vec4 frag_color;
+in vec2 frag_uv;
 
+uniform sampler2D textureSampler;
 out vec4 color;
 
 void main()
 {
-	color = vec4(1.0f, 0.0f, 0.0f, 1.f);
+	vec4 textureColor = texture(textureSampler, frag_uv);
+	if(textureColor.a < 0.5)
+		discard;
+	
+	color = textureColor * frag_color;
 }

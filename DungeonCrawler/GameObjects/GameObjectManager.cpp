@@ -5,6 +5,7 @@
 GameObjectManager::GameObjectManager(Effects* effects)
 {
 	m_effects = effects;
+	
 }
 
 GameObjectManager::~GameObjectManager()
@@ -91,7 +92,7 @@ void GameObjectManager::update(float dt)
 			if(dynamic_cast<Box*>(objectHit))
 				objectHit->setHit();
 
-			m_effects->addLaser(m_player->getPosition(), gunshotCollisionPoint, 0.5f);
+			m_effects->addParticle(m_player->getPosition(), gunshotCollisionPoint, 5.f, 1.f);
 
 		}
 
