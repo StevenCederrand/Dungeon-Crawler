@@ -21,20 +21,15 @@ MeshData2::MeshData2()
 
 MeshData2::~MeshData2()
 {
-	/*
-	for (int i = 0; i < m_maxNrOfControlPoints; i++)
-	{
-		delete m_controlPointArr[i];
-	}
-	delete m_controlPointArr;
-	*/
+
 }
 
 void MeshData2::initiateArrays()
 {
 	for (int i = 0; i < 100; i++)
 	{
-		m_controlPointArr[i].Set(0, 0, 0, 0);
+		for (int j = 0; j < 3; j++)
+			m_controlPointArrFloat[j][i] = 0.f;
 	}
 
 	for (int i = 0; i < 100; i++)
@@ -56,7 +51,14 @@ void MeshData2::initiateArrays()
 
 void MeshData2::AddControlPoint(FbxVector4 controlPoint)
 {
-	m_controlPointArr[m_currentControlPoint] = controlPoint;
+	float lx = controlPoint.mData[0];
+	float ly = controlPoint.mData[1];
+	float lz = controlPoint.mData[2];
+
+	m_controlPointArrFloat[0][m_currentControlPoint] = lx;
+	m_controlPointArrFloat[1][m_currentControlPoint] = ly;
+	m_controlPointArrFloat[2][m_currentControlPoint] = lz;
+
 	m_currentControlPoint++;
 }
 
@@ -131,9 +133,9 @@ void MeshData2::CheckMesh()
 				//Store currentPlaceInVerticeIndexArr if load more than 1 mesh, needs to be added for other start location
 				int lCurrentVertex = (m_nrOfVerticesPerPolygon * i) + j;
 				printf("Position: %.2f %.2f %.2f\n",
-					m_controlPointArr[m_controlPointIndexArr[lCurrentVertex]][0],
-					m_controlPointArr[m_controlPointIndexArr[lCurrentVertex]][1],
-					m_controlPointArr[m_controlPointIndexArr[lCurrentVertex]][2]);
+					m_controlPointArrFloat[0][m_controlPointIndexArr[lCurrentVertex]],
+					m_controlPointArrFloat[1][m_controlPointIndexArr[lCurrentVertex]],
+					m_controlPointArrFloat[2][m_controlPointIndexArr[lCurrentVertex]]);
 				//UV
 				printf("UV: %.2f %.2f\n",
 					m_UVCoordinates[m_UVCoordinateIndexArr[lCurrentVertex]][0],

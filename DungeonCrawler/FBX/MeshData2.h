@@ -9,7 +9,7 @@ private:
 
 	int m_currentControlPoint;
 	int m_currentControlPointIndex;
-	FbxVector4 m_controlPointArr[100]; //change to a vector 3
+	float m_controlPointArrFloat[3][100];
 	int m_controlPointIndexArr[100];
 
 	int m_currentUVCoordinate;
