@@ -92,173 +92,138 @@ void SaveHierarchy::SaveNode(FbxNode* pNode)
 	}
 }
 
-void SaveHierarchy::SaveStaticMesh(FbxNode* pNode)
+void SaveHierarchy::m_SaveControlPoints(FbxMesh* pMesh)
 {
-	FbxMesh* lMesh = (FbxMesh*)pNode->GetNodeAttribute();
-
-	SaveMeshName(pNode);
-	SaveControlPoints(lMesh);
-	SavePolygons(lMesh);
-
-	//m_mesh.CheckMesh(); //Writes out information about the mesh to debug
-}
-
-void SaveHierarchy::SaveControlPoints(FbxMesh* pMesh)
-{
-	int i = 0;
 	int lControlPointsCount = pMesh->GetControlPointsCount();
 	FbxVector4* lControlPoints = pMesh->GetControlPoints();
 
-	for (i = 0; i < lControlPointsCount; i++)
+	for (int i = 0; i < lControlPointsCount; i++)
 	{
 		m_mesh.AddControlPoint(lControlPoints[i]);
 	}
 	printf("\n\n");
 }
 
-void SaveHierarchy::BigThing(FbxMesh* pMesh) //trying to make SavePolygons into functions 
+void SaveHierarchy::m_SaveControlPointsIndex(FbxMesh* pMesh, int i, int j)
 {
+	int lControlPointIndex = pMesh->GetPolygonVertex(i, j);
+	m_mesh.AddIndexPoint(lControlPointIndex);
+}
 
-	//CONTINUE HERE BITCH
+void SaveHierarchy::m_SaveUVCoordinatesAndIndex(FbxMesh* pMesh, int k, int i, int j, int vertexCounter)
+{
+	FbxGeometryElementUV* lEUV = pMesh->GetElementUV(k);
 
-
-	int lPolygonCount = pMesh->GetPolygonCount();
-
-	//Go through all polygons
-	for (int i = 0; i < lPolygonCount; i++)
+	switch (lEUV->GetMappingMode())
 	{
-		int lPolygonSize = pMesh->GetPolygonSize(i); //3 if triangulated
-
-		//Go through each vertice in the polygon
-		for (int j = 0; j < lPolygonSize; j++)
+	default:
+		break;
+	case FbxGeometryElement::eByControlPoint: //if its mapped by control point
+		switch (lEUV->GetReferenceMode())
 		{
-			//Save Control Point index
-			int lControlPointIndex = pMesh->GetPolygonVertex(i, j);
-			m_mesh.AddIndexPoint(lControlPointIndex);
+		case FbxGeometryElement::eDirect:
+			//Display2DVector(header, lEUV->GetDirectArray().GetAt(lControlPointIndex));
+			break;
+		case FbxGeometryElement::eIndexToDirect:
+		{
+			//int id = lEUV->GetIndexArray().GetAt(lControlPointIndex);
+			//Display2DVector(header, lEUV->GetDirectArray().GetAt(id));
+		}
+		break;
+		default:
+			break;
+		}
+		break;
 
-			//how many UV coordinates the vertice has, 1 right now
-			for (int k = 0; k < pMesh->GetElementUVCount(); ++k)
-			{
+	case FbxGeometryElement::eByPolygonVertex:	//or by vertex, used right now
+	{
+		int lTextureUVIndex = pMesh->GetTextureUVIndex(i, j); //CORRECT
 
-			}
+		switch (lEUV->GetReferenceMode())
+		{
+		case FbxGeometryElement::eDirect:
+		case FbxGeometryElement::eIndexToDirect:
+		{
+			//actually does something, corrupted before, but is probably fine now.
+			FbxVector2 textureUvCoordinates = lEUV->GetDirectArray().GetAt(vertexCounter);
+			m_mesh.AddUVCoordinate(textureUvCoordinates);
+			m_mesh.AddUVIndex(lTextureUVIndex);
+		}
+		break;
+		default:
+			break;
+		}
+	}
+	break;
 
-			//How many normals per vertice, 1 right now
-			for (int k = 0; k < pMesh->GetElementNormalCount(); ++k)
-			{
+	case FbxGeometryElement::eByPolygon: //never used
+	case FbxGeometryElement::eAllSame:	 //-||-
+	case FbxGeometryElement::eNone:		 //-||-
+		break;
+	}
+}
 
-			}
+void SaveHierarchy::m_SaveNormals(FbxMesh* pMesh, int k, int vertexCounter)
+{
+	FbxVector4 lNormalCoordinates;
+	FbxGeometryElementNormal* leNormal = pMesh->GetElementNormal(k);
 
+	if (leNormal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+	{
+		switch (leNormal->GetReferenceMode())
+		{
+		case FbxGeometryElement::eDirect: //currently used
+			lNormalCoordinates = leNormal->GetDirectArray().GetAt(vertexCounter);
+			m_mesh.AddNormalCoordinate(lNormalCoordinates); //save normals
+
+			//Display3DVector(header, leNormal->GetDirectArray().GetAt(vertexId));
+			break;
+		case FbxGeometryElement::eIndexToDirect:
+		{
+			//int id = leNormal->GetIndexArray().GetAt(vertexId);
+			//Display3DVector(header, leNormal->GetDirectArray().GetAt(id));
+		}
+		break;
+		default:
+			break; // other reference modes not shown here!
 		}
 	}
 }
 
 //saves UV, UVIndex, normal, controlpointIndex
-void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, 3 if triangulated. Not control points!
+void SaveHierarchy::SaveStaticMesh(FbxNode* pNode) //trying to make SavePolygons into functions 
 {
-	//How many polygons there are in the current mesh
-	int lPolygonCount = pMesh->GetPolygonCount();
-	m_mesh.setNrOfPolygons(lPolygonCount);
-	FbxVector4* lControlPoints = pMesh->GetControlPoints();
-	char header[100];
-	int vertexCounter = 0; //just a counter, keeps track of which vertex is current
+	FbxMesh* lMesh = (FbxMesh*)pNode->GetNodeAttribute();
+	int lPolygonCount = lMesh->GetPolygonCount();
+	int lVertexCounter = 0;
+	int lPolygonSize = lMesh->GetPolygonSize(0); //checks first polygon, all should be 3
 
-	//how many polygons in mesh
+	//SaveMeshName(pNode);
+	m_mesh.setNrOfVerticesPerPolygon(lPolygonSize); //save in m_mesh
+	m_mesh.setNrOfPolygons(lPolygonCount);	//save in m_mesh
+	m_SaveControlPoints(lMesh);	//Save all controlpoints, to be used by index arr
+
+	//Go through all polygons
 	for (int i = 0; i < lPolygonCount; i++)
 	{
-		int lPolygonSize = pMesh->GetPolygonSize(i);
-		m_mesh.setNrOfVerticesPerPolygon(lPolygonSize); // if triangulated = 3
-
-		//where the i polygon start to read vertices from GetPolygonVertex
-		int lStartIndex = pMesh->GetPolygonVertexIndex(i);
-
-		//how many vertices in polygon, depends if triangulated
+		//Go through each vertice in the polygon
 		for (int j = 0; j < lPolygonSize; j++)
 		{
-			//i = what polygon, j = vertice in polygon
-			int lControlPointIndex = pMesh->GetPolygonVertex(i, j);
-			m_mesh.AddIndexPoint(lControlPointIndex);
+			//Save Control Point index
+			m_SaveControlPointsIndex(lMesh, i, j);
 
 			//how many UV coordinates the vertice has, 1 right now
-			for (int k = 0; k < pMesh->GetElementUVCount(); ++k)
+			for (int k = 0; k < lMesh->GetElementUVCount(); ++k)
 			{
-				FbxGeometryElementUV* lEUV = pMesh->GetElementUV(k);
-
-				switch (lEUV->GetMappingMode())
-				{
-				default:
-					break;
-				case FbxGeometryElement::eByControlPoint: //if its mapped by control point
-					switch (lEUV->GetReferenceMode())
-					{
-					case FbxGeometryElement::eDirect:
-						Display2DVector(header, lEUV->GetDirectArray().GetAt(lControlPointIndex));
-						break;
-					case FbxGeometryElement::eIndexToDirect:
-					{
-						int id = lEUV->GetIndexArray().GetAt(lControlPointIndex);
-						Display2DVector(header, lEUV->GetDirectArray().GetAt(id));
-					}
-					break;
-					default:
-						break;
-					}
-					break;
-
-				case FbxGeometryElement::eByPolygonVertex:	//or by vertex, used right now
-				{
-					int lTextureUVIndex = pMesh->GetTextureUVIndex(i, j); //CORRECT
-
-					switch (lEUV->GetReferenceMode())
-					{
-					case FbxGeometryElement::eDirect:
-					case FbxGeometryElement::eIndexToDirect: 
-					{
-						//actually does something, corrupted before, but is probably fine now.
-						FbxVector2 textureUvCoordinates = lEUV->GetDirectArray().GetAt(vertexCounter);
-						m_mesh.AddUVCoordinate(textureUvCoordinates);
-						m_mesh.AddUVIndex(lTextureUVIndex);
-					}
-					break;
-					default:
-						break;
-					}
-				}
-				break;
-
-				case FbxGeometryElement::eByPolygon: //never used
-				case FbxGeometryElement::eAllSame:	 //-||-
-				case FbxGeometryElement::eNone:		 //-||-
-					break;
-				}
+				m_SaveUVCoordinatesAndIndex(lMesh, k, i, j, lVertexCounter);
 			}
+
 			//How many normals per vertice, 1 right now
-			for (int k = 0; k < pMesh->GetElementNormalCount(); ++k)
+			for (int k = 0; k < lMesh->GetElementNormalCount(); ++k)
 			{
-				FbxVector4 lNormalCoordinates;
-				FbxGeometryElementNormal* leNormal = pMesh->GetElementNormal(k);
-
-				if (leNormal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
-				{
-					switch (leNormal->GetReferenceMode())
-					{
-					case FbxGeometryElement::eDirect: //currently used
-						lNormalCoordinates = leNormal->GetDirectArray().GetAt(vertexCounter);
-						m_mesh.AddNormalCoordinate(lNormalCoordinates); //save normals
-
-						//Display3DVector(header, leNormal->GetDirectArray().GetAt(vertexId));
-						break;
-					case FbxGeometryElement::eIndexToDirect:
-					{
-						//int id = leNormal->GetIndexArray().GetAt(vertexId);
-						//Display3DVector(header, leNormal->GetDirectArray().GetAt(id));
-					}
-					break;
-					default:
-						break; // other reference modes not shown here!
-					}
-				}
+				m_SaveNormals(lMesh, k, lVertexCounter);
 			}
-			vertexCounter++;
+			lVertexCounter++;
 			m_mesh.increaseVertexCount();
 		}
 	}

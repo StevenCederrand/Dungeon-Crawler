@@ -5,6 +5,7 @@
 class StaticMesh
 {
 private:
+	char m_name[100];
 	int m_vertexCount;
 
 	int m_currentControlPoint;

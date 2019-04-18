@@ -26,6 +26,13 @@ StaticMesh::~StaticMesh()
 
 void StaticMesh::initiateArrays()
 {
+	/*
+	for (int i = 0; i < 100; i++)
+	{
+		m_name[i] = "";
+	}
+	*/
+
 	for (int i = 0; i < 100; i++)
 	{
 		for (int j = 0; j < 3; j++)
