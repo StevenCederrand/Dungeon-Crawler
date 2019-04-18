@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include "HeaderStructs.h"
+#include "MeshData2.h"
 
 class WriteCustomFile
 {
@@ -15,4 +16,5 @@ public:
 	WriteCustomFile();
 	~WriteCustomFile();
 	void CreateCustomFile();
+	void WriteStaticMesh(MeshData2 currentMesh);
 };

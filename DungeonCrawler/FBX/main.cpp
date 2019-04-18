@@ -23,10 +23,6 @@ int main(int argc, char** argv)
 	saveHierarchy.SaveEntireHierarchy(lsdkObject.GetScene());
 	MeshData2 currentMesh = saveHierarchy.getMesh();
 
-	//Create our custom file
-	//WriteCustomFile writeCustomFileObject;
-	//writeCustomFileObject.CreateCustomFile();
-
 	int stop = 1;
 
 	return 0;

@@ -85,3 +85,8 @@ void WriteCustomFile::CreateCustomFile()
 	}
 	std::cout << "Streams are equal, method 2: " << equal << "\n" << std::endl;
 }
+
+void WriteCustomFile::WriteStaticMesh(MeshData2 currentMesh) //speciall case for static mesh no collision
+{
+	currentMesh.CheckMesh();
+}

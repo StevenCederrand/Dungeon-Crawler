@@ -65,8 +65,11 @@ void SaveHierarchy::SaveNode(FbxNode* pNode)
 	default:
 		break;
 	case FbxNodeAttribute::eMesh:	//if its a mesh
-		if (m_mesh.getIsStatic())	//if its static
-			SaveStaticMesh(pNode);
+		if (m_mesh.getIsStatic())   //if its static
+		{
+			SaveStaticMesh(pNode);	//saves relevant into in m_mesh
+			m_file.WriteStaticMesh(m_mesh);	//sends m_mesh to file writer for static mesh
+		}
 		break;
 	}
 
@@ -86,7 +89,7 @@ void SaveHierarchy::SaveStaticMesh(FbxNode* pNode)
 	SaveControlPoints(lMesh);
 	SavePolygons(lMesh);
 
-	m_mesh.CheckMesh(); //Writes out information about the mesh to debug
+	//m_mesh.CheckMesh(); //Writes out information about the mesh to debug
 }
 
 void SaveHierarchy::SaveControlPoints(FbxMesh* pMesh)
