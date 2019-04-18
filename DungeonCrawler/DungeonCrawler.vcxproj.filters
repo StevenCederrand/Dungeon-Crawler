@@ -40,7 +40,7 @@
     <ClCompile Include="FBX\DisplayHierarchy.cpp" />
     <ClCompile Include="FBX\fbxObjectManager.cpp" />
     <ClCompile Include="FBX\WriteCustomFile.cpp" />
-    <ClCompile Include="FBX\MeshData2.cpp" />
+    <ClCompile Include="FBX\StaticMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -88,7 +88,7 @@
     <ClInclude Include="FBX\DisplayHierarchy.h" />
     <ClInclude Include="FBX\fbxObjectManager.h" />
     <ClInclude Include="FBX\WriteCustomFile.h" />
-    <ClInclude Include="FBX\MeshData2.h" />
+    <ClInclude Include="FBX\StaticMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FBX\box.fbx" />

@@ -2,7 +2,7 @@
 
 #include "DisplayCommon.h"
 
-class MeshData2
+class StaticMesh
 {
 private:
 	int m_vertexCount;
@@ -19,7 +19,7 @@ private:
 
 	int m_currentNormalCoordinate;
 	float m_normalCoordinateArr[3][100];	//change to a vector 3
-	//Should normals also use an index array?
+	//Should normals also use an index array? are any normals similar?
 
 	//Will not save tangents or bitangents, they will be calculated in the shader
 
@@ -32,8 +32,8 @@ private:
 	void initiateArrays();
 	
 public:
-	MeshData2();
-	~MeshData2();
+	StaticMesh();
+	~StaticMesh();
 	void AddControlPoint(FbxVector4 controlPoint);
 	void AddIndexPoint(int index);
 	void AddUVCoordinate(FbxVector2 uVCoordinate);
@@ -50,3 +50,5 @@ public:
 	bool getCollision()const;
 	bool getIsStatic()const;
 };
+
+//different meshdata for each unic data, like hitbox only 4 pos and its speciall data is collision= true

@@ -227,7 +227,7 @@ void SaveHierarchy::PrintChildName(FbxMesh* pMesh)
 	printf("%s", pMesh->GetName());
 }
 
-MeshData2 SaveHierarchy::getMesh()const
+StaticMesh SaveHierarchy::getMesh()const
 {
 	return m_mesh;
 }

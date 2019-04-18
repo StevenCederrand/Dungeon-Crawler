@@ -17,11 +17,10 @@ int main(int argc, char** argv)
 
 	//Display our FBX file hierarchy
 	DisplayHierarchy displayHierarchyObject;
-	displayHierarchyObject.DisplayEntireHierarchy(lsdkObject.GetScene());
+	//displayHierarchyObject.DisplayEntireHierarchy(lsdkObject.GetScene());
 	
 	SaveHierarchy saveHierarchy;
 	saveHierarchy.SaveEntireHierarchy(lsdkObject.GetScene());
-	MeshData2 currentMesh = saveHierarchy.getMesh();
 
 	int stop = 1;
 

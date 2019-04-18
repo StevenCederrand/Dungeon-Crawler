@@ -2,13 +2,13 @@
 
 //Has memory leaks
 
-#include "MeshData2.h"
+#include "StaticMesh.h"
 #include "WriteCustomFile.h"
 
 class SaveHierarchy
 {
 private:
-	MeshData2 m_mesh; //will only be one, load one at a time, replaced
+	StaticMesh m_mesh; //will only be one, load one at a time, replaced
 	WriteCustomFile m_file; //will only be one, never replaced
 public:
 	SaveHierarchy();
@@ -21,5 +21,5 @@ public:
 	void SaveMeshName(FbxNode* pNode);
 	void PrintChildName(FbxMesh* pMesh);
 
-	MeshData2 getMesh()const;
+	StaticMesh getMesh()const;
 };

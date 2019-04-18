@@ -1,6 +1,6 @@
-#include "MeshData2.h"
+#include "StaticMesh.h"
 
-MeshData2::MeshData2()
+StaticMesh::StaticMesh()
 {
 	m_vertexCount = 0;
 
@@ -19,12 +19,12 @@ MeshData2::MeshData2()
 	initiateArrays();
 }
 
-MeshData2::~MeshData2()
+StaticMesh::~StaticMesh()
 {
 
 }
 
-void MeshData2::initiateArrays()
+void StaticMesh::initiateArrays()
 {
 	for (int i = 0; i < 100; i++)
 	{
@@ -51,7 +51,7 @@ void MeshData2::initiateArrays()
 	}
 }
 
-void MeshData2::AddControlPoint(FbxVector4 controlPoint)
+void StaticMesh::AddControlPoint(FbxVector4 controlPoint)
 {
 	float lx = controlPoint.mData[0];
 	float ly = controlPoint.mData[1];
@@ -64,13 +64,13 @@ void MeshData2::AddControlPoint(FbxVector4 controlPoint)
 	m_currentControlPoint++;
 }
 
-void MeshData2::AddIndexPoint(int index)
+void StaticMesh::AddIndexPoint(int index)
 {
 	m_controlPointIndexArr[m_currentControlPointIndex] = index;
 	m_currentControlPointIndex++;
 }
 
-void MeshData2::AddUVCoordinate(FbxVector2 uVCoordinate)
+void StaticMesh::AddUVCoordinate(FbxVector2 uVCoordinate)
 {
 	float lx = uVCoordinate.mData[0];
 	float ly = uVCoordinate.mData[1];
@@ -81,13 +81,13 @@ void MeshData2::AddUVCoordinate(FbxVector2 uVCoordinate)
 	m_currentUVCoordinate++;
 }
 
-void MeshData2::AddUVIndex(int index)
+void StaticMesh::AddUVIndex(int index)
 {
 	m_UVCoordinateIndexArr[m_currentUVIndex] = index; //CORRECT
 	m_currentUVIndex++;
 }
 
-void MeshData2::AddNormalCoordinate(FbxVector4 normalCoordinate)
+void StaticMesh::AddNormalCoordinate(FbxVector4 normalCoordinate)
 {
 	float lx = normalCoordinate.mData[0];
 	float ly = normalCoordinate.mData[1];
@@ -100,12 +100,12 @@ void MeshData2::AddNormalCoordinate(FbxVector4 normalCoordinate)
 	m_currentNormalCoordinate++;
 }
 
-void MeshData2::increaseVertexCount()
+void StaticMesh::increaseVertexCount()
 {
 	m_vertexCount++;
 }
 
-void MeshData2::CheckMesh()
+void StaticMesh::CheckMesh()
 {
 	//Only works for triangulated Meshes
 	for (int i = 0; i < m_nrOfPolygons; i++)
@@ -158,32 +158,32 @@ void MeshData2::CheckMesh()
 	printf("Nr of vertices: %i\n\n", m_vertexCount);
 }
 
-void MeshData2::setNrOfPolygons(int nrOfPolygons)
+void StaticMesh::setNrOfPolygons(int nrOfPolygons)
 {
 	m_nrOfPolygons = nrOfPolygons;
 }
 
-void MeshData2::setNrOfVerticesPerPolygon(int nrOfVerticesPerPolygon)
+void StaticMesh::setNrOfVerticesPerPolygon(int nrOfVerticesPerPolygon)
 {
 	m_nrOfVerticesPerPolygon = nrOfVerticesPerPolygon;
 }
 
-void MeshData2::setCollision(bool collision)
+void StaticMesh::setCollision(bool collision)
 {
 	m_collision = collision;
 }
 
-void MeshData2::setStaticMesh(bool staticMesh)
+void StaticMesh::setStaticMesh(bool staticMesh)
 {
 	m_isStatic = staticMesh;
 }
 
-bool MeshData2::getCollision()const
+bool StaticMesh::getCollision()const
 {
 	return m_collision;
 }
 
-bool MeshData2::getIsStatic()const
+bool StaticMesh::getIsStatic()const
 {
 	return m_isStatic;
 }
