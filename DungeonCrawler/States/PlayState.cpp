@@ -73,8 +73,8 @@ PlayState::PlayState() {
 				Randomizer::single(-30.f, 30.f)
 			)));
 	}
-
-	m_gameObjectManager->addGameObject(new Walker(boxMesh, WALKER));
+	m_walker = new Walker(boxMesh, WALKER);
+	m_gameObjectManager->addGameObject(m_walker);
 	m_player = new Player(boxMesh, PLAYER);
 	m_gameObjectManager->addGameObject(m_player);
 

@@ -9,7 +9,8 @@ enum Type {
 	WALKER = 1,
 	BOX = 10,
 	ROOM = 11,
-	LIGHTSPHERE = 12
+	LIGHTSPHERE = 12,
+	GAMEOBJECT = 20
 };
 
 class GameObject {
@@ -32,7 +33,7 @@ public:
 	void setHit();
 
 	virtual void hit(const HitDescription & desc);
-	Type getType();
+	virtual Type getType();
 
 	std::vector<AABB*> getBoundingBoxes() const;
 	const glm::vec3& getPosition() const;

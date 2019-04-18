@@ -13,6 +13,7 @@ public:
 	
 	void hitPlayer();
 	void hit(const HitDescription& desc);
+	Type getType();
 	float getDamage()const;
 
 private:

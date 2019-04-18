@@ -8,6 +8,7 @@ public:
 	Player(Mesh* mesh, Type type);
 	void update(float dt);
 	void hit(const HitDescription& desc);
+	Type getType();
 
 	void move(float dt);
 	void rotatePlayer();

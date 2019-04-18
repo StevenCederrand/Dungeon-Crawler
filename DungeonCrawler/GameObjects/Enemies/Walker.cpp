@@ -46,7 +46,11 @@ void Walker::hit(const HitDescription & desc)
 {
 	Player* player = dynamic_cast<Player*>(desc.owner);
 	m_health -= player->getDamage();
-	LOG_TRACE(m_health);
+}
+
+Type Walker::getType()
+{
+	return this->m_type;
 }
 
 float Walker::getDamage() const

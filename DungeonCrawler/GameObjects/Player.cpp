@@ -12,7 +12,7 @@ Player::Player(Mesh* mesh, Type type) :
 	this->setPosition(glm::vec3(0.f, 0.f, 0.f));
 	this->m_defaultSpeed = 7.f;
 	this->m_speed = 7.0f;
-	this->m_health = 5.f;
+	this->m_health = 200.f;
 	this->m_damage = 1.f;
 	this->m_automaticDamage = 1.f;
 	this->m_chargeDamage = 10.f;
@@ -64,7 +64,17 @@ void Player::hit(const HitDescription & desc)
 	{
 		Walker* walker = dynamic_cast<Walker*>(desc.owner);
 		m_health -= walker->getDamage();
+		LOG_TRACE(m_health);
 	}
+	if (type == Type::GAMEOBJECT)
+	{
+
+	}
+}
+
+Type Player::getType()
+{
+	return this->m_type;
 }
 
 void Player::move(float dt)
