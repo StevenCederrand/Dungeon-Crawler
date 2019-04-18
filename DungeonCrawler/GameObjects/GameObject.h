@@ -4,16 +4,12 @@
 #include "Graphics/Mesh.h"
 #include "Collision/AABB.h"
 #include "../Globals/LightTypes.h"
-//struct Spotlight {
-//	glm::vec3 position;
-//	glm::vec3 direction;
-//	float radius;
-//};
+
 
 class GameObject {
 public:
 	GameObject(Mesh* mesh, const glm::vec3& position = glm::vec3(0.f));
-	~GameObject();
+	virtual ~GameObject();
 
 	virtual void update(float dt) = 0;
 	void internalUpdate(float dt);

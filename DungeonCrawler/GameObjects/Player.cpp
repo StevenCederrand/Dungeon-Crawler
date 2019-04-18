@@ -24,7 +24,7 @@ Player::Player(Mesh * mesh) :
 	this->m_spotlight = new Spotlight();
 	this->m_spotlight->position = this->getPlayerPosition();
 	this->m_spotlight->radius = glm::radians(55.0f);
-
+	
 }
 
 Player::~Player() {
@@ -139,11 +139,6 @@ Spotlight* Player::getSpotlight() {
 void Player::spotlightHandler() {
 	this->m_spotlight->direction = this->getLookDirection();
 	this->m_spotlight->position = this->getPosition();
-
-	LOG_INFO(std::to_string(m_spotlight->position.x) + " " +
-		std::to_string(m_spotlight->position.y) + " " +
-		std::to_string(m_spotlight->position.z));//std::to_string(m_spotlight->direction.x) + " " +  std::to_string(m_spotlight->direction.y) + " " std::to_string(m_spotlight->direction.z));
-
 }
 
 void Player::camPerspective()

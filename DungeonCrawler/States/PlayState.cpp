@@ -12,19 +12,27 @@
 #include "GameObjects/Player.h"
 
 #include "Utility/Randomizer.h"
+#include <chrono>
 
 PlayState::PlayState() {
+	auto start = std::chrono::steady_clock::now();
 
-	#pragma region Init
 	m_parser = new Parser();
 	m_GLinit = new GLinit();
+
+	#pragma region Init
 	m_camera = new Camera();
 	Camera::active = m_camera;
-	m_lightManager = new LightManager();
+	m_lightManager = new LightManager()	;
 	m_renderer = new Renderer(m_camera, m_lightManager);
 	m_gameObjectManager = new GameObjectManager();
+	AudioEngine::loadSSO("Game.sso");
 	#pragma endregion
 
+	auto end = std::chrono::steady_clock::now();
+	LOG_INFO("Init Time: " + std::to_string(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()));
+
+	start = std::chrono::steady_clock::now();
 	#pragma region Create_Objects
 	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
 	ParserData* roomData = m_parser->loadFromObj("basementleveltest.obj");
@@ -35,16 +43,11 @@ PlayState::PlayState() {
 	m_GLinit->createMesh("Sphere", sphereData);
 	#pragma endregion
 
-	#pragma region Setup_Sounds
-	AudioEngine::loadSSO("Game.sso");
-	LOG_INFO("CREATED DDD");
-	#pragma endregion
-
+	end = std::chrono::steady_clock::now();
+	LOG_INFO("Create_objects Time: " + std::to_string(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()));
 
 	Mesh* roomMesh = MeshMap::getMesh("Room");
 	Mesh* boxMesh = MeshMap::getMesh("Box");
-
-	#pragma endregion
 
 	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 1.5f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
 
@@ -81,10 +84,13 @@ PlayState::PlayState() {
 
 	m_player = new Player(boxMesh);
 	m_gameObjectManager->addGameObject(m_player);
+
+	//Used for the player flashlight & shadow mapping from the 
+	//flashlights view
+	m_renderer->prepareFlashlight(m_gameObjectManager->getPlayer());
 }
 
-PlayState::~PlayState()
-{
+PlayState::~PlayState() {
 	delete m_parser;
 	delete m_GLinit;
 	delete m_camera;
@@ -100,13 +106,6 @@ void PlayState::update(float dt) {
 	m_lightManager->update(dt);
 
 	m_renderer->prepareGameObjects(m_gameObjectManager->getGameObjects());
-	m_renderer->prepareFlashlight(m_gameObjectManager->getPlayer());
-	//if (Input::isMouseReleased(GLFW_MOUSE_BUTTON_RIGHT)){
-
-	//	AudioEngine::unloadSSO("Game.sso");
-	//	m_stateManager->popState();
-	//	AudioEngine::loadSSO("Menu.sso");
-	//}
 }
 
 

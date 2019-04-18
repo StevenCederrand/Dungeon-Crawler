@@ -5,7 +5,7 @@
 class Player : public GameObject {
 public:
 	Player(Mesh* mesh);
-	~Player();
+	virtual ~Player();
 	void update(float dt);
 
 	void move(float dt);

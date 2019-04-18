@@ -1,6 +1,9 @@
+#include <GLM/gtx/transform.hpp>
+#include <GLM/gtc/matrix_transform.hpp>
 #include "Renderer.h"
 #include "ShaderMap.h"
 #include "../System/Log.h"
+
 #define MESH_VECTOR_RESERVE_SIZE 150
 
 Renderer::Renderer(Camera* camera, LightManager* lightManager)
@@ -19,14 +22,17 @@ Renderer::Renderer(Camera* camera, LightManager* lightManager)
 	shader->use();
 	shader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
 	shader->unuse();
+
+	//Create a new light projection matrix -- This doens't need to be created every frame
+	glm::mat4 projectionMatrix = glm::perspective(glm::radians(LIGHTFOV),
+		(float)ScreenResolutionX / (float)ScreenResolutionY, NEAR_CLIP, FAR_CLIP);
+	m_framebuffer->setProjectionMatrix(projectionMatrix);
 }
 
-Renderer::~Renderer()
-{
+Renderer::~Renderer() {
 	glDeleteBuffers(1, &this->m_rQuadVBO);
 	glDeleteVertexArrays(1, &this->m_rQuadVAO);
 	delete m_framebuffer;
-
 }
 
 void Renderer::prepareGameObjects(const std::vector<GameObject*>& gameObjects)
@@ -52,15 +58,18 @@ void Renderer::prepareGameObjects(const std::vector<GameObject*>& gameObjects)
 }
 
 void Renderer::prepareFlashlight(Player* player) {
-
-
-
 	m_spotlight = player->getSpotlight();
 
 }
 
 void Renderer::render()
 {
+	//if (m_spotlight != nullptr) {
+	//	std::string vec = std::to_string(m_spotlight->position.x) + " " +
+	//		std::to_string(m_spotlight->position.y) + " " + std::to_string(m_spotlight->position.z);
+	//	LOG_INFO(vec);
+	//}
+	this->shadowPass();
 	this->geometryPass();
 	this->lightPass();
 }
@@ -97,6 +106,34 @@ void Renderer::forwardPass() {
 	//// clear mesh map
 	//m_meshes.clear();
 
+}
+
+void Renderer::shadowPass() {
+	if (m_meshes.size() == 0) {
+		return;
+	}
+	glViewport(0, 0, ScreenResolutionX, ScreenResolutionY);
+	this->configureShadowMapperVM();
+
+	Shader* shadowShader = ShaderMap::getShader("ShadowPass");
+	shadowShader->use();
+	shadowShader->setMat4("lightSpaceMatrix", m_framebuffer->getLightSpaceMatrix());
+
+	glViewport(0, 0, ScreenResolutionX, ScreenResolutionY);
+	m_framebuffer->bindShadowBuffer();
+	glClear(GL_DEPTH_BUFFER_BIT);
+	
+	for (auto mesh : m_meshes) {
+		glBindVertexArray(mesh.first->getVao());
+		glEnableVertexAttribArray(0);
+		for (auto object : mesh.second) {
+			shadowShader->setMat4("modelMatrix", object->getModelMatrix());
+			glDrawElements(GL_TRIANGLES, mesh.first->getNrOfIndices(), GL_UNSIGNED_INT, NULL);
+		}
+		glDisableVertexAttribArray(0);
+		glBindVertexArray(NULL);
+	}
+	m_framebuffer->unbindBuffer();
 }
 
 void Renderer::geometryPass() {
@@ -138,12 +175,13 @@ void Renderer::lightPass() {
 
 	Shader* lightShader = ShaderMap::getShader("LightPass");
 	lightShader->use();
-	if (m_spotlight != nullptr) {
-		lightShader->setVec3("spotlight.position", m_spotlight->position);
-		lightShader->setVec3("spotlight.direction", m_spotlight->direction);
-		lightShader->setFloat("spotlight.radius", m_spotlight->radius);
-	}
 
+	//if (m_spotlight != nullptr) {
+	//	lightShader->setVec3("spotlight.position", m_spotlight->position);
+	//	lightShader->setVec3("spotlight.direction", m_spotlight->direction);
+	//	lightShader->setFloat("spotlight.radius", m_spotlight->radius);
+	//}
+	/*lightShader->setMat3("");*/
 	lightShader->setInt("numberOfLights", m_lightManager->getNumberOfLights());
 	lightShader->setVec3("cameraPosition", m_camera->getPosition());
 	drawQuad();
@@ -218,4 +256,9 @@ void Renderer::drawQuad() {
 	m_framebuffer->bindDeferredTextures();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glBindVertexArray(0);
+}
+
+void Renderer::configureShadowMapperVM() {
+	glm::mat4 viewMatrix = glm::lookAt(m_spotlight->position, m_spotlight->direction, glm::vec3(0, 1, 0));
+	m_framebuffer->setViewMatrix(viewMatrix);
 }
