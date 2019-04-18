@@ -116,6 +116,42 @@ void SaveHierarchy::SaveControlPoints(FbxMesh* pMesh)
 	printf("\n\n");
 }
 
+void SaveHierarchy::BigThing(FbxMesh* pMesh) //trying to make SavePolygons into functions 
+{
+
+	//CONTINUE HERE BITCH
+
+
+	int lPolygonCount = pMesh->GetPolygonCount();
+
+	//Go through all polygons
+	for (int i = 0; i < lPolygonCount; i++)
+	{
+		int lPolygonSize = pMesh->GetPolygonSize(i); //3 if triangulated
+
+		//Go through each vertice in the polygon
+		for (int j = 0; j < lPolygonSize; j++)
+		{
+			//Save Control Point index
+			int lControlPointIndex = pMesh->GetPolygonVertex(i, j);
+			m_mesh.AddIndexPoint(lControlPointIndex);
+
+			//how many UV coordinates the vertice has, 1 right now
+			for (int k = 0; k < pMesh->GetElementUVCount(); ++k)
+			{
+
+			}
+
+			//How many normals per vertice, 1 right now
+			for (int k = 0; k < pMesh->GetElementNormalCount(); ++k)
+			{
+
+			}
+
+		}
+	}
+}
+
 //saves UV, UVIndex, normal, controlpointIndex
 void SaveHierarchy::SavePolygons(FbxMesh* pMesh) //polygon = 4 vertices, 3 if triangulated. Not control points!
 {

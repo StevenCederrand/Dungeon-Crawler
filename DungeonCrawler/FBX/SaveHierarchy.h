@@ -17,6 +17,7 @@ public:
 	void SaveNode(FbxNode* pNode);
 	void SaveStaticMesh(FbxNode* pNode);
 	void SaveControlPoints(FbxMesh* pMesh);
+	void BigThing(FbxMesh* pMesh);
 	void SavePolygons(FbxMesh* pMesh);
 	void SaveMeshName(FbxNode* pNode);
 	void PrintChildName(FbxMesh* pMesh);
