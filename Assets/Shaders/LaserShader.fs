@@ -9,8 +9,9 @@ out vec4 color;
 void main()
 {
 	vec4 textureColor = texture(textureSampler, frag_uv);
+	
 	if(textureColor.a < 0.5)
 		discard;
 	
-	color = textureColor * frag_color;
+	color = frag_color;
 }

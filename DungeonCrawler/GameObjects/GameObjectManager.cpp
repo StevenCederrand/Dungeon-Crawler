@@ -89,10 +89,17 @@ void GameObjectManager::update(float dt)
 			//LOG_TRACE("Ray intersection! collision point: " + std::to_string(gunshotCollisionPoint.x) + ", " + std::to_string(gunshotCollisionPoint.z));
 
 			// --------MAYBE DYNAMIC CASY HERE TO CHECK IF WE HIT A ENEMY?--------
-			if(dynamic_cast<Box*>(objectHit))
-				objectHit->setHit();
+			if (dynamic_cast<Box*>(objectHit)) {
 
-			m_effects->addParticle(m_player->getPosition(), gunshotCollisionPoint, 5.f, 1.f);
+				objectHit->setHit();
+				m_effects->addParticle(m_player->getPosition(), gunshotCollisionPoint, 20.f, 0.1f);
+			}
+			else
+			{
+				m_effects->addParticle(m_player->getPosition(), gunshotCollisionPoint, 20.f, 0.1f, false);
+			}
+
+			
 
 		}
 

@@ -2,6 +2,7 @@
 #include "System/LOG.h"
 #include <math.h>
 #include "Globals/Paths.h"
+#include "Utility/Randomizer.h"
 
 Effects::Effects(GLinit* glInit)
 {
@@ -71,7 +72,7 @@ void Effects::unbindSparkTextures()
 }
 
 
-void Effects::addParticle(const glm::vec3& startpos, const glm::vec3& endpos, float speed, float lifetime)
+void Effects::addParticle(const glm::vec3& startpos, const glm::vec3& endpos, float speed, float lifetime, bool hitEnemy)
 {
 
 	float xLength = endpos.x - startpos.x;
@@ -81,25 +82,35 @@ void Effects::addParticle(const glm::vec3& startpos, const glm::vec3& endpos, fl
 	float xMul = cosf(angle);
 	float zMul = sinf(angle);
 	
+
 	{
 		size_t pIndex = getFirstUnusedParticle();
 		Particle& p = m_particles[pIndex];
-		p.center = startpos;
-		p.velocity = glm::vec3(0.f, speed, 0.f);
+		p.center = startpos + glm::vec3(xMul, 0.f, zMul);
+		p.velocity = glm::vec3(speed * xMul, 0, speed * zMul);
 		p.lifetime = lifetime;
 		p.initialLifetime = lifetime;
 		p.color = glm::vec4(1.f);
 		m_aliveParticles++;
 	}
+	
+	float offset = 100.f;
 
+	for(int i = 0; i < 10; i++)
 	{
 		size_t p2Index = getFirstUnusedParticle();
 		Particle& p2 = m_particles[p2Index];
-		p2.center = endpos;
-		p2.velocity = glm::vec3(0.f, speed, 0.f);
-		p2.lifetime = lifetime;
-		p2.initialLifetime = lifetime;
-		p2.color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+		p2.center = endpos - Randomizer::vec3(-offset, offset, 0.f, 0.f, -offset, offset) / (offset * 1.5f);
+		p2.velocity = glm::vec3(0.f, Randomizer::single(0.5f, 5.f), 0.f);
+		p2.lifetime = 0.5f;
+		p2.initialLifetime = 0.5f;
+
+		if (hitEnemy){
+			p2.color = glm::vec4(1.0f, 0.1f, 0.1f, 1.0f);
+		}
+		else {
+			p2.color = glm::vec4(0.8f, 1.0f, 0.1f, 1.0f);
+		}
 		m_aliveParticles++;
 	}
 }

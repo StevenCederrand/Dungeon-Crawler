@@ -6,7 +6,7 @@
 
 class Effects
 {
-#define MAX_PARTICLES 100
+#define MAX_PARTICLES 500
 
 public:
 	Effects(GLinit* glInit);
@@ -16,12 +16,12 @@ public:
 
 	void bindSparkTetxures();
 	void unbindSparkTextures();
-	void addParticle(const glm::vec3& startpos, const glm::vec3& endpos, float speed, float lifetime);
+	void addParticle(const glm::vec3& startpos, const glm::vec3& endpos, float speed, float lifetime, bool hitEnemy = true);
 	const GLuint getVAO() const;
 	unsigned int getNrOfAliveParticles() const;
 
 private:
-	float size = 0.5f;
+	float size = 0.1f;
 	GLfloat m_vertex_buffer_data[12] = {
 		-size, -size, 0.0f,
 		 size, -size, 0.0f,

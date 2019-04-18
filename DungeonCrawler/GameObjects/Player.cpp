@@ -62,7 +62,7 @@ void Player::update(float dt)
 
 		move(dt);
 		dashCd();
-		screenShake();
+		//screenShake();
 	}
 }
 
@@ -173,10 +173,10 @@ void Player::dashCd()
 
 void Player::shootProjectile()
 {
-	m_shootingCooldown = 0.10f;
+	m_shootingCooldown = 0.05f;
 	m_canShoot = false;
 	m_shooting = true;
-	screenShake();
+	//screenShake();
 }
 
 void Player::screenShake()
