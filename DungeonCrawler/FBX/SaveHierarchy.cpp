@@ -65,10 +65,21 @@ void SaveHierarchy::SaveNode(FbxNode* pNode)
 	default:
 		break;
 	case FbxNodeAttribute::eMesh:	//if its a mesh
-		if (m_mesh.getIsStatic())   //if its static
+		if (collisionBool)
 		{
-			SaveStaticMesh(pNode);	//saves relevant into in m_mesh
-			m_file.WriteStaticMesh(m_mesh);	//sends m_mesh to file writer for static mesh
+			//SaveBoundingBoxMesh
+		}
+		else
+		{
+			if (staticMeshBool)   //if its static
+			{
+				SaveStaticMesh(pNode);	//saves relevant into in m_mesh
+				m_file.WriteStaticMesh(m_mesh);	//sends m_mesh to file writer for static mesh
+			}
+			else  //dynamic
+			{
+
+			}
 		}
 		break;
 	}

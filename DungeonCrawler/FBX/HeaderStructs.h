@@ -20,6 +20,8 @@ struct MeshHeader
 struct BoundingBoxHeader
 {
 	unsigned int vertexCount;
+	bool collision; //custom maya attribute
+	bool isStatic;	//custom maya attribute
 };
 
 //Small info structs
