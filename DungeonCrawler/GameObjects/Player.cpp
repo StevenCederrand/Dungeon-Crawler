@@ -64,11 +64,6 @@ void Player::hit(const HitDescription & desc)
 	{
 		Walker* walker = dynamic_cast<Walker*>(desc.owner);
 		m_health -= walker->getDamage();
-		LOG_TRACE(m_health);
-	}
-	if (type == Type::GAMEOBJECT)
-	{
-
 	}
 }
 
