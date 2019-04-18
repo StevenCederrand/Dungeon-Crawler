@@ -44,6 +44,11 @@ void ParserData::setNormalMapName(std::string filename) {
 	m_normalMapName = filename;
 }
 
+void ParserData::setFilename(std::string filename)
+{
+	m_filename = filename;
+}
+
 void ParserData::setDiffuseColor(GLfloat r, GLfloat g, GLfloat b)
 {
 	m_diffuseColor = glm::vec3(r, g, b);
@@ -64,10 +69,14 @@ void ParserData::setShininess(GLfloat factor)
 	m_shininess = factor;
 }
 
-
 void ParserData::setBoundingBox(const std::vector<glm::vec3>& maxMinVector)
 {
 	m_maxMinVector = maxMinVector;
+}
+
+void ParserData::setNodesVector(const std::vector<glm::vec3>& nodesVector)
+{
+	m_nodesVector = nodesVector;
 }
 
 void ParserData::setNormalMapStrength(float str)
@@ -106,6 +115,11 @@ const std::string & ParserData::getNormalMapName() const {
 	return m_normalMapName;
 }
 
+const std::string & ParserData::getFilename() const
+{
+	return m_filename;
+}
+
 const glm::vec3 & ParserData::getDiffuseColor() const
 {
 	return m_diffuseColor;
@@ -130,6 +144,11 @@ const GLfloat & ParserData::getShininess() const
 const std::vector<glm::vec3>& ParserData::getMaxMinVector() const
 {
 	return m_maxMinVector;
+}
+
+const std::vector<glm::vec3>& ParserData::getNodesVector() const
+{
+	return m_nodesVector;
 }
 
 const GLfloat & ParserData::getNormalMapStrength() const

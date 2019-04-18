@@ -14,6 +14,7 @@
 
 #include "Utility/Randomizer.h"
 
+
 PlayState::PlayState() {
 	
 	#pragma region Init
@@ -28,7 +29,9 @@ PlayState::PlayState() {
 
 	#pragma region Create_Objects
 	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
-	ParserData* roomData = m_parser->loadFromObj("basementleveltest.obj");
+	//ParserData* roomData = m_parser->loadFromObj("basementleveltest.obj");
+	//ParserData* roomData = m_parser->loadFromObj("oneRoomAi.obj");
+	ParserData* roomData = m_parser->loadFromObj("roomWithNodes.obj");
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
 
 	m_GLinit->createMesh("Box", boxData);
@@ -42,11 +45,13 @@ PlayState::PlayState() {
 	#pragma endregion
 	
 	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 1.5f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
+	
 	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
 	m_lightManager->addLight(glm::vec3(0.f, 5.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
 
 	m_gameObjectManager->addGameObject(new Room(roomMesh, glm::vec3(0.f, 0.f, 0.f)));
 
+	//check the collsiion and then write to binary
 	for (int i = 0; i < 20; i++)
 	{
 		m_gameObjectManager->addGameObject(new Box(boxMesh, 
@@ -56,10 +61,12 @@ PlayState::PlayState() {
 				Randomizer::single(-15.f, 15.f)
 			)));
 	}
+	
+	m_gameObjectManager->nodecollision(roomData);
+	m_parser->writeToBinary();
 
 	m_player = new Player(boxMesh);
 	m_gameObjectManager->addGameObject(m_player);
-
 }
 
 PlayState::~PlayState() 

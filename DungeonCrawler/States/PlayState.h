@@ -7,6 +7,7 @@
 #include "Utility/Camera.h"
 #include "GameObjects/GameObjectManager.h"
 #include "Graphics/LightManager.h"
+#include <list>
 
 class PlayState : public State {
 public:

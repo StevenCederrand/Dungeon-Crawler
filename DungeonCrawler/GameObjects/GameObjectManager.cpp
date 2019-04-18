@@ -133,6 +133,65 @@ const std::vector<GameObject*>& GameObjectManager::getGameObjects() const
 	return m_gameObjects;
 }
 
+
+void GameObjectManager::nodecollision(ParserData* parserData)
+{
+
+	//load the nodes and make it a list
+	std::vector<glm::vec3> nodeVector = parserData->getNodesVector();
+	std::list<glm::vec3> nodeList;
+
+	int counter = 0;
+
+	//for (size_t i = 0; i < 2; i++)//nodeVector.size(); i++)
+	for (size_t i = 0; i < nodeVector.size(); i++)
+	{
+		nodeList.emplace_back(nodeVector[i]);
+
+	}
+	for (auto nodeIterator = nodeList.begin(); counter != -1 && nodeIterator != nodeList.end(); ++nodeIterator)
+	{
+		glm::vec3 min = glm::vec3(nodeIterator->x - 2, nodeIterator->y - 2, nodeIterator->z - 2);
+		glm::vec3 max = glm::vec3(nodeIterator->x + 2, nodeIterator->y + 2, nodeIterator->z + 2);
+		
+		for (size_t j = 0; j < m_gameObjects.size(); j++)
+		{
+			// Get the object and get the objects boundingboxes
+			GameObject* object = m_gameObjects[j];
+			std::vector<AABB*> aabbvector = object->getBoundingBoxes();
+
+
+			for (size_t k = 0; k < aabbvector.size(); k++)
+			{
+				//if there is a collision we can erase that node and continue
+				if (aabbvector[k]->checkCollisionNode(min, max))
+				{
+					nodeIterator = nodeList.erase(nodeIterator);
+					k = aabbvector.size();
+					j = m_gameObjects.size();
+					if (nodeIterator != nodeList.begin() && nodeIterator != nodeList.begin())
+					{
+						nodeIterator--;
+					}
+				}
+			}
+		}
+		counter++;
+		if (nodeIterator == nodeList.end())
+		{
+			counter = -1;
+			nodeIterator = nodeList.begin();
+		}
+	}
+	std::vector<glm::vec3> temp;
+	for (auto i = nodeList.begin(); i != nodeList.end(); ++i)
+	{
+		temp.emplace_back(*i);
+	}
+	//LOG_WARNING(std::to_string(temp[2].x) + " " + std::to_string(temp[2].y) + " " + std::to_string(temp[2].z) + "\n");
+	parserData->setNodesVector(temp);
+}
+
 void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject * object, glm::vec3& newVel, bool& hasCollided)
 {
 	// If the object is collidable then handle collision
@@ -141,7 +200,7 @@ void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject
 		AABB* playerBox = m_player->getBoundingBoxes()[0];
 		const std::vector<AABB*> objectBoxes = object->getBoundingBoxes();
 
-		for (int i = 0; i < objectBoxes.size(); i++) {
+		for (size_t i = 0; i < objectBoxes.size(); i++) {
 			AABB* objectBox = objectBoxes[i];
 
 			if (m_broadPhaseBox->checkCollision(*objectBox))
@@ -174,7 +233,7 @@ void GameObjectManager::handlePlayerShooting(float dt, GameObject * object, cons
 	{
 		const std::vector<AABB*> objectBoxes = object->getBoundingBoxes();
 		
-		for (int i = 0; i < objectBoxes.size(); i++) 
+		for (size_t i = 0; i < objectBoxes.size(); i++)
 		{
 			AABB* objectBox = objectBoxes[i];
 

@@ -1,8 +1,10 @@
 #ifndef _GAMEOBJECTMANAGER_H
 #define _GAMEOBJECTMANAGER_H
 #include <vector>
+#include <list>
 #include "Player.h"
 #include "GameObject.h"
+#include "Parser/Parser.h"
 
 class GameObjectManager {
 
@@ -15,6 +17,7 @@ public:
 	void constructPlayerBroadPhaseBox();
 
 	const std::vector<GameObject*>& getGameObjects() const;
+	void nodecollision(ParserData* parserData);
 
 private:
 	void handlePlayerCollisionAgainstObjects(float dt, GameObject* object, glm::vec3& newVel, bool& hasCollided);

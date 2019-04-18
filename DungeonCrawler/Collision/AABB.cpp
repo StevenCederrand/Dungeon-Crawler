@@ -150,6 +150,27 @@ bool AABB::checkCollision(const AABB & other)
 		m_parentPosition.z - m_dimensions.z > other.getPosition().z + other.m_dimensions.z);
 }
 
+bool AABB::checkCollisionNode(glm::vec3 min, glm::vec3 max)
+{
+	bool collision = false;
+
+	if (m_position.x + m_parentPosition.x - m_dimensions.x < max.x)
+	{
+		//collision = true;
+		if (m_position.x + m_parentPosition.x + m_dimensions.x > min.x)
+		{
+			if (m_position.z + m_parentPosition.z + m_dimensions.z > min.z)
+			{
+				if (m_position.z + m_parentPosition.z - m_dimensions.z < max.z)
+				{
+					collision = true;
+				}
+			}
+		}
+	}
+	return collision;
+}
+
 bool AABB::checkCollisionWithRay(const glm::vec3 & rayOrigin, const glm::vec3 rayDirection, float & t)
 {
 	float t1 = 1000, t0 = -t1;
