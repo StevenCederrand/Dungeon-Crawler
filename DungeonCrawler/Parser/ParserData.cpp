@@ -44,9 +44,14 @@ void ParserData::setNormalMapName(std::string filename) {
 	m_normalMapName = filename;
 }
 
+
 void ParserData::setFilename(std::string filename)
 {
 	m_filename = filename;
+}
+void ParserData::setAmbientMapName(std::string filename) {
+	this->m_ambientMapName = filename;
+
 }
 
 void ParserData::setDiffuseColor(GLfloat r, GLfloat g, GLfloat b)
@@ -115,9 +120,15 @@ const std::string & ParserData::getNormalMapName() const {
 	return m_normalMapName;
 }
 
+
 const std::string & ParserData::getFilename() const
 {
 	return m_filename;
+}
+
+const std::string & ParserData::getAmbientMapName() const
+{
+	return m_ambientMapName;
 }
 
 const glm::vec3 & ParserData::getDiffuseColor() const
@@ -162,4 +173,12 @@ const bool ParserData::hasNormalMap() {
 	}
 	return false;
 
+}
+
+const bool ParserData::hasAmbientMap()
+{
+	if (m_ambientMapName != "") {
+		return true;
+	}
+	return false;
 }

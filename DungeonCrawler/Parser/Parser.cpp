@@ -273,6 +273,7 @@ void Parser::writeToBinary()
 		std::vector<GLuint> indices = data->getIndices();
 		writeBinaryVecInt(binaryFile, indices);
 
+
 		std::vector<glm::vec3> vertices = data->getVertices();
 		writeBinaryVecVec3(binaryFile, vertices);
 
@@ -282,16 +283,19 @@ void Parser::writeToBinary()
 		std::vector<glm::vec3> normals = data->getNormals();
 		writeBinaryVecVec3(binaryFile, normals);
 
-		//writing strings
-		std::string binaryString;
-		binaryString = data->getTextureFilename();
-		writeBinaryString(binaryFile, binaryString);
+		//Diffuse map
+		std::string textureFilename = data->getTextureFilename();
+		writeBinaryString(binaryFile, textureFilename);
+		//Normal Map
+		textureFilename = data->getNormalMapName();
+		writeBinaryString(binaryFile, textureFilename);
+		//Filename
+		textureFilename = data->getFilename();
+		writeBinaryString(binaryFile, textureFilename);
+		//Ambient Map
+		textureFilename = data->getAmbientMapName();
+		writeBinaryString(binaryFile, textureFilename);
 
-		binaryString = data->getNormalMapName();
-		writeBinaryString(binaryFile, binaryString);
-
-		binaryString = data->getFilename();
-		writeBinaryString(binaryFile, binaryString);
 
 		glm::vec3 diffuseColor = data->getDiffuseColor();
 		writeBinaryVec3(binaryFile, diffuseColor);
@@ -343,8 +347,6 @@ void Parser::processFace(GLuint vertexIndex, GLuint uvIndex, GLuint normalIndex,
 	parserData->addNormal(tempNormals[normalStartPos]);
 
 	glm::vec3 pos = tempVertices[vertexStartPos];
-	//LOG_TRACE(std::to_string(pos.x) + ", " +  std::to_string(pos.y) + ", " + std::to_string(pos.z));
-	//glm::vec3 pos = tempVertices[vertexStartPos];
 	
 }
 
@@ -388,9 +390,12 @@ void Parser::parseMaterialFile(const std::string& filename, ParserData* parserDa
 		}
 		else if (attribs[0] == "map_Kd")
 		{
-			
-				parserData->setTextureFilename(TexturePath + attribs[1]);
-			
+			parserData->setTextureFilename(TexturePath + attribs[1]);
+		}
+		else if (attribs[0] == "map_Ka") {
+			LOG_INFO("FOUND AMBIENT MAP");
+			parserData->setAmbientMapName(TexturePath + attribs[attribs.size() - 1]);
+
 		}
 		if (attribs[0] == "map_Bump") {
 			if (exporterProgram == "Blender") {
@@ -636,6 +641,7 @@ void Parser::loadFromBinary(ParserData* data, const std::string & filename)
 	readBinaryString(binaryFile, data, 0);
 	readBinaryString(binaryFile, data, 1);
 	readBinaryString(binaryFile, data, 2);
+	readBinaryString(binaryFile, data, 3);
 
 	readBinaryVec3(binaryFile, data, 0);
 	readBinaryVec3(binaryFile, data, 1);
@@ -776,7 +782,7 @@ void Parser::readBinaryVecVec2(std::ifstream & binaryFile, ParserData * parserDa
 	}
 	vecString.clear();
 }
-//texture==0, normalMapName==1, filename==2
+//texture==0, normalMapName==1, filename==2, ambientMapName==3
 void Parser::readBinaryString(std::ifstream & binaryFile, ParserData * parserData, int choice)
 {
 	//read the value first (how big the other read should be)
@@ -806,9 +812,14 @@ void Parser::readBinaryString(std::ifstream & binaryFile, ParserData * parserDat
 	{
 		parserData->setNormalMapName(stringText);
 	}
+
 	else if (choice == 2)
 	{
 		parserData->setFilename(stringText);
+	}
+	else if (choice == 3) 
+	{
+		parserData->setAmbientMapName(stringText);
 	}
 }
 //diffuse==0, specular==1, ambient==2

@@ -40,7 +40,7 @@ void GameObjectManager::update(float dt)
 	glm::vec3 rayDirection = m_player->getLookDirection();
 	GameObject* objectHit = nullptr;
 
-
+	
 	//------ Player current velocity ( Also used for collision ) ------
 	newVel = m_player->getVelocity();
 
@@ -87,10 +87,17 @@ void GameObjectManager::update(float dt)
 			//LOG_TRACE("Ray intersection! collision point: " + std::to_string(gunshotCollisionPoint.x) + ", " + std::to_string(gunshotCollisionPoint.z));
 
 			// --------MAYBE DYNAMIC CASY HERE TO CHECK IF WE HIT A ENEMY?--------
-			if(dynamic_cast<Box*>(objectHit))
+			Box* box = dynamic_cast<Box*>(objectHit);
+			if (box) {
 				objectHit->setHit();
+			}
+			if (dynamic_cast<Walker*>(objectHit))
+				objectHit->setHit();
+			
+			HitDescription desc;
+			desc.player = m_player;
+			objectHit->hit(desc);
 		}
-
 	}
 }
 
@@ -101,16 +108,15 @@ void GameObjectManager::addGameObject(GameObject * gameObject)
 		// If there is no player added then dynamic cast it and check if the object that
 		// is going to be added in a few lines later is the player, if it is then construct
 		// a broadphase box ( Used to make collision more efficient )
-		if(!m_player) 
+		if (!m_player)
 		{
 			m_player = dynamic_cast<Player*>(gameObject);
 			// If this object is a player
-			if (m_player) 
+			if (m_player)
 			{
 				constructPlayerBroadPhaseBox();
 			}
 		}
-
 		m_gameObjects.emplace_back(gameObject);
 	}
 }
@@ -220,11 +226,17 @@ void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject
 					float dotprod = (newVel.x * nz + newVel.z * nx) * remainingTime;
 					newVel.x = dotprod * nz;
 					newVel.z = dotprod * nx;
+					if (dynamic_cast<Walker*>(object))
+					{
+						m_walker = dynamic_cast<Walker*>(object);
+						HitDescription desc;
+						desc.walker = m_walker; 
+						m_player->hit(desc);
+					}
 				}
 			}
 		}
 	}
-
 }
 
 void GameObjectManager::handlePlayerShooting(float dt, GameObject * object, const glm::vec3& rayDir, float& rayLengthUntilCollision, GameObject* & hitGameObject)

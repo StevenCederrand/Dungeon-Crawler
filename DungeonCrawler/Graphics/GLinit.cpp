@@ -40,11 +40,13 @@ Mesh* GLinit::createMesh(std::string name, ParserData* data)
 	mesh->setHasNormalMap(data->hasNormalMap());
 	
 	if (data->hasNormalMap()) {
-		LOG_INFO("HAS NORMALMAP");
 		GLuint normalID = createTexture(data->getNormalMapName());
 		mesh->setNormalID(normalID);
 	}
-
+	if (data->hasAmbientMap()) {
+		GLuint ambientID = createTexture(data->getAmbientMapName());
+		mesh->setAmbientID(ambientID);
+	}
 	mesh->setVao(vao);
 	mesh->setTextureID(textureID);
 	mesh->setNrOfIndices(int(data->getIndices().size()));

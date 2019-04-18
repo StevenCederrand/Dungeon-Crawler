@@ -3,6 +3,7 @@
 #include <vector>
 #include <list>
 #include "Player.h"
+#include "Enemies/Walker.h"
 #include "GameObject.h"
 #include "Parser/Parser.h"
 
@@ -26,6 +27,7 @@ private:
 private:
 	std::vector<GameObject*> m_gameObjects;
 	Player* m_player;
+	Walker* m_walker;
 	AABB* m_broadPhaseBox;
 };
 

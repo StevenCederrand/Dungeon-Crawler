@@ -195,6 +195,7 @@
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
     <ClInclude Include="Collision\AABB.h" />
+    <ClInclude Include="Collision\HitData.h" />
     <ClInclude Include="GameObjects\Box.h" />
     <ClInclude Include="GameObjects\Enemies\Walker.h" />
     <ClInclude Include="GameObjects\GameObject.h" />
