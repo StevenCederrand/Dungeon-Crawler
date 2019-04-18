@@ -40,7 +40,7 @@ void SaveHierarchy::m_SaveNode(FbxNode* pNode)
 	{
 		FbxBool collisionBoolFbx = collision.Get<bool>();
 		collisionBool = collisionBoolFbx;
-		m_mesh.setCollision(collisionBool);
+		m_staticMesh.setCollision(collisionBool);
 	}
 	else
 	{
@@ -53,7 +53,7 @@ void SaveHierarchy::m_SaveNode(FbxNode* pNode)
 	{
 		FbxBool staticMeshBoolFbx = staticMesh.Get<bool>();
 		staticMeshBool = staticMeshBoolFbx;
-		m_mesh.setStaticMesh(staticMeshBool);
+		m_staticMesh.setStaticMesh(staticMeshBool);
 	}
 	else
 	{
@@ -74,7 +74,7 @@ void SaveHierarchy::m_SaveNode(FbxNode* pNode)
 			if (staticMeshBool)   //if its static
 			{
 				m_SaveStaticMesh(pNode);	//saves relevant into in m_mesh
-				m_file.WriteStaticMesh(m_mesh);	//sends m_mesh to file writer for static mesh
+				m_file.WriteStaticMesh(m_staticMesh);	//sends m_mesh to file writer for static mesh
 			}
 			else  //dynamic
 			{
@@ -99,7 +99,7 @@ void SaveHierarchy::m_SaveControlPoints(FbxMesh* pMesh)
 
 	for (int i = 0; i < lControlPointsCount; i++)
 	{
-		m_mesh.AddControlPoint(lControlPoints[i]);
+		m_staticMesh.AddControlPoint(lControlPoints[i]);
 	}
 	printf("\n\n");
 }
@@ -107,7 +107,7 @@ void SaveHierarchy::m_SaveControlPoints(FbxMesh* pMesh)
 void SaveHierarchy::m_SaveControlPointsIndex(FbxMesh* pMesh, int i, int j)
 {
 	int lControlPointIndex = pMesh->GetPolygonVertex(i, j);
-	m_mesh.AddIndexPoint(lControlPointIndex);
+	m_staticMesh.AddIndexPoint(lControlPointIndex);
 }
 
 void SaveHierarchy::m_SaveUVCoordinatesAndIndex(FbxMesh* pMesh, int k, int i, int j, int vertexCounter)
@@ -146,8 +146,8 @@ void SaveHierarchy::m_SaveUVCoordinatesAndIndex(FbxMesh* pMesh, int k, int i, in
 		{
 			//actually does something, corrupted before, but is probably fine now.
 			FbxVector2 textureUvCoordinates = lEUV->GetDirectArray().GetAt(vertexCounter);
-			m_mesh.AddUVCoordinate(textureUvCoordinates);
-			m_mesh.AddUVIndex(lTextureUVIndex);
+			m_staticMesh.AddUVCoordinate(textureUvCoordinates);
+			m_staticMesh.AddUVIndex(lTextureUVIndex);
 		}
 		break;
 		default:
@@ -174,7 +174,7 @@ void SaveHierarchy::m_SaveNormals(FbxMesh* pMesh, int k, int vertexCounter)
 		{
 		case FbxGeometryElement::eDirect: //currently used
 			lNormalCoordinates = leNormal->GetDirectArray().GetAt(vertexCounter);
-			m_mesh.AddNormalCoordinate(lNormalCoordinates); //save normals
+			m_staticMesh.AddNormalCoordinate(lNormalCoordinates); //save normals
 
 			//Display3DVector(header, leNormal->GetDirectArray().GetAt(vertexId));
 			break;
@@ -199,8 +199,8 @@ void SaveHierarchy::m_SaveStaticMesh(FbxNode* pNode) //trying to make SavePolygo
 	int lPolygonSize = lMesh->GetPolygonSize(0); //checks first polygon, all should be 3
 
 	//SaveMeshName(pNode);
-	m_mesh.setNrOfVerticesPerPolygon(lPolygonSize); //save in m_mesh
-	m_mesh.setNrOfPolygons(lPolygonCount);	//save in m_mesh
+	m_staticMesh.setNrOfVerticesPerPolygon(lPolygonSize); //save in m_mesh
+	m_staticMesh.setNrOfPolygons(lPolygonCount);	//save in m_mesh
 	m_SaveControlPoints(lMesh);	//Save all controlpoints, to be used by index arr
 
 	//Go through all polygons
@@ -224,7 +224,45 @@ void SaveHierarchy::m_SaveStaticMesh(FbxNode* pNode) //trying to make SavePolygo
 				m_SaveNormals(lMesh, k, lVertexCounter);
 			}
 			lVertexCounter++;
-			m_mesh.increaseVertexCount();
+			m_staticMesh.increaseVertexCount();
+		}
+	}
+}
+
+void SaveHierarchy::m_SaveHitboxMesh(FbxNode* pNode)
+{
+	FbxMesh* lMesh = (FbxMesh*)pNode->GetNodeAttribute();
+	int lPolygonCount = lMesh->GetPolygonCount();
+	int lVertexCounter = 0;
+	int lPolygonSize = lMesh->GetPolygonSize(0); //checks first polygon, all should be 3
+
+	//SaveMeshName(pNode);
+	m_staticMesh.setNrOfVerticesPerPolygon(lPolygonSize); //save in m_mesh
+	m_staticMesh.setNrOfPolygons(lPolygonCount);	//save in m_mesh
+	m_SaveControlPoints(lMesh);	//Save all controlpoints, to be used by index arr
+
+	//Go through all polygons
+	for (int i = 0; i < lPolygonCount; i++)
+	{
+		//Go through each vertice in the polygon
+		for (int j = 0; j < lPolygonSize; j++)
+		{
+			//Save Control Point index
+			m_SaveControlPointsIndex(lMesh, i, j);
+
+			//how many UV coordinates the vertice has, 1 right now
+			for (int k = 0; k < lMesh->GetElementUVCount(); ++k)
+			{
+				m_SaveUVCoordinatesAndIndex(lMesh, k, i, j, lVertexCounter);
+			}
+
+			//How many normals per vertice, 1 right now
+			for (int k = 0; k < lMesh->GetElementNormalCount(); ++k)
+			{
+				m_SaveNormals(lMesh, k, lVertexCounter);
+			}
+			lVertexCounter++;
+			m_staticMesh.increaseVertexCount();
 		}
 	}
 }
@@ -237,9 +275,4 @@ void SaveHierarchy::m_SaveMeshName(FbxNode* pNode)
 void SaveHierarchy::m_PrintChildName(FbxMesh* pMesh)
 {
 	printf("%s", pMesh->GetName());
-}
-
-StaticMesh SaveHierarchy::getMesh()const
-{
-	return m_mesh;
 }
