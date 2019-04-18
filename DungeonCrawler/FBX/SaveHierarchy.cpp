@@ -198,9 +198,9 @@ void SaveHierarchy::m_SaveStaticMesh(FbxNode* pNode) //trying to make SavePolygo
 	int lVertexCounter = 0;
 	int lPolygonSize = lMesh->GetPolygonSize(0); //checks first polygon, all should be 3
 
-	//SaveMeshName(pNode);
 	m_staticMesh.setNrOfVerticesPerPolygon(lPolygonSize); //save in m_mesh
 	m_staticMesh.setNrOfPolygons(lPolygonCount);	//save in m_mesh
+	m_SaveMeshName(pNode);
 	m_SaveControlPoints(lMesh);	//Save all controlpoints, to be used by index arr
 
 	//Go through all polygons
@@ -269,7 +269,9 @@ void SaveHierarchy::m_SaveHitboxMesh(FbxNode* pNode)
 
 void SaveHierarchy::m_SaveMeshName(FbxNode* pNode)
 {
+	//Is fucked, need size of nodeName to not load in useless info
 	const char* nodeName = pNode->GetName();	//The node we get right now is the pCube1 which is the name of the cube in the outliner
+	m_staticMesh.setName(nodeName);
 }
 
 void SaveHierarchy::m_PrintChildName(FbxMesh* pMesh)

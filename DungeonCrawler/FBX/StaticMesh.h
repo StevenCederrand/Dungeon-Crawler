@@ -28,7 +28,7 @@ private:
 	int m_nrOfVerticesPerPolygon; //3 if triangulated
 
 	void initiateArrays();
-	
+
 public:
 	StaticMesh();
 	~StaticMesh();
@@ -44,6 +44,7 @@ public:
 	void setNrOfVerticesPerPolygon(int nrOfVerticesPerPolygon);
 	void setCollision(bool collision);
 	void setStaticMesh(bool staticMesh);
+	void setName(const char name[]);
 
 	bool getCollision()const;
 	bool getIsStatic()const;

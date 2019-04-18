@@ -26,12 +26,10 @@ StaticMesh::~StaticMesh()
 
 void StaticMesh::initiateArrays()
 {
-	/*
 	for (int i = 0; i < 100; i++)
 	{
-		m_name[i] = "";
+		m_name[i] = ' ';
 	}
-	*/
 
 	for (int i = 0; i < 100; i++)
 	{
@@ -163,6 +161,13 @@ void StaticMesh::CheckMesh()
 	printf("\n\n");
 
 	printf("Nr of vertices: %i\n\n", m_vertexCount);
+
+	printf("Name of mesh: ");
+	for (int i = 0; i < 100; i++)
+	{
+		printf("%c", m_name[i]);
+	}
+	printf("\n\n");
 }
 
 void StaticMesh::setNrOfPolygons(int nrOfPolygons)
@@ -183,6 +188,14 @@ void StaticMesh::setCollision(bool collision)
 void StaticMesh::setStaticMesh(bool staticMesh)
 {
 	m_isStatic = staticMesh;
+}
+
+void StaticMesh::setName(const char name[])
+{
+	for (int i = 0; i < 100; i++)
+	{
+		m_name[i] = name[i];
+	}
 }
 
 bool StaticMesh::getCollision()const
