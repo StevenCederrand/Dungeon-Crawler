@@ -3,11 +3,13 @@
 //Has memory leaks
 
 #include "MeshData2.h"
+#include "WriteCustomFile.h"
 
 class SaveHierarchy
 {
 private:
-	MeshData2 m_mesh; //will only be one, load one at a time
+	MeshData2 m_mesh; //will only be one, load one at a time, replaced
+	WriteCustomFile m_file; //will only be one, never replaced
 public:
 	SaveHierarchy();
 	~SaveHierarchy();

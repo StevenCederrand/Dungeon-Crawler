@@ -6,7 +6,6 @@
 #include <iostream>
 #include <fstream>
 #include "HeaderStructs.h"
-#include "SaveHierarchy.h"
 
 class WriteCustomFile
 {
