@@ -47,11 +47,15 @@ private:
 	float m_speed;
 	float m_health;
 	float m_damage;
+	float m_chargeDamage;
+	float m_automaticDamage;
+	float m_unChargedDamage;
 	Type m_type;
 
 	float m_dash;
 	bool m_dashCd;
-	int m_timer;
+
+	float m_dashTimer;
 
 	// Shooting
 	int m_weaponSlot;
@@ -62,10 +66,10 @@ private:
 	glm::vec3 m_lookDirection;
 	bool m_chargeStance;
 	float m_shakeIntensity;
-	int m_chargeTimer;
+	float m_chargeTimer;
 	
 	
-	int m_shake;
+	float m_shake;
 	glm::vec3 m_shakeDir;
 
 

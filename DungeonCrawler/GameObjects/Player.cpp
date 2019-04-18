@@ -14,15 +14,18 @@ Player::Player(Mesh* mesh, Type type) :
 	this->m_speed = 7.0f;
 	this->m_health = 5.f;
 	this->m_damage = 1.f;
+	this->m_automaticDamage = 1.f;
+	this->m_chargeDamage = 10.f;
+	this->m_unChargedDamage = 2.f;
 	this->m_debug = false;
 	this->m_dash = 100.f;
 	this->m_dashCd = false;
-	this->m_timer = 0;
-	this->m_shake = 0;
+	this->m_dashTimer = 0.f;
+	this->m_shake = 0.f;
 	this->m_shakeDir = glm::vec3(0.f, 0.f, 0.f);
 	this->m_chargeStance = false;
 	this->m_shakeIntensity = 0.10f;
-	this->m_chargeTimer = 100;
+	this->m_chargeTimer = 1.f;
 	this->m_weaponSlot = 1;
 	this->m_spraying = false;
 	this->m_type = type;
@@ -134,6 +137,7 @@ void Player::weaponSwap()
 
 void Player::shootAutomatic(float dt)
 {
+	m_damage = m_automaticDamage;
 	if (Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT) && !m_spraying || Input::isMousePressed(GLFW_MOUSE_BUTTON_RIGHT && !m_spraying))
 	{
 		dash();
@@ -143,7 +147,7 @@ void Player::shootAutomatic(float dt)
 		if (m_canShoot)
 		{
 			shootProjectile(dt);
-			m_shake = 4;
+			m_shake = 0.05f;
 			m_spraying = true;
 		}
 	}
@@ -184,23 +188,23 @@ void Player::dash()
 	{
 		setSpeed(m_dash);
 		m_dashCd = !m_dashCd;
-		m_timer = 50;
+		m_dashTimer = 1.f;
 	}
 }
 
 void Player::dashCd(float dt)
 {
-	if (m_timer <= 0 && m_dashCd)
+	if (m_dashTimer <= 0.f && m_dashCd)
 	{
 		m_dashCd = !m_dashCd;
 	}
-	if (m_timer <= 48)
+	if (m_dashTimer <= 0.98f)
 	{
 		setSpeed(m_defaultSpeed);
 	}
-	if (m_timer > 0)
+	if (m_dashTimer > 0.f)
 	{
-		m_timer -= dt;
+		m_dashTimer -= dt;
 	}
 }
 
@@ -218,7 +222,11 @@ void Player::chargeProjectile(float dt)
 	m_speed = 1.f;
 	if (m_chargeTimer <= 0)
 	{
-		m_damage = 3.f;
+		m_damage = m_chargeDamage;
+	}
+	if (m_chargeTimer > 0)
+	{
+		m_damage = m_unChargedDamage;
 	}
 	if (m_chargeTimer >= 0)
 	{
@@ -230,32 +238,32 @@ void Player::releaseChargedProjectile(float dt)
 {
 	m_chargeStance = false;
 	shootProjectile(dt);
-	m_shake = 4;
-	if (m_damage == 3)
+	m_shake = 0.05f;
+
+	if (m_damage == m_chargeDamage)
 	{
 		m_shakeIntensity = 1.f;
 	}
 	m_speed = m_defaultSpeed;
-	m_damage = 1.f;
-	m_chargeTimer = 100;
+	m_chargeTimer = 1.f;
 }
 
 void Player::screenShake(float dt)
 {
-	if (m_shake <= 0)
+	if (m_shake <= 0.f)
 	{
 		m_shakeDir *= 0.f;
 		m_shakeIntensity = 0.1f;
 	}
-	if (m_shake > 0)
+	if (m_shake > 0.f)
 	{
 		m_shakeDir = shakeDirection() * m_shakeIntensity;
 	}
-	if (m_shake > 2)
+	if (m_shake > 0.025f)
 	{
 		m_shakeDir = shakeDirection() * -m_shakeIntensity;
 	}
-	if (m_shake > 0)
+	if (m_shake > 0.f)
 	{
 		m_shake -= dt;
 	}
