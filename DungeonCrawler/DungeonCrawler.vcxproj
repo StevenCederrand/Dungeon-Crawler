@@ -159,6 +159,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Audio\AudioEngine.cpp" />
+    <ClCompile Include="FBX\BoundingBoxMesh.cpp" />
     <ClCompile Include="FBX\DisplayCommon.cpp" />
     <ClCompile Include="FBX\DisplayHierarchy.cpp" />
     <ClCompile Include="FBX\fbxObjectManager.cpp" />
@@ -201,6 +202,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
+    <ClInclude Include="FBX\BoundingBoxMesh.h" />
     <ClInclude Include="FBX\DisplayCommon.h" />
     <ClInclude Include="FBX\DisplayHierarchy.h" />
     <ClInclude Include="FBX\fbxObjectManager.h" />

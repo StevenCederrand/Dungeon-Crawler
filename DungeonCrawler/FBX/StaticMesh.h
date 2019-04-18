@@ -19,9 +19,6 @@ private:
 
 	int m_currentNormalCoordinate;
 	float m_normalCoordinateArr[3][100];	//change to a vector 3
-	//Should normals also use an index array? are any normals similar?
-
-	//Will not save tangents or bitangents, they will be calculated in the shader
 
 	bool m_collision;
 	bool m_isStatic;
