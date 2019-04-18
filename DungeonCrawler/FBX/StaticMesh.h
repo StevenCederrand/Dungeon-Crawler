@@ -44,7 +44,7 @@ public:
 	void setNrOfVerticesPerPolygon(int nrOfVerticesPerPolygon);
 	void setCollision(bool collision);
 	void setStaticMesh(bool staticMesh);
-	void setName(const char name[]);
+	void setName(const char name[], int nameSize);
 
 	bool getCollision()const;
 	bool getIsStatic()const;

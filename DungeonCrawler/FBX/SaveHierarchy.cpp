@@ -269,9 +269,18 @@ void SaveHierarchy::m_SaveHitboxMesh(FbxNode* pNode)
 
 void SaveHierarchy::m_SaveMeshName(FbxNode* pNode)
 {
-	//Is fucked, need size of nodeName to not load in useless info
-	const char* nodeName = pNode->GetName();	//The node we get right now is the pCube1 which is the name of the cube in the outliner
-	m_staticMesh.setName(nodeName);
+	const char* nodeName = pNode->GetName();	//outliner name
+	printf("Name: %s\n", nodeName);
+
+	int nameSize = 0;
+	for (int i = 0; i < 100; i++)
+	{
+		if (nodeName[i] == '\0') //Chars write \0 after its done
+			i = 100;
+		else
+			nameSize++;
+	}
+	m_staticMesh.setName(nodeName, nameSize);
 }
 
 void SaveHierarchy::m_PrintChildName(FbxMesh* pMesh)

@@ -190,9 +190,9 @@ void StaticMesh::setStaticMesh(bool staticMesh)
 	m_isStatic = staticMesh;
 }
 
-void StaticMesh::setName(const char name[])
+void StaticMesh::setName(const char name[], int nameSize)
 {
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < nameSize; i++)
 	{
 		m_name[i] = name[i];
 	}
