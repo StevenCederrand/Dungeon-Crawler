@@ -86,7 +86,7 @@ void SaveHierarchy::SaveStaticMesh(FbxNode* pNode)
 	SaveControlPoints(lMesh);
 	SavePolygons(lMesh);
 
-	m_mesh.CheckMesh();
+	//m_mesh.CheckMesh(); //Writes out information about the mesh to debug
 }
 
 void SaveHierarchy::SaveControlPoints(FbxMesh* pMesh)
@@ -222,4 +222,9 @@ void SaveHierarchy::SaveMeshName(FbxNode* pNode)
 void SaveHierarchy::PrintChildName(FbxMesh* pMesh)
 {
 	printf("%s", pMesh->GetName());
+}
+
+MeshData2 SaveHierarchy::getMesh()const
+{
+	return m_mesh;
 }

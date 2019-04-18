@@ -2,7 +2,7 @@
 
 struct MainHeader
 {
-	unsigned int dynamicMeshCount; //morph	/custom attribute for dynamic mesh?
+	unsigned int dynamicMeshCount; //morph	//custom attribute
 	unsigned int staticMeshCount;  //regular
 	unsigned int boundingBoxCount;
 	unsigned int materialCount;

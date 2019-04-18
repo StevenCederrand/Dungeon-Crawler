@@ -18,4 +18,6 @@ public:
 	void SavePolygons(FbxMesh* pMesh);
 	void SaveMeshName(FbxNode* pNode);
 	void PrintChildName(FbxMesh* pMesh);
+
+	MeshData2 getMesh()const;
 };
