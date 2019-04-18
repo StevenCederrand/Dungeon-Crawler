@@ -20,12 +20,12 @@ void SaveHierarchy::SaveEntireHierarchy(FbxScene* lScene)
 	{
 		for (int i = 0; i < lRootNode->GetChildCount(); i++)
 		{
-			SaveNode(lRootNode->GetChild(i));
+			m_SaveNode(lRootNode->GetChild(i));
 		}
 	}
 }
 
-void SaveHierarchy::SaveNode(FbxNode* pNode)
+void SaveHierarchy::m_SaveNode(FbxNode* pNode)
 {
 	FbxNodeAttribute::EType nodeType = pNode->GetNodeAttributeByIndex(0)->GetAttributeType();
 
@@ -73,7 +73,7 @@ void SaveHierarchy::SaveNode(FbxNode* pNode)
 		{
 			if (staticMeshBool)   //if its static
 			{
-				SaveStaticMesh(pNode);	//saves relevant into in m_mesh
+				m_SaveStaticMesh(pNode);	//saves relevant into in m_mesh
 				m_file.WriteStaticMesh(m_mesh);	//sends m_mesh to file writer for static mesh
 			}
 			else  //dynamic
@@ -88,7 +88,7 @@ void SaveHierarchy::SaveNode(FbxNode* pNode)
 	for (int j = 0; j < pNode->GetChildCount(); j++)
 	{
 		printf("\n");
-		SaveNode(pNode->GetChild(j));	//Deeper in the tree
+		m_SaveNode(pNode->GetChild(j));	//Deeper in the tree
 	}
 }
 
@@ -191,7 +191,7 @@ void SaveHierarchy::m_SaveNormals(FbxMesh* pMesh, int k, int vertexCounter)
 }
 
 //saves UV, UVIndex, normal, controlpointIndex
-void SaveHierarchy::SaveStaticMesh(FbxNode* pNode) //trying to make SavePolygons into functions 
+void SaveHierarchy::m_SaveStaticMesh(FbxNode* pNode) //trying to make SavePolygons into functions 
 {
 	FbxMesh* lMesh = (FbxMesh*)pNode->GetNodeAttribute();
 	int lPolygonCount = lMesh->GetPolygonCount();
@@ -229,12 +229,12 @@ void SaveHierarchy::SaveStaticMesh(FbxNode* pNode) //trying to make SavePolygons
 	}
 }
 
-void SaveHierarchy::SaveMeshName(FbxNode* pNode)
+void SaveHierarchy::m_SaveMeshName(FbxNode* pNode)
 {
 	const char* nodeName = pNode->GetName();	//The node we get right now is the pCube1 which is the name of the cube in the outliner
 }
 
-void SaveHierarchy::PrintChildName(FbxMesh* pMesh)
+void SaveHierarchy::m_PrintChildName(FbxMesh* pMesh)
 {
 	printf("%s", pMesh->GetName());
 }

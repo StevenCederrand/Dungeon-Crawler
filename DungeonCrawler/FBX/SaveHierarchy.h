@@ -15,15 +15,13 @@ private:
 	void m_SaveControlPointsIndex(FbxMesh* pMesh, int i, int j);
 	void m_SaveUVCoordinatesAndIndex(FbxMesh* pMesh, int k, int i, int j, int vertexCounter);
 	void m_SaveNormals(FbxMesh* pMesh, int k, int vertexCounter);
+	void m_SaveNode(FbxNode* pNode);
+	void m_SaveStaticMesh(FbxNode* pNode);
+	void m_SaveMeshName(FbxNode* pNode);
+	void m_PrintChildName(FbxMesh* pMesh);
 public:
 	SaveHierarchy();
 	~SaveHierarchy();
 	void SaveEntireHierarchy(FbxScene* lScene);
-	void SaveNode(FbxNode* pNode);
-	void SaveStaticMesh(FbxNode* pNode);
-	
-	void SaveMeshName(FbxNode* pNode);
-	void PrintChildName(FbxMesh* pMesh);
-
 	StaticMesh getMesh()const;
 };
