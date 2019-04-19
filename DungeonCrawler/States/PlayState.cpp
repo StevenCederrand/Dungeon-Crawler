@@ -19,19 +19,20 @@ PlayState::PlayState() {
 	m_parser = new Parser();
 	m_GLinit = new GLinit();
 	m_camera = new Camera();
+	m_effects = new Effects(m_GLinit);
 	Camera::active = m_camera;
 	m_lightManager = new LightManager();
-	m_renderer = new Renderer(m_camera, m_lightManager);
-	m_gameObjectManager = new GameObjectManager();
+	m_renderer = new Renderer(m_camera, m_lightManager, m_effects);
+	m_gameObjectManager = new GameObjectManager(m_effects);
 	#pragma endregion
-
+	
 	#pragma region Create_Objects
 	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
-	ParserData* roomData = m_parser->loadFromObj("basementleveltest.obj");
+	ParserData* roomData = m_parser->loadFromObj("collisionroomtest.obj");
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
 
-	m_GLinit->createMesh("Box", boxData);
 	m_GLinit->createMesh("Room", roomData);
+	m_GLinit->createMesh("Box", boxData);
 	m_GLinit->createMesh("Sphere", sphereData);
 	#pragma endregion
 
@@ -92,12 +93,14 @@ PlayState::~PlayState()
 	delete m_gameObjectManager;
 	delete m_renderer;
 	delete m_lightManager;
+	delete m_effects;
 }
 
 void PlayState::update(float dt)
 {
 
 	m_gameObjectManager->update(dt);
+	m_effects->update(dt);
 	m_camera->update(dt);
 	m_lightManager->update(dt);
 
@@ -125,6 +128,8 @@ void PlayState::renderImGUI()
 		, m_player->getPosition().z
 		, " ]");
 
+	ImGui::NewLine();
+	ImGui::Text("Nr of lasers: %i" , m_effects->getNrOfAliveParticles());
 
 	ImGui::End();
 }
