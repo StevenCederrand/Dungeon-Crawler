@@ -4,6 +4,7 @@
 #include "Globals/Paths.h"
 #include "Utility/Randomizer.h"
 
+
 Effects::Effects(GLinit* glInit)
 {
 	this->setupGraphicBuffers();
@@ -13,7 +14,6 @@ Effects::Effects(GLinit* glInit)
 		m_particles.emplace_back(Particle());
 	}
 
-	m_sparksIDS.emplace_back(glInit->createTexture(TexturePath + "whitePuff00.png"));
 }
 
 Effects::~Effects()
@@ -59,58 +59,60 @@ void Effects::update(float dt)
 	updateBuffers();
 }
 
-void Effects::bindSparkTetxures()
+void Effects::shootEffect(const glm::vec3& pos, const float playerRotation, float speed, float lifetime)
 {
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_sparksIDS[0]);
-}
-
-void Effects::unbindSparkTextures()
-{
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, NULL);
-}
-
-
-void Effects::addParticle(const glm::vec3& startpos, const glm::vec3& endpos, float speed, float lifetime, bool hitEnemy)
-{
-
-	float xLength = endpos.x - startpos.x;
-	float zLength = endpos.z - startpos.z;
-
-	float angle = atan2f(zLength, xLength);
-	float xMul = cosf(angle);
-	float zMul = sinf(angle);
 	
-
+	float xMul = cosf(glm::radians(playerRotation));
+	float zMul = sinf(glm::radians(playerRotation));
+	
+	for(int i = 0; i < 5; i++)
 	{
+		if (m_aliveParticles == MAX_PARTICLES)
+			return;
+		
 		size_t pIndex = getFirstUnusedParticle();
 		Particle& p = m_particles[pIndex];
-		p.center = startpos + glm::vec3(xMul, 0.f, zMul);
-		p.velocity = glm::vec3(speed * xMul, 0, speed * zMul);
+		p.center = pos + glm::vec3(xMul + Randomizer::single(-1.f, 1.f) / 6.f, 0.5f, zMul + Randomizer::single(-1.f, 1.f) / 6.f);
+		p.velocity = glm::vec3(0.f, Randomizer::single(speed / 2.f, speed), 0.f);
 		p.lifetime = lifetime;
 		p.initialLifetime = lifetime;
 		p.color = glm::vec4(1.f);
 		m_aliveParticles++;
 	}
 	
-	float offset = 100.f;
+}
 
-	for(int i = 0; i < 10; i++)
+void Effects::hitEffect(const glm::vec3& pos, float lifetime, bool hitEnemy)
+{
+	if (m_aliveParticles == MAX_PARTICLES)
+		return;
+
+	float offset = 100.f;
+	int nrOfParticels;
+	glm::vec4 particleColor;
+
+	if (hitEnemy) {
+		nrOfParticels = 80;
+		particleColor = glm::vec4(1.0f, 0.1f, 0.1f, 1.0f);
+	}
+	else {
+		nrOfParticels = 10;
+		particleColor = glm::vec4(0.f, 0.0f, 0.0f, 1.0f);
+	}
+
+	for (int i = 0; i < nrOfParticels; i++)
 	{
+		if (m_aliveParticles == MAX_PARTICLES)
+			return;
 		size_t p2Index = getFirstUnusedParticle();
 		Particle& p2 = m_particles[p2Index];
-		p2.center = endpos - Randomizer::vec3(-offset, offset, 0.f, 0.f, -offset, offset) / (offset * 1.5f);
-		p2.velocity = glm::vec3(0.f, Randomizer::single(0.5f, 5.f), 0.f);
-		p2.lifetime = 0.5f;
-		p2.initialLifetime = 0.5f;
+		p2.center = pos - Randomizer::vec3(-offset, offset, 0.f, 0.f, -offset, offset) / (offset * 1.5f);
+		p2.center.y = 0.5f;
+		p2.velocity = glm::vec3(0.f, Randomizer::single(-2.f, 5.f), 0.f);
+		p2.lifetime = 0.2f;
+		p2.initialLifetime = p2.lifetime;
+		p2.color = particleColor;
 
-		if (hitEnemy){
-			p2.color = glm::vec4(1.0f, 0.1f, 0.1f, 1.0f);
-		}
-		else {
-			p2.color = glm::vec4(0.8f, 1.0f, 0.1f, 1.0f);
-		}
 		m_aliveParticles++;
 	}
 }

@@ -46,6 +46,9 @@ void GameObjectManager::update(float dt)
 	//------ Player current velocity ( Also used for collision ) ------
 	newVel = m_player->getVelocity();
 
+	if (m_player->isShooting()) {
+		m_effects->shootEffect(m_player->getPosition(), m_player->getAngle(), 5.f, 0.20f);
+	}
 
 	//------ Update all the game objects and check for collision 'n stuff ------
 	for (size_t i = 0; i < m_gameObjects.size(); i++)
@@ -70,8 +73,10 @@ void GameObjectManager::update(float dt)
 		handlePlayerCollisionAgainstObjects(dt, object, newVel, hasCollided);
 
 		// If player is shooting then handle it
-		if (m_player->isShooting())
+		if (m_player->isShooting()) {
 			handlePlayerShooting(dt, object, rayDirection, rayLengthUntilCollision, objectHit);
+		}
+			
 	}
 
 	// Lastly we translate the player with the velocity that has been 
@@ -89,18 +94,14 @@ void GameObjectManager::update(float dt)
 			//LOG_TRACE("Ray intersection! collision point: " + std::to_string(gunshotCollisionPoint.x) + ", " + std::to_string(gunshotCollisionPoint.z));
 
 			// --------MAYBE DYNAMIC CASY HERE TO CHECK IF WE HIT A ENEMY?--------
+			bool hitEnemy = false;
 			if (dynamic_cast<Box*>(objectHit)) {
-
+				hitEnemy = true;
 				objectHit->setHit();
-				m_effects->addParticle(m_player->getPosition(), gunshotCollisionPoint, 20.f, 0.1f);
 			}
-			else
-			{
-				m_effects->addParticle(m_player->getPosition(), gunshotCollisionPoint, 20.f, 0.1f, false);
-			}
-
 			
-
+			m_effects->hitEffect(gunshotCollisionPoint, 0.15f, hitEnemy);
+			
 		}
 
 	}

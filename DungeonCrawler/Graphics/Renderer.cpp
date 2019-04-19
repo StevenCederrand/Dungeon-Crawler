@@ -114,7 +114,7 @@ void Renderer::renderEffects()
 	laserShader->setMat4("viewMatrix", m_camera->getViewMatrix());
 	laserShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
 	glBindVertexArray(m_effects->getVAO());
-	m_effects->bindSparkTetxures();
+
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
@@ -124,7 +124,7 @@ void Renderer::renderEffects()
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
 	glDisableVertexAttribArray(3);
-	m_effects->unbindSparkTextures();
+	
 	glBindVertexArray(0);
 	laserShader->unuse();
 	glDisable(GL_BLEND);

@@ -14,9 +14,8 @@ public:
 
 	void update(float dt);
 
-	void bindSparkTetxures();
-	void unbindSparkTextures();
-	void addParticle(const glm::vec3& startpos, const glm::vec3& endpos, float speed, float lifetime, bool hitEnemy = true);
+	void shootEffect(const glm::vec3& pos,const float playerRotation, float speed, float lifetime);
+	void hitEffect(const glm::vec3& pos, float lifetime, bool hitEnemy = true);
 	const GLuint getVAO() const;
 	unsigned int getNrOfAliveParticles() const;
 
@@ -60,7 +59,6 @@ private:
 
 	std::vector<glm::vec3> m_centerPosBuffer;
 	std::vector<glm::vec4> m_colorBuffer;
-	std::vector<GLuint> m_sparksIDS;
 private:
 	void updateBuffers();
 	size_t m_lastUnusedParticle;

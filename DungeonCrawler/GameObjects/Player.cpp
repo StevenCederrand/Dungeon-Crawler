@@ -32,15 +32,11 @@ void Player::update(float dt)
 	}
 	if (!m_debug)
 	{
-		camPerspective();
-		if (Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT))
+		if (Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT) || Input::isMousePressed(GLFW_MOUSE_BUTTON_RIGHT))
 		{
 			dash();
 		}
-		if (Input::isMousePressed(GLFW_MOUSE_BUTTON_RIGHT))
-		{
-			dash();
-		}
+		
 		if (Input::isMouseHeldDown(GLFW_MOUSE_BUTTON_LEFT))
 		{
 			if (m_canShoot) 
@@ -48,21 +44,23 @@ void Player::update(float dt)
 				shootProjectile();
 				m_shake = 4;
 			}
+			else
+			{
+				m_shooting = false;
+			}
 		}
 
 		if (!m_canShoot)
 		{
 			m_shootingCooldown -= dt;
-
 			if (m_shootingCooldown <= 0.f) {
 				m_canShoot = true;
 			}
 		}
 
-
 		move(dt);
 		dashCd();
-		//screenShake();
+		screenShake();
 	}
 }
 
@@ -88,6 +86,7 @@ void Player::move(float dt)
 		m_movementDirection.x = this->m_speed * dt;
 	}
 	setVelocity(m_movementDirection);
+	
 	Camera::active->setToPlayer(getPosition(), m_shakeDir);
 }
 
@@ -109,40 +108,17 @@ const glm::vec3 & Player::getLookDirection() const
 	return glm::normalize(m_lookDirection);
 }
 
+const float& Player::getAngle() const
+{
+	return m_angle;
+}
+
 glm::vec3 Player::shakeDirection()const
 {
 	glm::vec3 lookDir = Camera::active->getMouseWorldPos() - getPosition();
 	lookDir.y = 0;
 
 	return glm::normalize(lookDir);
-}
-
-void Player::camPerspective()
-{
-	if (Input::isKeyPressed(GLFW_KEY_1))
-	{
-		Camera::active->setAngle(1);
-	}
-	if (Input::isKeyPressed(GLFW_KEY_2))
-	{
-		Camera::active->setAngle(2);
-	}
-	if (Input::isKeyPressed(GLFW_KEY_3))
-	{
-		Camera::active->setAngle(3);
-	}
-	if (Input::isKeyPressed(GLFW_KEY_4))
-	{
-		Camera::active->setAngle(4);
-	}
-	if (Input::isKeyPressed(GLFW_KEY_5))
-	{
-		Camera::active->setAngle(5);
-	}
-	if (Input::isKeyPressed(GLFW_KEY_6))
-	{
-		Camera::active->setAngle(6);
-	}
 }
 
 void Player::dash()
@@ -187,11 +163,11 @@ void Player::screenShake()
 	}
 	if (m_shake > 0)
 	{
-		m_shakeDir = shakeDirection() * 0.25f;
+		m_shakeDir = shakeDirection() * 0.1f;
 	}
 	if (m_shake > 2)
 	{
-		m_shakeDir = shakeDirection() * -0.25f;
+		m_shakeDir = shakeDirection() * -0.1f;
 	}
 	if (m_shake > 0)
 	{

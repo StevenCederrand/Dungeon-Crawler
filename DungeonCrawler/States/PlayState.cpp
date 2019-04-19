@@ -28,11 +28,11 @@ PlayState::PlayState() {
 	
 	#pragma region Create_Objects
 	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
-	ParserData* roomData = m_parser->loadFromObj("basementleveltest.obj");
+	ParserData* roomData = m_parser->loadFromObj("collisionroomtest.obj");
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
 
-	m_GLinit->createMesh("Box", boxData);
 	m_GLinit->createMesh("Room", roomData);
+	m_GLinit->createMesh("Box", boxData);
 	m_GLinit->createMesh("Sphere", sphereData);
 	#pragma endregion
 	
