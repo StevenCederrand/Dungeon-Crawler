@@ -109,10 +109,10 @@ void Renderer::geometryPass() {
 void Renderer::renderEffects()
 {
 	glEnable(GL_BLEND);
-	Shader* laserShader = ShaderMap::getShader("LaserShader");
-	laserShader->use();
-	laserShader->setMat4("viewMatrix", m_camera->getViewMatrix());
-	laserShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+	Shader* effectsShader = ShaderMap::getShader("EffectsShader");
+	effectsShader->use();
+	effectsShader->setMat4("viewMatrix", m_camera->getViewMatrix());
+	effectsShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
 	glBindVertexArray(m_effects->getVAO());
 
 	glEnableVertexAttribArray(0);
@@ -126,7 +126,7 @@ void Renderer::renderEffects()
 	glDisableVertexAttribArray(3);
 	
 	glBindVertexArray(0);
-	laserShader->unuse();
+	effectsShader->unuse();
 	glDisable(GL_BLEND);
 }
 

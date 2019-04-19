@@ -170,7 +170,7 @@ void Application::initShaders() {
 	shader->setInt("colourBuffer", 2);
 	shader->unuse();
 
-	shader = ShaderMap::createShader("LaserShader", "LaserShader.vs", "LaserShader.fs");
+	shader = ShaderMap::createShader("EffectsShader", "EffectsShader.vs", "EffectsShader.fs");
 
 }
 
