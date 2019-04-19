@@ -2,8 +2,11 @@
 #include "System/Log.h"
 #include "Box.h"
 
-GameObjectManager::GameObjectManager()
+GameObjectManager::GameObjectManager(Effects* effects)
 {
+	m_effects = effects;
+	m_broadPhaseBox = nullptr;
+	m_player = nullptr;
 }
 
 GameObjectManager::~GameObjectManager()
@@ -44,6 +47,9 @@ void GameObjectManager::update(float dt)
 	//------ Player current velocity ( Also used for collision ) ------
 	newVel = m_player->getVelocity();
 
+	if (m_player->isShooting()) {
+		m_effects->shootEffect(m_player->getPosition(), m_player->getAngle(), 5.f, 0.20f);
+	}
 
 	//------ Update all the game objects and check for collision 'n stuff ------
 	for (size_t i = 0; i < m_gameObjects.size(); i++)
@@ -68,8 +74,10 @@ void GameObjectManager::update(float dt)
 		handlePlayerCollisionAgainstObjects(dt, object, newVel, hasCollided);
 
 		// If player is shooting then handle it
-		if (m_player->isShooting())
+		if (m_player->isShooting()) {
 			handlePlayerShooting(dt, object, rayDirection, rayLengthUntilCollision, objectHit);
+		}
+			
 	}
 
 	// Lastly we translate the player with the velocity that has been 
@@ -81,14 +89,20 @@ void GameObjectManager::update(float dt)
 	// If the length is -1 then there was no intersection
 	if (rayLengthUntilCollision != -1.0f)
 	{
-		glm::vec3 gunshotCollisionPoint = rayDirection * rayLengthUntilCollision;
+		glm::vec3 gunshotCollisionPoint = m_player->getPosition() + rayDirection * rayLengthUntilCollision;
 		if (objectHit)
 		{
 			//LOG_TRACE("Ray intersection! collision point: " + std::to_string(gunshotCollisionPoint.x) + ", " + std::to_string(gunshotCollisionPoint.z));
 
 			// --------MAYBE DYNAMIC CASY HERE TO CHECK IF WE HIT A ENEMY?--------
-			if(dynamic_cast<Box*>(objectHit))
+			bool hitEnemy = false;
+			if (dynamic_cast<Box*>(objectHit)) {
+				hitEnemy = true;
 				objectHit->setHit();
+			}
+			
+			m_effects->hitEffect(gunshotCollisionPoint, 0.15f, hitEnemy);
+			
 		}
 
 	}
@@ -146,7 +160,7 @@ void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject
 		AABB* playerBox = m_player->getBoundingBoxes()[0];
 		const std::vector<AABB*> objectBoxes = object->getBoundingBoxes();
 
-		for (int i = 0; i < objectBoxes.size(); i++) {
+		for (size_t i = 0; i < objectBoxes.size(); i++) {
 			AABB* objectBox = objectBoxes[i];
 
 			if (m_broadPhaseBox->checkCollision(*objectBox))
@@ -179,7 +193,7 @@ void GameObjectManager::handlePlayerShooting(float dt, GameObject * object, cons
 	{
 		const std::vector<AABB*> objectBoxes = object->getBoundingBoxes();
 		
-		for (int i = 0; i < objectBoxes.size(); i++) 
+		for (size_t i = 0; i < objectBoxes.size(); i++)
 		{
 			AABB* objectBox = objectBoxes[i];
 

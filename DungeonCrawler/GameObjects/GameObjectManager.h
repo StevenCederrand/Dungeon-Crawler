@@ -3,12 +3,13 @@
 #include <vector>
 #include "Player.h"
 #include "GameObject.h"
+#include "Graphics/Effects.h"
 
 
 class GameObjectManager {
 
 public:
-	GameObjectManager();
+	GameObjectManager(Effects* effects);
 	~GameObjectManager();
 
 	void update(float dt);
@@ -26,6 +27,7 @@ private:
 	std::vector<GameObject*> m_gameObjects;
 	Player* m_player;
 	AABB* m_broadPhaseBox;
+	Effects* m_effects; 
 };
 
 #endif

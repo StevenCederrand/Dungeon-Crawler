@@ -8,12 +8,13 @@
 #include <vector>
 #include <map>
 #include "Shader.h"
+#include "Effects.h"
 
 
 class Renderer
 {
 public:
-	Renderer(Camera* camera, LightManager* lightManager);
+	Renderer(Camera* camera, LightManager* lightManager, Effects* effects);
 	~Renderer();
 
 	void prepareGameObjects(const std::vector<GameObject*>& gameObjects);
@@ -31,6 +32,7 @@ private:
 	void forwardPass();
 	void shadowPass(); //Get depth buffer
 	void geometryPass();
+	void renderEffects();
 	void lightPass();
 
 	bool initRenderQuad();	
@@ -49,7 +51,7 @@ private:
 	
 	LightManager* m_lightManager;
 	Camera* m_camera;
-
+	Effects* m_effects;
 
 	unsigned int m_rQuadVAO;
 	unsigned int m_rQuadVBO;

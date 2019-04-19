@@ -10,7 +10,6 @@ public:
 
 	void move(float dt);
 	void rotatePlayer();
-	void camPerspective();
 	void dash();
 	void dashCd();
 
@@ -27,6 +26,8 @@ public:
 	bool isShooting() const;
 
 	const glm::vec3& getLookDirection() const;
+	const float& getAngle() const;
+
 	glm::vec3 shakeDirection() const;
 	Spotlight* getSpotlight();
 

@@ -123,8 +123,8 @@ void Framebuffer::bindDeferredTextures() {
 	glBindTexture(GL_TEXTURE_2D, this->m_normalBuffer);
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, this->m_colourBuffer);
-	//glActiveTexture(GL_TEXTURE3);
-	//glBindTexture(GL_TEXTURE_2D, this->m_depthMap);
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, this->m_depthMap);
 }
 
 void Framebuffer::unbindDeferredTextures() {
@@ -134,8 +134,8 @@ void Framebuffer::unbindDeferredTextures() {
 	glBindTexture(GL_TEXTURE_2D, NULL);
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, NULL);
-	//glActiveTexture(GL_TEXTURE3);
-	//glBindTexture(GL_TEXTURE_2D, NULL);
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, NULL);
 }
 
 unsigned int Framebuffer::getFrameBuffer() const {

@@ -160,4 +160,8 @@ void Application::initShaders() {
 	shader = ShaderMap::createShader("GeometryPass", "GeometryPass/GeometryPass.vs", "GeometryPass/GeometryPass.gs", "GeometryPass/GeometryPass.fs");
 	shader = ShaderMap::createShader("LightPass", "LightPass/LightPass.vs", "LightPass/LightPass.fs");
 	shader = ShaderMap::createShader("ShadowPass", "ShadowPass/ShadowPass.vs", "ShadowPass/ShadowPass.fs");
+	shader = ShaderMap::createShader("EffectsShader", "EffectsShader.vs", "EffectsShader.fs");
 }
+
+
+

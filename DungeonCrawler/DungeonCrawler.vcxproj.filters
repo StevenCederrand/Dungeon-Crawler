@@ -45,6 +45,7 @@
     <ClCompile Include="Graphics\UIRenderer.cpp" />
     <ClCompile Include="GameObjects\LightSphere.cpp" />
     <ClCompile Include="GameObjects\Room.cpp" />
+    <ClCompile Include="Graphics\Effects.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -101,6 +102,10 @@
     <ClInclude Include="Utility\Ray.h" />
     <ClInclude Include="Utility\Randomizer.h" />
     <ClInclude Include="GameObjects\Room.h" />
+<<<<<<< HEAD
     <ClInclude Include="Globals\LightTypes.h" />
+=======
+    <ClInclude Include="Graphics\Effects.h" />
+>>>>>>> 1f31c555d98d642edc19dc5985747eab900f98a4
   </ItemGroup>
 </Project>

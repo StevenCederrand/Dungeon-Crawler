@@ -7,6 +7,7 @@
 #include "Utility/Camera.h"
 #include "GameObjects/GameObjectManager.h"
 #include "Graphics/LightManager.h"
+#include "Graphics/Effects.h"
 
 class PlayState : public State {
 public:
@@ -27,7 +28,7 @@ private:
 	GameObjectManager* m_gameObjectManager;
 	LightManager* m_lightManager;
 	GameObject* m_player;
-
+	Effects* m_effects;
 };
 
 #endif

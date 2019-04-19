@@ -14,7 +14,7 @@ GameObject::GameObject(Mesh * mesh, const glm::vec3 & position)
 
 	if (!mesh->getMaxMinVector().empty())
 	{
-		for (int i = 0; i < mesh->getMaxMinVector().size() - 1; i += 2)
+		for (size_t i = 0; i < mesh->getMaxMinVector().size() - 1; i += 2)
 		{
 			AABB* aabb = new AABB(mesh->getMaxMinVector()[i], mesh->getMaxMinVector()[i + 1]);
 			aabb->setParentPosition(position);
@@ -27,7 +27,7 @@ GameObject::GameObject(Mesh * mesh, const glm::vec3 & position)
 
 GameObject::~GameObject()
 {
-	for(int i = 0; i < m_boundingBoxes.size(); i++)
+	for(size_t i = 0; i < m_boundingBoxes.size(); i++)
 		delete m_boundingBoxes[i];
 }
 
@@ -59,7 +59,7 @@ void GameObject::updateModelMatrix()
 void GameObject::setPosition(const glm::vec3 & position)
 {
 	m_position = position;
-	for (int i = 0; i < m_boundingBoxes.size(); i++)
+	for (size_t i = 0; i < m_boundingBoxes.size(); i++)
 	{
 		m_boundingBoxes[i]->setParentPosition(position);
 	}
@@ -69,7 +69,7 @@ void GameObject::translate(const glm::vec3 & translationVector)
 {
 	m_position += translationVector;
 	m_velocity = glm::vec3(translationVector);
-	for (int i = 0; i < m_boundingBoxes.size(); i++)
+	for (size_t i = 0; i < m_boundingBoxes.size(); i++)
 	{
 		m_boundingBoxes[i]->setParentPosition(m_position);
 	}
