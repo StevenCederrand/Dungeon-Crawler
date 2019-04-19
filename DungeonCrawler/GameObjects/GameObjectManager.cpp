@@ -5,7 +5,8 @@
 GameObjectManager::GameObjectManager(Effects* effects)
 {
 	m_effects = effects;
-	
+	m_broadPhaseBox = nullptr;
+	m_player = nullptr;
 }
 
 GameObjectManager::~GameObjectManager()
