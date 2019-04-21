@@ -94,14 +94,13 @@ void Renderer::shadowPass() {
 	if (m_meshes.size() == 0) {
 		return;
 	}
-	glViewport(0, 0, ScreenResolutionX, ScreenResolutionY);
+
 	this->configureShadowMapperVM();
 
 	Shader* shadowShader = ShaderMap::getShader("ShadowPass");
 	shadowShader->use();
 	shadowShader->setMat4("lightSpaceMatrix", m_framebuffer->getLightSpaceMatrix());
 
-	glViewport(0, 0, ScreenResolutionX, ScreenResolutionY);
 	m_framebuffer->bindShadowBuffer();
 	glClear(GL_DEPTH_BUFFER_BIT);
 	
@@ -182,12 +181,8 @@ void Renderer::lightPass() {
 	Shader* lightShader = ShaderMap::getShader("LightPass");
 	lightShader->use();
 
-	//if (m_spotlight != nullptr) {
-	//	lightShader->setVec3("spotlight.position", m_spotlight->position);
-	//	lightShader->setVec3("spotlight.direction", m_spotlight->direction);
-	//	lightShader->setFloat("spotlight.radius", m_spotlight->radius);
-	//}
-	/*lightShader->setMat3("");*/
+
+	lightShader->setMat4("lightSpaceMatrix", m_framebuffer->getLightSpaceMatrix());
 	lightShader->setInt("numberOfLights", m_lightManager->getNumberOfLights());
 	lightShader->setVec3("cameraPosition", m_camera->getPosition());
 	drawQuad();
@@ -265,6 +260,7 @@ void Renderer::drawQuad() {
 }
 
 void Renderer::configureShadowMapperVM() {
-	glm::mat4 viewMatrix = glm::lookAt(m_spotlight->position, m_spotlight->direction, glm::vec3(0, 1, 0));
+	glm::vec3 pos = m_spotlight->position + glm::vec3(0, 0.5f, 0);
+	glm::mat4 viewMatrix = glm::lookAt(pos, pos + m_spotlight->direction, glm::vec3(0, 1, 0));
 	m_framebuffer->setViewMatrix(viewMatrix);
 }

@@ -27,9 +27,7 @@ void Framebuffer::genFrameBuffers() {
 		LOG_ERROR("FRAMEBUFFER INCOMPLETE");
 		return;
 	}
-
-	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
-
+	
 	//Used for shadow mapping
 	glGenFramebuffers(1, &this->m_shadowBuffer);
 	this->bindShadowBuffer();
@@ -38,7 +36,6 @@ void Framebuffer::genFrameBuffers() {
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
 		LOG_ERROR("ERROR GENERATING SHADOW FRAMEBUFFER OBJECT");
 	}
-	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 }
 
 void Framebuffer::genRenderBuffer() {

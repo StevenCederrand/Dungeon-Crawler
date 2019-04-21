@@ -6,11 +6,13 @@ out vec4 finalColor;
 layout (binding = 0) uniform sampler2D positionBuffer;
 layout (binding = 1) uniform sampler2D normalBuffer;
 layout (binding = 2) uniform sampler2D colourBuffer;
+layout (binding = 3) uniform sampler2D shadowBuffer;
 
 uniform vec3 sunColor;
 uniform vec3 sunPosition;
 uniform vec3 cameraPosition;
 
+uniform mat4 lightSpaceMatrix;
 vec3 worldPosition;
 vec3 normal;
 vec3 textureColor;
@@ -62,8 +64,7 @@ vec3 getPhongColor(vec3 lightPosition, float specularStrength, vec3 lightColor)
 
 }
 
-vec3 getSumOfAllColorFromPointLights(float specularStrength, vec3 worldPosition)
-{
+vec3 getSumOfAllColorFromPointLights(float specularStrength, vec3 worldPosition) {
 	vec3 finalColor = vec3(0.f);
 	for(int i = 0; i < numberOfLights; i++)
 	{
@@ -83,22 +84,15 @@ vec3 getSumOfAllColorFromPointLights(float specularStrength, vec3 worldPosition)
 	return finalColor;
 }
 
-/*vec3 getSumOfSpotlights(vec3 worldPosition) {
-	vec3 lightDirection = normalize(spotlight.position - worldPosition);
-	float radialVal = dot(lightDirection, normalize(-spotlight.direction));
-
-	if(radialVal > spotlight.radius) {
-		//Do Something
-		return vec3(1);
-	}
-	else {
-		return vec3(0);
-	}
+float shadowCalculations(vec4 lightSpacePos) {
+	
 }
-*/
+
 void main() {
 
 	worldPosition = texture(positionBuffer, frag_uv).rgb;
+	vec4 lightSpacePos = lightSpaceMatrix * vec4(worldPosition, 1.0);
+
 	normal = texture(normalBuffer, frag_uv).rgb;
 	textureColor = texture(colourBuffer, frag_uv).rgb;
 	float shininess = texture(colourBuffer, frag_uv).a;
