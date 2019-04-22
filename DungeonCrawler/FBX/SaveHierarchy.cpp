@@ -35,25 +35,26 @@ void SaveHierarchy::m_SaveNode(FbxNode* pNode)
 	//then material
 
 	bool collisionBool = false;
+	bool staticMeshBool = false;
+
 	FbxProperty collision = pNode->FindProperty("Collision", true);
 	if (collision.IsValid())
 	{
 		FbxBool collisionBoolFbx = collision.Get<bool>();
 		collisionBool = collisionBoolFbx;
-		m_staticMesh.setCollision(collisionBool);
+		//m_staticMesh.setCollision(collisionBool);
 	}
 	else
 	{
 		printf("Collision Bool not found");
 	}
 
-	bool staticMeshBool = false;
 	FbxProperty staticMesh = pNode->FindProperty("StaticMesh", true);
 	if (staticMesh.IsValid())
 	{
 		FbxBool staticMeshBoolFbx = staticMesh.Get<bool>();
 		staticMeshBool = staticMeshBoolFbx;
-		m_staticMesh.setStaticMesh(staticMeshBool);
+		//m_staticMesh.setStaticMesh(staticMeshBool);
 	}
 	else
 	{
@@ -67,16 +68,18 @@ void SaveHierarchy::m_SaveNode(FbxNode* pNode)
 	case FbxNodeAttribute::eMesh:	//if its a mesh
 		if (collisionBool)
 		{
+
 			//SaveBoundingBoxMesh
 			m_SaveHitboxMesh(pNode);	//saves relevant into in m_mesh
 			m_file.WriteBoundingBoxMesh(m_bBMesh);	//sends m_mesh to file writer for static mesh
 			m_bBMesh.PrepareForNewMesh();
+
 		}
 		else
 		{
 			if (staticMeshBool)   //if its static
 			{
-				m_SaveStaticMesh(pNode);	//saves relevant into in m_mesh
+				m_SaveStaticMesh(pNode, collisionBool, staticMeshBool);	//saves relevant info in m_mesh
 				m_file.WriteStaticMesh(m_staticMesh);	//sends m_mesh to file writer for static mesh
 				m_staticMesh.PrepareForNewMesh();
 			}
@@ -195,7 +198,7 @@ void SaveHierarchy::m_SaveNormals(FbxMesh* pMesh, int k, int vertexCounter)
 }
 
 //saves UV, UVIndex, normal, controlpointIndex
-void SaveHierarchy::m_SaveStaticMesh(FbxNode* pNode) //trying to make SavePolygons into functions 
+void SaveHierarchy::m_SaveStaticMesh(FbxNode* pNode, bool collision, bool staticMesh) //trying to make SavePolygons into functions 
 {
 	FbxMesh* lMesh = (FbxMesh*)pNode->GetNodeAttribute();
 	int lPolygonCount = lMesh->GetPolygonCount();
