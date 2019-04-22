@@ -90,3 +90,9 @@ void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //speciall case fo
 {
 	currentMesh.CheckMesh();
 }
+
+void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh)
+{
+	currentMesh.CheckMesh();
+}
+

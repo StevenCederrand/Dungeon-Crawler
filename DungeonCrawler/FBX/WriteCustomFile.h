@@ -7,6 +7,7 @@
 #include <fstream>
 #include "HeaderStructs.h"
 #include "StaticMesh.h"
+#include "BoundingBoxMesh.h"
 
 class WriteCustomFile
 {
@@ -17,4 +18,5 @@ public:
 	~WriteCustomFile();
 	void CreateCustomFile();
 	void WriteStaticMesh(StaticMesh currentMesh);
+	void WriteBoundingBoxMesh(BoundingBoxMesh currentMesh);
 };

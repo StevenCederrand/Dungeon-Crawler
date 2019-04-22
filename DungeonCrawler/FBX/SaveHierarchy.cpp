@@ -68,6 +68,9 @@ void SaveHierarchy::m_SaveNode(FbxNode* pNode)
 		if (collisionBool)
 		{
 			//SaveBoundingBoxMesh
+			m_SaveHitboxMesh(pNode);	//saves relevant into in m_mesh
+			m_file.WriteBoundingBoxMesh(m_bBMesh);	//sends m_mesh to file writer for static mesh
+			m_bBMesh.PrepareForNewMesh();
 		}
 		else
 		{

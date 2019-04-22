@@ -14,4 +14,8 @@ private:
 	void initiateArrays();
 public:
 	BoundingBoxMesh();
+	~BoundingBoxMesh();
+
+	void CheckMesh();
+	void PrepareForNewMesh();
 };
