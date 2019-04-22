@@ -14,7 +14,7 @@ private:
 	WriteCustomFile m_file; //will only be one, never replaced
 
 	void m_SaveControlPoints(FbxMesh* pMesh, bool collision);
-	void m_SaveControlPointsIndex(FbxMesh* pMesh, int i, int j);
+	void m_SaveControlPointsIndex(FbxMesh* pMesh, int i, int j, bool collision);
 	void m_SaveUVCoordinatesAndIndex(FbxMesh* pMesh, int k, int i, int j, int vertexCounter);
 	void m_SaveNormals(FbxMesh* pMesh, int k, int vertexCounter);
 	void m_SaveNode(FbxNode* pNode);

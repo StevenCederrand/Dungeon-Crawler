@@ -25,7 +25,9 @@ public:
 	~BoundingBoxMesh();
 	void PrepareForNewMesh();
 	void AddControlPoint(FbxVector4 controlPoint);
+	void AddIndexPoint(int index);
 
+	void IncreaseVertexCount();
 	void CheckMesh();
 
 	void setCollision(bool collision);
