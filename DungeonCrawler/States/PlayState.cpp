@@ -11,6 +11,7 @@
 #include "GameObjects/Room.h"
 #include "GameObjects/Player.h"
 #include "GameObjects/Enemies/Walker.h"
+#include "GameObjects/Enemies/Shooter.h"
 
 #include "Utility/Randomizer.h"
 
@@ -83,11 +84,11 @@ PlayState::PlayState() {
 	m_gameObjectManager->nodecollision(roomData);
 	m_parser->writeToBinary();
 
-
+	m_shooter = new Shooter(boxMesh, SHOOTER);
+	m_gameObjectManager->addGameObject(m_shooter);
 	m_walker = new Walker(boxMesh, WALKER);
 	m_gameObjectManager->addGameObject(m_walker);
 	m_player = new Player(boxMesh, PLAYER);
-
 	m_gameObjectManager->addGameObject(m_player);
 }
 
@@ -116,7 +117,7 @@ void PlayState::renderImGUI()
 {
 	ImGui::Begin("PlayState");
 
-	ImGui::Text("Press shift to DASH");
+	ImGui::Text("Press shift or r.mb to DASH");
 
 	ImGui::Text("Player [ %f%s%f%s%f%s"
 		, m_player->getPosition().x

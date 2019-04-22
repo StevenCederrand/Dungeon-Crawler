@@ -1,6 +1,7 @@
 #include "GameObjectManager.h"
 #include "System/Log.h"
 #include "Box.h"
+#include <vector>
 
 GameObjectManager::GameObjectManager()
 {
@@ -20,6 +21,7 @@ GameObjectManager::~GameObjectManager()
 
 void GameObjectManager::update(float dt)
 {	
+	handleDeadEnemies(dt);
 	//------ Player collision broadphasebox ( Used to speed up collision checking against map ) ------
 	if (m_broadPhaseBox)
 		m_broadPhaseBox->setParentPosition(m_player->getPosition());
@@ -93,7 +95,11 @@ void GameObjectManager::update(float dt)
 			}
 			if (dynamic_cast<Walker*>(objectHit))
 				objectHit->setHit();
-			
+			if (dynamic_cast<Shooter*>(objectHit))
+			{
+				objectHit->setHit();
+			}
+
 			HitDescription desc;
 			desc.player = m_player;
 			objectHit->hit(desc);
@@ -226,11 +232,17 @@ void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject
 					float dotprod = (newVel.x * nz + newVel.z * nx) * remainingTime;
 					newVel.x = dotprod * nz;
 					newVel.z = dotprod * nx;
+					HitDescription desc;
 					if (dynamic_cast<Walker*>(object))
 					{
 						m_walker = dynamic_cast<Walker*>(object);
-						HitDescription desc;
 						desc.walker = m_walker; 
+						m_player->hit(desc);
+					}
+					if (dynamic_cast<Shooter*>(object))
+					{
+						m_shooter = dynamic_cast<Shooter*>(object);
+						desc.shooter = m_shooter;
 						m_player->hit(desc);
 					}
 				}
@@ -263,6 +275,32 @@ void GameObjectManager::handlePlayerShooting(float dt, GameObject * object, cons
 				rayLengthUntilCollision = rayLengthBefore;
 			}
 
+		}
+	}
+}
+
+void GameObjectManager::handleDeadEnemies(float dt)
+{
+	
+	for (size_t i = 0; i < m_gameObjects.size(); i++)
+	{
+		// Get the object, just convenient
+		GameObject* object = m_gameObjects[i];
+		
+		if (dynamic_cast<Walker*>(object))
+		{
+			if (!dynamic_cast<Walker*>(object)->getAliveStatus())
+			{
+				m_gameObjects.erase(m_gameObjects.begin()+ i);
+			}
+		}
+
+		if (dynamic_cast<Shooter*>(object))
+		{
+			if (!dynamic_cast<Shooter*>(object)->getAliveStatus())
+			{
+				m_gameObjects.erase(m_gameObjects.begin() + i);
+			}
 		}
 	}
 }

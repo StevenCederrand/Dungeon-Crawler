@@ -7,6 +7,7 @@
 enum Type {
 	PLAYER = 0,
 	WALKER = 1,
+	SHOOTER = 2,
 	BOX = 10,
 	ROOM = 11,
 	LIGHTSPHERE = 12,

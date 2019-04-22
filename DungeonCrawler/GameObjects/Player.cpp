@@ -5,6 +5,7 @@
 #include "System/Log.h"
 #include "Utility/Camera.h"
 #include "Enemies/Walker.h"
+#include "Enemies/Shooter.h"
 
 Player::Player(Mesh* mesh, Type type) :
 	GameObject(mesh, type)
@@ -29,12 +30,14 @@ Player::Player(Mesh* mesh, Type type) :
 	this->m_weaponSlot = 1;
 	this->m_spraying = false;
 	this->m_type = type;
+	this->m_iframes = 0.f;
 }
 
 void Player::update(float dt)
 {
 	// Start of by saying that the player is not shooting
 	m_shooting = false;
+	iframeCountdown(dt);
 
 	if (Input::isKeyReleased(GLFW_KEY_Q))
 	{
@@ -60,11 +63,23 @@ void Player::update(float dt)
 void Player::hit(const HitDescription & desc)
 {
 	Type type = desc.owner->getType();
-	if (type == Type::WALKER)
+	if (m_iframes <= 0)
 	{
-		Walker* walker = dynamic_cast<Walker*>(desc.owner);
-		m_health -= walker->getDamage();
+		if (type == Type::WALKER)
+		{
+			Walker* walker = dynamic_cast<Walker*>(desc.owner);
+			m_health -= walker->getDamage();
+		}
+		if (type == Type::SHOOTER)
+		{
+			Shooter* shooter = dynamic_cast<Shooter*>(desc.owner);
+			m_health -= shooter->getDamage();
+		}
+		m_iframes = 2.f;
 	}
+	
+	LOG_WARNING("Player Health: " + std::to_string(m_health));
+		//"Player health: " + m_health);
 }
 
 Type Player::getType()
@@ -287,6 +302,14 @@ void Player::setHealth(float health)
 void Player::setDamage(float damage)
 {
 	this->m_damage = damage;
+}
+
+void Player::iframeCountdown(float dt)
+{
+	if (m_iframes > 0.f)
+	{
+		m_iframes -= dt;
+	}
 }
 
 void Player::takeDamage(float damageRecieved)

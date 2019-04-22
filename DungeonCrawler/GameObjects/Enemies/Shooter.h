@@ -1,17 +1,14 @@
 #pragma once
-#ifndef _WALKER_H
-#define _WALKER_H
+#ifndef _SHOOTER_H
+#define _SHOOTER_H
 #include "../GameObject.h"
 
-class Walker : public GameObject {
+class Shooter :public GameObject {
 public:
-	Walker(Mesh* mesh, Type type);
+	Shooter(Mesh* mesh, Type type);
 	void update(float dt);
-	void move(float dt);
-	void moveToPlayer(float dt);
-	void findPath(glm::vec3 startPos, glm::vec3 targetPos);
-	
-	void hitPlayer();
+
+
 	void hit(const HitDescription& desc);
 	Type getType();
 	float getDamage()const;
@@ -19,12 +16,14 @@ public:
 	bool getAliveStatus()const;
 
 private:
+
 	float m_health;
 	float m_speed;
 	float m_damage;
 	bool m_isPlayerClose;
 	Type m_type;
 	bool m_amIAlive;
+
 };
 
-#endif // !_WALKER_H
+#endif // !_SHOOTER_H

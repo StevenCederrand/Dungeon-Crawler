@@ -26,6 +26,7 @@ public:
 	void setSpeed(float speed);
 	void setHealth(float health);
 	void setDamage(float damage);
+	void iframeCountdown(float dt);
 
 	void takeDamage(float damageRecieved);
 
@@ -33,10 +34,10 @@ public:
 	float getHealth()const;
 	float getDamage()const;
 	bool isShooting() const;
+	
 
 	const glm::vec3& getLookDirection() const;
 	glm::vec3 shakeDirection() const;
-
 	glm::vec3 getPlayerPosition()const;
 
 private:
@@ -47,15 +48,17 @@ private:
 	float m_defaultSpeed;
 	float m_speed;
 	float m_health;
+	float m_iframes;
+
 	float m_damage;
 	float m_chargeDamage;
 	float m_automaticDamage;
 	float m_unChargedDamage;
+
 	Type m_type;
 
 	float m_dash;
 	bool m_dashCd;
-
 	float m_dashTimer;
 
 	// Shooting

@@ -27,6 +27,7 @@ private:
 	LightManager* m_lightManager;
 	GameObject* m_player;
 	GameObject* m_walker;
+	GameObject* m_shooter;
 
 };
 

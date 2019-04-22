@@ -157,6 +157,7 @@
     <ClCompile Include="Audio\AudioEngine.cpp" />
     <ClCompile Include="Collision\AABB.cpp" />
     <ClCompile Include="GameObjects\Box.cpp" />
+    <ClCompile Include="GameObjects\Enemies\Shooter.cpp" />
     <ClCompile Include="GameObjects\Enemies\Walker.cpp" />
     <ClCompile Include="GameObjects\GameObject.cpp" />
     <ClCompile Include="GameObjects\GameObjectManager.cpp" />
@@ -197,6 +198,7 @@
     <ClInclude Include="Collision\AABB.h" />
     <ClInclude Include="Collision\HitData.h" />
     <ClInclude Include="GameObjects\Box.h" />
+    <ClInclude Include="GameObjects\Enemies\Shooter.h" />
     <ClInclude Include="GameObjects\Enemies\Walker.h" />
     <ClInclude Include="GameObjects\GameObject.h" />
     <ClInclude Include="GameObjects\GameObjectManager.h" />
