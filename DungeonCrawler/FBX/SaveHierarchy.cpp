@@ -67,7 +67,9 @@ void SaveHierarchy::m_SaveNode(FbxNode* pNode)
 	case FbxNodeAttribute::eMesh:	//if its a mesh
 		if (collisionBool)
 		{
-			//SaveBoundingBoxMesh
+			m_SaveHitboxMesh(pNode);
+			m_file.WriteStaticMesh(m_bBMesh);	//sends m_mesh to file writer for static mesh
+			m_bBMesh.PrepareForNewMesh();
 		}
 		else
 		{
