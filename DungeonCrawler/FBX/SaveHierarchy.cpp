@@ -35,25 +35,26 @@ void SaveHierarchy::m_SaveNode(FbxNode* pNode)
 	//then material
 
 	bool collisionBool = false;
+	bool staticMeshBool = false;
+
 	FbxProperty collision = pNode->FindProperty("Collision", true);
 	if (collision.IsValid())
 	{
 		FbxBool collisionBoolFbx = collision.Get<bool>();
 		collisionBool = collisionBoolFbx;
-		m_staticMesh.setCollision(collisionBool);
+		//m_staticMesh.setCollision(collisionBool);
 	}
 	else
 	{
 		printf("Collision Bool not found");
 	}
 
-	bool staticMeshBool = false;
 	FbxProperty staticMesh = pNode->FindProperty("StaticMesh", true);
 	if (staticMesh.IsValid())
 	{
 		FbxBool staticMeshBoolFbx = staticMesh.Get<bool>();
 		staticMeshBool = staticMeshBoolFbx;
-		m_staticMesh.setStaticMesh(staticMeshBool);
+		//m_staticMesh.setStaticMesh(staticMeshBool);
 	}
 	else
 	{
@@ -67,9 +68,9 @@ void SaveHierarchy::m_SaveNode(FbxNode* pNode)
 	case FbxNodeAttribute::eMesh:	//if its a mesh
 		if (collisionBool)
 		{
-			m_SaveHitboxMesh(pNode);
-			m_file.WriteStaticMesh(m_bBMesh);	//sends m_mesh to file writer for static mesh
-			m_bBMesh.PrepareForNewMesh();
+			//m_SaveHitboxMesh(pNode);
+			//m_file.WriteStaticMesh(m_bBMesh);	//sends m_mesh to file writer for static mesh
+			//m_bBMesh.PrepareForNewMesh();
 		}
 		else
 		{
