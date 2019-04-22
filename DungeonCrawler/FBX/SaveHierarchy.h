@@ -19,7 +19,7 @@ private:
 	void m_SaveNormals(FbxMesh* pMesh, int k, int vertexCounter);
 	void m_SaveNode(FbxNode* pNode);
 	void m_SaveStaticMesh(FbxNode* pNode, bool collision, bool staticMesh);
-	void m_SaveHitboxMesh(FbxNode* pNode);
+	void m_SaveHitboxMesh(FbxNode* pNode, bool collision, bool staticMesh);
 	void m_SaveMeshName(FbxNode* pNode);
 	void m_PrintChildName(FbxMesh* pMesh);
 public:

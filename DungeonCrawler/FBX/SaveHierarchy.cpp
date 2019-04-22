@@ -66,12 +66,10 @@ void SaveHierarchy::m_SaveNode(FbxNode* pNode)
 	case FbxNodeAttribute::eMesh:	//if its a mesh
 		if (collisionBool)
 		{
-
-			//SaveBoundingBoxMesh
-			//m_SaveHitboxMesh(pNode);	//saves relevant into in m_mesh
+			printf("Its a BoundingBox");
+			m_SaveHitboxMesh(pNode, collisionBool, staticMeshBool);	//saves relevant into in m_mesh
 			//m_file.WriteBoundingBoxMesh(m_bBMesh);	//sends m_mesh to file writer for static mesh
 			//m_bBMesh.PrepareForNewMesh();
-
 		}
 		else
 		{
@@ -237,8 +235,11 @@ void SaveHierarchy::m_SaveStaticMesh(FbxNode* pNode, bool collision, bool static
 	}
 }
 
-void SaveHierarchy::m_SaveHitboxMesh(FbxNode* pNode)
+void SaveHierarchy::m_SaveHitboxMesh(FbxNode* pNode, bool collision, bool staticMesh)
 {
+	m_bBMesh.setCollision(collision);
+	m_bBMesh.setStaticMesh(staticMesh);
+
 	FbxMesh* lMesh = (FbxMesh*)pNode->GetNodeAttribute();
 	int lPolygonCount = lMesh->GetPolygonCount();
 	int lVertexCounter = 0;
@@ -257,18 +258,7 @@ void SaveHierarchy::m_SaveHitboxMesh(FbxNode* pNode)
 		{
 			//Save Control Point index
 			m_SaveControlPointsIndex(lMesh, i, j);
-
-			//how many UV coordinates the vertice has, 1 right now
-			for (int k = 0; k < lMesh->GetElementUVCount(); ++k)
-			{
-				m_SaveUVCoordinatesAndIndex(lMesh, k, i, j, lVertexCounter);
-			}
-
-			//How many normals per vertice, 1 right now
-			for (int k = 0; k < lMesh->GetElementNormalCount(); ++k)
-			{
-				m_SaveNormals(lMesh, k, lVertexCounter);
-			}
+			
 			lVertexCounter++;
 			m_staticMesh.increaseVertexCount();
 		}

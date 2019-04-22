@@ -22,7 +22,7 @@ private:
 	float m_normalCoordinateArr[3][100];	//change to a vector 3
 
 	bool m_collision;
-	bool m_isStatic;
+	bool m_staticMesh;
 
 	int m_nrOfPolygons;
 	int m_nrOfVerticesPerPolygon; //3 if triangulated

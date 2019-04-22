@@ -11,7 +11,7 @@ StaticMesh::StaticMesh()
 	m_currentNormalCoordinate = 0;
 
 	m_collision = 0;
-	m_isStatic = 0;
+	m_staticMesh = 0;
 
 	m_nrOfPolygons = 0;
 	m_nrOfVerticesPerPolygon = 0;
@@ -67,7 +67,7 @@ void StaticMesh::PrepareForNewMesh()
 	m_currentNormalCoordinate = 0;
 
 	m_collision = 0;
-	m_isStatic = 0;
+	m_staticMesh = 0;
 
 	m_nrOfPolygons = 0;
 	m_nrOfVerticesPerPolygon = 0;
@@ -173,7 +173,7 @@ void StaticMesh::CheckMesh()
 		printf("This mesh has no collision");
 	printf("\n");
 
-	if (m_isStatic)
+	if (m_staticMesh)
 		printf("This mesh is static");
 	else
 		printf("This mesh is dynamic");
@@ -206,7 +206,7 @@ void StaticMesh::setCollision(bool collision)
 
 void StaticMesh::setStaticMesh(bool staticMesh)
 {
-	m_isStatic = staticMesh;
+	m_staticMesh = staticMesh;
 }
 
 void StaticMesh::setName(const char name[], int nameSize)
@@ -224,5 +224,5 @@ bool StaticMesh::getCollision()const
 
 bool StaticMesh::getIsStatic()const
 {
-	return m_isStatic;
+	return m_staticMesh;
 }
