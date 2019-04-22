@@ -66,9 +66,9 @@ void SaveHierarchy::m_SaveNode(FbxNode* pNode)
 	case FbxNodeAttribute::eMesh:	//if its a mesh
 		if (collisionBool)
 		{
-			printf("Its a BoundingBox");
 			m_SaveHitboxMesh(pNode, collisionBool, staticMeshBool);	//saves relevant into in m_mesh
 			//m_file.WriteBoundingBoxMesh(m_bBMesh);	//sends m_mesh to file writer for static mesh
+			m_bBMesh.CheckMesh();
 			//m_bBMesh.PrepareForNewMesh();
 		}
 		else
@@ -95,14 +95,24 @@ void SaveHierarchy::m_SaveNode(FbxNode* pNode)
 	}
 }
 
-void SaveHierarchy::m_SaveControlPoints(FbxMesh* pMesh)
+void SaveHierarchy::m_SaveControlPoints(FbxMesh* pMesh, bool collision)
 {
 	int lControlPointsCount = pMesh->GetControlPointsCount();
 	FbxVector4* lControlPoints = pMesh->GetControlPoints();
 
-	for (int i = 0; i < lControlPointsCount; i++)
+	if (collision)
 	{
-		m_staticMesh.AddControlPoint(lControlPoints[i]);
+		for (int i = 0; i < lControlPointsCount; i++)
+		{
+			m_bBMesh.AddControlPoint(lControlPoints[i]);
+		}
+	}
+	else
+	{
+		for (int i = 0; i < lControlPointsCount; i++)
+		{
+			m_staticMesh.AddControlPoint(lControlPoints[i]);
+		}
 	}
 	printf("\n\n");
 }
@@ -206,32 +216,39 @@ void SaveHierarchy::m_SaveStaticMesh(FbxNode* pNode, bool collision, bool static
 
 	m_staticMesh.setNrOfVerticesPerPolygon(lPolygonSize); //save in m_mesh
 	m_staticMesh.setNrOfPolygons(lPolygonCount);	//save in m_mesh
-	m_SaveMeshName(pNode);
-	m_SaveControlPoints(lMesh);	//Save all controlpoints, to be used by index arr
+	m_SaveMeshName(pNode, collision);
+	m_SaveControlPoints(lMesh, collision);	//Save all controlpoints, to be used by index arr
 
 	//Go through all polygons
-	for (int i = 0; i < lPolygonCount; i++)
+	if (lPolygonSize == 3)
 	{
-		//Go through each vertice in the polygon
-		for (int j = 0; j < lPolygonSize; j++)
+		for (int i = 0; i < lPolygonCount; i++)
 		{
-			//Save Control Point index
-			m_SaveControlPointsIndex(lMesh, i, j);
-
-			//how many UV coordinates the vertice has, 1 right now
-			for (int k = 0; k < lMesh->GetElementUVCount(); ++k)
+			//Go through each vertice in the polygon
+			for (int j = 0; j < lPolygonSize; j++)
 			{
-				m_SaveUVCoordinatesAndIndex(lMesh, k, i, j, lVertexCounter);
-			}
+				//Save Control Point index
+				m_SaveControlPointsIndex(lMesh, i, j);
 
-			//How many normals per vertice, 1 right now
-			for (int k = 0; k < lMesh->GetElementNormalCount(); ++k)
-			{
-				m_SaveNormals(lMesh, k, lVertexCounter);
+				//how many UV coordinates the vertice has, 1 right now
+				for (int k = 0; k < lMesh->GetElementUVCount(); ++k)
+				{
+					m_SaveUVCoordinatesAndIndex(lMesh, k, i, j, lVertexCounter);
+				}
+
+				//How many normals per vertice, 1 right now
+				for (int k = 0; k < lMesh->GetElementNormalCount(); ++k)
+				{
+					m_SaveNormals(lMesh, k, lVertexCounter);
+				}
+				lVertexCounter++;
+				m_staticMesh.increaseVertexCount();
 			}
-			lVertexCounter++;
-			m_staticMesh.increaseVertexCount();
 		}
+	}
+	else
+	{
+		printf("WARNING, MESH NOT TRIANGULATED\n");
 	}
 }
 
@@ -241,36 +258,50 @@ void SaveHierarchy::m_SaveHitboxMesh(FbxNode* pNode, bool collision, bool static
 	m_bBMesh.setStaticMesh(staticMesh);
 
 	FbxMesh* lMesh = (FbxMesh*)pNode->GetNodeAttribute();
-	int lPolygonCount = lMesh->GetPolygonCount();
+	int lPolygonCount = lMesh->GetPolygonCount();	//SHOULD BE 12 IF HITBOX
 	int lVertexCounter = 0;
 	int lPolygonSize = lMesh->GetPolygonSize(0); //checks first polygon, all should be 3
 
-	//SaveMeshName(pNode);
-	m_staticMesh.setNrOfVerticesPerPolygon(lPolygonSize); //save in m_mesh
-	m_staticMesh.setNrOfPolygons(lPolygonCount);	//save in m_mesh
-	m_SaveControlPoints(lMesh);	//Save all controlpoints, to be used by index arr
+	//FIXA SÅ FUNKTIONER E SPECIFIKA, SOM SAVECONTROLPOINTS, RETURNA INFON HIT ISTÄLLET FÖR SET
+	m_SaveMeshName(pNode, collision);
+	m_SaveControlPoints(lMesh, collision);	//Save all controlpoints, to be used by index arr
 
-	//Go through all polygons
-	for (int i = 0; i < lPolygonCount; i++)
+	/*
+	if (lPolygonSize == 3)
 	{
-		//Go through each vertice in the polygon
-		for (int j = 0; j < lPolygonSize; j++)
+		if (lPolygonCount == 12)
 		{
-			//Save Control Point index
-			m_SaveControlPointsIndex(lMesh, i, j);
-			
-			lVertexCounter++;
-			m_staticMesh.increaseVertexCount();
+			//Go through all polygons
+			for (int i = 0; i < lPolygonCount; i++)
+			{
+				//Go through each vertice in the polygon
+				for (int j = 0; j < lPolygonSize; j++)
+				{
+					//Save Control Point index
+					m_SaveControlPointsIndex(lMesh, i, j);
+
+					lVertexCounter++;
+					m_staticMesh.increaseVertexCount();
+				}
+			}
+		}
+		else
+		{
+			printf("WARNING, HITBOX SHOULD HAVE EXACTLY 12 POLYGONS\n");
 		}
 	}
+	else
+	{
+		printf("WARNING, MESH NOT TRIANGULATED\n");
+	}
+	*/
 }
 
-void SaveHierarchy::m_SaveMeshName(FbxNode* pNode)
+void SaveHierarchy::m_SaveMeshName(FbxNode* pNode, bool collision)
 {
 	const char* nodeName = pNode->GetName();	//outliner name
-	printf("Name: %s\n", nodeName);
-
 	int nameSize = 0;
+
 	for (int i = 0; i < 100; i++)
 	{
 		if (nodeName[i] == '\0') //Chars write \0 after its done
@@ -278,7 +309,11 @@ void SaveHierarchy::m_SaveMeshName(FbxNode* pNode)
 		else
 			nameSize++;
 	}
-	m_staticMesh.setName(nodeName, nameSize);
+
+	if (collision)
+		m_bBMesh.setName(nodeName, nameSize);
+	else
+		m_staticMesh.setName(nodeName, nameSize);
 }
 
 void SaveHierarchy::m_PrintChildName(FbxMesh* pMesh)

@@ -131,6 +131,29 @@ void StaticMesh::increaseVertexCount()
 
 void StaticMesh::CheckMesh()
 {
+	printf("Name of mesh: ");
+	for (int i = 0; i < 100; i++)
+	{
+		printf("%c", m_name[i]);
+	}
+	printf("\n\n");
+
+	if (m_collision)
+		printf("This mesh has collision");
+	else
+		printf("This mesh has no collision");
+	printf("\n");
+
+	if (m_staticMesh)
+		printf("This mesh is static");
+	else
+		printf("This mesh is dynamic");
+	printf("\n\n");
+
+	printf("Nr of vertices: %i\n\n", m_vertexCount);
+
+	printf("\n\n");
+
 	//Only works for triangulated Meshes
 	for (int i = 0; i < m_nrOfPolygons; i++)
 	{
@@ -164,27 +187,6 @@ void StaticMesh::CheckMesh()
 			printf("ERROR: MESH NOT TRIANGULATED");
 		}
 		printf("\n");		
-	}
-	printf("\n\n");
-
-	if (m_collision)
-		printf("This mesh has collision");
-	else
-		printf("This mesh has no collision");
-	printf("\n");
-
-	if (m_staticMesh)
-		printf("This mesh is static");
-	else
-		printf("This mesh is dynamic");
-	printf("\n\n");
-
-	printf("Nr of vertices: %i\n\n", m_vertexCount);
-
-	printf("Name of mesh: ");
-	for (int i = 0; i < 100; i++)
-	{
-		printf("%c", m_name[i]);
 	}
 	printf("\n\n");
 }
