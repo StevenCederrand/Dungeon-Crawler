@@ -75,6 +75,7 @@ void SaveHierarchy::m_SaveNode(FbxNode* pNode)
 			{
 				m_SaveStaticMesh(pNode);	//saves relevant into in m_mesh
 				m_file.WriteStaticMesh(m_staticMesh);	//sends m_mesh to file writer for static mesh
+				m_staticMesh.PrepareForNewMesh();
 			}
 			else  //dynamic
 			{

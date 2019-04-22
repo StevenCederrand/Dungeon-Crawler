@@ -28,10 +28,10 @@ private:
 	int m_nrOfVerticesPerPolygon; //3 if triangulated
 
 	void initiateArrays();
-
 public:
 	StaticMesh();
 	~StaticMesh();
+	void PrepareForNewMesh();
 	void AddControlPoint(FbxVector4 controlPoint);
 	void AddIndexPoint(int index);
 	void AddUVCoordinate(FbxVector2 uVCoordinate);
