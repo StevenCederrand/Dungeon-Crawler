@@ -13,16 +13,10 @@ uniform vec3 sunPosition;
 uniform vec3 cameraPosition;
 
 uniform mat4 lightSpaceMatrix;
+
 vec3 worldPosition;
 vec3 normal;
 vec3 textureColor;
-
-/*
-uniform struct Spotlight {
-	vec3 position;
-	vec3 direction;
-	float radius;
-} spotlight;*/
 
 uniform int numberOfLights;
 
@@ -37,31 +31,69 @@ layout (std140, binding = 0) buffer Lights
 	lightData lightBuffer[];
 };
 
-vec3 getAmbientColor(float ambientFactor)
-{
-	vec3 ambientColor = vec3(0.8f);
-	return ambientColor * ambientFactor;
+vec3 getAmbientColor(float ambientFactor);
+vec3 getDiffuseColor(vec3 lightPosition, vec3 lightColor);
+vec3 getPhongColor(vec3 lightPosition, float specularStrength, vec3 lightColor);
+vec3 getSumOfAllColorFromPointLights(float specularStrength, vec3 worldPosition);
+float shadowCalculations(vec4 lightSpacePos);
+
+void main() {
+
+	worldPosition = texture(positionBuffer, frag_uv).rgb;
+
+	normal = texture(normalBuffer, frag_uv).rgb;
+	textureColor = texture(colourBuffer, frag_uv).rgb;
+	float shininess = texture(colourBuffer, frag_uv).a;
+
+	vec4 lightSpacePos = lightSpaceMatrix * vec4(worldPosition, 1);
+
+	float shadow = shadowCalculations(lightSpacePos);
+
+	vec3 currentColor = (getAmbientColor(0.2f) + (1.0 - shadow)) * (getDiffuseColor(sunPosition, sunColor)
+	+ getPhongColor(sunPosition, shininess, sunColor)) + getSumOfAllColorFromPointLights(shininess, worldPosition);// + getSumOfSpotlights(worldPosition);
+
+
+	// Clamp
+	currentColor = min(currentColor, vec3(1.f));
+
+  	finalColor = vec4(textureColor, 1.0f) * vec4(currentColor, 1.0f);
+
 }
 
-vec3 getDiffuseColor(vec3 lightPosition, vec3 lightColor)
-{
-	vec3 toLight = normalize(lightPosition - worldPosition);
-	float diffuseFactor = dot(toLight, normalize(normal));
-	diffuseFactor = max(diffuseFactor, 0.f);
 
-	return lightColor * diffuseFactor;
-}
+float shadowCalculations(vec4 lightSpacePos) {
+	//Perspective divide
+	vec3 projectCoords = lightSpacePos.xyz / lightSpacePos.w;
+	projectCoords = projectCoords * 0.5 + 0.5;
 
-vec3 getPhongColor(vec3 lightPosition, float specularStrength, vec3 lightColor)
-{
-	vec3 toLight = normalize(lightPosition - worldPosition);
-	vec3 viewDirection = normalize(cameraPosition - worldPosition);
-	vec3 reflectDirection = reflect(-toLight, normalize(normal));
+	//If we're sampling outside of the texture, just return 1
+	if(projectCoords.z >= 1.0) {
+		return 1.0;
+	}
+	if(projectCoords.x < -1 || projectCoords.x > 1) {
+		return 1.0f;
+	}
+	if(projectCoords.y < -1 || projectCoords.y > 1) {
+		return 1.0f;
+	}
+	float shadow = 0.0f;
 
-	float spec = pow(max(dot(viewDirection, reflectDirection), 0.0f), 32);
+	vec2 texelSize = 1.0 / textureSize(shadowBuffer, 0);
 
-	return lightColor * spec * specularStrength;
+	//Sample the depthmap and get the closest depth from the light
+	float closestDepth = texture(shadowBuffer, projectCoords.xy).r;
+	float currentDepth = projectCoords.z;
+	float bias = 0.0001f;
 
+	for(int i = -1; i <= 1; ++i) {
+		for(int j = -1; j <= 1; ++j) {
+			float pcfDepth = texture(shadowBuffer, projectCoords.xy + vec2(i, j) * texelSize).r;
+			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+		}
+	}
+	shadow /= 9.0;
+
+	return shadow;
 }
 
 vec3 getSumOfAllColorFromPointLights(float specularStrength, vec3 worldPosition) {
@@ -84,28 +116,35 @@ vec3 getSumOfAllColorFromPointLights(float specularStrength, vec3 worldPosition)
 	return finalColor;
 }
 
-float shadowCalculations(vec4 lightSpacePos) {
-	
-}
+vec3 getPhongColor(vec3 lightPosition, float specularStrength, vec3 lightColor) {
+	vec3 toLight = normalize(lightPosition - worldPosition);
+	vec3 viewDirection = normalize(cameraPosition - worldPosition);
+	vec3 reflectDirection = reflect(-toLight, normalize(normal));
 
-void main() {
+	float spec = pow(max(dot(viewDirection, reflectDirection), 0.0f), 32);
 
-	worldPosition = texture(positionBuffer, frag_uv).rgb;
-	vec4 lightSpacePos = lightSpaceMatrix * vec4(worldPosition, 1.0);
-
-	normal = texture(normalBuffer, frag_uv).rgb;
-	textureColor = texture(colourBuffer, frag_uv).rgb;
-	float shininess = texture(colourBuffer, frag_uv).a;
-
-	vec3 currentColor = getAmbientColor(0.2f)+ getDiffuseColor(sunPosition, sunColor)
-	+ getPhongColor(sunPosition, shininess, sunColor) + getSumOfAllColorFromPointLights(shininess, worldPosition);// + getSumOfSpotlights(worldPosition);
-	/*
-
-	*/
-
-	// Clamp
-	currentColor = min(currentColor, vec3(1.f));
-
-  	finalColor = vec4(textureColor, 1.0f) * vec4(currentColor, 1.0f);
+	return lightColor * spec * specularStrength;
 
 }
+
+vec3 getDiffuseColor(vec3 lightPosition, vec3 lightColor)
+{
+	vec3 toLight = normalize(lightPosition - worldPosition);
+	float diffuseFactor = dot(toLight, normalize(normal));
+	diffuseFactor = max(diffuseFactor, 0.f);
+
+	return lightColor * diffuseFactor;
+}
+
+vec3 getAmbientColor(float ambientFactor)
+{
+	vec3 ambientColor = vec3(0.8f);
+	return ambientColor * ambientFactor;
+}
+
+/*
+uniform struct Spotlight {
+	vec3 position;
+	vec3 direction;
+	float radius;
+} spotlight;*/

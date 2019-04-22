@@ -74,6 +74,7 @@ void Renderer::render()
 	//		std::to_string(m_spotlight->position.y) + " " + std::to_string(m_spotlight->position.z);
 	//	LOG_INFO(vec);
 	//}
+
 	this->shadowPass();
 	this->geometryPass();
 	this->lightPass();
@@ -100,7 +101,7 @@ void Renderer::shadowPass() {
 	Shader* shadowShader = ShaderMap::getShader("ShadowPass");
 	shadowShader->use();
 	shadowShader->setMat4("lightSpaceMatrix", m_framebuffer->getLightSpaceMatrix());
-
+	
 	m_framebuffer->bindShadowBuffer();
 	glClear(GL_DEPTH_BUFFER_BIT);
 	
@@ -181,8 +182,8 @@ void Renderer::lightPass() {
 	Shader* lightShader = ShaderMap::getShader("LightPass");
 	lightShader->use();
 
-
 	lightShader->setMat4("lightSpaceMatrix", m_framebuffer->getLightSpaceMatrix());
+
 	lightShader->setInt("numberOfLights", m_lightManager->getNumberOfLights());
 	lightShader->setVec3("cameraPosition", m_camera->getPosition());
 	drawQuad();

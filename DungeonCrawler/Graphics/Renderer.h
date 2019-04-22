@@ -21,7 +21,7 @@ public:
 	void prepareFlashlight(Player* player);
 	void render();
 	
-	const float LIGHTFOV = 45.f;
+	const float LIGHTFOV = 30.f;
 	const float NEAR_CLIP = 0.1f;
 	const float FAR_CLIP = 70.0f;
 
