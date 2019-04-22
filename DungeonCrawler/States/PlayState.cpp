@@ -129,7 +129,7 @@ void PlayState::renderImGUI()
 		, " ]");
 
 	ImGui::NewLine();
-	ImGui::Text("Nr of lasers: %i" , m_effects->getNrOfAliveParticles());
+	ImGui::Text("Nr of lasers: %i" , m_effects->getNumberOfParticles());
 
 	ImGui::End();
 }

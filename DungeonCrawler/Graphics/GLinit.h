@@ -12,7 +12,7 @@ public:
 	~GLinit();
 	//If we're already have the mesh created then we return the pointer to that mesh.
 	Mesh* createMesh(std::string name, ParserData* data);
-	GLuint createTexture(std::string filename);
+	GLuint createTexture(std::string filename, bool useFilepath = false, bool alpha = false);
 private:
 	GLuint createAndBindVAO();
 	void bindIndices(const std::vector<GLuint>& indices);

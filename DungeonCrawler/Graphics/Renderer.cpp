@@ -120,7 +120,18 @@ void Renderer::renderEffects()
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
 	glEnableVertexAttribArray(3);
-	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, m_effects->getNrOfAliveParticles());
+
+	const std::vector<Effects::ParticleType*>& effectMap = m_effects->getTypeVector();
+
+	for (auto& type : effectMap)
+	{
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, type->textureID);
+		glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, type->nrOfParticles);
+		glBindTexture(GL_TEXTURE_2D, NULL);
+	}
+
+	
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
