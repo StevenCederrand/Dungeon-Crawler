@@ -56,15 +56,21 @@ void main() {
 
 	float shadow = shadowCalculations(lightSpacePos);
 
-	vec3 currentColor = (getAmbientColor(0.2f) + (1.0 - shadow)  * getSumOfSpotlights(worldPosition)) * (getDiffuseColor(sunPosition, sunColor)
+	vec3 currentColor = (getAmbientColor(0.2f) + (1.0 - shadow)) + getSumOfSpotlights(worldPosition) * (getDiffuseColor(sunPosition, sunColor)
 	+ getPhongColor(sunPosition, shininess, sunColor))  + getSumOfAllColorFromPointLights(shininess, worldPosition);
+	vec3 col = vec3(0);
 
+	// If something is not in shadow then add spotlight values
+	if(shadow == 0) {
+		col = getSumOfSpotlights(worldPosition);
+	}
 
+	col +=  getAmbientColor(0.2f) * (getDiffuseColor(sunPosition, sunColor)
+	+ getPhongColor(sunPosition, shininess, sunColor))  + getSumOfAllColorFromPointLights(shininess, worldPosition);
 	// Clamp
-	currentColor = min(currentColor, vec3(1.f));
+	currentColor = min(col, vec3(1.f));
 
-  	finalColor = vec4(textureColor, 1.0f) * vec4(currentColor, 1.0f);
-
+  	finalColor = vec4(textureColor, 1.0f) * vec4(col, 1.0f);
 }
 
 
@@ -78,10 +84,10 @@ float shadowCalculations(vec4 lightSpacePos) {
 		return 1.0;
 	}
 	//Avoid sampling outside of the texture
-	if(projectCoords.x < -1 || projectCoords.x > 1) {
+	if(projectCoords.x < 0 || projectCoords.x > 1) {
 		return 1.0f;
 	}
-	if(projectCoords.y < -1 || projectCoords.y > 1) {
+	if(projectCoords.y < 0 || projectCoords.y > 1) {
 		return 1.0f;
 	}
 	float shadow = 0.0f;
@@ -109,7 +115,7 @@ vec3 getSumOfSpotlights(vec3 worldPosition) {
 
 	if(radialVal > spotlight.radius) {
 		//Do Something
-		return vec3(1);
+		return vec3(0.2f);
 	}
 	else {
 		return vec3(0);

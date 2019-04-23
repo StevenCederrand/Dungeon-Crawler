@@ -23,7 +23,7 @@ public:
 	
 	const float LIGHTFOV = 30.f;
 	const float NEAR_CLIP = 0.1f;
-	const float FAR_CLIP = 70.0f;
+	const float FAR_CLIP = 50.0f;
 
 private:
 	void bindMesh(Mesh* mesh, Shader* shader);

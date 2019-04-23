@@ -67,13 +67,7 @@ void Renderer::prepareFlashlight(Player* player) {
 
 }
 
-void Renderer::render()
-{
-	//if (m_spotlight != nullptr) {
-	//	std::string vec = std::to_string(m_spotlight->position.x) + " " +
-	//		std::to_string(m_spotlight->position.y) + " " + std::to_string(m_spotlight->position.z);
-	//	LOG_INFO(vec);
-	//}
+void Renderer::render() {
 
 	this->shadowPass();
 	this->geometryPass();
@@ -82,7 +76,7 @@ void Renderer::render()
 	// Copy over the depthbuffer from the previous passes.
 	glEnable(GL_DEPTH_TEST);
 	m_framebuffer->bindFrameBuffer();
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); // write to default framebuffer
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); //write to default framebuffer
 	glBlitFramebuffer(
 		0, 0, ScreenResolutionX, ScreenResolutionY, 0, 0, ScreenResolutionX, ScreenResolutionY, GL_DEPTH_BUFFER_BIT, GL_NEAREST
 	);

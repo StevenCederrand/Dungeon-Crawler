@@ -2,3 +2,5 @@
 pl_walk pl_walk.wav
 #player dash
 pl_dash Dash.wav
+#player shot
+pl_gun_shot Gunshot.wav

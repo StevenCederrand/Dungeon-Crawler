@@ -58,6 +58,7 @@ void Player::update(float dt)
 		{
 			if (m_canShoot)
 			{
+				LOG_INFO("SHOOT");
 				shootProjectile();
 				m_shake = 4;
 			}
@@ -95,17 +96,17 @@ void Player::move(float dt)
 	if (Input::isKeyHeldDown(GLFW_KEY_A))
 	{
 		m_movementDirection.x = -this->m_speed * dt;
-			AudioEngine::playOnce("pl_walk", 0.4f);
+		AudioEngine::playOnce("pl_walk", 0.4f);
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_S))
 	{
 		m_movementDirection.z = this->m_speed * dt;
-			AudioEngine::playOnce("pl_walk", 0.4f);
+		AudioEngine::playOnce("pl_walk", 0.4f);
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_D))
 	{
 		m_movementDirection.x = this->m_speed * dt;
-			AudioEngine::playOnce("pl_walk", 0.4f);
+		AudioEngine::playOnce("pl_walk", 0.4f);
 	}
 	setVelocity(m_movementDirection);
 	
@@ -180,10 +181,11 @@ void Player::dashCd()
 
 void Player::shootProjectile()
 {
-	m_shootingCooldown = 0.05f;
+	m_shootingCooldown = 0.25f;
 	m_canShoot = false;
 	m_shooting = true;
-	//screenShake();
+	AudioEngine::play("pl_gun_shot", 0.8f);
+	screenShake();
 }
 
 void Player::screenShake()
