@@ -23,6 +23,10 @@ PlayState::PlayState() {
 	m_GLinit = new GLinit();
 	m_camera = new Camera();
 	m_effects = new Effects(m_GLinit);
+	m_effects->createEmitter("BloodEmitter", "BloodParticle.png", 0.5f);
+	m_effects->createEmitter("WallSmokeEmitter", "WallSmoke.png", 0.5f);
+	m_effects->createEmitter("GunFlareEmitter", "GunFlare.png", 0.25f);
+
 	Camera::active = m_camera;
 	m_lightManager = new LightManager();
 	m_renderer = new Renderer(m_camera, m_lightManager, m_effects);
@@ -120,12 +124,6 @@ void PlayState::update(float dt)
 	m_lightManager->update(dt);
 
 	m_renderer->prepareGameObjects(m_gameObjectManager->getGameObjects());
-	//if (Input::isMouseReleased(GLFW_MOUSE_BUTTON_RIGHT)){
-
-	//	AudioEngine::unloadSSO("Game.sso");
-	//	m_stateManager->popState();
-	//	AudioEngine::loadSSO("Menu.sso");
-	//}
 }
 
 
@@ -144,7 +142,7 @@ void PlayState::renderImGUI()
 		, " ]");
 
 	ImGui::NewLine();
-	ImGui::Text("Nr of lasers: %i" , m_effects->getNrOfAliveParticles());
+	ImGui::Text("Nr of lasers: %i" , m_effects->getTotalAmountOfParticles());
 
 	ImGui::End();
 }
