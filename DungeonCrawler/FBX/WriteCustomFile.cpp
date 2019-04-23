@@ -2,7 +2,7 @@
 
 WriteCustomFile::WriteCustomFile()
 {
-
+	m_mainHeader = MainHeader{ 1 }; //Creates one mainheader
 }
 
 WriteCustomFile::~WriteCustomFile()
@@ -12,19 +12,15 @@ WriteCustomFile::~WriteCustomFile()
 
 void WriteCustomFile::CreateCustomFile()
 {
-	//IGNORE FOR NOW, START WITH FBX FILE
-
 	//Version Header
 	unsigned int version = 0; //on top of file, once
 
-	//Creates one mainheader
-	MainHeader mh{ 1 };
-
 	//Creates a scope of meshes based on the amount the ones counted in the mainheader staticmeshcount
-	MeshHeader h { mh.staticMeshCount };
+	MeshHeader h { m_mainHeader.staticMeshCount };
 	//Creates a vertex pointer to a new vertex array
 	Vertex *vArray = new Vertex[h.vertexCount];
 
+	/*
 	//Creates a scope of boundingboxheader classes based on the amount of boundingbox counted
 	BoundingBoxHeader bbh { mh.boundingBoxCount };
 	//Creates a boundingboxvertex pointer to a new boundingboxvertex array
@@ -84,27 +80,49 @@ void WriteCustomFile::CreateCustomFile()
 		}
 	}
 	std::cout << "Streams are equal, method 2: " << equal << "\n" << std::endl;
+	*/
+}
+
+void WriteCustomFile::WriteMainHeader(int nrOfStaticMeshes, int nrOfBoundingBoxes)
+{
+	m_mainHeader.staticMeshCount = nrOfStaticMeshes;
+	m_mainHeader.boundingBoxCount = nrOfBoundingBoxes;
+
+	//Write to file, make sure to write binary
+	std::ofstream outfile("testCustomBin.bin", std::ofstream::binary);
+
+	//add mainheader
+	outfile.write((const char*)&m_mainHeader, sizeof(MainHeader));
 }
 
 void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //special case for static mesh no collision takes info from current mesh to mesh header struct
 {
-	//debug prints out the data
-	currentMesh.CheckMesh();
-	
-	m_mainHeader.staticMeshCount += 1;
-	MeshHeader meshHeader{ 1 };
+	MeshHeader lmeshHeader{ 1 };
 
 	//Add data into the mesh header struct
-	meshHeader.vertexCount = currentMesh.getVertexCount();
-	meshHeader.isStatic = currentMesh.getIsStatic();
-	meshHeader.collision = currentMesh.getCollision();
+	lmeshHeader.vertexCount = currentMesh.getVertexCount();
+	lmeshHeader.isStatic = currentMesh.getIsStatic();
+	lmeshHeader.collision = currentMesh.getCollision();
 
 	//Creates a vertex pointer to a new vertex array
-	Vertex *vArray = new Vertex[meshHeader.vertexCount];
+	Vertex *vArray = new Vertex[lmeshHeader.vertexCount];
+
+	//Write to file, make sure to write binary
+	std::ofstream outfile("testCustomBin.bin", std::ofstream::binary);
+
+	outfile.write((const char*)&lmeshHeader, sizeof(MeshHeader));
+	outfile.write((const char*)vArray, sizeof(Vertex)*lmeshHeader.vertexCount);
+
+	outfile.close();
+
+
+	m_mainHeader.staticMeshCount++;
 }
 
 void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //special case for boundingbox mesh with collision from current mesh to bounding box mesh header struct
 {
+	// IGNORE FOR NOW
+	/*
 	//debug prints out the data
 	currentMesh.CheckMesh();
 
@@ -119,5 +137,6 @@ void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //specia
 
 	//Creates a boundingboxvertex pointer to a new boundingboxvertex array
 	BoundingBoxVertex *bbvArray = new BoundingBoxVertex[boundingBoxHeader.vertexCount];
+	*/
 }
 

@@ -3,6 +3,8 @@
 SaveHierarchy::SaveHierarchy()
 {
 	m_nrOfNodes = 0;
+	m_nrOfStaticMesh = 0;
+	m_nrOfBoundingBox = 0;
 }
 
 SaveHierarchy::~SaveHierarchy()
@@ -21,7 +23,8 @@ void SaveHierarchy::SaveEntireHierarchy(FbxScene* lScene)
 		{
 			m_calculateNrOfNodes(lRootNode->GetChild(i));
 		}
-		printf("FINAL Number of Nodes: %i\n", m_nrOfNodes);
+		m_file.WriteMainHeader(m_nrOfStaticMesh, m_nrOfBoundingBox);
+		//printf("FINAL Number of Nodes: %i\n", m_nrOfNodes);
 
 		//Write Meshes
 		for (int i = 0; i < lRootNode->GetChildCount(); i++)
@@ -40,10 +43,41 @@ void SaveHierarchy::SaveEntireHierarchy(FbxScene* lScene)
 void SaveHierarchy::m_calculateNrOfNodes(FbxNode* pNode)
 {
 	m_nrOfNodes++;
+
+	//check which nodes are staticMeshes and which are bounding boxes
+	bool collisionBool = false;
+	bool staticMeshBool = false;
+
+	FbxProperty collision = pNode->FindProperty("Collision", true);
+	if (collision.IsValid())
+	{
+		FbxBool collisionBoolFbx = collision.Get<bool>();
+		collisionBool = collisionBoolFbx;
+	}
+	else
+	{
+		printf("Collision Bool not found");
+	}
+
+	FbxProperty staticMesh = pNode->FindProperty("StaticMesh", true);
+	if (staticMesh.IsValid())
+	{
+		FbxBool staticMeshBoolFbx = staticMesh.Get<bool>();
+		staticMeshBool = staticMeshBoolFbx;
+	}
+	else
+	{
+		printf("Static Mesh Bool not found");
+	}
+
+	if (collisionBool)
+		m_nrOfBoundingBox++;
+	else
+		m_nrOfStaticMesh++;
+
 	// Recursively print the children.
 	for (int j = 0; j < pNode->GetChildCount(); j++)
 	{
-		printf("Number of Nodes: %i\n", m_nrOfNodes);
 		m_calculateNrOfNodes(pNode->GetChild(j));	//Deeper in the tree
 	}
 }

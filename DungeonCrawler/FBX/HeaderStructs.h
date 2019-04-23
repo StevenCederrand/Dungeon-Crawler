@@ -14,7 +14,8 @@ struct MeshHeader
 	char nameOfMesh[100];
 	unsigned int vertexCount;
 	//unsigned int materialID; //our different morph characters will use the same material
-	char nameOfCustomAttribute[100]; //might not be needed
+	char nameOfCustomAttributeCollision[100]; //might not be needed
+	char nameOfCustomAttributeIsStatic[100]; //might not be needed
 	bool collision; //custom maya attribute
 	bool isStatic;	//custom maya attribute
 };

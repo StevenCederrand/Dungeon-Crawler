@@ -14,6 +14,8 @@ private:
 	MainHeader m_mainHeader;
 	WriteCustomFile m_file; //will only be one, never replaced
 	int m_nrOfNodes;
+	int m_nrOfStaticMesh;
+	int m_nrOfBoundingBox;
 
 	void m_SaveControlPoints(FbxMesh* pMesh, bool collision);
 	void m_SaveControlPointsIndex(FbxMesh* pMesh, int i, int j, bool collision);
