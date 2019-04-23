@@ -53,7 +53,10 @@ void GameObjectManager::update(float dt)
 	newVel = m_player->getVelocity();
 
 	if (m_player->isShooting()) {
-		m_effects->shootEffect(m_player->getPosition(), m_player->getAngle(), 5.f, 0.20f);
+		float xAngle = cosf(glm::radians(m_player->getAngle()));
+		float zAngle = sinf(glm::radians(m_player->getAngle()));
+		float offset = 0.5f;
+		m_effects->addParticles("GunFlareEmitter", m_player->getPosition() + glm::vec3(xAngle, 0.f, zAngle) * offset, 5.f, 0.2f);
 	}
 
 	//------ Update all the game objects and check for collision 'n stuff ------
@@ -101,6 +104,7 @@ void GameObjectManager::update(float dt)
 
 			// --------MAYBE DYNAMIC CASY HERE TO CHECK IF WE HIT A ENEMY?--------
 			bool hitEnemy = false;
+			
 			if (dynamic_cast<Box*>(objectHit)) {
 				hitEnemy = true;
 				objectHit->setHit();
@@ -115,13 +119,17 @@ void GameObjectManager::update(float dt)
 				objectHit->setHit();
 			}
 
-
 			HitDescription desc;
 			desc.player = m_player;
 			objectHit->hit(desc);
 
-		
-			m_effects->hitEffect(gunshotCollisionPoint, 0.15f, hitEnemy);
+			if (hitEnemy){
+				m_effects->addParticles("BloodEmitter", gunshotCollisionPoint, 5.f, 0.2f, 5.f);
+			}
+			else{
+				m_effects->addParticles("WallSmokeEmitter", gunshotCollisionPoint, 5.f, 0.2f, 5.f);
+			}
+
 			
 		}
 	}
