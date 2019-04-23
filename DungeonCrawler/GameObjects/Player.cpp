@@ -71,6 +71,7 @@ void Player::update(float dt)
 		move(dt);
 		dashCd(dt);
 		screenShake(dt);
+		spotlightHandler();
 	}
 }
 
@@ -218,6 +219,7 @@ void Player::shootAutomatic(float dt)
 		m_shootingCooldown -= dt;
 
 		if (m_shootingCooldown <= 0.f) {
+			this->m_flash->color.a = 0;
 			m_canShoot = true;
 		}
 	}

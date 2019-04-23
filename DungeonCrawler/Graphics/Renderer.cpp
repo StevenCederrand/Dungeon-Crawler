@@ -70,11 +70,11 @@ void Renderer::preparePlayerLights(Player* player) {
 
 void Renderer::render() {
 
-	if (m_playerLight != nullptr) {
-		std::string vec = std::to_string(m_playerLight->position.x) + " " +
-			std::to_string(m_playerLight->position.y) + " " + std::to_string(m_playerLight->position.z);
-		LOG_INFO(vec);
-	}
+	//if (m_playerLight != nullptr) {
+	//	std::string vec = std::to_string(m_playerLight->position.x) + " " +
+	//		std::to_string(m_playerLight->position.y) + " " + std::to_string(m_playerLight->position.z);
+	//	LOG_INFO(vec);
+	//}
 
 	this->shadowPass();
 	this->geometryPass();
