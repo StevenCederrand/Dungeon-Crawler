@@ -24,11 +24,6 @@ private:
 	float m_lightByteSize;
 
 private:
-	//struct Light{
-	//	glm::vec4 position;
-	//	glm::vec4 color;
-	//};
-	
 
 	std::vector<Light> m_lights;
 };

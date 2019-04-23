@@ -10,6 +10,7 @@ struct Spotlight {
 
 struct Light {
 	glm::vec4 position;
+	//The alpha is the light radius
 	glm::vec4 color;
 };
 

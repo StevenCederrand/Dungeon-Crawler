@@ -30,13 +30,14 @@ public:
 
 	glm::vec3 shakeDirection() const;
 	Spotlight* getSpotlight();
+	Light* getFlash();
 
 private:
 	void spotlightHandler();
 private:
 	float m_angle;
 	Spotlight* m_spotlight;
-
+	Light* m_flash;
 	glm::vec3 m_movementDirection;
 	//Player Variables
 	float m_defaultSpeed;

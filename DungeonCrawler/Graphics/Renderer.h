@@ -18,7 +18,7 @@ public:
 	~Renderer();
 
 	void prepareGameObjects(const std::vector<GameObject*>& gameObjects);
-	void prepareFlashlight(Player* player);
+	void preparePlayerLights(Player* player);
 	void render();
 	
 	const float LIGHTFOV = 30.f;
@@ -43,8 +43,9 @@ private:
 private:
 	Framebuffer* m_framebuffer;
 	
+	Spotlight* m_playerSpotLight;
+	Light* m_playerLight;
 
-	Spotlight* m_spotlight;
 
 	std::map<Mesh*, std::vector<GameObject*>> m_meshes;
 	std::map<Mesh*, std::vector<GameObject*>>::iterator m_meshIterator;

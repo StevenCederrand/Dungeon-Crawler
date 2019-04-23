@@ -62,12 +62,19 @@ void Renderer::prepareGameObjects(const std::vector<GameObject*>& gameObjects)
 	}
 }
 
-void Renderer::prepareFlashlight(Player* player) {
-	m_spotlight = player->getSpotlight();
+void Renderer::preparePlayerLights(Player* player) {
+	m_playerSpotLight = player->getSpotlight();
+	m_playerLight = player->getFlash();
 
 }
 
 void Renderer::render() {
+
+	//if (m_playerLight != nullptr) {
+	//	std::string vec = std::to_string(m_playerLight->position.x) + " " +
+	//		std::to_string(m_playerLight->position.y) + " " + std::to_string(m_playerLight->position.z);
+	//	LOG_INFO(vec);
+	//}
 
 	this->shadowPass();
 	this->geometryPass();
@@ -175,11 +182,15 @@ void Renderer::lightPass() {
 
 	Shader* lightShader = ShaderMap::getShader("LightPass");
 	lightShader->use();
-	if (m_spotlight != nullptr) {
-		lightShader->setVec3("spotlight.position", m_spotlight->position);
-		lightShader->setVec3("spotlight.direction", m_spotlight->direction);
-		lightShader->setFloat("spotlight.radius", m_spotlight->radius);
+	if (m_playerSpotLight != nullptr) {
+		lightShader->setVec3("spotlight.position", m_playerSpotLight->position);
+		lightShader->setVec3("spotlight.direction", m_playerSpotLight->direction);
+		lightShader->setFloat("spotlight.radius", m_playerSpotLight->radius);
+		
+		lightShader->setVec4("flashPosition", m_playerLight->position);
+		lightShader->setVec4("flashColor", m_playerLight->color);
 	}
+
 	lightShader->setMat4("lightSpaceMatrix", m_framebuffer->getLightSpaceMatrix());
 	lightShader->setInt("numberOfLights", m_lightManager->getNumberOfLights());
 	lightShader->setVec3("cameraPosition", m_camera->getPosition());
@@ -258,7 +269,7 @@ void Renderer::drawQuad() {
 }
 
 void Renderer::configureShadowMapperVM() {
-	glm::vec3 pos = m_spotlight->position + glm::vec3(0, 0.5f, 0);
-	glm::mat4 viewMatrix = glm::lookAt(pos, pos + m_spotlight->direction, glm::vec3(0, 1, 0));
+	glm::vec3 pos = m_playerSpotLight->position + glm::vec3(0, 0.5f, 0);
+	glm::mat4 viewMatrix = glm::lookAt(pos, pos + m_playerSpotLight->direction, glm::vec3(0, 1, 0));
 	m_framebuffer->setViewMatrix(viewMatrix);
 }

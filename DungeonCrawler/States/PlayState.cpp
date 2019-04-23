@@ -81,7 +81,7 @@ PlayState::PlayState() {
 
 	//Used for the player flashlight & shadow mapping from the 
 	//flashlights view
-	m_renderer->prepareFlashlight(m_gameObjectManager->getPlayer());
+	m_renderer->preparePlayerLights(m_gameObjectManager->getPlayer());
 }
 
 PlayState::~PlayState() {

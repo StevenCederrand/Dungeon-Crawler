@@ -14,6 +14,9 @@ uniform struct Spotlight {
 	float radius;
 } spotlight;
 
+uniform vec4 flashColor;
+uniform vec4 flashPosition;
+
 uniform vec3 sunColor;
 uniform vec3 sunPosition;
 uniform vec3 cameraPosition;
@@ -43,6 +46,7 @@ vec3 getPhongColor(vec3 lightPosition, float specularStrength, vec3 lightColor);
 vec3 getSumOfAllColorFromPointLights(float specularStrength, vec3 worldPosition);
 vec3 getSumOfSpotlights(vec3 worldPosition);
 float shadowCalculations(vec4 lightSpacePos);
+vec3 flashEffect(vec3 worldPosition);
 
 void main() {
 
@@ -56,24 +60,23 @@ void main() {
 
 	float shadow = shadowCalculations(lightSpacePos);
 
-	vec3 currentColor = (getAmbientColor(0.2f) + (1.0 - shadow)) + getSumOfSpotlights(worldPosition) * (getDiffuseColor(sunPosition, sunColor)
-	+ getPhongColor(sunPosition, shininess, sunColor))  + getSumOfAllColorFromPointLights(shininess, worldPosition);
-	vec3 col = vec3(0);
-
+	vec3 currentColor = vec3(0);
 	// If something is not in shadow then add spotlight values
 	if(shadow == 0) {
-		col = getSumOfSpotlights(worldPosition);
+		currentColor = getSumOfSpotlights(worldPosition);
 	}
 
-	col +=  getAmbientColor(0.2f) * (getDiffuseColor(sunPosition, sunColor)
-	+ getPhongColor(sunPosition, shininess, sunColor))  + getSumOfAllColorFromPointLights(shininess, worldPosition);
-	// Clamp
-	currentColor = min(col, vec3(1.f));
+	currentColor += getAmbientColor(0.2f) * (getDiffuseColor(sunPosition, sunColor)
+	+ getPhongColor(sunPosition, shininess, sunColor)) + getSumOfAllColorFromPointLights(shininess, worldPosition) + flashEffect(worldPosition);
 
-  	finalColor = vec4(textureColor, 1.0f) * vec4(col, 1.0f);
+
+	// Clamp
+	currentColor = min(currentColor, vec3(1.f));
+
+  	finalColor = vec4(textureColor, 1.0f) * vec4(currentColor, 1.0f);
 }
 
-
+//Calculate the shadow map
 float shadowCalculations(vec4 lightSpacePos) {
 	//Perspective divide
 	vec3 projectCoords = lightSpacePos.xyz / lightSpacePos.w;
@@ -109,6 +112,23 @@ float shadowCalculations(vec4 lightSpacePos) {
 	return shadow;
 }
 
+vec3 flashEffect(vec3 worldPosition) {
+
+	if(flashColor.w == 0) {
+		return vec3(0);
+	}
+	vec3 lightPosition = vec3(flashPosition);
+	float dist = length(lightPosition - worldPosition);
+	if(dist >= flashColor.w) {
+		return vec3(0);
+	}
+
+	vec3 colour = getDiffuseColor(lightPosition, vec3(flashColor)) + getPhongColor(lightPosition, 0.1f, vec3(flashColor));
+	float strength = clamp((flashColor.w - dist) / flashColor.w, 0.f, 1.0f);
+	return colour * strength;
+}
+
+//Calculate the spotlight
 vec3 getSumOfSpotlights(vec3 worldPosition) {
 	vec3 lightDirection = normalize(spotlight.position - worldPosition);
 	float radialVal = dot(lightDirection, normalize(-spotlight.direction));
@@ -121,7 +141,7 @@ vec3 getSumOfSpotlights(vec3 worldPosition) {
 		return vec3(0);
 	}
 }
-
+//Calculate all of the pointlight stuff
 vec3 getSumOfAllColorFromPointLights(float specularStrength, vec3 worldPosition) {
 	vec3 finalColor = vec3(0.f);
 	for(int i = 0; i < numberOfLights; i++)
