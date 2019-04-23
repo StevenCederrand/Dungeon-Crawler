@@ -30,6 +30,8 @@ public:
 	void IncreaseVertexCount();
 	void CheckMesh();
 
+	void setNrOfPolygons(int nrOfPolygons);
+	void setNrOfVerticesPerPolygon(int nrOfVerticesPerPolygon);
 	void setCollision(bool collision);
 	void setStaticMesh(bool staticMesh);
 	void setName(const char name[], int nameSize);

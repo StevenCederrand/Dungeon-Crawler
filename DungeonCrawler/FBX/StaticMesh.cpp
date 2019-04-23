@@ -139,7 +139,7 @@ void StaticMesh::CheckMesh()
 	printf("\n\n");
 
 	if (m_collision)
-		printf("This mesh has collision");
+		printf("This mesh is a hitbox");
 	else
 		printf("This mesh has no collision");
 	printf("\n");

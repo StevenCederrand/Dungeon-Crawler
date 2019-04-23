@@ -266,6 +266,8 @@ void SaveHierarchy::m_SaveHitboxMesh(FbxNode* pNode, bool collision, bool static
 	int lVertexCounterHit = 0;
 	int lPolygonSize = lMesh->GetPolygonSize(0); //checks first polygon, all should be 3
 
+	m_bBMesh.setNrOfVerticesPerPolygon(lPolygonSize); //save in m_mesh
+	m_bBMesh.setNrOfPolygons(lPolygonCount);	//save in m_mesh
 	m_SaveMeshName(pNode, collision);
 	m_SaveControlPoints(lMesh, collision);	//Save all controlpoints, to be used by index arr
 

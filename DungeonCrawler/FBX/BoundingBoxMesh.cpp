@@ -7,8 +7,8 @@ BoundingBoxMesh::BoundingBoxMesh()
 	m_currentControlPointIndex = 0;
 	m_collision = 0;
 	m_staticMesh = 0;
-	m_nrOfPolygons = 12;
-	m_nrOfVerticesPerPolygon = 3;
+	m_nrOfPolygons = 0; //DO A CHECK IF 12 and set 0 here
+	m_nrOfVerticesPerPolygon = 0;
 
 	initiateArrays();
 }
@@ -21,10 +21,12 @@ BoundingBoxMesh::~BoundingBoxMesh()
 void BoundingBoxMesh::PrepareForNewMesh()
 {
 	m_vertexCount = 0;
+	m_currentControlPoint = 0;
+	m_currentControlPointIndex = 0;
 	m_collision = 0;
 	m_staticMesh = 0;
-	m_nrOfPolygons = 12;
-	m_nrOfVerticesPerPolygon = 3;
+	m_nrOfPolygons = 0;
+	m_nrOfVerticesPerPolygon = 0;
 
 	initiateArrays();
 }
@@ -63,7 +65,7 @@ void BoundingBoxMesh::CheckMesh()
 	printf("\n");
 
 	if (m_collision)
-		printf("This mesh has collision");
+		printf("This mesh is a hitbox");
 	else
 		printf("This mesh has no collision");
 	printf("\n");
@@ -78,30 +80,38 @@ void BoundingBoxMesh::CheckMesh()
 
 	printf("\n");
 
+	int lCurrentVertex = 0;
 	//Only works for triangulated Meshes
-	for (int i = 0; i < m_nrOfPolygons; i++)
+	if (m_nrOfPolygons == 12)
 	{
-		printf("Polygon %i:\n", i);
-		if (m_nrOfVerticesPerPolygon == 3)
+		for (int i = 0; i < m_nrOfPolygons; i++)
 		{
-			for (int j = 0; j < m_nrOfVerticesPerPolygon; j++) //Per Vertex Stuff
+			printf("Polygon %i:\n", i);
+			if (m_nrOfVerticesPerPolygon == 3) //=2 on rectangle hitbox?
 			{
-				printf("Vertex %i:\n", j);
-				//Position
-				//Store currentPlaceInVerticeIndexArr if load more than 1 mesh, needs to be added for other start location
-				int lCurrentVertex = (m_nrOfVerticesPerPolygon * i) + j;
-				printf("Position: %.2f %.2f %.2f\n",
-					m_controlPoints[0][m_controlPointIndexArr[lCurrentVertex]],
-					m_controlPoints[1][m_controlPointIndexArr[lCurrentVertex]],
-					m_controlPoints[2][m_controlPointIndexArr[lCurrentVertex]]);
+				for (int j = 0; j < m_nrOfVerticesPerPolygon; j++) //Per Vertex Stuff
+				{
+					printf("Vertex %i:\n", j);
+					//Position
+					//Store currentPlaceInVerticeIndexArr if load more than 1 mesh, needs to be added for other start location
+					lCurrentVertex = (m_nrOfVerticesPerPolygon * i) + j;
+					printf("Position: %.2f %.2f %.2f\n",
+						m_controlPoints[0][m_controlPointIndexArr[lCurrentVertex]],
+						m_controlPoints[1][m_controlPointIndexArr[lCurrentVertex]],
+						m_controlPoints[2][m_controlPointIndexArr[lCurrentVertex]]);
+				}
 			}
+			else if (m_nrOfVerticesPerPolygon == 4)
+			{
+				//Not used right now, use if mesh is not triangulated
+				printf("ERROR: MESH NOT TRIANGULATED");
+			}
+			printf("\n");
 		}
-		else if (m_nrOfVerticesPerPolygon == 4)
-		{
-			//Not used right now, use if mesh is not triangulated
-			printf("ERROR: MESH NOT TRIANGULATED");
-		}
-		printf("\n");
+	}
+	else
+	{
+		printf("WARNING: Number of polygons on a hitbox should be 12, something is wrong.\n");
 	}
 	printf("\n\n");
 }
@@ -123,6 +133,16 @@ void BoundingBoxMesh::AddIndexPoint(int index)
 {
 	m_controlPointIndexArr[m_currentControlPointIndex] = index;
 	m_currentControlPointIndex++;
+}
+
+void BoundingBoxMesh::setNrOfPolygons(int nrOfPolygons)
+{
+	m_nrOfPolygons = nrOfPolygons;
+}
+
+void BoundingBoxMesh::setNrOfVerticesPerPolygon(int nrOfVerticesPerPolygon)
+{
+	m_nrOfVerticesPerPolygon = nrOfVerticesPerPolygon;
 }
 
 void BoundingBoxMesh::setCollision(bool collision)
