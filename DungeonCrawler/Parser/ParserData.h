@@ -20,6 +20,8 @@ public:
 	
 	void setTextureFilename(std::string filename);
 	void setNormalMapName(std::string filename);
+
+	void setFilename(std::string filename);
 	void setAmbientMapName(std::string filename);
 
 	void setDiffuseColor(GLfloat r, GLfloat g, GLfloat b);
@@ -27,6 +29,7 @@ public:
 	void setAmbientColor(GLfloat r, GLfloat g, GLfloat b);
 	void setShininess(GLfloat factor);
 	void setBoundingBox(const std::vector<glm::vec3>& maxMinVector);
+	void setNodesVector(const std::vector<glm::vec3>& nodesVector);
 
 	void setNormalMapStrength(float str);
 
@@ -38,12 +41,16 @@ public:
 
 	const std::string& getTextureFilename() const;
 	const std::string& getNormalMapName() const;
+
+	const std::string& getFilename() const;
 	const std::string& getAmbientMapName() const;
+
 	const glm::vec3& getDiffuseColor() const;
 	const glm::vec3& getSpecularColor() const;
 	const glm::vec3& getAmbientColor() const;
 	const GLfloat& getShininess() const;
 	const std::vector<glm::vec3>& getMaxMinVector() const;
+	const std::vector<glm::vec3>& getNodesVector() const;
 	
 	const GLfloat& getNormalMapStrength() const;
 	const bool hasNormalMap();
@@ -57,6 +64,8 @@ private:
 
 	std::string m_textureFilename;
 	std::string m_normalMapName;
+
+	std::string m_filename;
 	std::string m_ambientMapName;
 
 	glm::vec3 m_diffuseColor;
@@ -70,6 +79,7 @@ private:
 
 	// Collision coordinates ( layout in the vector)
 	std::vector<glm::vec3> m_maxMinVector;
+	std::vector<glm::vec3> m_nodesVector;
 
 };
 

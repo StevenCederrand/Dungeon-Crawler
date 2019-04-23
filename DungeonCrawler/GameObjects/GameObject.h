@@ -3,10 +3,20 @@
 #include <GLM/glm.hpp>
 #include "Graphics/Mesh.h"
 #include "Collision/AABB.h"
+#include "Collision/HitData.h"
+enum Type {
+	PLAYER = 0,
+	WALKER = 1,
+	SHOOTER = 2,
+	BOX = 10,
+	ROOM = 11,
+	LIGHTSPHERE = 12,
+	GAMEOBJECT = 20
+};
 
 class GameObject {
 public:
-	GameObject(Mesh* mesh, const glm::vec3& position = glm::vec3(0.f));
+	GameObject(Mesh* mesh, Type type, const glm::vec3& position = glm::vec3(0.f));
 	~GameObject();
 
 	virtual void update(float dt) = 0;
@@ -22,6 +32,9 @@ public:
 	void setRotation(const glm::vec3 rotation);
 	void setPlayerPosition(const glm::vec3& position);
 	void setHit();
+
+	virtual void hit(const HitDescription & desc);
+	virtual Type getType();
 
 	std::vector<AABB*> getBoundingBoxes() const;
 	const glm::vec3& getPosition() const;
@@ -49,7 +62,7 @@ private:
 	float m_colorTintFadeDuration;
 	bool m_isCollidable;
 	std::vector<AABB*> m_boundingBoxes;
-	
+	Type m_type;
 };
 
 

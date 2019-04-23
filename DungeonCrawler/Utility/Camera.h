@@ -25,7 +25,6 @@ public:
 	const glm::vec3 getMouseWorldPos();
 
 	void setToPlayer(glm::vec3 playerPos, glm::vec3 shakeDir);
-	void setAngle(int angle);
 
 private:
 	void setProjectionMatrix();

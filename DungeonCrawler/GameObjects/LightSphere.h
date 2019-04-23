@@ -6,13 +6,13 @@ class LightSphere : public GameObject {
 
 public:
 
-	LightSphere(Mesh* mesh, const glm::vec3& position);
+	LightSphere(Mesh* mesh, Type type, const glm::vec3& position);
 	virtual ~LightSphere();
 
 	void update(float dt);
 
 private:
-
+	Type m_type;
 };
 
 #endif

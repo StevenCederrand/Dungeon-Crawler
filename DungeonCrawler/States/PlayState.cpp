@@ -10,8 +10,11 @@
 #include "GameObjects/Box.h"
 #include "GameObjects/Room.h"
 #include "GameObjects/Player.h"
+#include "GameObjects/Enemies/Walker.h"
+#include "GameObjects/Enemies/Shooter.h"
 
 #include "Utility/Randomizer.h"
+
 
 PlayState::PlayState() {
 
@@ -32,6 +35,9 @@ PlayState::PlayState() {
 	
 	#pragma region Create_Objects
 	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
+	//ParserData* roomData = m_parser->loadFromObj("basementleveltest.obj");
+	//ParserData* roomData = m_parser->loadFromObj("oneRoomAi.obj");
+	//ParserData* roomData = m_parser->loadFromObj("roomWithNodes.obj");
 	ParserData* roomData = m_parser->loadFromObj("collisionroomtest.obj");
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
 
@@ -52,10 +58,12 @@ PlayState::PlayState() {
 	#pragma endregion
 
 	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 1.5f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
+	
 
+	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
 	m_lightManager->addLight(glm::vec3(0.f, 5.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
 
-	m_gameObjectManager->addGameObject(new Room(roomMesh, glm::vec3(0.f, 0.f, 0.f)));
+	m_gameObjectManager->addGameObject(new Room(roomMesh, ROOM, glm::vec3(0.f, 0.f, 0.f)));
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -74,19 +82,26 @@ PlayState::PlayState() {
 
 	}
 
+	//check the collsiion and then write to binary
 	for (int i = 0; i < 20; i++)
 	{
-		m_gameObjectManager->addGameObject(new Box(boxMesh,
+		m_gameObjectManager->addGameObject(new Box(boxMesh, BOX,
 			glm::vec3(
 				Randomizer::single(-15.f, 15.f),
 				0.f,
 				Randomizer::single(-30.f, 30.f)
 			)));
 	}
+	
+	m_gameObjectManager->nodecollision(roomData);
+	m_parser->writeToBinary();
 
-	m_player = new Player(boxMesh);
+	m_shooter = new Shooter(boxMesh, SHOOTER);
+	m_gameObjectManager->addGameObject(m_shooter);
+	m_walker = new Walker(boxMesh, WALKER);
+	m_gameObjectManager->addGameObject(m_walker);
+	m_player = new Player(boxMesh, PLAYER);
 	m_gameObjectManager->addGameObject(m_player);
-
 }
 
 PlayState::~PlayState()
@@ -116,7 +131,7 @@ void PlayState::renderImGUI()
 {
 	ImGui::Begin("PlayState");
 
-	ImGui::Text("Press shift to DASH");
+	ImGui::Text("Press shift or r.mb to DASH");
 
 	ImGui::Text("Player [ %f%s%f%s%f%s"
 		, m_player->getPosition().x
