@@ -219,6 +219,36 @@ void StaticMesh::setName(const char name[], int nameSize)
 	}
 }
 
+char StaticMesh::getNameCharacter(int space)const
+{
+	return m_name[space];
+}
+
+int StaticMesh::getVertexCount() const
+{
+	return m_vertexCount;
+}
+
+float StaticMesh::getControlPoint(int i, int j)const
+{
+	return m_controlPoints[j][i];
+}
+
+int StaticMesh::getControlPointIndex(int index)const
+{
+	return m_controlPointIndexArr[index];
+}
+
+float StaticMesh::getUVCoordinate(int i, int j)const
+{
+	return m_UVCoordinates[j][i];
+}
+
+int StaticMesh::getUVIndex(int index)const
+{
+	return m_UVCoordinateIndexArr[index];
+}
+
 bool StaticMesh::getCollision()const
 {
 	return m_collision;
@@ -228,9 +258,3 @@ bool StaticMesh::getIsStatic()const
 {
 	return m_staticMesh;
 }
-
-int StaticMesh::getVertexCount() const
-{
-	return this->m_vertexCount;
-}
-

@@ -8,24 +8,25 @@ private:
 	char m_name[100];
 	int m_vertexCount;
 
-	int m_currentControlPoint;
-	int m_currentControlPointIndex;
+	int m_currentControlPoint;			//Will not be needed when writing file
+	int m_currentControlPointIndex;		//Will not be needed when writing file
 	float m_controlPoints[3][100];
 	int m_controlPointIndexArr[100];
 
-	int m_currentUVCoordinate;
-	int m_currentUVIndex;
+	int m_currentUVCoordinate;			//Will not be needed when writing file
+	int m_currentUVIndex;				//Will not be needed when writing file
 	float m_UVCoordinates[2][100]; //They are 0 to 1, dont need to convert
 	int m_UVCoordinateIndexArr[100];
 
-	int m_currentNormalCoordinate;
-	float m_normalCoordinateArr[3][100];	//change to a vector 3
+	int m_currentNormalCoordinate;		//Will not be needed when writing file
+	float m_normalCoordinateArr[3][100];
+	//No index arr
 
 	bool m_collision;
 	bool m_staticMesh;
 
-	int m_nrOfPolygons;
-	int m_nrOfVerticesPerPolygon; //3 if triangulated
+	int m_nrOfPolygons;					//Will not be needed when writing file
+	int m_nrOfVerticesPerPolygon;		//Will not be needed when writing file,	3 if triangulated
 
 	void initiateArrays();
 public:
@@ -46,9 +47,14 @@ public:
 	void setStaticMesh(bool staticMesh);
 	void setName(const char name[], int nameSize);
 
+	char getNameCharacter(int space)const;
+	int getVertexCount()const;
+	float getControlPoint(int i, int j)const;	//not tested
+	int getControlPointIndex(int index)const;
+	float getUVCoordinate(int i, int j)const;	//not tested
+	int getUVIndex(int index)const;
 	bool getCollision()const;
 	bool getIsStatic()const;
-	int getVertexCount()const;
 };
 
 //different meshdata for each unic data, like hitbox only 4 pos and its speciall data is collision= true

@@ -83,40 +83,60 @@ void WriteCustomFile::CreateCustomFile()
 	*/
 }
 
-void WriteCustomFile::WriteMainHeader(int nrOfStaticMeshes, int nrOfBoundingBoxes)
+void WriteCustomFile::WriteMainHeader(int nrOfStaticMeshes, int nrOfBoundingBoxes) //works
 {
+	/*
+	m_mainHeader.version = '1';
+	m_mainHeader.dynamicMeshCount = 0;
 	m_mainHeader.staticMeshCount = nrOfStaticMeshes;
 	m_mainHeader.boundingBoxCount = nrOfBoundingBoxes;
 
 	//Write to file, make sure to write binary
-	std::ofstream outfile("testCustomBin.bin", std::ofstream::binary);
+	std::ofstream outfile("mainHeaderBin.bin", std::ofstream::binary);
 
 	//add mainheader
 	outfile.write((const char*)&m_mainHeader, sizeof(MainHeader));
+
+	outfile.close();
+	*/
 }
 
-void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //special case for static mesh no collision takes info from current mesh to mesh header struct
+void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think it works but it replaces the file each time
 {
 	MeshHeader lmeshHeader{ 1 };
 
 	//Add data into the mesh header struct
+	for (int i = 0; i < 100; i++)
+	{
+		lmeshHeader.nameOfMesh[i] = currentMesh.getNameCharacter(i);
+	}
+
 	lmeshHeader.vertexCount = currentMesh.getVertexCount();
-	lmeshHeader.isStatic = currentMesh.getIsStatic();
+
+	for (int i = 0; i < 100; i++)
+	{
+		lmeshHeader.vertexIndexArray[i] = currentMesh.getControlPointIndex(i);
+	}
+
+	for (int i = 0; i < 100; i++)
+	{
+		lmeshHeader.UVIndexArray[i] = currentMesh.getUVIndex(i);
+	}
+
 	lmeshHeader.collision = currentMesh.getCollision();
+	lmeshHeader.isStatic = currentMesh.getIsStatic();
 
 	//Creates a vertex pointer to a new vertex array
-	Vertex *vArray = new Vertex[lmeshHeader.vertexCount];
+
+	//Vertex *vArray = new Vertex[lmeshHeader.vertexCount];
 
 	//Write to file, make sure to write binary
-	std::ofstream outfile("testCustomBin.bin", std::ofstream::binary);
+	std::ofstream outfile("staticMeshBin.bin", std::ofstream::binary);
 
 	outfile.write((const char*)&lmeshHeader, sizeof(MeshHeader));
-	outfile.write((const char*)vArray, sizeof(Vertex)*lmeshHeader.vertexCount);
+	//outfile.write((const char*)vArray, sizeof(Vertex)*lmeshHeader.vertexCount);
 
 	outfile.close();
-
-
-	m_mainHeader.staticMeshCount++;
 }
 
 void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //special case for boundingbox mesh with collision from current mesh to bounding box mesh header struct
