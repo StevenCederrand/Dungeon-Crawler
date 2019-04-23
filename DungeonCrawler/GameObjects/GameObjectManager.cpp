@@ -3,11 +3,14 @@
 #include "Box.h"
 #include <vector>
 
+
 GameObjectManager::GameObjectManager(Effects* effects)
 {
 	m_effects = effects;
 	m_broadPhaseBox = nullptr;
 	m_player = nullptr;
+	m_walker = nullptr;
+	m_shooter = nullptr;
 }
 
 GameObjectManager::~GameObjectManager()
@@ -102,23 +105,25 @@ void GameObjectManager::update(float dt)
 				hitEnemy = true;
 				objectHit->setHit();
 			}
-			if (dynamic_cast<Walker*>(objectHit))
+			if (dynamic_cast<Walker*>(objectHit)) {
 				hitEnemy = true;
 				objectHit->setHit();
+			}
 			if (dynamic_cast<Shooter*>(objectHit))
 			{
 				hitEnemy = true;
 				objectHit->setHit();
 			}
 
+
 			HitDescription desc;
 			desc.player = m_player;
 			objectHit->hit(desc);
 
+		
 			m_effects->hitEffect(gunshotCollisionPoint, 0.15f, hitEnemy);
 			
 		}
-
 	}
 }
 
@@ -306,7 +311,9 @@ void GameObjectManager::handleDeadEnemies(float dt)
 		{
 			if (!dynamic_cast<Walker*>(object)->getAliveStatus())
 			{
+				delete m_gameObjects[i];
 				m_gameObjects.erase(m_gameObjects.begin()+ i);
+				continue;
 			}
 		}
 
@@ -314,7 +321,9 @@ void GameObjectManager::handleDeadEnemies(float dt)
 		{
 			if (!dynamic_cast<Shooter*>(object)->getAliveStatus())
 			{
+				delete m_gameObjects[i];
 				m_gameObjects.erase(m_gameObjects.begin() + i);
+				continue;
 			}
 		}
 	}
