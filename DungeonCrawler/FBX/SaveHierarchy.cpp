@@ -2,7 +2,7 @@
 
 SaveHierarchy::SaveHierarchy()
 {
-	//m_mesh = MeshData2();
+	m_nrOfNodes = 0;
 }
 
 SaveHierarchy::~SaveHierarchy()
@@ -12,28 +12,106 @@ SaveHierarchy::~SaveHierarchy()
 
 void SaveHierarchy::SaveEntireHierarchy(FbxScene* lScene)
 {
-	// Print the nodes of the scene and their attributes recursively.
 	// Note that we are not printing the root node because it should not contain any attributes.
-	// The root node of our box would be a shell.
 	FbxNode* lRootNode = lScene->GetRootNode();
 	if (lRootNode)
 	{
+		//Count how many number of nodes we have to work with
 		for (int i = 0; i < lRootNode->GetChildCount(); i++)
 		{
-			m_SaveNode(lRootNode->GetChild(i));
+			m_calculateNrOfNodes(lRootNode->GetChild(i));
+		}
+		printf("FINAL Number of Nodes: %i\n", m_nrOfNodes);
+
+		//Write Meshes
+		for (int i = 0; i < lRootNode->GetChildCount(); i++)
+		{
+			m_SaveStaticMeshNode(lRootNode->GetChild(i));
+		}
+
+		//Write Hitboxes
+		for (int i = 0; i < lRootNode->GetChildCount(); i++)
+		{
+			m_SaveStaticHitboxNode(lRootNode->GetChild(i));
 		}
 	}
 }
 
-void SaveHierarchy::m_SaveNode(FbxNode* pNode)
+void SaveHierarchy::m_calculateNrOfNodes(FbxNode* pNode)
+{
+	m_nrOfNodes++;
+	// Recursively print the children.
+	for (int j = 0; j < pNode->GetChildCount(); j++)
+	{
+		printf("Number of Nodes: %i\n", m_nrOfNodes);
+		m_calculateNrOfNodes(pNode->GetChild(j));	//Deeper in the tree
+	}
+}
+
+void SaveHierarchy::m_SaveStaticMeshNode(FbxNode* pNode)
 {
 	FbxNodeAttribute::EType nodeType = pNode->GetNodeAttributeByIndex(0)->GetAttributeType();
+	bool collisionBool = false;
+	bool staticMeshBool = false;
 
-	//Check all if they are static meshes first, put them in the file first.
-	//Then hitboxes
-	//then dynamic meshes
-	//then material
+	FbxProperty collision = pNode->FindProperty("Collision", true);
+	if (collision.IsValid())
+	{
+		FbxBool collisionBoolFbx = collision.Get<bool>();
+		collisionBool = collisionBoolFbx;
+	}
+	else
+	{
+		printf("Collision Bool not found");
+	}
 
+	FbxProperty staticMesh = pNode->FindProperty("StaticMesh", true);
+	if (staticMesh.IsValid())
+	{
+		FbxBool staticMeshBoolFbx = staticMesh.Get<bool>();
+		staticMeshBool = staticMeshBoolFbx;
+	}
+	else
+	{
+		printf("Static Mesh Bool not found");
+	}
+
+	switch (nodeType)
+	{
+	default:
+		break;
+	case FbxNodeAttribute::eMesh:	//if its a mesh
+		if (collisionBool)
+		{
+
+		}
+		else
+		{
+			if (staticMeshBool)   //if its static
+			{
+				m_SaveStaticMesh(pNode, collisionBool, staticMeshBool);	//saves relevant info in m_mesh
+				m_file.WriteStaticMesh(m_staticMesh);	//sends m_mesh to file writer for static mesh
+				m_staticMesh.PrepareForNewMesh();
+			}
+			else  //dynamic
+			{
+
+			}
+		}
+		break;
+	}
+
+	// Recursively print the children.
+	for (int j = 0; j < pNode->GetChildCount(); j++)
+	{
+		printf("\n");
+		m_SaveStaticMeshNode(pNode->GetChild(j));	//Deeper in the tree
+	}
+}
+
+void SaveHierarchy::m_SaveStaticHitboxNode(FbxNode* pNode)
+{
+	FbxNodeAttribute::EType nodeType = pNode->GetNodeAttributeByIndex(0)->GetAttributeType();
 	bool collisionBool = false;
 	bool staticMeshBool = false;
 
@@ -67,17 +145,14 @@ void SaveHierarchy::m_SaveNode(FbxNode* pNode)
 		if (collisionBool)
 		{
 			m_SaveHitboxMesh(pNode, collisionBool, staticMeshBool);	//saves relevant into in m_mesh
-			//m_file.WriteBoundingBoxMesh(m_bBMesh);	//sends m_mesh to file writer for static mesh
-			m_bBMesh.CheckMesh();
+			m_file.WriteBoundingBoxMesh(m_bBMesh);	//sends m_mesh to file writer for static mesh
 			m_bBMesh.PrepareForNewMesh();
 		}
 		else
 		{
 			if (staticMeshBool)   //if its static
 			{
-				m_SaveStaticMesh(pNode, collisionBool, staticMeshBool);	//saves relevant info in m_mesh
-				m_file.WriteStaticMesh(m_staticMesh);	//sends m_mesh to file writer for static mesh
-				m_staticMesh.PrepareForNewMesh();
+
 			}
 			else  //dynamic
 			{
@@ -91,7 +166,7 @@ void SaveHierarchy::m_SaveNode(FbxNode* pNode)
 	for (int j = 0; j < pNode->GetChildCount(); j++)
 	{
 		printf("\n");
-		m_SaveNode(pNode->GetChild(j));	//Deeper in the tree
+		m_SaveStaticHitboxNode(pNode->GetChild(j));	//Deeper in the tree
 	}
 }
 

@@ -2,6 +2,7 @@
 
 struct MainHeader
 {
+	char version; //What version of this program the file was made in
 	unsigned int dynamicMeshCount; //morph	//custom attribute
 	unsigned int staticMeshCount;  //regular
 	unsigned int boundingBoxCount;
