@@ -99,6 +99,7 @@ void Application::run()
 	LOG_INFO("Running Application loop");
 
 	while (!glfwWindowShouldClose(m_window)) {
+		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -128,7 +129,7 @@ void Application::run()
 		m_stateManager->renderImGUI();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
+		
 		glfwSwapBuffers(m_window);
 	}
 
@@ -156,7 +157,20 @@ void Application::renderImGUI()
 void Application::initShaders() {
 	Shader* shader = ShaderMap::createShader("GameObjectShader", "GameObjectShader.vs", "GameObjectShader.fs");
 	shader = ShaderMap::createShader("MenuShader", "MainMenu/MainMenu.vs", "MainMenu/MainMenu.fs");
+	
 	shader = ShaderMap::createShader("GeometryPass", "GeometryPass/GeometryPass.vs", "GeometryPass/GeometryPass.gs", "GeometryPass/GeometryPass.fs");
+
 	shader = ShaderMap::createShader("LightPass", "LightPass/LightPass.vs", "LightPass/LightPass.fs");
+	shader->use();
+	shader->setInt("positionBuffer", 0);
+	shader->setInt("normalBuffer", 1);
+	shader->setInt("colourBuffer", 2);
+	shader->unuse();
+
+	shader = ShaderMap::createShader("EffectsShader", "EffectsShader.vs", "EffectsShader.fs");
+
 
 }
+
+
+

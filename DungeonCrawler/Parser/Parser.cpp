@@ -27,6 +27,8 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 		return data;
 	}
 	
+	m_faces.clear();
+
 	std::vector<glm::vec3> tempVertexBuffer;
 	tempVertexBuffer.reserve(CAPACITY);
 
@@ -161,6 +163,7 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 	tempVertexBuffer.clear();
 	tempUVBuffer.clear();
 	tempNormalBuffer.clear();
+
 
 	// Parse the material 
 	parseMaterialFile(MTLfile, data);

@@ -37,6 +37,8 @@ public:
 	
 
 	const glm::vec3& getLookDirection() const;
+	const float& getAngle() const;
+
 	glm::vec3 shakeDirection() const;
 	glm::vec3 getPlayerPosition()const;
 

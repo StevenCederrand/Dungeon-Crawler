@@ -6,12 +6,13 @@
 #include "Enemies/Walker.h"
 #include "Enemies/Shooter.h"
 #include "GameObject.h"
+#include "Graphics/Effects.h"
 #include "Parser/Parser.h"
 
 class GameObjectManager {
 
 public:
-	GameObjectManager();
+	GameObjectManager(Effects* effects);
 	~GameObjectManager();
 
 	void update(float dt);
@@ -32,6 +33,7 @@ private:
 	Walker* m_walker;
 	Shooter* m_shooter;
 	AABB* m_broadPhaseBox;
+	Effects* m_effects; 
 };
 
 #endif

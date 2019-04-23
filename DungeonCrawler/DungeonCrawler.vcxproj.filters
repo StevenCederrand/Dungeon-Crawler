@@ -47,6 +47,7 @@
     <ClCompile Include="GameObjects\Room.cpp" />
     <ClCompile Include="GameObjects\Enemies\Walker.cpp" />
     <ClCompile Include="GameObjects\Enemies\Shooter.cpp" />
+    <ClCompile Include="Graphics\Effects.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -106,5 +107,6 @@
     <ClInclude Include="GameObjects\Enemies\Walker.h" />
     <ClInclude Include="Collision\HitData.h" />
     <ClInclude Include="GameObjects\Enemies\Shooter.h" />
+    <ClInclude Include="Graphics\Effects.h" />
   </ItemGroup>
 </Project>

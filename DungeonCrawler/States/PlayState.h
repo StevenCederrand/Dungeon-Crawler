@@ -8,6 +8,7 @@
 #include "GameObjects/GameObjectManager.h"
 #include "Graphics/LightManager.h"
 #include <list>
+#include "Graphics/Effects.h"
 
 class PlayState : public State {
 public:
@@ -29,6 +30,7 @@ private:
 	GameObject* m_walker;
 	GameObject* m_shooter;
 
+	Effects* m_effects;
 };
 
 #endif

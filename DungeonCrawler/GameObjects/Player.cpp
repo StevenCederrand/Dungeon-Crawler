@@ -6,6 +6,7 @@
 #include "Utility/Camera.h"
 #include "Enemies/Walker.h"
 #include "Enemies/Shooter.h"
+#include "../Audio/AudioEngine.h"
 
 Player::Player(Mesh* mesh, Type type) :
 	GameObject(mesh, type)
@@ -95,25 +96,30 @@ void Player::move(float dt)
 	if (Input::isKeyHeldDown(GLFW_KEY_W))
 	{
 		m_movementDirection.z =  -this->m_speed * dt;
+		AudioEngine::playOnce("pl_walk", 0.4f);
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_A))
 	{
 		m_movementDirection.x = -this->m_speed * dt;
+			AudioEngine::playOnce("pl_walk", 0.4f);
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_S))
 	{
 		m_movementDirection.z = this->m_speed * dt;
+			AudioEngine::playOnce("pl_walk", 0.4f);
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_D))
 	{
 		m_movementDirection.x = this->m_speed * dt;
+			AudioEngine::playOnce("pl_walk", 0.4f);
 	}
 	setVelocity(m_movementDirection);
+	
 	Camera::active->setToPlayer(getPosition(), m_shakeDir);
 }
 
 void Player::rotatePlayer()
-{	
+{
 	glm::vec3 pos = Camera::active->getMouseWorldPos();
 
 	m_lookDirection = glm::vec3(
@@ -121,13 +127,18 @@ void Player::rotatePlayer()
 		0.0f,
 		pos.z - this->getPosition().z);
 	m_angle = glm::degrees(atan2f(m_lookDirection.z, m_lookDirection.x));
-	
+
 	setRotation(glm::vec3(0.f, -m_angle, 0.f));
 }
 
 const glm::vec3 & Player::getLookDirection() const
 {
 	return glm::normalize(m_lookDirection);
+}
+
+const float& Player::getAngle() const
+{
+	return m_angle;
 }
 
 glm::vec3 Player::shakeDirection()const
@@ -230,7 +241,7 @@ void Player::dashCd(float dt)
 
 void Player::shootProjectile(float dt)
 {
-	m_shootingCooldown = 0.10f;
+	m_shootingCooldown = 0.05f;
 	m_canShoot = false;
 	m_shooting = true;
 	screenShake(dt);

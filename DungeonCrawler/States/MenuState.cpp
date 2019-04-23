@@ -16,6 +16,7 @@ MenuState::MenuState() {
 	this->m_renderer->setupMenuButtons(this->m_menu);
 
 	AudioEngine::loadSSO("Menu.sso");
+	LOG_INFO("CREATED");
 }
 
 MenuState::~MenuState()
@@ -26,14 +27,17 @@ MenuState::~MenuState()
 }
 
 void MenuState::update(float dt) {
+	//Force the player into the playstate
+	m_stateManager->pushTemporaryState(new PlayState());
 	if (Input::isMouseReleased(GLFW_MOUSE_BUTTON_RIGHT))
 	{
-		
+		AudioEngine::unloadSSO("Menu.sso");
+		m_stateManager->pushTemporaryState(new PlayState());
+
 	}
-	m_stateManager->pushTemporaryState(new PlayState());	
 
 	if (Input::isKeyReleased(GLFW_KEY_S)) {
-		AudioEngine::play("LMouseClick", 10.0f);
+		AudioEngine::play("LMouseClick", 1.0f);
 	}
 
 	if (Input::isKeyReleased(GLFW_KEY_ENTER)) {

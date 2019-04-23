@@ -4,7 +4,7 @@
 #include "System/Log.h"
 #include "System/Input.h"
 #include "StateManager.h"
-
+#include "../Audio/AudioEngine.h"
 #include "Graphics/MeshMap.h"
 #include "Graphics/ShaderMap.h"
 #include "GameObjects/Box.h"
@@ -17,34 +17,42 @@
 
 
 PlayState::PlayState() {
-	
+
 	#pragma region Init
 	m_parser = new Parser();
 	m_GLinit = new GLinit();
 	m_camera = new Camera();
+	m_effects = new Effects(m_GLinit);
 	Camera::active = m_camera;
 	m_lightManager = new LightManager();
-	m_renderer = new Renderer(m_camera, m_lightManager);
-	m_gameObjectManager = new GameObjectManager();
+	m_renderer = new Renderer(m_camera, m_lightManager, m_effects);
+	m_gameObjectManager = new GameObjectManager(m_effects);
 	#pragma endregion
-
+	
 	#pragma region Create_Objects
 	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
 	//ParserData* roomData = m_parser->loadFromObj("basementleveltest.obj");
 	//ParserData* roomData = m_parser->loadFromObj("oneRoomAi.obj");
-	ParserData* roomData = m_parser->loadFromObj("roomWithNodes.obj");
+	//ParserData* roomData = m_parser->loadFromObj("roomWithNodes.obj");
+	ParserData* roomData = m_parser->loadFromObj("collisionroomtest.obj");
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
 
-	m_GLinit->createMesh("Box", boxData);
 	m_GLinit->createMesh("Room", roomData);
+	m_GLinit->createMesh("Box", boxData);
 	m_GLinit->createMesh("Sphere", sphereData);
 	#pragma endregion
-	
+
+	#pragma region Setup_Sounds
+	AudioEngine::loadSSO("Game.sso");
+	LOG_INFO("CREATED DDD");
+	#pragma endregion
+
+
 	Mesh* roomMesh = MeshMap::getMesh("Room");
 	Mesh* boxMesh = MeshMap::getMesh("Box");
-	
+
 	#pragma endregion
-	
+
 	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 1.5f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
 	
 
@@ -75,8 +83,8 @@ PlayState::PlayState() {
 	{
 		m_gameObjectManager->addGameObject(new Box(boxMesh, BOX,
 			glm::vec3(
-				Randomizer::single(-15.f, 15.f), 
-				0.f, 
+				Randomizer::single(-15.f, 15.f),
+				0.f,
 				Randomizer::single(-30.f, 30.f)
 			)));
 	}
@@ -92,7 +100,7 @@ PlayState::PlayState() {
 	m_gameObjectManager->addGameObject(m_player);
 }
 
-PlayState::~PlayState() 
+PlayState::~PlayState()
 {
 	delete m_parser;
 	delete m_GLinit;
@@ -100,16 +108,24 @@ PlayState::~PlayState()
 	delete m_gameObjectManager;
 	delete m_renderer;
 	delete m_lightManager;
+	delete m_effects;
 }
 
 void PlayState::update(float dt)
 {
-	
+
 	m_gameObjectManager->update(dt);
+	m_effects->update(dt);
 	m_camera->update(dt);
 	m_lightManager->update(dt);
 
 	m_renderer->prepareGameObjects(m_gameObjectManager->getGameObjects());
+	//if (Input::isMouseReleased(GLFW_MOUSE_BUTTON_RIGHT)){
+
+	//	AudioEngine::unloadSSO("Game.sso");
+	//	m_stateManager->popState();
+	//	AudioEngine::loadSSO("Menu.sso");
+	//}
 }
 
 
@@ -121,12 +137,14 @@ void PlayState::renderImGUI()
 
 	ImGui::Text("Player [ %f%s%f%s%f%s"
 		, m_player->getPosition().x
-		, ", " 
+		, ", "
 		, m_player->getPosition().y
-		, ", " 
+		, ", "
 		, m_player->getPosition().z
 		, " ]");
 
+	ImGui::NewLine();
+	ImGui::Text("Nr of lasers: %i" , m_effects->getNrOfAliveParticles());
 
 	ImGui::End();
 }

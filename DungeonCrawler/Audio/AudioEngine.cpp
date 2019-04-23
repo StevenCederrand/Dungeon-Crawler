@@ -106,6 +106,27 @@ bool AudioEngine::unloadSound(std::string key) {
 	return true;
 }
 
+bool AudioEngine::unloadSSO(std::string ssoName) {
+
+	std::ifstream ssoFile(SoundPath + ssoName);
+	std::string line;
+
+	if (!ssoFile.is_open()) {
+		LOG_ERROR("ERROR OPENING SSO FILE");
+		return false;
+	}
+	while (std::getline(ssoFile, line)) {
+		if (line[0] == '#' || line == "") {
+			continue;
+		}
+		size_t space = line.find(' ');
+		std::string key = line.substr(0, space);
+		AudioEngine::unloadSound(key);
+	}
+	LOG_INFO("Number of sounds: " + std::to_string(m_sounds.size()));
+	return true;
+}
+
 void AudioEngine::update() {
 	//Loop through the channels in use and then stop and remove then if they aren't in use
 	bool isPlaying;
@@ -122,6 +143,7 @@ void AudioEngine::update() {
 }
 
 void AudioEngine::playOnce(std::string key, float volume) {
+	
 	if (volume > 1.0f) {
 		LOG_WARNING("CANNOT HANDLE VOLUMES ABOVE 1.0f");
 		LOG_WARNING("SETTING VOLUME TO 1.0f");
