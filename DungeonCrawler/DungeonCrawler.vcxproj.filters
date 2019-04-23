@@ -46,6 +46,7 @@
     <ClCompile Include="GameObjects\LightSphere.cpp" />
     <ClCompile Include="GameObjects\Room.cpp" />
     <ClCompile Include="Graphics\Effects.cpp" />
+    <ClCompile Include="Graphics\Emitter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -103,5 +104,6 @@
     <ClInclude Include="Utility\Randomizer.h" />
     <ClInclude Include="GameObjects\Room.h" />
     <ClInclude Include="Graphics\Effects.h" />
+    <ClInclude Include="Graphics\Emitter.h" />
   </ItemGroup>
 </Project>

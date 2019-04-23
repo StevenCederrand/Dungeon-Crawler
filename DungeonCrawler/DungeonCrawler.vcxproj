@@ -163,6 +163,7 @@
     <ClCompile Include="GameObjects\LightSphere.cpp" />
     <ClCompile Include="GameObjects\Room.cpp" />
     <ClCompile Include="Graphics\Effects.cpp" />
+    <ClCompile Include="Graphics\Emitter.cpp" />
     <ClCompile Include="Graphics\Framebuffer.cpp" />
     <ClCompile Include="Graphics\GLinit.cpp" />
     <ClCompile Include="Graphics\LightManager.cpp" />
@@ -204,6 +205,7 @@
     <ClInclude Include="Globals\Paths.h" />
     <ClInclude Include="Globals\Settings.h" />
     <ClInclude Include="Graphics\Effects.h" />
+    <ClInclude Include="Graphics\Emitter.h" />
     <ClInclude Include="Graphics\Framebuffer.h" />
     <ClInclude Include="Graphics\GLinit.h" />
     <ClInclude Include="Graphics\LightManager.h" />
