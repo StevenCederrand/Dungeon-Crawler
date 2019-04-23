@@ -172,9 +172,7 @@
     <ClCompile Include="Graphics\Mesh.cpp" />
     <ClCompile Include="Graphics\MeshMap.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
-    <ClCompile Include="Graphics\UIRenderer.cpp" />
-    <ClCompile Include="Main Menu\MainMenu.cpp" />
-    <ClCompile Include="Main Menu\MenuButton.cpp" />
+    <ClCompile Include="UserInterface\Button.cpp" />
     <ClCompile Include="Parser\ParserData.cpp" />
     <ClCompile Include="Graphics\Shader.cpp" />
     <ClCompile Include="Graphics\ShaderMap.cpp" />
@@ -217,9 +215,7 @@
     <ClInclude Include="Graphics\Mesh.h" />
     <ClInclude Include="Graphics\MeshMap.h" />
     <ClInclude Include="Graphics\Renderer.h" />
-    <ClInclude Include="Graphics\UIRenderer.h" />
-    <ClInclude Include="Main Menu\MainMenu.h" />
-    <ClInclude Include="Main Menu\MenuButton.h" />
+    <ClInclude Include="UserInterface\Button.h" />
     <ClInclude Include="Parser\ParserData.h" />
     <ClInclude Include="Graphics\Shader.h" />
     <ClInclude Include="Graphics\ShaderMap.h" />

@@ -9,11 +9,7 @@
 
 
 MenuState::MenuState() {
-	this->m_menu = new MainMenu();
 	this->m_camera = new Camera();
-	this->m_renderer = new UIRenderer(this->m_camera);
-	this->m_menu->insertButton(glm::vec2(0, 0), 2, 2);
-	this->m_renderer->setupMenuButtons(this->m_menu);
 
 	AudioEngine::loadSSO("Menu.sso");
 	LOG_INFO("CREATED");
@@ -22,8 +18,6 @@ MenuState::MenuState() {
 MenuState::~MenuState()
 {
 	delete this->m_camera;
-	delete this->m_menu;
-	delete this->m_renderer;
 }
 
 void MenuState::update(float dt) {
@@ -57,5 +51,4 @@ void MenuState::renderImGUI()
 }
 
 void MenuState::render() {
-	this->m_renderer->render();
 }
