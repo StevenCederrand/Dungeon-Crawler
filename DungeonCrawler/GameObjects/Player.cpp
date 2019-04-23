@@ -4,21 +4,26 @@
 #include <GLM/gtc/matrix_transform.hpp>
 #include "System/Log.h"
 #include "Utility/Camera.h"
+#include "Enemies/Walker.h"
+#include "Enemies/Shooter.h"
 #include "../Audio/AudioEngine.h"
 
-Player::Player(Mesh * mesh) :
-	GameObject(mesh)
+Player::Player(Mesh* mesh, Type type) :
+	GameObject(mesh, type)
 {
 	this->setPosition(glm::vec3(0.f, 0.f, 0.f));
 	this->m_defaultSpeed = 7.f;
 	this->m_speed = 7.0f;
-	this->m_health = 5.f;
-	this->m_damage = 0.f;
+	this->m_health = 200.f;
+	this->m_damage = 1.f;
+	this->m_automaticDamage = 1.f;
+	this->m_chargeDamage = 10.f;
+	this->m_unChargedDamage = 2.f;
 	this->m_debug = false;
 	this->m_dash = 100.f;
 	this->m_dashCd = false;
-	this->m_timer = 0;
-	this->m_shake = 0;
+	this->m_dashTimer = 0.f;
+	this->m_shake = 0.f;
 	this->m_shakeDir = glm::vec3(0.f, 0.f, 0.f);
 
 	this->m_spotlight = new Spotlight();
@@ -27,6 +32,14 @@ Player::Player(Mesh * mesh) :
 	this->m_flash = new Light();
 	this->m_flash->color = glm::vec4(1, 1, 1, 0);
 	this->m_flash->position = glm::vec4(getPlayerPosition(), 1);
+
+	this->m_chargeStance = false;
+	this->m_shakeIntensity = 0.10f;
+	this->m_chargeTimer = 1.f;
+	this->m_weaponSlot = 1;
+	this->m_spraying = false;
+	this->m_type = type;
+	this->m_iframes = 0.f;
 }
 
 Player::~Player() {
@@ -38,6 +51,7 @@ void Player::update(float dt)
 {
 	// Start of by saying that the player is not shooting
 	m_shooting = false;
+	iframeCountdown(dt);
 
 	if (Input::isKeyReleased(GLFW_KEY_Q))
 	{
@@ -45,46 +59,46 @@ void Player::update(float dt)
 	}
 	if (!m_debug)
 	{
-
-		if (Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT))
+		weaponSwap();
+		if (m_weaponSlot == 1)
 		{
-			dash();
-			AudioEngine::playOnce("pl_dash", 0.5f);
+			shootAutomatic(dt);
 		}
-
-		if (Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT) || Input::isMousePressed(GLFW_MOUSE_BUTTON_RIGHT))
+		if (m_weaponSlot == 2)
 		{
-			dash();
+			shootChargeShot(dt);
 		}
-		
-		if (Input::isMouseHeldDown(GLFW_MOUSE_BUTTON_LEFT))
-		{
-			if (m_canShoot)
-			{
-				shootProjectile();
-				m_shake = 4;
-			}
-			else
-			{
-				m_shooting = false;
-				
-			}
-		}
-		if (!m_canShoot)
-		{
-			//Shoot reset
-			m_shootingCooldown -= dt;
-			if (m_shootingCooldown <= 0.f) {
-				m_canShoot = true;
-				this->m_flash->color.a = 0;
-			}
-		}
-
-		spotlightHandler();
 		move(dt);
-		dashCd();
-		screenShake();
+		dashCd(dt);
+		screenShake(dt);
 	}
+}
+
+void Player::hit(const HitDescription & desc)
+{
+	Type type = desc.owner->getType();
+	if (m_iframes <= 0)
+	{
+		if (type == Type::WALKER)
+		{
+			Walker* walker = dynamic_cast<Walker*>(desc.owner);
+			m_health -= walker->getDamage();
+		}
+		if (type == Type::SHOOTER)
+		{
+			Shooter* shooter = dynamic_cast<Shooter*>(desc.owner);
+			m_health -= shooter->getDamage();
+		}
+		m_iframes = 2.f;
+	}
+	
+	LOG_WARNING("Player Health: " + std::to_string(m_health));
+		//"Player health: " + m_health);
+}
+
+Type Player::getType()
+{
+	return this->m_type;
 }
 
 void Player::move(float dt)
@@ -161,6 +175,69 @@ void Player::spotlightHandler() {
 	this->m_spotlight->position = this->getPosition();
 	this->m_flash->position = glm::vec4(this->getPosition(), 1);
 }
+glm::vec3 Player::getPlayerPosition() const
+{
+	return getPosition();
+}
+
+void Player::weaponSwap()
+{
+	if (Input::isKeyPressed(GLFW_KEY_1))
+	{
+		m_weaponSlot = 1;
+	}
+	if (Input::isKeyPressed(GLFW_KEY_2))
+	{
+		m_weaponSlot = 2;
+	}
+}
+
+void Player::shootAutomatic(float dt)
+{
+	m_damage = m_automaticDamage;
+	if (Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT) && !m_spraying || Input::isMousePressed(GLFW_MOUSE_BUTTON_RIGHT && !m_spraying))
+	{
+		dash();
+	}
+	if (Input::isMouseHeldDown(GLFW_MOUSE_BUTTON_LEFT))
+	{
+		if (m_canShoot)
+		{
+			shootProjectile(dt);
+			m_shake = 0.05f;
+			m_spraying = true;
+		}
+	}
+	if (Input::isMouseReleased(GLFW_MOUSE_BUTTON_LEFT))
+	{
+		m_spraying = false;
+	}
+
+	if (!m_canShoot)
+	{
+		m_shootingCooldown -= dt;
+
+		if (m_shootingCooldown <= 0.f) {
+			m_canShoot = true;
+		}
+	}
+}
+
+void Player::shootChargeShot(float dt)
+{
+	if (Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT) && !m_chargeStance || Input::isMousePressed(GLFW_MOUSE_BUTTON_RIGHT && !m_chargeStance))
+	{
+		dash();
+	}
+	if (Input::isMouseHeldDown(GLFW_MOUSE_BUTTON_LEFT))
+	{
+		chargeProjectile(dt);
+	}
+	if (Input::isMouseReleased(GLFW_MOUSE_BUTTON_LEFT))
+	{
+		releaseChargedProjectile(dt);
+	}
+}
 
 void Player::dash()
 {
@@ -168,53 +245,86 @@ void Player::dash()
 	{
 		setSpeed(m_dash);
 		m_dashCd = !m_dashCd;
-		m_timer = 30;
+		m_dashTimer = 1.f;
 	}
 }
 
-void Player::dashCd()
+void Player::dashCd(float dt)
 {
-	if (m_timer <= 0 && m_dashCd)
+	if (m_dashTimer <= 0.f && m_dashCd)
 	{
 		m_dashCd = !m_dashCd;
 	}
-	if (m_timer <= 28)
+	if (m_dashTimer <= 0.98f)
 	{
 		setSpeed(m_defaultSpeed);
 	}
-	if (m_timer > 0)
+	if (m_dashTimer > 0.f)
 	{
-		m_timer--;
+		m_dashTimer -= dt;
 	}
 }
 
-void Player::shootProjectile()
+void Player::shootProjectile(float dt)
 {
 	m_shootingCooldown = 0.25f;
 	this->m_flash->color.a = 5;
 	m_canShoot = false;
 	m_shooting = true;
 	AudioEngine::play("pl_gun_shot", 0.8f);
-	screenShake();
+	screenShake(dt);
 }
 
-void Player::screenShake()
+void Player::chargeProjectile(float dt)
 {
-	if (m_shake <= 0)
+	m_chargeStance = true;
+	m_speed = 1.f;
+	if (m_chargeTimer <= 0)
+	{
+		m_damage = m_chargeDamage;
+	}
+	if (m_chargeTimer > 0)
+	{
+		m_damage = m_unChargedDamage;
+	}
+	if (m_chargeTimer >= 0)
+	{
+		m_chargeTimer -= dt;
+	}
+}
+
+void Player::releaseChargedProjectile(float dt)
+{
+	m_chargeStance = false;
+	shootProjectile(dt);
+	m_shake = 0.05f;
+
+	if (m_damage == m_chargeDamage)
+	{
+		m_shakeIntensity = 1.f;
+	}
+	m_speed = m_defaultSpeed;
+	m_chargeTimer = 1.f;
+}
+
+void Player::screenShake(float dt)
+{
+	if (m_shake <= 0.f)
 	{
 		m_shakeDir *= 0.f;
+		m_shakeIntensity = 0.1f;
 	}
-	if (m_shake > 0)
+	if (m_shake > 0.f)
 	{
-		m_shakeDir = shakeDirection() * 0.1f;
+		m_shakeDir = shakeDirection() * m_shakeIntensity;
 	}
-	if (m_shake > 2)
+	if (m_shake > 0.025f)
 	{
-		m_shakeDir = shakeDirection() * -0.1f;
+		m_shakeDir = shakeDirection() * -m_shakeIntensity;
 	}
-	if (m_shake > 0)
+	if (m_shake > 0.f)
 	{
-		m_shake--;
+		m_shake -= dt;
 	}
 }
 
@@ -231,6 +341,19 @@ void Player::setHealth(float health)
 void Player::setDamage(float damage)
 {
 	this->m_damage = damage;
+}
+
+void Player::iframeCountdown(float dt)
+{
+	if (m_iframes > 0.f)
+	{
+		m_iframes -= dt;
+	}
+}
+
+void Player::takeDamage(float damageRecieved)
+{
+	m_health = m_health - damageRecieved;
 }
 
 float Player::getSpeed() const

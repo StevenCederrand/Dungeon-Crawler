@@ -45,7 +45,10 @@
     <ClCompile Include="Graphics\UIRenderer.cpp" />
     <ClCompile Include="GameObjects\LightSphere.cpp" />
     <ClCompile Include="GameObjects\Room.cpp" />
+    <ClCompile Include="GameObjects\Enemies\Walker.cpp" />
+    <ClCompile Include="GameObjects\Enemies\Shooter.cpp" />
     <ClCompile Include="Graphics\Effects.cpp" />
+    <ClCompile Include="Graphics\Emitter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -102,10 +105,12 @@
     <ClInclude Include="Utility\Ray.h" />
     <ClInclude Include="Utility\Randomizer.h" />
     <ClInclude Include="GameObjects\Room.h" />
-<<<<<<< HEAD
     <ClInclude Include="Globals\LightTypes.h" />
-=======
     <ClInclude Include="Graphics\Effects.h" />
->>>>>>> 1f31c555d98d642edc19dc5985747eab900f98a4
+    <ClInclude Include="GameObjects\Enemies\Walker.h" />
+    <ClInclude Include="Collision\HitData.h" />
+    <ClInclude Include="GameObjects\Enemies\Shooter.h" />
+    <ClInclude Include="Graphics\Effects.h" />
+    <ClInclude Include="Graphics\Emitter.h" />
   </ItemGroup>
 </Project>

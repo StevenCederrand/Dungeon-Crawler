@@ -55,8 +55,7 @@ MenuState::~MenuState()
 
 void MenuState::update(float dt) {
 	//Force the player into the playstate
-	if (Input::isMouseReleased(GLFW_MOUSE_BUTTON_RIGHT))
-	{
+	if (Input::isMouseReleased(GLFW_MOUSE_BUTTON_RIGHT)) {
 		bool completed = false;
 
 		//Have a side thread output text while it's loading

@@ -5,7 +5,7 @@
 class Room : public GameObject
 {
 public:
-	Room(Mesh* mesh, const glm::vec3& position = glm::vec3(0));
+	Room(Mesh* mesh, Type type, const glm::vec3& position = glm::vec3(0));
 	~Room();
 
 	void update(float dt);
@@ -14,7 +14,7 @@ public:
 private:
 
 
-
+	Type m_type;
 };
 
 

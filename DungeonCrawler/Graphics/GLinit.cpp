@@ -2,6 +2,8 @@
 #include "Vendor/stb/stb_image.h"
 #include "System/Log.h"
 #include "MeshMap.h"
+#include "Globals/Paths.h"
+
 GLinit::GLinit()
 {
 }
@@ -100,12 +102,23 @@ void GLinit::storeDataInAttributeList(const GLuint & attributeNumber, const GLui
 	m_vbos.emplace_back(&vbo);
 }
 
-GLuint GLinit::createTexture(std::string filename)
+GLuint GLinit::createTexture(std::string filename, bool useFilepath,  bool alpha)
 {
 	GLint width, height, channels;
 	GLuint textureID;
 	stbi_set_flip_vertically_on_load(1);
-	unsigned char* textureData = stbi_load(filename.c_str(), &width, &height, &channels, STBI_rgb);
+
+	unsigned char* textureData = nullptr;
+
+	if (useFilepath) {
+		textureData = stbi_load((TexturePath + filename).c_str(), &width, &height, &channels, 
+			alpha ? STBI_rgb_alpha : STBI_rgb);
+	}
+	else
+	{
+		textureData = stbi_load(filename.c_str(), &width, &height, &channels,
+			alpha ? STBI_rgb_alpha : STBI_rgb);
+	}
 
 	if (!textureData)
 	{
@@ -122,8 +135,14 @@ GLuint GLinit::createTexture(std::string filename)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData);
+	if (alpha) {
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
+	}
+	else
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData);
+	}
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, NULL);
 	stbi_image_free(textureData);

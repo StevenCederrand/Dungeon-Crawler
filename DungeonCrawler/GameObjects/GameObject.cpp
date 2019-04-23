@@ -1,7 +1,7 @@
 #include "GameObject.h"
 #include <GLM/gtx/transform.hpp>
 
-GameObject::GameObject(Mesh * mesh, const glm::vec3 & position)
+GameObject::GameObject(Mesh * mesh, Type type, const glm::vec3 & position)
 {
 	m_mesh = mesh;
 	m_isCollidable = true;
@@ -10,7 +10,9 @@ GameObject::GameObject(Mesh * mesh, const glm::vec3 & position)
 	m_velocity = glm::vec3(0.f);
 	m_scale = glm::vec3(1.f);
 	m_colorTint = glm::vec3(1.f);
+	m_type = type;
 	updateModelMatrix();
+	
 
 	if (!mesh->getMaxMinVector().empty())
 	{
@@ -108,6 +110,16 @@ void GameObject::setPlayerPosition(const glm::vec3 & position)
 void GameObject::setHit()
 {
 	m_colorTintFadeDuration = 2.f;
+}
+
+void GameObject::hit(const HitDescription & desc)
+{
+
+}
+
+Type GameObject::getType()
+{
+	return m_type;
 }
 
 std::vector<AABB*> GameObject::getBoundingBoxes() const

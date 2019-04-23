@@ -70,11 +70,11 @@ void Renderer::preparePlayerLights(Player* player) {
 
 void Renderer::render() {
 
-	//if (m_playerLight != nullptr) {
-	//	std::string vec = std::to_string(m_playerLight->position.x) + " " +
-	//		std::to_string(m_playerLight->position.y) + " " + std::to_string(m_playerLight->position.z);
-	//	LOG_INFO(vec);
-	//}
+	if (m_playerLight != nullptr) {
+		std::string vec = std::to_string(m_playerLight->position.x) + " " +
+			std::to_string(m_playerLight->position.y) + " " + std::to_string(m_playerLight->position.z);
+		LOG_INFO(vec);
+	}
 
 	this->shadowPass();
 	this->geometryPass();
@@ -158,19 +158,30 @@ void Renderer::renderEffects()
 	effectsShader->use();
 	effectsShader->setMat4("viewMatrix", m_camera->getViewMatrix());
 	effectsShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
-	glBindVertexArray(m_effects->getVAO());
-
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
-	glEnableVertexAttribArray(3);
-	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, m_effects->getNrOfAliveParticles());
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-	glDisableVertexAttribArray(2);
-	glDisableVertexAttribArray(3);
 	
-	glBindVertexArray(0);
+	const std::map<std::string, Emitter*>& emitters = m_effects->getEmitters();
+	
+	for (const auto& map : emitters)
+	{
+		glBindVertexArray(map.second->getVAO());
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
+		glEnableVertexAttribArray(3);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, map.second->getTextureID());
+		glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, map.second->getNumberOfParticles());
+		glBindTexture(GL_TEXTURE_2D, NULL);
+
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
+		glDisableVertexAttribArray(3);
+
+		glBindVertexArray(0);
+	}
+
 	effectsShader->unuse();
 	glDisable(GL_BLEND);
 }
