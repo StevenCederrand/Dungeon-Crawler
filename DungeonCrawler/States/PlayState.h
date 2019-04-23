@@ -17,7 +17,7 @@ public:
 	void update(float dt);
 	void renderImGUI();
 	void render();
-
+	
 private:
 	Parser* m_parser;
 	GLinit* m_GLinit;
