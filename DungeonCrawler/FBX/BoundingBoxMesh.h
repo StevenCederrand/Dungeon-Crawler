@@ -37,4 +37,6 @@ public:
 	void setName(const char name[], int nameSize);
 
 	bool getCollision()const;
+	bool getIsStatic()const;
+	int getVertexCount()const;
 };

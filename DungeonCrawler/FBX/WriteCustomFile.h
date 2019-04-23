@@ -12,11 +12,11 @@
 class WriteCustomFile
 {
 private:
-
+	void CreateCustomFile();
+	MainHeader m_mainHeader;
 public:
 	WriteCustomFile();
 	~WriteCustomFile();
-	void CreateCustomFile();
 	void WriteStaticMesh(StaticMesh currentMesh);
 	void WriteBoundingBoxMesh(BoundingBoxMesh currentMesh);
 };

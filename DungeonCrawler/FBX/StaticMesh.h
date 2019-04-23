@@ -48,6 +48,7 @@ public:
 
 	bool getCollision()const;
 	bool getIsStatic()const;
+	int getVertexCount()const;
 };
 
 //different meshdata for each unic data, like hitbox only 4 pos and its speciall data is collision= true

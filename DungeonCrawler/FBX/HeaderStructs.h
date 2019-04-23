@@ -6,7 +6,7 @@ struct MainHeader
 	unsigned int dynamicMeshCount; //morph	//custom attribute
 	unsigned int staticMeshCount;  //regular
 	unsigned int boundingBoxCount;
-	unsigned int materialCount;
+	//unsigned int materialCount;
 };
 
 struct MeshHeader

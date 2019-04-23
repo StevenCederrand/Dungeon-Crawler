@@ -228,3 +228,9 @@ bool StaticMesh::getIsStatic()const
 {
 	return m_staticMesh;
 }
+
+int StaticMesh::getVertexCount() const
+{
+	return this->m_vertexCount;
+}
+

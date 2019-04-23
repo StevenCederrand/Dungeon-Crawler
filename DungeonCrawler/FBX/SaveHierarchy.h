@@ -11,6 +11,7 @@ class SaveHierarchy
 private:
 	StaticMesh m_staticMesh; //will only be one, load one at a time, replaced
 	BoundingBoxMesh m_bBMesh;
+	MainHeader m_mainHeader;
 	WriteCustomFile m_file; //will only be one, never replaced
 	int m_nrOfNodes;
 

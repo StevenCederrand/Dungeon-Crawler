@@ -167,3 +167,13 @@ bool BoundingBoxMesh::getCollision()const
 {
 	return m_collision;
 }
+
+bool BoundingBoxMesh::getIsStatic() const
+{
+	return m_staticMesh;
+}
+
+int BoundingBoxMesh::getVertexCount() const
+{
+	return this->m_vertexCount;
+}
