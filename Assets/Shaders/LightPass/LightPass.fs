@@ -8,6 +8,12 @@ layout (binding = 1) uniform sampler2D normalBuffer;
 layout (binding = 2) uniform sampler2D colourBuffer;
 layout (binding = 3) uniform sampler2D shadowBuffer;
 
+uniform struct Spotlight {
+	vec3 position;
+	vec3 direction;
+	float radius;
+} spotlight;
+
 uniform vec3 sunColor;
 uniform vec3 sunPosition;
 uniform vec3 cameraPosition;
@@ -35,6 +41,7 @@ vec3 getAmbientColor(float ambientFactor);
 vec3 getDiffuseColor(vec3 lightPosition, vec3 lightColor);
 vec3 getPhongColor(vec3 lightPosition, float specularStrength, vec3 lightColor);
 vec3 getSumOfAllColorFromPointLights(float specularStrength, vec3 worldPosition);
+vec3 getSumOfSpotlights(vec3 worldPosition);
 float shadowCalculations(vec4 lightSpacePos);
 
 void main() {
@@ -49,8 +56,8 @@ void main() {
 
 	float shadow = shadowCalculations(lightSpacePos);
 
-	vec3 currentColor = (getAmbientColor(0.2f) + (1.0 - shadow)) * (getDiffuseColor(sunPosition, sunColor)
-	+ getPhongColor(sunPosition, shininess, sunColor)) + getSumOfAllColorFromPointLights(shininess, worldPosition);// + getSumOfSpotlights(worldPosition);
+	vec3 currentColor = (getAmbientColor(0.2f) + (1.0 - shadow)  * getSumOfSpotlights(worldPosition)) * (getDiffuseColor(sunPosition, sunColor)
+	+ getPhongColor(sunPosition, shininess, sunColor))  + getSumOfAllColorFromPointLights(shininess, worldPosition);
 
 
 	// Clamp
@@ -70,6 +77,7 @@ float shadowCalculations(vec4 lightSpacePos) {
 	if(projectCoords.z >= 1.0) {
 		return 1.0;
 	}
+	//Avoid sampling outside of the texture
 	if(projectCoords.x < -1 || projectCoords.x > 1) {
 		return 1.0f;
 	}
@@ -77,7 +85,6 @@ float shadowCalculations(vec4 lightSpacePos) {
 		return 1.0f;
 	}
 	float shadow = 0.0f;
-
 	vec2 texelSize = 1.0 / textureSize(shadowBuffer, 0);
 
 	//Sample the depthmap and get the closest depth from the light
@@ -91,9 +98,22 @@ float shadowCalculations(vec4 lightSpacePos) {
 			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
 		}
 	}
-	shadow /= 9.0;
+	shadow /= 9.0f;
 
 	return shadow;
+}
+
+vec3 getSumOfSpotlights(vec3 worldPosition) {
+	vec3 lightDirection = normalize(spotlight.position - worldPosition);
+	float radialVal = dot(lightDirection, normalize(-spotlight.direction));
+
+	if(radialVal > spotlight.radius) {
+		//Do Something
+		return vec3(1);
+	}
+	else {
+		return vec3(0);
+	}
 }
 
 vec3 getSumOfAllColorFromPointLights(float specularStrength, vec3 worldPosition) {
