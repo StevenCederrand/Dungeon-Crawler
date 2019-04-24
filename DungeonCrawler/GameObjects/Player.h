@@ -1,7 +1,7 @@
 #ifndef PLAYER_h
 #define PLAYER_h
 #include "GameObject.h"
-
+#include <string>
 class Player : public GameObject {
 public:
 	Player(Mesh* mesh, Type type);
@@ -47,6 +47,7 @@ public:
 
 private:
 	void spotlightHandler();
+	void setupSoundVector();
 private:
 	float m_angle;
 	Spotlight* m_spotlight;
@@ -80,7 +81,7 @@ private:
 	float m_shakeIntensity;
 	float m_chargeTimer;
 	
-	
+	std::vector<std::string> m_walkSounds;
 	float m_shake;
 	glm::vec3 m_shakeDir;
 	

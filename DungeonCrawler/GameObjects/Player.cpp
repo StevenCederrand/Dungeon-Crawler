@@ -40,6 +40,8 @@ Player::Player(Mesh* mesh, Type type) :
 	this->m_spraying = false;
 	this->m_type = type;
 	this->m_iframes = 0.f;
+
+	this->setupSoundVector();
 }
 
 Player::~Player() {
@@ -110,22 +112,22 @@ void Player::move(float dt)
 	if (Input::isKeyHeldDown(GLFW_KEY_W))
 	{
 		m_movementDirection.z =  -this->m_speed * dt;
-		AudioEngine::playOnce("pl_walk", 0.4f);
+		AudioEngine::playOnce(m_walkSounds.at(0), 0.4f);
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_A))
 	{
 		m_movementDirection.x = -this->m_speed * dt;
-		AudioEngine::playOnce("pl_walk", 0.4f);
+		AudioEngine::playOnce(m_walkSounds.at(1), 0.4f);
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_S))
 	{
 		m_movementDirection.z = this->m_speed * dt;
-		AudioEngine::playOnce("pl_walk", 0.4f);
+		AudioEngine::playOnce(m_walkSounds.at(2), 0.4f);
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_D))
 	{
 		m_movementDirection.x = this->m_speed * dt;
-		AudioEngine::playOnce("pl_walk", 0.4f);
+		AudioEngine::playOnce(m_walkSounds.at(0), 0.4f);
 	}
 	setVelocity(m_movementDirection);
 	
@@ -136,8 +138,6 @@ void Player::rotatePlayer()
 {
 	glm::vec3 pos = Camera::active->getMouseWorldPos();
 
-	//The problem is that the player is looking towards the mouse position
-	//and that position is slightly ahead of the mouse cursor
 	m_lookDirection = glm::vec3(
 		pos.x - this->getPosition().x,
 		0,
@@ -178,6 +178,11 @@ void Player::spotlightHandler() {
 	this->m_spotlight->position = this->getPosition();
 	this->m_flash->position = glm::vec4(this->getPosition(), 1);
 }
+void Player::setupSoundVector() {
+	m_walkSounds.push_back("pl_walk");
+	m_walkSounds.push_back("pl_walk-2");
+	m_walkSounds.push_back("pl_walk-3");
+}	
 glm::vec3 Player::getPlayerPosition() const
 {
 	return getPosition();

@@ -34,6 +34,12 @@ private:
 	static bool keyInUse(std::string key);
 	static bool playingSound(std::string key);
 	static FMOD::Channel* getChannel(const char* key);
+	
+	//This is to avoid playing multiple instances of a related sound
+	//I.e we shouldn't overlap walk1 with walk2, instead we should wait for walk1 to complete
+	static bool playingRelatedSound(std::string key); 
+
+private:
 
 	//Sound effect containers
 	static FMOD::System *m_soundSystem;

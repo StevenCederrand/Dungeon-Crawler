@@ -1,5 +1,9 @@
-#Player walking on wood
-pl_walk pl_walk.wav
+## If the key has a '-' then that sound exists in a set of sounds
+#Player walking sounds
+pl_walk step1F.wav
+pl_walk-2 step2F.wav
+pl_walk-3 step3F.wav
+
 #player dash
 pl_dash Dash.wav
 #player shot

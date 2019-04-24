@@ -49,10 +49,7 @@ FMOD_RESULT AudioEngine::loadSSO(std::string name) {
 	FMOD_RESULT res = FMOD_OK;
 	
 	Parser parser;
-
 	parser.parseSSO(name);
-
-	//LOG_INFO("SSO read");
 
 	return res;
 }
@@ -225,6 +222,17 @@ FMOD::Channel* AudioEngine::getChannel(const char* key) {
 		}
 	}
 	return nullptr;
+}
+
+bool AudioEngine::playingRelatedSound(std::string key) {
+	int positionOfHyphen = key.find('-');
+
+	if (positionOfHyphen > 0) {
+		std::string start = key.substr(0, positionOfHyphen);
+			
+	}
+	
+	return false;
 }
 
 bool AudioEngine::playingSound(std::string key) {
