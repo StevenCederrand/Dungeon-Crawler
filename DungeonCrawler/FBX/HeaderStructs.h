@@ -17,22 +17,22 @@ struct MeshHeader
 	int vertexIndexArray[100];
 	int UVIndexArray[100];
 	bool collision; //custom maya attribute
-	bool isStatic;	//custom maya attribute
+	bool staticMesh;	//custom maya attribute
 };
 
 struct BoundingBoxHeader
 {
 	unsigned int vertexCount;
 	bool collision; //custom maya attribute
-	bool isStatic;	//custom maya attribute
+	bool staticMesh;	//custom maya attribute
 };
 
 //Small info structs
 struct Vertex
 {
 	float position[3];
-	float normal[3];
 	float UV[2];
+	float normal[3];
 };
 
 struct BoundingBoxVertex

@@ -23,7 +23,7 @@ void SaveHierarchy::SaveEntireHierarchy(FbxScene* lScene)
 		{
 			m_calculateNrOfNodes(lRootNode->GetChild(i));
 		}
-		m_file.WriteMainHeader(m_nrOfStaticMesh, m_nrOfBoundingBox);
+		m_file.WriteMainHeader(m_nrOfStaticMesh, m_nrOfBoundingBox); //MainHeader
 		//printf("FINAL Number of Nodes: %i\n", m_nrOfNodes);
 
 		//Write Meshes

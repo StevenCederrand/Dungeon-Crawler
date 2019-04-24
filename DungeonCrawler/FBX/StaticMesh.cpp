@@ -136,25 +136,52 @@ void StaticMesh::CheckMesh()
 	{
 		printf("%c", m_name[i]);
 	}
+	printf("\n");
+	printf("Nr of vertices: %i\n\n", m_vertexCount);
+
+	printf("ControlPoint Indices:\n");
+	for (int i = 0; i < 100; i++)
+	{
+		printf("%i ", m_controlPointIndexArr[i]);
+	}
+	printf("\n\n");
+
+	printf("UV Indices:\n");
+	for (int i = 0; i < 100; i++)
+	{
+		printf("%i ", m_UVCoordinateIndexArr[i]);
+	}
 	printf("\n\n");
 
 	if (m_collision)
-		printf("This mesh is a hitbox");
+		printf("Collision = 1");
 	else
-		printf("This mesh has no collision");
+		printf("Collision = 0");
 	printf("\n");
 
 	if (m_staticMesh)
-		printf("This mesh is static");
+		printf("Static = 1");
 	else
-		printf("This mesh is dynamic");
+		printf("Static = 0");
 	printf("\n\n");
 
-	printf("Nr of vertices: %i\n\n", m_vertexCount);
+	//print vertices
+	for (int i = 0; i < 100; i++)
+	{
+		printf("Control point %i: ", i);
+		for (int j = 0; j < 3; j++)
+			printf("%.2f ", m_controlPoints[j][i]);
+		printf("\nUV %i: ", i);
+		for (int j = 0; j < 2; j++)
+			printf("%.2f ", m_UVCoordinates[j][i]);
+		printf("\nNormal %i: ", i);
+		for (int j = 0; j < 3; j++)
+			printf("%.2f ", m_normalCoordinateArr[j][i]);
+		printf("\n\n");
+	}
 
-	printf("\n\n");
-
-	//Only works for triangulated Meshes
+	//Only works for triangulated Meshes, This writes the polygons
+	/*
 	for (int i = 0; i < m_nrOfPolygons; i++)
 	{
 		printf("Polygon %i:\n", i);
@@ -188,7 +215,7 @@ void StaticMesh::CheckMesh()
 		}
 		printf("\n");		
 	}
-	printf("\n\n");
+	*/
 }
 
 void StaticMesh::setNrOfPolygons(int nrOfPolygons)
@@ -249,6 +276,11 @@ int StaticMesh::getUVIndex(int index)const
 	return m_UVCoordinateIndexArr[index];
 }
 
+float StaticMesh::getNormal(int i, int j)const
+{
+	return m_normalCoordinateArr[j][i];
+}
+
 bool StaticMesh::getCollision()const
 {
 	return m_collision;
@@ -257,4 +289,9 @@ bool StaticMesh::getCollision()const
 bool StaticMesh::getIsStatic()const
 {
 	return m_staticMesh;
+}
+
+int StaticMesh::getNrOfControlPoints()const
+{
+	return m_currentControlPoint;
 }
