@@ -1,3 +1,5 @@
+#include <GLM/gtx/transform.hpp>
+#include <GLM/gtc/matrix_transform.hpp>
 #include "Renderer.h"
 #include "ShaderMap.h"
 #include "../System/Log.h"
@@ -19,21 +21,23 @@ Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects)
 	this->m_framebuffer->genFrameBuffers();
 	this->initRenderQuad();
 
+	Shader* shader = ShaderMap::getShader("GeometryPass");
+	shader->use();
+	shader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+	shader->unuse();
+
+	//Create a new light projection matrix -- This doens't need to be created every frame
+	glm::mat4 projectionMatrix = glm::perspective(glm::radians(LIGHTFOV),
+		(float)ScreenResolutionX / (float)ScreenResolutionY, NEAR_CLIP, FAR_CLIP);
+	m_framebuffer->setProjectionMatrix(projectionMatrix);
+
 	m_effects = effects; // Point to effect class
-
-	Shader* geomShader = ShaderMap::getShader("GeometryPass");
-	geomShader->use();
-	geomShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
-	geomShader->unuse();
-
 }
 
-Renderer::~Renderer()
-{
+Renderer::~Renderer() {
 	glDeleteBuffers(1, &this->m_rQuadVBO);
 	glDeleteVertexArrays(1, &this->m_rQuadVAO);
 	delete m_framebuffer;
-
 }
 
 void Renderer::prepareGameObjects(const std::vector<GameObject*>& gameObjects)
@@ -58,21 +62,61 @@ void Renderer::prepareGameObjects(const std::vector<GameObject*>& gameObjects)
 	}
 }
 
-void Renderer::render()
-{
+void Renderer::preparePlayerLights(Player* player) {
+	m_playerSpotLight = player->getSpotlight();
+	m_playerLight = player->getFlash();
+
+}
+
+void Renderer::render() {
+
+	//if (m_playerLight != nullptr) {
+	//	std::string vec = std::to_string(m_playerLight->position.x) + " " +
+	//		std::to_string(m_playerLight->position.y) + " " + std::to_string(m_playerLight->position.z);
+	//	LOG_INFO(vec);
+	//}
+
+	this->shadowPass();
 	this->geometryPass();
 	this->lightPass();
 
 	// Copy over the depthbuffer from the previous passes.
 	glEnable(GL_DEPTH_TEST);
 	m_framebuffer->bindFrameBuffer();
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); // write to default framebuffer
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); //write to default framebuffer
 	glBlitFramebuffer(
 		0, 0, ScreenResolutionX, ScreenResolutionY, 0, 0, ScreenResolutionX, ScreenResolutionY, GL_DEPTH_BUFFER_BIT, GL_NEAREST
 	);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	
 	this->renderEffects();
+}
+
+void Renderer::shadowPass() {
+	if (m_meshes.size() == 0) {
+		return;
+	}
+
+	this->configureShadowMapperVM();
+
+	Shader* shadowShader = ShaderMap::getShader("ShadowPass");
+	shadowShader->use();
+	shadowShader->setMat4("lightSpaceMatrix", m_framebuffer->getLightSpaceMatrix());
+	
+	m_framebuffer->bindShadowBuffer();
+	glClear(GL_DEPTH_BUFFER_BIT);
+	
+	for (auto mesh : m_meshes) {
+		glBindVertexArray(mesh.first->getVao());
+		glEnableVertexAttribArray(0);
+		for (auto object : mesh.second) {
+			shadowShader->setMat4("modelMatrix", object->getModelMatrix());
+			glDrawElements(GL_TRIANGLES, mesh.first->getNrOfIndices(), GL_UNSIGNED_INT, NULL);
+		}
+		glDisableVertexAttribArray(0);
+		glBindVertexArray(NULL);
+	}
+	m_framebuffer->unbindBuffer();
 }
 
 void Renderer::geometryPass() {
@@ -149,6 +193,16 @@ void Renderer::lightPass() {
 
 	Shader* lightShader = ShaderMap::getShader("LightPass");
 	lightShader->use();
+	if (m_playerSpotLight != nullptr) {
+		lightShader->setVec3("spotlight.position", m_playerSpotLight->position);
+		lightShader->setVec3("spotlight.direction", m_playerSpotLight->direction);
+		lightShader->setFloat("spotlight.radius", m_playerSpotLight->radius);
+		
+		lightShader->setVec4("flashPosition", m_playerLight->position);
+		lightShader->setVec4("flashColor", m_playerLight->color);
+	}
+
+	lightShader->setMat4("lightSpaceMatrix", m_framebuffer->getLightSpaceMatrix());
 	lightShader->setInt("numberOfLights", m_lightManager->getNumberOfLights());
 	lightShader->setVec3("cameraPosition", m_camera->getPosition());
 	drawQuad();
@@ -223,4 +277,10 @@ void Renderer::drawQuad() {
 	m_framebuffer->bindDeferredTextures();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glBindVertexArray(0);
+}
+
+void Renderer::configureShadowMapperVM() {
+	glm::vec3 pos = m_playerSpotLight->position + glm::vec3(0, 0.5f, 0);
+	glm::mat4 viewMatrix = glm::lookAt(pos, pos + m_playerSpotLight->direction, glm::vec3(0, 1, 0));
+	m_framebuffer->setViewMatrix(viewMatrix);
 }

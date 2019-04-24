@@ -3,7 +3,9 @@
 #include <GLM/glm.hpp>
 #include "Graphics/Mesh.h"
 #include "Collision/AABB.h"
+#include "../Globals/LightTypes.h"
 #include "Collision/HitData.h"
+
 enum Type {
 	PLAYER = 0,
 	WALKER = 1,
@@ -17,7 +19,7 @@ enum Type {
 class GameObject {
 public:
 	GameObject(Mesh* mesh, Type type, const glm::vec3& position = glm::vec3(0.f));
-	~GameObject();
+	virtual ~GameObject();
 
 	virtual void update(float dt) = 0;
 	void internalUpdate(float dt);

@@ -18,6 +18,8 @@ public:
 	void update(float dt);
 	void renderImGUI();
 	void render();
+private:
+
 
 private:
 	Parser* m_parser;

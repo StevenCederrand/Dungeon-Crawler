@@ -9,33 +9,33 @@ Framebuffer::~Framebuffer()
 	glDeleteTextures(1, &m_colourBuffer);
 	glDeleteTextures(1, &m_normalBuffer);
 	glDeleteTextures(1, &m_positionBuffer);
+	glDeleteTextures(1, &m_depthMap); 
 	glDeleteRenderbuffers(1, &m_rbo);
 	glDeleteFramebuffers(1, &this->m_frameBuffer);
+	glDeleteFramebuffers(1, &this->m_shadowBuffer);
 }
 
 void Framebuffer::genFrameBuffers() {
 	
 	//Deferred rendering 
 	glGenFramebuffers(1, &this->m_frameBuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, this->m_frameBuffer);
+	this->bindFrameBuffer();
 	this->genDeferredBuffers();
 	this->genRenderBuffer();
-
+	this->unbindBuffer();
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
 		LOG_ERROR("FRAMEBUFFER INCOMPLETE");
 		return;
 	}
-
-	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
-	return;
+	
 	//Used for shadow mapping
-	//glGenFramebuffers(1, &this->m_shadowBuffer);
-	//glBindFramebuffer(GL_FRAMEBUFFER, this->m_shadowBuffer);
-
-	//if (glCheckFramebufferStatus(this->m_frameBuffer) != GL_FRAMEBUFFER_COMPLETE) {
-	//	LOG_ERROR("ERROR GENERATING SHADOW FRAMEBUFFER OBJECT");
-	//}
-	//glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+	glGenFramebuffers(1, &this->m_shadowBuffer);
+	this->bindShadowBuffer();
+	this->genShadowMappingBuffers();
+	this->unbindBuffer();
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+		LOG_ERROR("ERROR GENERATING SHADOW FRAMEBUFFER OBJECT");
+	}
 }
 
 void Framebuffer::genRenderBuffer() {
@@ -97,10 +97,20 @@ void Framebuffer::genShadowMappingBuffers() {
 	glBindTexture(GL_TEXTURE_2D, this->m_depthMap);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, ScreenResolutionX, ScreenResolutionY,
 		0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+	
+	//Set border color to white
+	float borderColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+	//Generate depthmap texture
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthMap, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 }
 
 void Framebuffer::bindDeferredTextures() {
@@ -110,8 +120,8 @@ void Framebuffer::bindDeferredTextures() {
 	glBindTexture(GL_TEXTURE_2D, this->m_normalBuffer);
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, this->m_colourBuffer);
-	//glActiveTexture(GL_TEXTURE3);
-	//glBindTexture(GL_TEXTURE_2D, this->m_depthMap);
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, this->m_depthMap);
 }
 
 void Framebuffer::unbindDeferredTextures() {
@@ -121,10 +131,32 @@ void Framebuffer::unbindDeferredTextures() {
 	glBindTexture(GL_TEXTURE_2D, NULL);
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, NULL);
-	//glActiveTexture(GL_TEXTURE3);
-	//glBindTexture(GL_TEXTURE_2D, NULL);
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, NULL);
 }
 
 unsigned int Framebuffer::getFrameBuffer() const {
 	return this->m_frameBuffer;
 }
+
+void Framebuffer::setProjectionMatrix(const glm::mat4 & projectionMatrix) {
+	m_projectionMatrix = projectionMatrix;
+}
+
+const glm::mat4 & Framebuffer::getProjectionMatrix() const {
+	return m_projectionMatrix;
+}
+
+void Framebuffer::setViewMatrix(const glm::mat4 & viewMatrix) {
+	m_viewMatrix = viewMatrix;
+}
+
+const glm::mat4 & Framebuffer::getViewMatrix() const {
+	return m_viewMatrix;
+}
+
+const glm::mat4 & Framebuffer::getLightSpaceMatrix() {
+
+	return m_projectionMatrix * m_viewMatrix;
+}
+

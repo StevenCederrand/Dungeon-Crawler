@@ -97,6 +97,8 @@
     <ClInclude Include="Utility\Ray.h" />
     <ClInclude Include="Utility\Randomizer.h" />
     <ClInclude Include="GameObjects\Room.h" />
+    <ClInclude Include="Globals\LightTypes.h" />
+    <ClInclude Include="Graphics\Effects.h" />
     <ClInclude Include="GameObjects\Enemies\Walker.h" />
     <ClInclude Include="Collision\HitData.h" />
     <ClInclude Include="GameObjects\Enemies\Shooter.h" />

@@ -25,6 +25,14 @@ Player::Player(Mesh* mesh, Type type) :
 	this->m_dashTimer = 0.f;
 	this->m_shake = 0.f;
 	this->m_shakeDir = glm::vec3(0.f, 0.f, 0.f);
+
+	this->m_spotlight = new Spotlight();
+	this->m_spotlight->position = this->getPlayerPosition();
+	this->m_spotlight->radius = glm::radians(55.0f);
+	this->m_flash = new Light();
+	this->m_flash->color = glm::vec4(1, 1, 1, 0);
+	this->m_flash->position = glm::vec4(getPlayerPosition(), 1);
+
 	this->m_chargeStance = false;
 	this->m_shakeIntensity = 0.10f;
 	this->m_chargeTimer = 1.f;
@@ -32,6 +40,11 @@ Player::Player(Mesh* mesh, Type type) :
 	this->m_spraying = false;
 	this->m_type = type;
 	this->m_iframes = 0.f;
+}
+
+Player::~Player() {
+	delete this->m_spotlight;
+	delete this->m_flash;
 }
 
 void Player::update(float dt)
@@ -58,6 +71,7 @@ void Player::update(float dt)
 		move(dt);
 		dashCd(dt);
 		screenShake(dt);
+		spotlightHandler();
 	}
 }
 
@@ -101,17 +115,17 @@ void Player::move(float dt)
 	if (Input::isKeyHeldDown(GLFW_KEY_A))
 	{
 		m_movementDirection.x = -this->m_speed * dt;
-			AudioEngine::playOnce("pl_walk", 0.4f);
+		AudioEngine::playOnce("pl_walk", 0.4f);
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_S))
 	{
 		m_movementDirection.z = this->m_speed * dt;
-			AudioEngine::playOnce("pl_walk", 0.4f);
+		AudioEngine::playOnce("pl_walk", 0.4f);
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_D))
 	{
 		m_movementDirection.x = this->m_speed * dt;
-			AudioEngine::playOnce("pl_walk", 0.4f);
+		AudioEngine::playOnce("pl_walk", 0.4f);
 	}
 	setVelocity(m_movementDirection);
 	
@@ -149,6 +163,19 @@ glm::vec3 Player::shakeDirection()const
 	return glm::normalize(lookDir);
 }
 
+Spotlight* Player::getSpotlight() {
+	return m_spotlight;
+}
+
+Light* Player::getFlash() {
+	return m_flash;
+}
+
+void Player::spotlightHandler() {
+	this->m_spotlight->direction = this->getLookDirection();
+	this->m_spotlight->position = this->getPosition();
+	this->m_flash->position = glm::vec4(this->getPosition(), 1);
+}
 glm::vec3 Player::getPlayerPosition() const
 {
 	return getPosition();
@@ -192,6 +219,7 @@ void Player::shootAutomatic(float dt)
 		m_shootingCooldown -= dt;
 
 		if (m_shootingCooldown <= 0.f) {
+			this->m_flash->color.a = 0;
 			m_canShoot = true;
 		}
 	}
@@ -241,9 +269,11 @@ void Player::dashCd(float dt)
 
 void Player::shootProjectile(float dt)
 {
-	m_shootingCooldown = 0.05f;
+	m_shootingCooldown = 0.25f;
+	this->m_flash->color.a = 5;
 	m_canShoot = false;
 	m_shooting = true;
+	AudioEngine::play("pl_gun_shot", 0.8f);
 	screenShake(dt);
 }
 

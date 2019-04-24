@@ -14,13 +14,15 @@
 #include "GameObjects/Enemies/Shooter.h"
 
 #include "Utility/Randomizer.h"
+#include <chrono>
 
 
 PlayState::PlayState() {
 
-	#pragma region Init
 	m_parser = new Parser();
 	m_GLinit = new GLinit();
+
+	#pragma region Init
 	m_camera = new Camera();
 	m_effects = new Effects(m_GLinit);
 	m_effects->createEmitter("BloodEmitter", "BloodParticle.png", 0.5f);
@@ -28,11 +30,12 @@ PlayState::PlayState() {
 	m_effects->createEmitter("GunFlareEmitter", "GunFlare.png", 0.25f);
 
 	Camera::active = m_camera;
-	m_lightManager = new LightManager();
+	m_lightManager = new LightManager()	;
 	m_renderer = new Renderer(m_camera, m_lightManager, m_effects);
 	m_gameObjectManager = new GameObjectManager(m_effects);
+	AudioEngine::loadSSO("Game.sso");
 	#pragma endregion
-	
+
 	#pragma region Create_Objects
 	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
 	//ParserData* roomData = m_parser->loadFromObj("basementleveltest.obj");
@@ -46,16 +49,9 @@ PlayState::PlayState() {
 	m_GLinit->createMesh("Sphere", sphereData);
 	#pragma endregion
 
-	#pragma region Setup_Sounds
-	AudioEngine::loadSSO("Game.sso");
-	LOG_INFO("CREATED DDD");
-	#pragma endregion
-
 
 	Mesh* roomMesh = MeshMap::getMesh("Room");
 	Mesh* boxMesh = MeshMap::getMesh("Box");
-
-	#pragma endregion
 
 	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 1.5f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
 	
@@ -102,10 +98,13 @@ PlayState::PlayState() {
 	m_gameObjectManager->addGameObject(m_walker);
 	m_player = new Player(boxMesh, PLAYER);
 	m_gameObjectManager->addGameObject(m_player);
+
+	//Used for the player flashlight & shadow mapping from the 
+	//flashlights view
+	m_renderer->preparePlayerLights(m_gameObjectManager->getPlayer());
 }
 
-PlayState::~PlayState()
-{
+PlayState::~PlayState() {
 	delete m_parser;
 	delete m_GLinit;
 	delete m_camera;
@@ -115,8 +114,7 @@ PlayState::~PlayState()
 	delete m_effects;
 }
 
-void PlayState::update(float dt)
-{
+void PlayState::update(float dt) {
 
 	m_gameObjectManager->update(dt);
 	m_effects->update(dt);

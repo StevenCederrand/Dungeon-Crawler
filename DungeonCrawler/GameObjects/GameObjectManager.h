@@ -9,6 +9,7 @@
 #include "Graphics/Effects.h"
 #include "Parser/Parser.h"
 
+
 class GameObjectManager {
 
 public:
@@ -19,6 +20,7 @@ public:
 	void addGameObject(GameObject* gameObject);
 	void constructPlayerBroadPhaseBox();
 
+	Player* getPlayer() const;
 	const std::vector<GameObject*>& getGameObjects() const;
 	void nodecollision(ParserData* parserData);
 

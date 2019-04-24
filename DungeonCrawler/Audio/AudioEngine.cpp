@@ -52,7 +52,7 @@ FMOD_RESULT AudioEngine::loadSSO(std::string name) {
 
 	parser.parseSSO(name);
 
-	LOG_INFO("SSO read");
+	//LOG_INFO("SSO read");
 
 	return res;
 }
@@ -145,13 +145,11 @@ void AudioEngine::update() {
 void AudioEngine::playOnce(std::string key, float volume) {
 	
 	if (volume > 1.0f) {
-		LOG_WARNING("CANNOT HANDLE VOLUMES ABOVE 1.0f");
-		LOG_WARNING("SETTING VOLUME TO 1.0f");
 		volume = 1.0f;
 	}
+	//If we have a sound by that key
 	if (keyInUse(key)) {
-		FMOD_RESULT res;
-		FMOD::Channel* channel;
+		
 		if (m_sounds.at(key) == nullptr) {
 			return;
 		}
@@ -159,7 +157,11 @@ void AudioEngine::playOnce(std::string key, float volume) {
 		if (playingSound(key)) {
 			return;
 		}
+		FMOD_RESULT res;
+		FMOD::Channel* channel;
 		res = m_soundSystem->playSound(m_sounds.at(key), 0, false, &channel);
+		//Lock the channel to play the sound only once
+		channel->setLoopCount(0);
 		
 		if (res != FMOD_OK) {
 			LOG_ERROR("ERROR PLAYING SOUND");
@@ -173,8 +175,8 @@ void AudioEngine::playOnce(std::string key, float volume) {
 
 void AudioEngine::play(std::string key, float volume) {
 	if (volume > 1.0f) {
-		LOG_WARNING("CANNOT HANDLE VOLUMES ABOVE 1.0f");
-		LOG_WARNING("SETTING VOLUME TO 1.0f");
+		//LOG_WARNING("CANNOT HANDLE VOLUMES ABOVE 1.0f");
+		//LOG_WARNING("SETTING VOLUME TO 1.0f");
 		volume = 1.0f;
 	}
 	if (keyInUse(key)) {
@@ -188,7 +190,6 @@ void AudioEngine::play(std::string key, float volume) {
 		if (channel != nullptr) {
 			int index;
 			channel->getIndex(&index);
-			LOG_INFO("Playing from: " + std::to_string(index));
 			//Play the sound again from the specific channel. 
 			res = m_soundSystem->playSound(m_sounds.at(key), 0, false, &channel);
 			if (res != FMOD_OK) {
