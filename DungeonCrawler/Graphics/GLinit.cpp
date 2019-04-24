@@ -106,7 +106,7 @@ GLuint GLinit::createTexture(std::string filename, bool useFilepath,  bool alpha
 {
 	GLint width, height, channels;
 	GLuint textureID;
-	stbi_set_flip_vertically_on_load(1);
+	stbi_set_flip_vertically_on_load(0);
 
 	unsigned char* textureData = nullptr;
 

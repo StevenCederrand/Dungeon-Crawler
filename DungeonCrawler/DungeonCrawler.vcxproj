@@ -185,6 +185,7 @@
     <ClCompile Include="States\StateManager.cpp" />
     <ClCompile Include="Parser\Parser.cpp" />
     <ClCompile Include="Utility\Camera.cpp" />
+    <ClCompile Include="Utility\UICamera.cpp" />
     <ClCompile Include="Vendor\ImGui\imgui.cpp" />
     <ClCompile Include="Vendor\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Vendor\ImGui\imgui_draw.cpp" />
@@ -230,6 +231,7 @@
     <ClInclude Include="Utility\Camera.h" />
     <ClInclude Include="Utility\Randomizer.h" />
     <ClInclude Include="Utility\Ray.h" />
+    <ClInclude Include="Utility\UICamera.h" />
     <ClInclude Include="Vendor\ImGui\imconfig.h" />
     <ClInclude Include="Vendor\ImGui\imgui.h" />
     <ClInclude Include="Vendor\ImGui\imgui_impl_glfw.h" />

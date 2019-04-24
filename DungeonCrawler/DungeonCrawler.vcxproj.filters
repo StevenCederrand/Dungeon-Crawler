@@ -37,9 +37,6 @@
     <ClCompile Include="GameObjects\Player.cpp" />
     <ClCompile Include="Graphics\Framebuffer.cpp" />
     <ClCompile Include="Graphics\LightManager.cpp" />
-    <ClCompile Include="Main Menu\MainMenu.cpp" />
-    <ClCompile Include="Main Menu\MenuButton.cpp" />
-    <ClCompile Include="Graphics\UIRenderer.cpp" />
     <ClCompile Include="GameObjects\LightSphere.cpp" />
     <ClCompile Include="GameObjects\Room.cpp" />
     <ClCompile Include="GameObjects\Enemies\Walker.cpp" />
@@ -47,6 +44,7 @@
     <ClCompile Include="Graphics\Effects.cpp" />
     <ClCompile Include="Graphics\Emitter.cpp" />
     <ClCompile Include="UserInterface\Button.cpp" />
+    <ClCompile Include="Utility\UICamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -93,9 +91,6 @@
     <ClInclude Include="Graphics\Framebuffer.h" />
     <ClInclude Include="Graphics\LightManager.h" />
     <ClInclude Include="Globals\Settings.h" />
-    <ClInclude Include="Main Menu\MainMenu.h" />
-    <ClInclude Include="Main Menu\MenuButton.h" />
-    <ClInclude Include="Graphics\UIRenderer.h" />
     <ClInclude Include="GameObjects\LightSphere.h" />
     <ClInclude Include="Utility\Ray.h" />
     <ClInclude Include="Utility\Randomizer.h" />
@@ -106,5 +101,6 @@
     <ClInclude Include="Graphics\Effects.h" />
     <ClInclude Include="Graphics\Emitter.h" />
     <ClInclude Include="UserInterface\Button.h" />
+    <ClInclude Include="Utility\UICamera.h" />
   </ItemGroup>
 </Project>

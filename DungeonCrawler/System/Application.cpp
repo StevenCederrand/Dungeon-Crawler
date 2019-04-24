@@ -81,12 +81,15 @@ bool Application::initialize()
 	// Initialize the audio system
 	m_audioEngine = new AudioEngine();
 
+	// Initialize the shaders
+	this->initShaders();
+
 	// Initializes the input system
 	m_input = new Input();
 	m_stateManager = new StateManager();
 	m_stateManager->setState(new MenuState());
 
-	this->initShaders();
+	
 
 	LOG_INFO("Application successfully initialized");
 	return true;
@@ -135,6 +138,7 @@ void Application::run()
 
 }
 
+
 void Application::renderImGUI()
 {
 	ImGui::Begin("System (Esc to exit application)");
@@ -169,6 +173,7 @@ void Application::initShaders() {
 
 	shader = ShaderMap::createShader("EffectsShader", "EffectsShader.vs", "EffectsShader.fs");
 
+	shader = ShaderMap::createShader("UIShader", "UI.vs", "UI.fs");
 
 }
 
