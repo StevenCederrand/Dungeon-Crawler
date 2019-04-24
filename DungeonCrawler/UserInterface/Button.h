@@ -2,8 +2,9 @@
 #define _BUTTON_H
 #include <GLM/glm.hpp>
 #include <Graphics/GLinit.h>
+#include "UI.h"
 
-class Button {
+class Button : public UI {
 public:
 	Button(const glm::vec2& position, const glm::vec2& size, GLinit* glInit, const std::string& activeTexture, const std::string& inactiveTexture);
 	~Button();

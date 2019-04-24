@@ -7,28 +7,13 @@
 #include "Vendor/ImGui/imgui.h"
 #include "../Audio/AudioEngine.h"
 #include <Graphics/ShaderMap.h>
-
 #include <System/Application.h>
 
 MenuState::MenuState() {
 	this->m_camera = new UICamera();
+	m_uiManager = new UIManager(m_camera);
 	m_glInit = new GLinit();
-	
-	m_playButton = new Button(
-		glm::vec2((float)Application::windowWidth * 0.5f, (float)Application::windowHeight * 0.75),
-		glm::vec2(300.f, 200.f),
-		m_glInit,
-		"playbtn_active.png",
-		"playbtn_inactive.png");
-
-	m_exitButton = new Button(
-		glm::vec2((float)Application::windowWidth * 0.5f, (float)Application::windowHeight * 0.25),
-		glm::vec2(300.f, 200.f),
-		m_glInit,
-		"exitbtn_active.png",
-		"exitbtn_inactive.png");
-
-
+	createUIElements();
 	AudioEngine::loadSSO("Menu.sso");
 
 }
@@ -37,15 +22,40 @@ MenuState::~MenuState()
 {
 	delete this->m_camera;
 	delete m_glInit;
-	delete m_playButton;
-	delete m_exitButton;
+	delete m_uiManager;
+}
+
+void MenuState::createUIElements()
+{
+	m_logo = new Image(
+		glm::vec2((float)Application::windowWidth * 0.5f, (float)Application::windowHeight - 125.f),
+		glm::vec2(300.f, 200.f),
+		m_glInit,
+		"logo.png");
+
+	m_playButton = new Button(
+		glm::vec2((float)Application::windowWidth * 0.5f, (float)Application::windowHeight * 0.5),
+		glm::vec2(150.f, 100.f),
+		m_glInit,
+		"playbtn_active.png",
+		"playbtn_inactive.png");
+
+	m_exitButton = new Button(
+		glm::vec2((float)Application::windowWidth * 0.5f, (float)Application::windowHeight * 0.30),
+		glm::vec2(150.f, 100.f),
+		m_glInit,
+		"exitbtn_active.png",
+		"exitbtn_inactive.png");
+
+	m_uiManager->registerUIElement(m_logo);
+	m_uiManager->registerUIElement(m_playButton);
+	m_uiManager->registerUIElement(m_exitButton);
 }
 
 void MenuState::update(float dt) {
 	//Force the player into the playstate
 	m_camera->update(dt);
-	m_playButton->update(dt);
-	m_exitButton->update(dt);
+	m_uiManager->update(dt);
 
 	if (m_playButton->isPressed()) {
 		m_stateManager->pushTemporaryState(new PlayState());
@@ -84,16 +94,5 @@ void MenuState::renderImGUI()
 
 void MenuState::render() 
 {
-	Shader* shader = ShaderMap::getShader("UIShader");
-	shader->use();
-	shader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
-	shader->setMat4("viewMatrix", m_camera->getViewMatrix());
-	
-	shader->setMat4("modelMatrix", m_playButton->getModelMatrix());
-	m_playButton->draw();
-	
-	shader->setMat4("modelMatrix", m_exitButton->getModelMatrix());
-	m_exitButton->draw();
-	
-	shader->unuse();
+	m_uiManager->render();
 }
