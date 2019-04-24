@@ -3,6 +3,7 @@
 FMOD::System* AudioEngine::m_soundSystem;
 std::map<std::string, FMOD::Sound*> AudioEngine::m_sounds;
 std::vector<FMOD::Channel*> AudioEngine::m_channels;
+std::vector<std::string> AudioEngine::keysInUse;
 void* AudioEngine::m_extraDriverData;
 
 AudioEngine::AudioEngine() {
@@ -134,6 +135,7 @@ void AudioEngine::update() {
 
 		if (!isPlaying) {	
 			temp->stop();
+
 			m_channels.erase(m_channels.begin() + i);
 		}
 	}
@@ -154,6 +156,10 @@ void AudioEngine::playOnce(std::string key, float volume) {
 		if (playingSound(key)) {
 			return;
 		}
+		if (playingRelatedSound(key)) {
+			return;
+		}
+
 		FMOD_RESULT res;
 		FMOD::Channel* channel;
 		res = m_soundSystem->playSound(m_sounds.at(key), 0, false, &channel);
@@ -167,6 +173,7 @@ void AudioEngine::playOnce(std::string key, float volume) {
 
 		channel->setVolume(volume);
 		m_channels.push_back(channel);
+		keysInUse.push_back(key);
 	}
 }
 
@@ -229,7 +236,12 @@ bool AudioEngine::playingRelatedSound(std::string key) {
 
 	if (positionOfHyphen > 0) {
 		std::string start = key.substr(0, positionOfHyphen);
-			
+		for (size_t i = 0; i < keysInUse.size(); i++) {
+			if (start == keysInUse.at(i).substr(0, keysInUse.at(i).find('-'))) {
+				LOG_WARNING("Related sound is already playing");
+				return true;
+			}
+		}
 	}
 	
 	return false;
