@@ -128,22 +128,22 @@ void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think
 		lmeshHeader.UVIndexArray[i] = currentMesh.getUVIndex(i);
 	}
 
-	lmeshHeader.collision = currentMesh.getCollision();
+	lmeshHeader.collision = currentMesh.getCollision(); //TAKES 4 PLACES IN THE FILE!?
 	lmeshHeader.staticMesh = currentMesh.getIsStatic();
-
+	lmeshHeader.padding1 = false;
+	lmeshHeader.padding2 = false;
 
 	std::ofstream outfile;
-	outfile.open("staticMeshBin.bin", std::ios::out | std::ios::app | std::ios::binary);
+	outfile.open("staticMeshBin.bin", std::ios::out | std::ios::app | std::ios::binary); //writing, append, in binery
 
-	outfile.write((const char*)&lmeshHeader, sizeof(MeshHeader)); //Writes meshHéader info
-	//outfile.write((const char*)vArray, sizeof(Vertex)*lmeshHeader.vertexCount);	//writes all vertices
+	outfile.write((const char*)&lmeshHeader, sizeof(MeshHeader)); //Writes meshHeader info
 
 	//Creates a vertex pointer to a new vertex array
-	//Vertex* vArray = new Vertex[lmeshHeader.vertexCount];
+	Vertex* vArray = new Vertex[lmeshHeader.vertexCount];
 
-	/*
-	//Something wrong here, but it works?
-	for (int i = 0; i < 1; i++)
+	//I THINK IT WORKS, FLOAT NEEDS SPECIAL CONVERTER
+
+	for (int i = 0; i < lmeshHeader.vertexCount; i++)
 	{
 		for (int j = 0; j < 3; j++)
 		{
@@ -160,15 +160,19 @@ void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think
 	}
 	for (int i = 0; i < lmeshHeader.vertexCount; i++)	 //WORKS, HMMM
 	{
-		printf("VERTEX TEST %i %.2f %.2f %.2f\n", i, 
+		printf("VERTEX POS TEST %i %.2f %.2f %.2f\n", i, 
 			vArray[i].position[0], vArray[i].position[1], vArray[i].position[2]);
+		printf("VERTEX UV TEST %i %.2f %.2f\n", i,
+			vArray[i].UV[0], vArray[i].UV[1]);
+		printf("VERTEX NORMAL TEST %i %.2f %.2f %.2f\n\n", i,
+			vArray[i].normal[0], vArray[i].normal[1], vArray[i].normal[2]);
 	}
 
 	//this doesnt work
-	//outfile.write((const char*)vArray, sizeof(Vertex));	//writes all vertices
+	outfile.write((const char*)vArray, sizeof(Vertex)*lmeshHeader.vertexCount);	//writes all vertices
 
 	delete vArray; //need to delete all positions too?
-	*/
+
 	outfile.close();
 
 	//currentMesh.CheckMesh();

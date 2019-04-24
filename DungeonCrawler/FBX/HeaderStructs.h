@@ -18,6 +18,8 @@ struct MeshHeader
 	int UVIndexArray[100];
 	bool collision; //custom maya attribute
 	bool staticMesh;	//custom maya attribute
+	bool padding1; //Bool reserves 4 bytes, although it is only 1 byte, so might aswell padd them up
+	bool padding2;
 };
 
 struct BoundingBoxHeader
