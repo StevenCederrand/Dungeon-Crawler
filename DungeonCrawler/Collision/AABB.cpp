@@ -27,7 +27,7 @@ void AABB::setDimensions(const float & width, const float & height, const float 
 {
 	m_dimensions.x = width;
 	m_dimensions.y = height;
-	m_dimensions.z = depth + 3;
+	m_dimensions.z = depth;
 }
 
 float AABB::swepAABB(const glm::vec3 & vel, const AABB & other, float & normalX, float & normalZ)
@@ -181,7 +181,8 @@ bool AABB::checkCollisionWithRay(const glm::vec3 & rayOrigin, const glm::vec3 ra
 		{
 			continue;
 		}
-		glm::vec3 xd(0, 0, 0.5f);
+		glm::vec3 xd(0, 0, 0.35f);
+
 		float lo = (m_parentPosition[i] + m_position[i] - m_dimensions[i] - xd[i] - rayOrigin[i]) / rayDirection[i];
 		float hi = (m_parentPosition[i] + m_position[i] + m_dimensions[i] + xd[i] - rayOrigin[i]) / rayDirection[i];
 
