@@ -189,3 +189,13 @@ void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //specia
 	*/
 }
 
+
+
+//STUFF I FIX: 
+//ADD READABLE FILE
+//ADD SUPPORT TO WRITE BOUNDING BOX MESH TO FILE
+
+
+
+//TOBIAS
+//START ON LOADER FOR THE REAL PROGRAM FOR THE FBX FILE
