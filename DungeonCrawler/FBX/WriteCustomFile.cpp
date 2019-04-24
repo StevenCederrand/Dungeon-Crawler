@@ -86,24 +86,25 @@ void WriteCustomFile::CreateCustomFile()
 void WriteCustomFile::WriteMainHeader(int nrOfStaticMeshes, int nrOfBoundingBoxes) //works
 {
 	//CLEAN
-	std::ofstream outfile("staticMeshBin.bin", std::ofstream::binary); //change
-	outfile.close();
+	std::ofstream outfileClean("staticMeshBin.bin", std::ofstream::binary); //change
+	outfileClean.close();
 
-
-	/*
+	//Real info
 	m_mainHeader.version = '1';
+	m_mainHeader.padding1 = ' ';
+	m_mainHeader.padding2 = ' ';
+	m_mainHeader.padding3 = ' ';
 	m_mainHeader.dynamicMeshCount = 0;
 	m_mainHeader.staticMeshCount = nrOfStaticMeshes;
 	m_mainHeader.boundingBoxCount = nrOfBoundingBoxes;
 
 	//Write to file, make sure to write binary
-	std::ofstream outfile("mainHeaderBin.bin", std::ofstream::binary);
+	std::ofstream outfile;
+	outfile.open("staticMeshBin.bin", std::ios::out | std::ios::app | std::ios::binary); //writing, append, in binery
 
-	//add mainheader
 	outfile.write((const char*)&m_mainHeader, sizeof(MainHeader));
 
 	outfile.close();
-	*/
 }
 
 void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think it works
@@ -135,6 +136,7 @@ void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think
 
 	std::ofstream outfile;
 	outfile.open("staticMeshBin.bin", std::ios::out | std::ios::app | std::ios::binary); //writing, append, in binery
+	//Needs a readable file too, change binary flag
 
 	outfile.write((const char*)&lmeshHeader, sizeof(MeshHeader)); //Writes meshHeader info
 
@@ -158,24 +160,12 @@ void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think
 			vArray[i].normal[j] = currentMesh.getNormal(i, j);
 		}
 	}
-	for (int i = 0; i < lmeshHeader.vertexCount; i++)	 //WORKS, HMMM
-	{
-		printf("VERTEX POS TEST %i %.2f %.2f %.2f\n", i, 
-			vArray[i].position[0], vArray[i].position[1], vArray[i].position[2]);
-		printf("VERTEX UV TEST %i %.2f %.2f\n", i,
-			vArray[i].UV[0], vArray[i].UV[1]);
-		printf("VERTEX NORMAL TEST %i %.2f %.2f %.2f\n\n", i,
-			vArray[i].normal[0], vArray[i].normal[1], vArray[i].normal[2]);
-	}
 
-	//this doesnt work
 	outfile.write((const char*)vArray, sizeof(Vertex)*lmeshHeader.vertexCount);	//writes all vertices
 
 	delete vArray; //need to delete all positions too?
 
 	outfile.close();
-
-	//currentMesh.CheckMesh();
 }
 
 void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //special case for boundingbox mesh with collision from current mesh to bounding box mesh header struct

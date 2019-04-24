@@ -2,7 +2,10 @@
 
 struct MainHeader
 {
-	char version; //What version of this program the file was made in
+	char version; //What version of this program the file was made in,
+	char padding1; //char also takes up 4 bytes, padd it
+	char padding2;
+	char padding3;
 	unsigned int dynamicMeshCount; //morph	//custom attribute
 	unsigned int staticMeshCount;  //regular
 	unsigned int boundingBoxCount;
