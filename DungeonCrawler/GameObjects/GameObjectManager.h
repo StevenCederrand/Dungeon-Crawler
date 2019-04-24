@@ -22,6 +22,7 @@ public:
 
 	Player* getPlayer() const;
 	const std::vector<GameObject*>& getGameObjects() const;
+	std::vector<GameObject*>* getVectorPointer();
 	void nodecollision(ParserData* parserData);
 
 private:

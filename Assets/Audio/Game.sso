@@ -4,3 +4,5 @@ pl_walk pl_walk.wav
 pl_dash Dash.wav
 #player shot
 pl_gun_shot Gunshot.wav
+#bullet impact with enemy
+gun_impact_enemy gun_impact_enemy.wav

@@ -1,7 +1,9 @@
 #ifndef _CAMERA_H
 #define _CAMERA_H
 #include <GLM/glm.hpp>
+#include <vector>
 #include "Ray.h"
+#include "../GameObjects/GameObject.h";
 
 class Camera {
 
@@ -25,6 +27,7 @@ public:
 	const glm::vec3 getMouseWorldPos();
 
 	void setToPlayer(glm::vec3 playerPos, glm::vec3 shakeDir);
+	void setGameObjects(std::vector<GameObject*>* gameObjects);
 
 private:
 	void setProjectionMatrix();
@@ -36,7 +39,7 @@ private:
 	void snapMouseToMiddle();
 
 	void setDistanceToOrbitPoint(float distance);
-
+	
 private:
 	glm::mat4 m_viewMatrix;
 	glm::mat4 m_projectionMatrix;

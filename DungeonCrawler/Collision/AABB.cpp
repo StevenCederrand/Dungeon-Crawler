@@ -27,7 +27,7 @@ void AABB::setDimensions(const float & width, const float & height, const float 
 {
 	m_dimensions.x = width;
 	m_dimensions.y = height;
-	m_dimensions.z = depth;
+	m_dimensions.z = depth + 3;
 }
 
 float AABB::swepAABB(const glm::vec3 & vel, const AABB & other, float & normalX, float & normalZ)
@@ -174,20 +174,19 @@ bool AABB::checkCollisionNode(glm::vec3 min, glm::vec3 max)
 bool AABB::checkCollisionWithRay(const glm::vec3 & rayOrigin, const glm::vec3 rayDirection, float & t)
 {
 	float t1 = 1000, t0 = -t1;
-
+	
 	for (int i = 0; i < 3; i++)
 	{
 		if (rayDirection[i] == 0.0f)
 		{
 			continue;
 		}
-
-		float lo = (m_parentPosition[i] + m_position[i] - m_dimensions[i] - rayOrigin[i]) / rayDirection[i];
-		float hi = (m_parentPosition[i] + m_position[i] + m_dimensions[i] - rayOrigin[i]) / rayDirection[i];
+		glm::vec3 xd(0, 0, 0.5f);
+		float lo = (m_parentPosition[i] + m_position[i] - m_dimensions[i] - xd[i] - rayOrigin[i]) / rayDirection[i];
+		float hi = (m_parentPosition[i] + m_position[i] + m_dimensions[i] + xd[i] - rayOrigin[i]) / rayDirection[i];
 
 		t0 = std::max(t0, std::min(lo, hi));
 		t1 = std::min(t1, std::max(lo, hi));
-		
 	}
 
 	if ((t0 <= t1) && (t1 > 0))

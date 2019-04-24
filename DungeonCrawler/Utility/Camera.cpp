@@ -33,6 +33,7 @@ Camera::Camera()
 
 Camera::~Camera()
 {
+
 }
 
 void Camera::update(float dt)
@@ -149,6 +150,7 @@ void Camera::setDistanceToOrbitPoint(float distance)
 	m_distanceToOrbitPoint = distance;
 }
 
+
 void Camera::setProjectionMatrix()
 {
 	m_projectionMatrix = glm::perspective(glm::radians(FOV), (float)Application::windowWidth / (float)Application::windowHeight, NEAR_CLIPPING, FAR_CLIPPING);
@@ -198,8 +200,11 @@ const glm::vec3 Camera::getMouseWorldPos()
 	glfwGetCursorPos(glfwGetCurrentContext(), &m_mousePos.x, &m_mousePos.y);
 	Ray ray = Camera::active->getRayFromScreen(static_cast<float>(m_mousePos.x), static_cast<float>(m_mousePos.y), 1280, 720);
 
-	glm::vec3 planeNormal(0.f, 1.f, 0.f);
-	float dis = glm::dot(-ray.pos, planeNormal) / (glm::dot(ray.dir, planeNormal) + 0.001f);
+	glm::vec3 planeNormal(0.f, 1.f, 0.f); // we might not want to hardcode this, idk
+	float dis = 0;
+
+	//If we're not checking mouse ray collision with objects
+	dis = glm::dot(-ray.pos, planeNormal) / (glm::dot(ray.dir, planeNormal) + 0.001f);
 
 	return ray.calcPoint(dis);
 }

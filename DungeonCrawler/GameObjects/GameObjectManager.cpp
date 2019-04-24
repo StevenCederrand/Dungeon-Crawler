@@ -2,7 +2,7 @@
 #include "System/Log.h"
 #include "Box.h"
 #include <vector>
-
+#include "../Audio/AudioEngine.h"
 
 GameObjectManager::GameObjectManager(Effects* effects)
 {
@@ -52,6 +52,7 @@ void GameObjectManager::update(float dt)
 	//------ Player current velocity ( Also used for collision ) ------
 	newVel = m_player->getVelocity();
 
+	//------ Add shooting particle effect
 	if (m_player->isShooting()) {
 		float xAngle = cosf(glm::radians(m_player->getAngle()));
 		float zAngle = sinf(glm::radians(m_player->getAngle()));
@@ -124,6 +125,7 @@ void GameObjectManager::update(float dt)
 			objectHit->hit(desc);
 
 			if (hitEnemy){
+				AudioEngine::play("gun_impact_enemy", .5f);
 				m_effects->addParticles("BloodEmitter", gunshotCollisionPoint, 5.f, 0.2f, 5.f);
 			}
 			else{
@@ -138,7 +140,6 @@ void GameObjectManager::update(float dt)
 void GameObjectManager::addGameObject(GameObject * gameObject)
 {
 	if (gameObject) {
-
 		// If there is no player added then dynamic cast it and check if the object that
 		// is going to be added in a few lines later is the player, if it is then construct
 		// a broadphase box ( Used to make collision more efficient )
@@ -176,6 +177,11 @@ Player * GameObjectManager::getPlayer() const {
 const std::vector<GameObject*>& GameObjectManager::getGameObjects() const
 {
 	return m_gameObjects;
+}
+
+std::vector<GameObject*>* GameObjectManager::getVectorPointer()
+{
+	return &m_gameObjects;
 }
 
 

@@ -136,9 +136,11 @@ void Player::rotatePlayer()
 {
 	glm::vec3 pos = Camera::active->getMouseWorldPos();
 
+	//The problem is that the player is looking towards the mouse position
+	//and that position is slightly ahead of the mouse cursor
 	m_lookDirection = glm::vec3(
 		pos.x - this->getPosition().x,
-		0.0f,
+		0,
 		pos.z - this->getPosition().z);
 	m_angle = glm::degrees(atan2f(m_lookDirection.z, m_lookDirection.x));
 
