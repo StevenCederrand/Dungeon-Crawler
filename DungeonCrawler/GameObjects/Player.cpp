@@ -40,6 +40,9 @@ Player::Player(Mesh* mesh, Type type) :
 	this->m_spraying = false;
 	this->m_type = type;
 	this->m_iframes = 0.f;
+	this->m_pistolBullets = 8;
+	this->m_reloadTime = 0.f;
+	this->m_reloading = false;
 
 	this->setupSoundVector();
 }
@@ -53,6 +56,11 @@ void Player::update(float dt)
 {
 	// Start of by saying that the player is not shooting
 	m_shooting = false;
+	if (!Input::isMouseHeldDown(GLFW_MOUSE_BUTTON_LEFT))
+	{
+		m_spraying = false;
+	}
+	LOG_WARNING(m_pistolBullets);
 	iframeCountdown(dt);
 
 	if (Input::isKeyReleased(GLFW_KEY_Q))
@@ -65,6 +73,11 @@ void Player::update(float dt)
 		if (m_weaponSlot == 1)
 		{
 			shootAutomatic(dt);
+			if ((m_pistolBullets <= 0) && (m_reloading == false) && (m_spraying == false))
+			{
+				m_reloading = true;
+				m_reloadTime = 2.f;
+			}
 		}
 		if (m_weaponSlot == 2)
 		{
@@ -72,6 +85,7 @@ void Player::update(float dt)
 		}
 		move(dt);
 		dashCd(dt);
+		reloadCd(dt);
 		screenShake(dt);
 		spotlightHandler();
 	}
@@ -178,15 +192,18 @@ void Player::spotlightHandler() {
 	this->m_spotlight->position = this->getPosition();
 	this->m_flash->position = glm::vec4(this->getPosition(), 1);
 }
+
 void Player::setupSoundVector() {
 	m_walkSounds.push_back("pl_walk");
 	m_walkSounds.push_back("pl_walk-2");
 	m_walkSounds.push_back("pl_walk-3");
-}	
+}
+
 glm::vec3 Player::getPlayerPosition() const
 {
 	return getPosition();
 }
+
 
 void Player::weaponSwap()
 {
@@ -203,38 +220,44 @@ void Player::weaponSwap()
 void Player::shootAutomatic(float dt)
 {
 	m_damage = m_automaticDamage;
-	if (Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT) && !m_spraying || Input::isMousePressed(GLFW_MOUSE_BUTTON_RIGHT && !m_spraying))
+
+	if ((Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT) && !m_spraying) || (Input::isMousePressed(GLFW_MOUSE_BUTTON_RIGHT) && !m_spraying))
 	{
 		dash();
 	}
-	if (Input::isMouseHeldDown(GLFW_MOUSE_BUTTON_LEFT))
+	if (!m_reloading)
 	{
-		if (m_canShoot)
+		if (Input::isMouseHeldDown(GLFW_MOUSE_BUTTON_LEFT))
 		{
-			shootProjectile(dt);
-			m_shake = 0.05f;
-			m_spraying = true;
+			if (m_canShoot && m_pistolBullets > 0)
+			{
+				shootProjectile(dt);
+				m_shake = 0.05f;
+				m_spraying = true;
+				m_pistolBullets--;
+			}
+			if (m_pistolBullets <= 0)
+			{
+				//le click sounds
+			}
 		}
 	}
-	if (Input::isMouseReleased(GLFW_MOUSE_BUTTON_LEFT))
-	{
-		m_spraying = false;
-	}
-
+	
+	
 	if (!m_canShoot)
 	{
 		m_shootingCooldown -= dt;
-
 		if (m_shootingCooldown <= 0.f) {
 			this->m_flash->color.a = 0;
 			m_canShoot = true;
 		}
 	}
+
 }
 
 void Player::shootChargeShot(float dt)
 {
-	if (Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT) && !m_chargeStance || Input::isMousePressed(GLFW_MOUSE_BUTTON_RIGHT && !m_chargeStance))
+	if ((Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT) && !m_chargeStance) || (Input::isMousePressed(GLFW_MOUSE_BUTTON_RIGHT && !m_chargeStance)))
 	{
 		dash();
 	}
@@ -271,6 +294,19 @@ void Player::dashCd(float dt)
 	if (m_dashTimer > 0.f)
 	{
 		m_dashTimer -= dt;
+	}
+}
+
+void Player::reloadCd(float dt)
+{
+	if ((m_reloadTime <= 0) && (m_reloading == true))
+	{
+		m_reloading = false;
+		m_pistolBullets = 8;
+	}
+	if (m_reloadTime > 0)
+	{
+		m_reloadTime -= dt;
 	}
 }
 

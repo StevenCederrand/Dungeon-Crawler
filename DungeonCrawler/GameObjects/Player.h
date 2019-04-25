@@ -16,6 +16,8 @@ public:
 	void dash();
 	void dashCd(float dt);
 	
+	void reloadCd(float dt);
+
 	void weaponSwap();
 	void shootAutomatic(float dt);
 	void shootChargeShot(float dt);
@@ -59,6 +61,9 @@ private:
 	float m_health;
 	float m_iframes;
 
+	int m_pistolBullets;
+	bool m_reloading;
+	float m_reloadTime;
 	float m_damage;
 	float m_chargeDamage;
 	float m_automaticDamage;
