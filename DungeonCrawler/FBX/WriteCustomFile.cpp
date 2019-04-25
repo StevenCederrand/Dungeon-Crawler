@@ -264,7 +264,6 @@ void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //specia
 
 
 //STUFF I FIX:
-//ADD SUPPORT TO WRITE BOUNDING BOX MESH TO FILE
 //ADD MATERIALS
 
 
