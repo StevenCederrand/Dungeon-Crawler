@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <string>
 #include "HeaderStructs.h"
 #include "StaticMesh.h"
 #include "BoundingBoxMesh.h"
