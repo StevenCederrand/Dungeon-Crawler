@@ -160,75 +160,107 @@ void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think
 
 	//I THINK IT WORKS, FLOAT NEEDS SPECIAL CONVERTER
 
-	std::string vertexPosition;
-	std::string vertexUV;
-	std::string vertexNormal;
+	std::string lvertexPosition;
+	std::string lvertexUV;
+	std::string lvertexNormal;
 	for (int i = 0; i < lmeshHeader.vertexCount; i++)
 	{
-		vertexPosition += "Vertex: ";
-		vertexPosition += std::to_string(i);
-
-		vertexPosition += "\nPosition: ";
+		lvertexPosition += "\nPosition: ";
 		for (int j = 0; j < 3; j++)
 		{
 			vArray[i].position[j] = currentMesh.getControlPoint(i, j);
-			vertexPosition += std::to_string(vArray[i].position[j]);
-			vertexPosition += " ";
+			lvertexPosition += std::to_string(vArray[i].position[j]);
+			lvertexPosition += " ";
 		}
-		vertexUV += "\nUV: ";
+		lvertexUV += "\nUV: ";
 		for (int j = 0; j < 2; j++)
 		{
 			vArray[i].UV[j] = currentMesh.getUVCoordinate(i, j);
-			vertexUV += std::to_string(vArray[i].UV[j]);
-			vertexUV += " ";
+			lvertexUV += std::to_string(vArray[i].UV[j]);
+			lvertexUV += " ";
 		}
-		vertexNormal += "\nnormal: ";
+		lvertexNormal += "\nnormal: ";
 		for (int j = 0; j < 3; j++)
 		{
 			vArray[i].normal[j] = currentMesh.getNormal(i, j);
-			vertexNormal += std::to_string(vArray[i].normal[j]);
-			vertexNormal += " ";
+			lvertexNormal += std::to_string(vArray[i].normal[j]);
+			lvertexNormal += " ";
 		}
 	}
 
 	outfileBinary.write((const char*)vArray, sizeof(Vertex)*lmeshHeader.vertexCount);	//writes all vertices
 	outfileBinary.close();
 
-	
-	SKRIV UT VERTEX INFON HÄR
-
-	outfileReadable.close();
-	
+	outfileReadable << lvertexPosition << lvertexUV << lvertexNormal << "\n\n";
+	outfileReadable.close();	
 
 	delete vArray; //need to delete all positions too?
 }
 
 void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //special case for boundingbox mesh with collision from current mesh to bounding box mesh header struct
 {
-	// IGNORE FOR NOW
-	/*
-	//debug prints out the data
-	currentMesh.CheckMesh();
+	BoundingBoxHeader lboundingBoxHeader{ 1 };
 
-	m_mainHeader.boundingBoxCount += 1;
-	BoundingBoxHeader boundingBoxHeader{ 1 };
+	for (int i = 0; i < 100; i++)
+	{
+		lboundingBoxHeader.nameOfHitbox[i] = currentMesh.getNameCharacter(i);  //HAS $ IN SPOT 99?
+	}
 
-	//Add data into the bounding box header struct
-	boundingBoxHeader.vertexCount = currentMesh.getVertexCount();
-	boundingBoxHeader.isStatic = currentMesh.getIsStatic();
-	boundingBoxHeader.collision = currentMesh.getCollision();
+	lboundingBoxHeader.vertexCount = currentMesh.getVertexCount();
+
+	std::string vertexIndexArrString;
+	for (int i = 0; i < 36; i++)
+	{
+		lboundingBoxHeader.vertexIndexArray[i] = currentMesh.getControlPointIndex(i);
+		if (i % 20 == 0)
+			vertexIndexArrString += "\n";
+		vertexIndexArrString += std::to_string(lboundingBoxHeader.vertexIndexArray[i]);
+		vertexIndexArrString += " ";
+	}
+
+	lboundingBoxHeader.staticMesh = currentMesh.getIsStatic();
+	lboundingBoxHeader.collision = currentMesh.getCollision();
+	lboundingBoxHeader.padding1 = 0;
+	lboundingBoxHeader.padding2 = 0;
+
+	std::ofstream outfileBinary;
+	outfileBinary.open("ourFileBinary.bin", std::ios::out | std::ios::app | std::ios::binary); //writing, append, in binery
+	outfileBinary.write((const char*)&lboundingBoxHeader, sizeof(BoundingBoxHeader));
+
+	std::ofstream outfileReadable;
+	outfileReadable.open("outFileReadable.txt", std::ios::out | std::ios::app);
+	outfileReadable << "Name of mesh: " << lboundingBoxHeader.nameOfHitbox
+		<< "\nVertex count: " << lboundingBoxHeader.vertexCount
+		<< "\n\nVertex index array: " << vertexIndexArrString.c_str()
+		<< "\n\nCollision: " << lboundingBoxHeader.collision
+		<< "\nStatic mesh: " << lboundingBoxHeader.staticMesh << "\n\n\n";
 
 
 	//Creates a boundingboxvertex pointer to a new boundingboxvertex array
-	BoundingBoxVertex *bbvArray = new BoundingBoxVertex[boundingBoxHeader.vertexCount];
-	*/
+	BoundingBoxVertex *bbvArray = new BoundingBoxVertex[lboundingBoxHeader.vertexCount];
+
+	std::string lvertexPosition;
+	for (int i = 0; i < lboundingBoxHeader.vertexCount; i++)
+	{
+		lvertexPosition += "\nPosition: ";
+		for (int j = 0; j < 3; j++)
+		{
+			bbvArray[i].position[j] = currentMesh.getControlPoint(i, j);
+			lvertexPosition += std::to_string(bbvArray[i].position[j]);
+			lvertexPosition += " ";
+		}
+	}
+
+	outfileBinary.write((const char*)bbvArray, sizeof(BoundingBoxVertex)*lboundingBoxHeader.vertexCount);	//writes all vertices
+	outfileBinary.close();
+
+	outfileReadable << lvertexPosition << "\n\n";
+	outfileReadable.close();
 }
 
 
 
-//STUFF I FIX: 
-//BETTER CLEAN FUNCTION
-//ADD READABLE FILE
+//STUFF I FIX:
 //ADD SUPPORT TO WRITE BOUNDING BOX MESH TO FILE
 //ADD MATERIALS
 

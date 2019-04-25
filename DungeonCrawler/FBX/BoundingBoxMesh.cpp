@@ -163,6 +163,11 @@ void BoundingBoxMesh::setName(const char name[], int nameSize)
 	}
 }
 
+char BoundingBoxMesh::getNameCharacter(int space)const
+{
+	return m_name[space];
+}
+
 bool BoundingBoxMesh::getCollision()const
 {
 	return m_collision;
@@ -176,4 +181,14 @@ bool BoundingBoxMesh::getIsStatic() const
 int BoundingBoxMesh::getVertexCount() const
 {
 	return this->m_vertexCount;
+}
+
+float BoundingBoxMesh::getControlPoint(int i, int j)const
+{
+	return m_controlPoints[j][i];
+}
+
+int BoundingBoxMesh::getControlPointIndex(int index)const
+{
+	return m_controlPointIndexArr[index];
 }

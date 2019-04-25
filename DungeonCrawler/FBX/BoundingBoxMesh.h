@@ -36,7 +36,10 @@ public:
 	void setStaticMesh(bool staticMesh);
 	void setName(const char name[], int nameSize);
 
+	char getNameCharacter(int space)const;
 	bool getCollision()const;
 	bool getIsStatic()const;
 	int getVertexCount()const;
+	float getControlPoint(int i, int j)const;
+	int getControlPointIndex(int index)const;
 };

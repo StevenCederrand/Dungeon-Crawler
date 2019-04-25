@@ -49,14 +49,12 @@ public:
 
 	char getNameCharacter(int space)const;
 	int getVertexCount()const;
-	float getControlPoint(int i, int j)const;	//not tested
+	float getControlPoint(int i, int j)const;
 	int getControlPointIndex(int index)const;
-	float getUVCoordinate(int i, int j)const;	//not tested
+	float getUVCoordinate(int i, int j)const;
 	int getUVIndex(int index)const;
 	float getNormal(int i, int j)const;
 	bool getCollision()const;
 	bool getIsStatic()const;
 	int getNrOfControlPoints()const;
 };
-
-//different meshdata for each unic data, like hitbox only 4 pos and its speciall data is collision= true
