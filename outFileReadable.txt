@@ -3,7 +3,7 @@ Nr of dynamic meshes: 0
 Nr of static meshes: 3
 Nr of bounding boxes: 3
 
-Name of mesh: Rectangle                                                                                           $
+Name of mesh: Rectangle                                                                                           
 Vertex count: 36
 
 Vertex index array: 
@@ -134,7 +134,7 @@ normal: 0.000000 0.000000 -1.000000
 normal: 0.000000 0.000000 -1.000000 
 normal: 0.000000 0.000000 -1.000000 
 
-Name of mesh: Box                                                                                                 $
+Name of mesh: Box                                                                                                 
 Vertex count: 36
 
 Vertex index array: 
@@ -265,7 +265,7 @@ normal: 0.000000 0.000000 -1.000000
 normal: 0.000000 0.000000 -1.000000 
 normal: 0.000000 0.000000 -1.000000 
 
-Name of mesh: StandingRectangle                                                                                   $
+Name of mesh: StandingRectangle                                                                                   
 Vertex count: 36
 
 Vertex index array: 
@@ -396,7 +396,7 @@ normal: 0.000000 1.000000 0.000000
 normal: 0.000000 1.000000 0.000000 
 normal: 0.000000 1.000000 0.000000 
 
-Name of mesh: RectangleHitbox                                                                                     $
+Name of mesh: RectangleHitbox                                                                                     
 Vertex count: 36
 
 Vertex index array: 
@@ -445,7 +445,7 @@ Position: 0.000000 0.000000 0.000000
 Position: 0.000000 0.000000 0.000000 
 Position: 0.000000 0.000000 0.000000 
 
-Name of mesh: BoxHitbox                                                                                           $
+Name of mesh: BoxHitbox                                                                                           
 Vertex count: 36
 
 Vertex index array: 
@@ -494,7 +494,7 @@ Position: 0.000000 0.000000 0.000000
 Position: 0.000000 0.000000 0.000000 
 Position: 0.000000 0.000000 0.000000 
 
-Name of mesh: StandingRectangleHitbox                                                                             $
+Name of mesh: StandingRectangleHitbox                                                                             
 Vertex count: 36
 
 Vertex index array: 

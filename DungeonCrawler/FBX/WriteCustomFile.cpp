@@ -110,10 +110,11 @@ void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think
 {
 	MeshHeader lmeshHeader{ 1 };
 
-	//Add data into the mesh header struct
+	std::string nameOfMesh;
 	for (int i = 0; i < 100; i++)
 	{
 		lmeshHeader.nameOfMesh[i] = currentMesh.getNameCharacter(i);  //HAS $ IN SPOT 99?
+		nameOfMesh += lmeshHeader.nameOfMesh[i];
 	}
 
 	lmeshHeader.vertexCount = currentMesh.getVertexCount();
@@ -149,7 +150,7 @@ void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think
 
 	std::ofstream outfileReadable;
 	outfileReadable.open("outFileReadable.txt", std::ios::out | std::ios::app);
-	outfileReadable << "Name of mesh: " << lmeshHeader.nameOfMesh
+	outfileReadable << "Name of mesh: " << nameOfMesh
 		<< "\nVertex count: " << lmeshHeader.vertexCount
 		<< "\n\nVertex index array: " << vertexIndexArrString.c_str()
 		<< "\n\nUV index array: " << UVIndexArrString.c_str() << "\n\nCollision: " << lmeshHeader.collision
@@ -201,9 +202,11 @@ void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //specia
 {
 	BoundingBoxHeader lboundingBoxHeader{ 1 };
 
+	std::string nameOfHitbox;
 	for (int i = 0; i < 100; i++)
 	{
 		lboundingBoxHeader.nameOfHitbox[i] = currentMesh.getNameCharacter(i);  //HAS $ IN SPOT 99?
+		nameOfHitbox += lboundingBoxHeader.nameOfHitbox[i];
 	}
 
 	lboundingBoxHeader.vertexCount = currentMesh.getVertexCount();
@@ -229,7 +232,7 @@ void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //specia
 
 	std::ofstream outfileReadable;
 	outfileReadable.open("outFileReadable.txt", std::ios::out | std::ios::app);
-	outfileReadable << "Name of mesh: " << lboundingBoxHeader.nameOfHitbox
+	outfileReadable << "Name of mesh: " << nameOfHitbox
 		<< "\nVertex count: " << lboundingBoxHeader.vertexCount
 		<< "\n\nVertex index array: " << vertexIndexArrString.c_str()
 		<< "\n\nCollision: " << lboundingBoxHeader.collision
