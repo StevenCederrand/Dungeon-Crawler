@@ -265,8 +265,4 @@ void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //specia
 
 //STUFF I FIX:
 //ADD MATERIALS
-
-
-
-//TOBIAS
-//START ON LOADER FOR THE REAL PROGRAM FOR THE FBX FILE
+//"Readable file" might have to be ascii
