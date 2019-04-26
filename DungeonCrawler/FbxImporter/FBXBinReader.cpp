@@ -1,0 +1,1 @@
+//With the .lib file included the fbxbinreader should interpret the binary data and set the data to the structs and return the data
