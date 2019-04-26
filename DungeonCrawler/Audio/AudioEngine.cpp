@@ -156,9 +156,9 @@ void AudioEngine::playOnce(std::string key, float volume) {
 		if (playingSound(key)) {
 			return;
 		}
-		if (playingRelatedSound(key)) {
-			return;
-		}
+		//if (playingRelatedSound(key)) {
+		//	return;
+		//}
 
 		FMOD_RESULT res;
 		FMOD::Channel* channel;

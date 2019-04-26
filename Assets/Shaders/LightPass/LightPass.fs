@@ -131,11 +131,11 @@ vec3 flashEffect(vec3 worldPosition) {
 //Calculate the spotlight
 vec3 getSumOfSpotlights(vec3 worldPosition) {
 	vec3 lightDirection = normalize(spotlight.position - worldPosition);
+	vec3 col = vec3(1);
 	float radialVal = dot(lightDirection, normalize(-spotlight.direction));
 
 	if(radialVal > spotlight.radius) {
-		//Do Something
-		return vec3(0.2f);
+		return vec3(0.4f);
 	}
 	else {
 		return vec3(0);

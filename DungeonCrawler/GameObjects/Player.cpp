@@ -7,6 +7,7 @@
 #include "Enemies/Walker.h"
 #include "Enemies/Shooter.h"
 #include "../Audio/AudioEngine.h"
+#include "../Utility/Randomizer.h"
 
 Player::Player(Mesh* mesh, Type type) :
 	GameObject(mesh, type)
@@ -95,8 +96,8 @@ void Player::hit(const HitDescription & desc)
 		m_iframes = 2.f;
 	}
 	
-	LOG_WARNING("Player Health: " + std::to_string(m_health));
-		//"Player health: " + m_health);
+	//LOG_WARNING("Player Health: " + std::to_string(m_health));
+	//	//"Player health: " + m_health);
 }
 
 Type Player::getType()
@@ -108,26 +109,31 @@ void Player::move(float dt)
 {
 	m_movementDirection = glm::vec3(0.f);
 
+	bool inMotion = false;
 	rotatePlayer();
 	if (Input::isKeyHeldDown(GLFW_KEY_W))
 	{
 		m_movementDirection.z =  -this->m_speed * dt;
-		AudioEngine::playOnce(m_walkSounds.at(0), 0.4f);
+		inMotion = true;
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_A))
 	{
 		m_movementDirection.x = -this->m_speed * dt;
-		AudioEngine::playOnce(m_walkSounds.at(1), 0.4f);
+		inMotion = true;
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_S))
 	{
 		m_movementDirection.z = this->m_speed * dt;
-		AudioEngine::playOnce(m_walkSounds.at(2), 0.4f);
+		inMotion = true;
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_D))
 	{
 		m_movementDirection.x = this->m_speed * dt;
-		AudioEngine::playOnce(m_walkSounds.at(0), 0.4f);
+		inMotion = true;
+	}
+
+	if (inMotion) {
+		AudioEngine::playOnce(m_walkSounds.at(1), 0.1f);
 	}
 	setVelocity(m_movementDirection);
 	
