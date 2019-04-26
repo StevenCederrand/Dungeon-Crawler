@@ -19,7 +19,6 @@
     <ClCompile Include="System\Application.cpp" />
     <ClCompile Include="System\Input.cpp" />
     <ClCompile Include="System\Log.cpp" />
-    <ClCompile Include="System\Main.cpp" />
     <ClCompile Include="States\MenuState.cpp" />
     <ClCompile Include="States\PlayState.cpp" />
     <ClCompile Include="States\StateManager.cpp" />
@@ -47,6 +46,9 @@
     <ClCompile Include="Utility\UICamera.cpp" />
     <ClCompile Include="UserInterface\UIManager.cpp" />
     <ClCompile Include="UserInterface\Image.cpp" />
+    <ClCompile Include="FbxImporter\HeaderStruct.cpp" />
+    <ClCompile Include="FbxImporter\FBXBinReader.cpp" />
+    <ClCompile Include="FbxImporter\FBXParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -109,5 +111,7 @@
     <ClInclude Include="UserInterface\UI.h" />
     <ClInclude Include="UserInterface\UIManager.h" />
     <ClInclude Include="UserInterface\Image.h" />
+    <ClInclude Include="FbxImporter\FBXBinReader.h" />
+    <ClInclude Include="FbxImporter\FBXParser.h" />
   </ItemGroup>
 </Project>
