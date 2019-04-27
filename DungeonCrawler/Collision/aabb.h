@@ -18,6 +18,7 @@ public:
 	bool checkCollision(const AABB& other);
 	bool checkCollisionNode(glm::vec3 min, glm::vec3 max);
 	bool checkCollisionWithRay(const glm::vec3& rayOrigin, const glm::vec3 rayDirection, float& t);
+	bool checkCollisionWithCell(const glm::vec2& cellPosition, float size);
 
 	const glm::vec3& getPosition() const;
 	const glm::vec3& getDimensions() const;

@@ -199,6 +199,15 @@ bool AABB::checkCollisionWithRay(const glm::vec3 & rayOrigin, const glm::vec3 ra
 	return false;
 }
 
+bool AABB::checkCollisionWithCell(const glm::vec2& cellPosition, float size)
+{
+	return
+		     (getPosition().x + m_dimensions.x < cellPosition.x - size ||
+			  getPosition().x - m_dimensions.x > cellPosition.x + size ||
+			  getPosition().z + m_dimensions.z < cellPosition.y - size ||
+			  getPosition().z - m_dimensions.z > cellPosition.y + size);
+}
+
 const glm::vec3 & AABB::getPosition() const
 {
 	return m_parentPosition + m_position;

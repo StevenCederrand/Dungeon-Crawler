@@ -41,14 +41,13 @@ PlayState::PlayState() {
 	//ParserData* roomData = m_parser->loadFromObj("basementleveltest.obj");
 	//ParserData* roomData = m_parser->loadFromObj("oneRoomAi.obj");
 	//ParserData* roomData = m_parser->loadFromObj("roomWithNodes.obj");
-	ParserData* roomData = m_parser->loadFromObj("collisionroomtest.obj");
+	ParserData* roomData = m_parser->loadFromObj("roomWithNodes.obj");
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
 
 	m_GLinit->createMesh("Room", roomData);
 	m_GLinit->createMesh("Box", boxData);
 	m_GLinit->createMesh("Sphere", sphereData);
 	#pragma endregion
-
 
 	Mesh* roomMesh = MeshMap::getMesh("Room");
 	Mesh* boxMesh = MeshMap::getMesh("Box");
@@ -59,7 +58,9 @@ PlayState::PlayState() {
 	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
 	m_lightManager->addLight(glm::vec3(0.f, 5.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
 
-	m_gameObjectManager->addGameObject(new Room(roomMesh, ROOM, glm::vec3(0.f, 0.f, 0.f)));
+	Room* room = new Room(roomMesh, ROOM, glm::vec3(0.f, 0.f, 0.f));
+
+	m_gameObjectManager->addGameObject(room);
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -78,24 +79,30 @@ PlayState::PlayState() {
 
 	}
 
-	//check the collsiion and then write to binary
-	for (int i = 0; i < 20; i++)
-	{
-		m_gameObjectManager->addGameObject(new Box(boxMesh, BOX,
-			glm::vec3(
-				Randomizer::single(-15.f, 15.f),
-				0.f,
-				Randomizer::single(-30.f, 30.f)
-			)));
-	}
+	//for (int i = 0; i < 20; i++)
+	//{
+	//	m_gameObjectManager->addGameObject(new Box(boxMesh, BOX,
+	//		glm::vec3(
+	//			Randomizer::single(-15.f, 15.f),
+	//			0.f,
+	//			Randomizer::single(-30.f, 30.f)
+	//		)));
+	//}
 	
 	m_gameObjectManager->nodecollision(roomData);
 	m_parser->writeToBinary();
 
-	m_shooter = new Shooter(boxMesh, SHOOTER);
-	m_gameObjectManager->addGameObject(m_shooter);
-	m_walker = new Walker(boxMesh, WALKER);
-	m_gameObjectManager->addGameObject(m_walker);
+	//m_shooter = new Shooter(boxMesh, SHOOTER);
+	//m_gameObjectManager->addGameObject(m_shooter);
+	for (int i = 0; i < 10; i++)
+	{
+		m_walker = new Walker(boxMesh, WALKER, room, glm::vec3(
+			Randomizer::single(-25.f, 25.f),
+			0.f,
+			Randomizer::single(-35.f, 35.f)));
+		m_gameObjectManager->addGameObject(m_walker);
+	}
+	
 	m_player = new Player(boxMesh, PLAYER);
 	m_gameObjectManager->addGameObject(m_player);
 
