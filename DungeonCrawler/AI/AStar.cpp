@@ -1,5 +1,6 @@
 #include "AStar.h"
 #include <algorithm>
+#include <System/Log.h>
 
 bool nodeComparator(const Node* n1, const Node* n2)
 {
@@ -55,7 +56,9 @@ std::vector<Node> AStar::findPath(const GridCell& start, const GridCell& destina
 	
 	Node* current = new Node(start.x, start.z, nullptr, 0, getHCost(start, destination));
 	openList.emplace_back(current);
-	while (openList.size() > 0){
+	bool noPath = false;
+
+	while (openList.size() > 0 || noPath == false){
 		
 		std::stable_sort(openList.begin(), openList.end(), nodeComparator);
 		current = openList[0];
@@ -92,6 +95,8 @@ std::vector<Node> AStar::findPath(const GridCell& start, const GridCell& destina
 		
 		openList.erase(openList.begin());
 		closedList.emplace_back(current);
+		
+		bool noValidAdjacentCells = true;
 
 		// Look at the adjacent cells
 		for (int i = 0; i < 9; i++) {
@@ -105,6 +110,7 @@ std::vector<Node> AStar::findPath(const GridCell& start, const GridCell& destina
 
 			if (!c.valid) continue;
 
+			noValidAdjacentCells = false;
 			float gCost = current->gCost + getHCost(*current, c);
 			float hCost = getHCost(c, destination);
 
@@ -125,6 +131,20 @@ std::vector<Node> AStar::findPath(const GridCell& start, const GridCell& destina
 			}
 		}
 
+		// There is no valid cells from the current cell so exit
+		if (noValidAdjacentCells)
+		{
+			noPath = true;
+			LOG_TRACE("Took an early exit");
+		}
+
+	}
+
+
+	for (int i = 0; i < openList.size(); i++)
+	{
+		if (openList[i])
+			delete openList[i];
 	}
 
 	for (int i = 0; i < closedList.size(); i++)
@@ -132,6 +152,8 @@ std::vector<Node> AStar::findPath(const GridCell& start, const GridCell& destina
 		if (closedList[i])
 			delete closedList[i];
 	}
+	
+	openList.clear();
 	closedList.clear();
 	
 	// Default return
