@@ -345,5 +345,14 @@ void GameObjectManager::handleDeadEnemies(float dt)
 				continue;
 			}
 		}
+		if (dynamic_cast<PowerUps*>(object))
+		{
+			if (dynamic_cast<PowerUps*>(object)->powerTriggered())
+			{
+				delete m_gameObjects[i];
+				m_gameObjects.erase(m_gameObjects.begin() + i);
+				continue;
+			}
+		}
 	}
 }

@@ -43,15 +43,18 @@ PlayState::PlayState() {
 	//ParserData* roomData = m_parser->loadFromObj("roomWithNodes.obj");
 	ParserData* roomData = m_parser->loadFromObj("collisionroomtest.obj");
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
+	ParserData* powerUpData = m_parser->loadFromObj("LifePowerUp.obj");
 
 	m_GLinit->createMesh("Room", roomData);
 	m_GLinit->createMesh("Box", boxData);
 	m_GLinit->createMesh("Sphere", sphereData);
+	m_GLinit->createMesh("PowerUp", powerUpData);
 	#pragma endregion
 
 
 	Mesh* roomMesh = MeshMap::getMesh("Room");
 	Mesh* boxMesh = MeshMap::getMesh("Box");
+	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
 
 	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 1.5f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
 	
@@ -98,6 +101,8 @@ PlayState::PlayState() {
 	m_gameObjectManager->addGameObject(m_walker);
 	m_player = new Player(boxMesh, PLAYER);
 	m_gameObjectManager->addGameObject(m_player);
+	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 10, 0, 0);
+	m_gameObjectManager->addGameObject(m_powerUp);
 
 	//Used for the player flashlight & shadow mapping from the 
 	//flashlights view

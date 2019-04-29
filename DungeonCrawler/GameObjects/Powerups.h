@@ -3,14 +3,16 @@
 #define _POWERUPS_H
 #include "GameObject.h"
 
-class Powerups :public GameObject
+class PowerUps :public GameObject
 {
 public:
-	Powerups(Mesh* mesh, Type type, float health, float damage, float speed);
+	PowerUps(Mesh* mesh, Type type, float health, float damage, float speed);
 
 	void update(float dt);
 	void trigger();
-	bool powerTrigger();
+	bool powerTriggered();
+
+
 private:
 
 	float m_healthUp;

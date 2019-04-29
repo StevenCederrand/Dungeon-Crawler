@@ -6,4 +6,5 @@ union HitDescription
 	class Player* player;
 	class Walker* walker;
 	class Shooter* shooter;
+	class PowerUps* powerUp;
 };
