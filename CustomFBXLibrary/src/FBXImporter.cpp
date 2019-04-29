@@ -5,11 +5,11 @@ namespace FBXImporter {
 	void displayMeshName()
 	{
 		std::cout << "Lib file working!" << std::endl;
-		std::cout << "Mesh Name" << std::endl;
+		std::cout << "Mesh name: " << "" << std::endl;
 	}
 	void displayVertices()
 	{
-		std::cout << "Vertices" << std::endl;
+		std::cout << "Amount of vertices:" << "" << std::endl;
 
 	}
 }
