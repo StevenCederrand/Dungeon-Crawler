@@ -27,6 +27,7 @@ GameObjectManager::~GameObjectManager()
 
 void GameObjectManager::update(float dt)
 {	
+	LOG_INFO(std::to_string(this->m_numberOfEnemies));
 	handleDeadEnemies(dt);
 	//------ Player collision broadphasebox ( Used to speed up collision checking against map ) ------
 	if (m_broadPhaseBox)
@@ -73,6 +74,10 @@ void GameObjectManager::update(float dt)
 			continue;
 		}
 
+
+		if (object->getType() == ROOM) {
+			this->m_maxMinValues = object->getMaxMinValues();
+		}
 		// Update the object
 		object->setPlayerPosition(m_player->getPosition());
 		object->internalUpdate(dt);
@@ -152,6 +157,13 @@ void GameObjectManager::addGameObject(GameObject * gameObject)
 				constructPlayerBroadPhaseBox();
 			}
 		}
+
+		if (dynamic_cast<Shooter*>(gameObject)) {
+			this->m_numberOfEnemies++;
+		}
+		if (dynamic_cast<Walker*>(gameObject)) {
+			this->m_numberOfEnemies++;
+		}
 		m_gameObjects.emplace_back(gameObject);
 	}
 }
@@ -187,14 +199,12 @@ std::vector<GameObject*>* GameObjectManager::getVectorPointer()
 
 void GameObjectManager::nodecollision(ParserData* parserData)
 {
-
 	//load the nodes and make it a list
 	std::vector<glm::vec3> nodeVector = parserData->getNodesVector();
 	std::list<glm::vec3> nodeList;
 
 	int counter = 0;
 
-	//for (size_t i = 0; i < 2; i++)//nodeVector.size(); i++)
 	for (size_t i = 0; i < nodeVector.size(); i++)
 	{
 		nodeList.emplace_back(nodeVector[i]);
@@ -272,6 +282,7 @@ void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject
 					newVel.x = dotprod * nz;
 					newVel.z = dotprod * nx;
 					HitDescription desc;
+
 					if (dynamic_cast<Walker*>(object))
 					{
 						m_walker = dynamic_cast<Walker*>(object);
@@ -330,8 +341,9 @@ void GameObjectManager::handleDeadEnemies(float dt)
 		{
 			if (!dynamic_cast<Walker*>(object)->getAliveStatus())
 			{
+				this->m_numberOfEnemies--;
 				delete m_gameObjects[i];
-				m_gameObjects.erase(m_gameObjects.begin()+ i);
+				m_gameObjects.erase(m_gameObjects.begin() + i);
 				continue;
 			}
 		}
@@ -340,10 +352,24 @@ void GameObjectManager::handleDeadEnemies(float dt)
 		{
 			if (!dynamic_cast<Shooter*>(object)->getAliveStatus())
 			{
+				this->m_numberOfEnemies--;
 				delete m_gameObjects[i];
 				m_gameObjects.erase(m_gameObjects.begin() + i);
 				continue;
 			}
 		}
 	}
+	this->manageRoom();
+}
+
+void GameObjectManager::manageRoom() {
+
+
+	if (this->m_numberOfEnemies > 0 && m_isLocked) {
+
+	}
+	else {
+		//LOG_INFO("WE GUCCI");
+	}
+
 }

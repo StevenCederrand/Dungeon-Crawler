@@ -869,6 +869,42 @@ void Parser::readBinaryVec3(std::ifstream & binaryFile, ParserData * parserData,
 	}
 	vecString.clear();
 }
+
+void Parser::readBinaryVec4(std::ifstream& binaryFile, ParserData* parserData)
+{
+
+	//read the value first (how big the other read should be)
+	char* textInt = new char[10];
+	binaryFile.read(textInt, 10);
+
+	//convert it  from char* to int
+	char* tempa;
+	int readSize = strtol(textInt, &tempa, 10);
+	delete[] textInt;
+
+	//make a char pointer to read to, readsize is the size
+	char* text = new char[readSize + 1];
+	binaryFile.read(text, readSize);
+
+	//make a vector string and fill it with the split function
+	text[readSize] = '\0';
+	std::string stringText = text;
+	delete[] text;
+	std::vector<std::string> vecString = split(stringText, ' ');
+
+	//fill the parserData with the Information
+
+	glm::vec4 tempGL;
+	tempGL.x = std::stof(vecString[0], NULL);
+	tempGL.y = std::stof(vecString[1], NULL);
+	tempGL.z = std::stof(vecString[2], NULL);
+	tempGL.w = std::stof(vecString[3], NULL);
+
+
+	parserData->setMaxMinValues(tempGL);
+
+	vecString.clear();
+}
 //shininess==0, normalMapStrength==1
 void Parser::readBinaryFloat(std::ifstream & binaryFile, ParserData * parserData, int choice)
 {

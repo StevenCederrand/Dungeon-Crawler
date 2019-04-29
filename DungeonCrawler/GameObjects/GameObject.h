@@ -33,6 +33,7 @@ public:
 	void setScale(const glm::vec3& scale);
 	void setRotation(const glm::vec3 rotation);
 	void setPlayerPosition(const glm::vec3& position);
+	void setMaxMinValues(const glm::vec4& maxMinValues);
 	void setHit();
 
 	virtual void hit(const HitDescription & desc);
@@ -47,6 +48,7 @@ public:
 	const glm::vec3& getColorTint() const;
 	const glm::mat4& getModelMatrix() const;
 	const bool isCollidable() const;
+	const glm::vec4& getMaxMinValues() const;
 
 	Mesh* getMesh() const;
 
@@ -64,6 +66,8 @@ private:
 	float m_colorTintFadeDuration;
 	bool m_isCollidable;
 	std::vector<AABB*> m_boundingBoxes;
+	glm::vec4 m_maxMinValues;
+
 	Type m_type;
 };
 

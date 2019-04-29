@@ -30,6 +30,7 @@ public:
 	void setShininess(GLfloat factor);
 	void setBoundingBox(const std::vector<glm::vec3>& maxMinVector);
 	void setNodesVector(const std::vector<glm::vec3>& nodesVector);
+	void setMaxMinValues(const glm::vec4& maxMinValues);
 
 	void setNormalMapStrength(float str);
 
@@ -51,7 +52,8 @@ public:
 	const GLfloat& getShininess() const;
 	const std::vector<glm::vec3>& getMaxMinVector() const;
 	const std::vector<glm::vec3>& getNodesVector() const;
-	
+	const glm::vec4& getMaxMinValues() const;
+
 	const GLfloat& getNormalMapStrength() const;
 	const bool hasNormalMap();
 	const bool hasAmbientMap();
@@ -72,7 +74,7 @@ private:
 	glm::vec3 m_specularColor;
 	glm::vec3 m_ambientColor;
 
-
+	glm::vec4 m_maxMinValues;
 
 	GLfloat m_shininess;
 	GLfloat m_normalMapStrength;

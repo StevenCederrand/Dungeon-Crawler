@@ -20,6 +20,10 @@ public:
 	void render();
 
 private:
+	void createRoom(std::string filename, std::string key);
+	void spawnEnemies(int minX, int maxX, int minZ, int maxZ);
+
+private:
 	Parser* m_parser;
 	GLinit* m_GLinit;
 	Camera* m_camera;

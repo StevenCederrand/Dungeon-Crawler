@@ -13,7 +13,6 @@ public:
 
 private:
 
-
 	Type m_type;
 };
 

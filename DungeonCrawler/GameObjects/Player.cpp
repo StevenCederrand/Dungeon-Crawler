@@ -133,7 +133,7 @@ void Player::move(float dt)
 	}
 
 	if (inMotion) {
-		AudioEngine::playOnce(m_walkSounds.at(1), 0.1f);
+		AudioEngine::playOnce(m_walkSounds.at(1), 0.5f);
 	}
 	setVelocity(m_movementDirection);
 	

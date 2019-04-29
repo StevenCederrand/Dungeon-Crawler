@@ -44,6 +44,7 @@ private:
 	void readBinaryVecVec2(std::ifstream& binaryFile, ParserData* parserData);
 	void readBinaryString(std::ifstream& binaryFile, ParserData* parserData, int choice);
 	void readBinaryVec3(std::ifstream& binaryFile, ParserData* parserData, int choice);
+	void readBinaryVec4(std::ifstream& binaryFile, ParserData* parserData);
 	void readBinaryFloat(std::ifstream& binaryFile, ParserData* parserData, int choice);
 		
 private:

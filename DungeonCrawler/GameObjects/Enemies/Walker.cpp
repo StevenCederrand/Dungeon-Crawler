@@ -7,7 +7,7 @@
 Walker::Walker(Mesh * mesh, Type type)	:
 	GameObject(mesh, type)
 {
-	this->m_health = 50.f;
+	this->m_health = 2.f;
 	this->m_speed = 3.f;
 	this->m_damage = 1.f;
 	this->m_isPlayerClose = false;

@@ -3,7 +3,7 @@
 #define _SHOOTER_H
 #include "../GameObject.h"
 
-class Shooter :public GameObject {
+class Shooter : public GameObject {
 public:
 	Shooter(Mesh* mesh, Type type);
 	void update(float dt);
