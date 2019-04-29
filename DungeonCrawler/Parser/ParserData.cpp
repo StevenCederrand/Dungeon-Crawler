@@ -79,11 +79,6 @@ void ParserData::setBoundingBox(const std::vector<glm::vec3>& maxMinVector)
 	m_maxMinVector = maxMinVector;
 }
 
-void ParserData::setNodesVector(const std::vector<glm::vec3>& nodesVector)
-{
-	m_nodesVector = nodesVector;
-}
-
 void ParserData::setNormalMapStrength(float str)
 {
 	m_normalMapStrength = str;
@@ -155,11 +150,6 @@ const GLfloat & ParserData::getShininess() const
 const std::vector<glm::vec3>& ParserData::getMaxMinVector() const
 {
 	return m_maxMinVector;
-}
-
-const std::vector<glm::vec3>& ParserData::getNodesVector() const
-{
-	return m_nodesVector;
 }
 
 const GLfloat & ParserData::getNormalMapStrength() const
