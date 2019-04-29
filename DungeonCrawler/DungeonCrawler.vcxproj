@@ -163,6 +163,7 @@
     <ClCompile Include="GameObjects\GameObjectManager.cpp" />
     <ClCompile Include="GameObjects\Player.cpp" />
     <ClCompile Include="GameObjects\LightSphere.cpp" />
+    <ClCompile Include="GameObjects\Powerups.cpp" />
     <ClCompile Include="GameObjects\Room.cpp" />
     <ClCompile Include="Graphics\Effects.cpp" />
     <ClCompile Include="Graphics\Emitter.cpp" />
@@ -207,6 +208,7 @@
     <ClInclude Include="GameObjects\GameObjectManager.h" />
     <ClInclude Include="GameObjects\Player.h" />
     <ClInclude Include="GameObjects\LightSphere.h" />
+    <ClInclude Include="GameObjects\Powerups.h" />
     <ClInclude Include="GameObjects\Room.h" />
     <ClInclude Include="Globals\LightTypes.h" />
     <ClInclude Include="Globals\Paths.h" />

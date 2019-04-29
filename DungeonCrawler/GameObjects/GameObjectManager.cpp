@@ -27,7 +27,7 @@ GameObjectManager::~GameObjectManager()
 
 void GameObjectManager::update(float dt)
 {	
-	LOG_INFO(std::to_string(this->m_numberOfEnemies));
+	//LOG_INFO(std::to_string(this->m_numberOfEnemies));
 	handleDeadEnemies(dt);
 	//------ Player collision broadphasebox ( Used to speed up collision checking against map ) ------
 	if (m_broadPhaseBox)
