@@ -40,6 +40,11 @@ void GridSystem::constructCells()
 
 }
 
+void GridSystem::update(float dt)
+{
+	
+}
+
 const GridCell& GridSystem::getCell(float x, float z)
 {
 	int cx = (x + m_width * 0.5) / m_cellSize;

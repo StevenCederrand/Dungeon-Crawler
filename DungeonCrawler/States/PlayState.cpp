@@ -94,7 +94,7 @@ PlayState::PlayState() {
 
 	//m_shooter = new Shooter(boxMesh, SHOOTER);
 	//m_gameObjectManager->addGameObject(m_shooter);
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		m_walker = new Walker(boxMesh, WALKER, room, glm::vec3(
 			Randomizer::single(-25.f, 25.f),

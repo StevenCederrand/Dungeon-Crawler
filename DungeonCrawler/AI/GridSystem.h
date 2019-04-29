@@ -13,9 +13,9 @@ public:
 	~GridSystem();
 
 	void constructCells();
+	void update(float dt);
 
 	const GridCell& getCell(float x, float z);
-
 	const int& getCellSize() const;
 	const bool failedGettingGridCell() const;
 

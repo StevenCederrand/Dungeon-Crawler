@@ -77,6 +77,7 @@ void Walker::calculatePath(float dt)
 	// Runs every half second
 	if (m_AStarTimer >= 0.5f) {
 		m_AStarTimer = 0.0f;
+		
 		bool canRunAStar = true;
 
 		// Get the cells that the player and the walker is standing on
@@ -85,8 +86,8 @@ void Walker::calculatePath(float dt)
 		const GridCell& playerCell = m_room->getGrid()->getCell(getPlayerPosition().x, getPlayerPosition().z);
 		if (m_room->getGrid()->failedGettingGridCell() || !playerCell.valid)
 			canRunAStar = false;
-
-		const GridCell & myCell = m_room->getGrid()->getCell(getPosition().x, getPosition().z);
+		
+		const GridCell& myCell = m_room->getGrid()->getCell(getPosition().x, getPosition().z);
 		if (m_room->getGrid()->failedGettingGridCell())
 			canRunAStar = false;
 
@@ -97,6 +98,7 @@ void Walker::calculatePath(float dt)
 		}
 	}
 
+	
 	// If there is nodes in the path vector then 
 	// move to them and pop them when being close enough
 	if (m_path.size() > 0)
@@ -110,7 +112,7 @@ void Walker::calculatePath(float dt)
 		float length = sqrtf(xDir * xDir + zDir * zDir);
 				
 		glm::vec3 velocity = (glm::vec3(xDir, 0.f, zDir) / length) * m_speed * dt;
-
+		
 		// Move towards the node
 		translate(velocity);
 
