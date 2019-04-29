@@ -37,7 +37,7 @@ PlayState::PlayState() {
 	#pragma endregion
 
 	#pragma region Create_Objects
-	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
+	ParserData* boxData = m_parser->loadFromObj("MainCharacter.obj");
 	//ParserData* roomData = m_parser->loadFromObj("basementleveltest.obj");
 	//ParserData* roomData = m_parser->loadFromObj("oneRoomAi.obj");
 	//ParserData* roomData = m_parser->loadFromObj("roomWithNodes.obj");
