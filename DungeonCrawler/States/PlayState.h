@@ -19,7 +19,7 @@ public:
 	void renderImGUI();
 	void render();
 private:
-
+	void resetPlayer();
 
 private:
 	Parser* m_parser;
