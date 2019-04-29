@@ -60,7 +60,6 @@ void Player::update(float dt)
 	{
 		m_spraying = false;
 	}
-	LOG_WARNING(m_pistolBullets);
 	iframeCountdown(dt);
 
 	if (Input::isKeyReleased(GLFW_KEY_Q))
