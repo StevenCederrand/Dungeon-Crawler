@@ -13,7 +13,8 @@ enum Type {
 	BOX = 10,
 	ROOM = 11,
 	LIGHTSPHERE = 12,
-	GAMEOBJECT = 20
+	GAMEOBJECT = 20,
+	POWERUPS = 21
 };
 
 class GameObject {
