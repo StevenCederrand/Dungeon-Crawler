@@ -162,7 +162,6 @@
     <ClCompile Include="Collision\AABB.cpp" />
     <ClCompile Include="FbxImporter\FBXParser.cpp" />
     <ClCompile Include="FbxImporter\FBXBinReader.cpp" />
-    <ClCompile Include="FbxImporter\HeaderStruct.cpp" />
     <ClCompile Include="GameObjects\Box.cpp" />
     <ClCompile Include="GameObjects\Enemies\Shooter.cpp" />
     <ClCompile Include="GameObjects\Enemies\Walker.cpp" />

@@ -3,6 +3,7 @@
 #include <iostream>
 int main()
 {
+	FBXImporter::displayMeshName();
 	FBXImporter::displayVertices();
 	std::cin.get();
 }

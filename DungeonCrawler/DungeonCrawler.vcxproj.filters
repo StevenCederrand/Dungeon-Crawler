@@ -46,7 +46,6 @@
     <ClCompile Include="Utility\UICamera.cpp" />
     <ClCompile Include="UserInterface\UIManager.cpp" />
     <ClCompile Include="UserInterface\Image.cpp" />
-    <ClCompile Include="FbxImporter\HeaderStruct.cpp" />
     <ClCompile Include="FbxImporter\FBXBinReader.cpp" />
     <ClCompile Include="FbxImporter\FBXParser.cpp" />
   </ItemGroup>
