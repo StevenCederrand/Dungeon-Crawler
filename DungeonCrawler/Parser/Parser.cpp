@@ -114,14 +114,6 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 				if (maxMinVector[currentBox + 1].z < z) maxMinVector[currentBox + 1].z = z;
 
 			}
-			else if (isParsingTrigger)
-			{ //Nodes, get the xyz and send it to the vector
-				float x = std::stof(attribs[1]);
-				float y = std::stof(attribs[2]);
-				float z = std::stof(attribs[3]);
-				nodeVector.emplace_back(glm::vec3(x, y, z));
-			}
-
 		}
 		else if (attribs[0] == "vt" && !isParsingCollider)
 		{
