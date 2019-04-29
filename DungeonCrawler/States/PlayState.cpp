@@ -79,19 +79,6 @@ PlayState::PlayState() {
 
 	}
 
-	//for (int i = 0; i < 20; i++)
-	//{
-	//	m_gameObjectManager->addGameObject(new Box(boxMesh, BOX,
-	//		glm::vec3(
-	//			Randomizer::single(-15.f, 15.f),
-	//			0.f,
-	//			Randomizer::single(-30.f, 30.f)
-	//		)));
-	//}
-	
-	m_gameObjectManager->nodecollision(roomData);
-	m_parser->writeToBinary();
-
 	//m_shooter = new Shooter(boxMesh, SHOOTER);
 	//m_gameObjectManager->addGameObject(m_shooter);
 	for (int i = 0; i < 10; i++)
