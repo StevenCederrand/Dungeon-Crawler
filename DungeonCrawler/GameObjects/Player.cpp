@@ -14,7 +14,7 @@ Player::Player(Mesh* mesh, Type type) :
 	this->setPosition(glm::vec3(0.f, 0.f, 0.f));
 	this->m_defaultSpeed = 7.f;
 	this->m_speed = 7.0f;
-	this->m_health = 200.f;
+	this->m_health = 4.f;
 	this->m_damage = 1.f;
 	this->m_automaticDamage = 1.f;
 	this->m_chargeDamage = 10.f;
