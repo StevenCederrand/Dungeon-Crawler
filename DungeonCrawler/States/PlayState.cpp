@@ -171,13 +171,13 @@ void PlayState::resetPlayer()
 	Mesh* boxMesh = MeshMap::getMesh("Box");
 
 	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 1.5f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
-
-
 	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
 	m_lightManager->addLight(glm::vec3(0.f, 5.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
 	
-	m_gameObjectManager->addGameObject(new Room(roomMesh, ROOM, glm::vec3(0.f, 0.f, 0.f)));
-	for (int i = 0; i < 5; i++)
+	Room* room = new Room(roomMesh, ROOM, glm::vec3(0.f, 0.f, 0.f));
+	m_gameObjectManager->addGameObject(room);
+	
+	for (int i = 0; i < 10; i++)
 	{
 		m_lightManager->addLight(
 			// Position
@@ -205,11 +205,20 @@ void PlayState::resetPlayer()
 			)));
 	}
 
-
+	//create a shooter
 	m_shooter = new Shooter(boxMesh, SHOOTER);
 	m_gameObjectManager->addGameObject(m_shooter);
-	m_walker = new Walker(boxMesh, WALKER);
-	m_gameObjectManager->addGameObject(m_walker);
+
+	//create a walker
+	for (int i = 0; i < 2; i++)
+	{
+		m_walker = new Walker(boxMesh, WALKER, room, glm::vec3(
+			Randomizer::single(-25.f, 25.f),
+			0.f,
+			Randomizer::single(-35.f, 35.f)));
+		m_gameObjectManager->addGameObject(m_walker);
+	}
+
 	m_player = new Player(boxMesh, PLAYER);
 	m_gameObjectManager->addGameObject(m_player);
 
