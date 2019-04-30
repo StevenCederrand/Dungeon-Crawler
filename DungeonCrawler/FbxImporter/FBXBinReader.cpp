@@ -3,27 +3,8 @@
 
 int main()
 {
-	std::ifstream::pos_type size;
-	char x;
-	std::ifstream infileBinary;
-	infileBinary.open("ourFileBinary.bin", std::ios::binary | std::ios::in);
-	
-	if (infileBinary.is_open() == false)
-	{
-		std::cout << "Could not open the custom binary file" << std::endl;
-	}
-
-	else if (infileBinary.is_open())
-	{
-		size = infileBinary.tellg();
-		infileBinary.read(&x, 7);
-
-		FBXImporter::displayMeshName();
-		FBXImporter::displayVertices();
-		
-		std::cin.get();
-	}
-	
+	FBXBinReader binaryData;
+	binaryData.binaryMeshReading();
 }
 
 FBXBinReader::FBXBinReader()
@@ -36,5 +17,9 @@ FBXBinReader::~FBXBinReader()
 
 MainHeader FBXBinReader::binaryMeshReading()
 {
+	std::string pathtoMesh = "ourFileBinary.bin";
+	std::vector<unsigned int> binaryFileData = FBXImporter::getBinaryData(pathtoMesh);
+
+	//std::cout << binaryFileData << std::endl;
 	return MainHeader();
 }

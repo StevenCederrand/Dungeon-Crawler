@@ -1,2 +1,3 @@
 ﻿  FBXImporter.cpp
+C:\Users\TOB-E\Desktop\Lilla spel\Dungeon-Crawler\CustomFBXLibrary\src\FBXImporter.cpp(38): warning C4244: 'initializing': conversion from 'std::streamoff' to 'int', possible loss of data
   CustomFBXLibrary.vcxproj -> C:\Users\TOB-E\Desktop\Lilla spel\Dungeon-Crawler\x64\Release\CustomFBXLibrary.lib

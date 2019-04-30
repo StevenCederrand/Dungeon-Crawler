@@ -1,7 +1,4 @@
 #pragma once
-#include <iostream>
-#include <fstream>
-#include <string>
 #include "FBXImporter.h"
 #include "HeaderStruct.h"
 
