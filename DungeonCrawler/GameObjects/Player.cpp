@@ -7,6 +7,7 @@
 #include "Enemies/Walker.h"
 #include "Enemies/Shooter.h"
 #include "../Audio/AudioEngine.h"
+#include "Powerups.h"
 
 Player::Player(Mesh* mesh, Type type) :
 	GameObject(mesh, type)
@@ -106,6 +107,14 @@ void Player::hit(const HitDescription & desc)
 			m_health -= shooter->getDamage();
 		}
 		m_iframes = 2.f;
+	}
+	if (type == Type::POWERUPS)
+	{
+		PowerUps* powerUp = dynamic_cast<PowerUps*>(desc.owner);
+		glm::vec3 boosts = powerUp->getBoost();
+		m_health += boosts.x;
+		m_damage += boosts.y;
+		m_speed += boosts.z;
 	}
 	
 	LOG_WARNING("Player Health: " + std::to_string(m_health));

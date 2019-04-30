@@ -12,6 +12,11 @@ public:
 	void trigger();
 	bool powerTriggered();
 
+	float getHealthBoost() const;
+	float getDamageBoost() const;
+	float getSpeedBoost() const;
+	glm::vec3 getBoost() const;
+	Type getType();
 
 private:
 
