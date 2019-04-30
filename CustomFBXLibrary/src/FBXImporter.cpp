@@ -1,6 +1,7 @@
 #include "FBXImporter.h"
 #include <iostream>
 
+//Lib file that interprets binary values to base 10 values and returns them
 namespace FBXImporter {
 	void displayMeshName()
 	{
@@ -13,5 +14,3 @@ namespace FBXImporter {
 
 	}
 }
-
-//Lib file that interprets binary values to base 10 values and returns them

@@ -112,5 +112,6 @@
     <ClInclude Include="UserInterface\Image.h" />
     <ClInclude Include="FbxImporter\FBXBinReader.h" />
     <ClInclude Include="FbxImporter\FBXParser.h" />
+    <ClInclude Include="FbxImporter\HeaderStruct.h" />
   </ItemGroup>
 </Project>

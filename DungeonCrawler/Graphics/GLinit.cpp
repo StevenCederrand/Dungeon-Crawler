@@ -25,6 +25,8 @@ GLinit::~GLinit()
 
 Mesh* GLinit::createMesh(std::string name, ParserData* data)
 {
+	//Make a check if FBX is binary
+	//Use the FBXParser class that takes in the binary custom files and generates the meshes
 	if (MeshMap::MeshExistWithName(name))
 		return MeshMap::getMesh(name);
 
