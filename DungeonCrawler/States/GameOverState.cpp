@@ -11,14 +11,14 @@ GameOverState::GameOverState()
 	m_glInit = new GLinit();
 
 	m_playAgain = new Button(glm::vec2(Application::windowWidth * 0.5, Application::windowHeight * 0.7),
-		glm::vec2(200.f, 200.f), m_glInit,
-		"playbtn_active.png",
-		"playbtn_inactive.png");
+		glm::vec2(400.f, 200.f), m_glInit,
+		"playagainbtn_active.png",
+		"playagainbtn_inactive.png");
 
 	m_menu = new Button(glm::vec2(Application::windowWidth * 0.5, Application::windowHeight * 0.3f),
-		glm::vec2(200.f, 200.f), m_glInit,
-		"exitbtn_active.png",
-		"exitbtn_inactive.png");
+		glm::vec2(400.f, 150.f), m_glInit,
+		"mainmenubtn_active.png",
+		"mainmenubtn_inactive.png");
 
 	m_manager->registerUIElement(m_playAgain);
 	m_manager->registerUIElement(m_menu);
