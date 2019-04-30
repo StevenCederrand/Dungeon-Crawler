@@ -154,6 +154,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AI\AStar.cpp" />
+    <ClCompile Include="AI\GridSystem.cpp" />
     <ClCompile Include="Audio\AudioEngine.cpp" />
     <ClCompile Include="Collision\AABB.cpp" />
     <ClCompile Include="GameObjects\Box.cpp" />
@@ -163,6 +165,7 @@
     <ClCompile Include="GameObjects\GameObjectManager.cpp" />
     <ClCompile Include="GameObjects\Player.cpp" />
     <ClCompile Include="GameObjects\LightSphere.cpp" />
+    <ClCompile Include="GameObjects\Powerups.cpp" />
     <ClCompile Include="GameObjects\Room.cpp" />
     <ClCompile Include="Graphics\Effects.cpp" />
     <ClCompile Include="Graphics\Emitter.cpp" />
@@ -198,6 +201,10 @@
     <ClCompile Include="Vendor\stb\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AI\AStar.h" />
+    <ClInclude Include="AI\GridCell.h" />
+    <ClInclude Include="AI\GridSystem.h" />
+    <ClInclude Include="AI\Node.h" />
     <ClInclude Include="Audio\AudioEngine.h" />
     <ClInclude Include="Collision\AABB.h" />
     <ClInclude Include="Collision\HitData.h" />
@@ -208,6 +215,7 @@
     <ClInclude Include="GameObjects\GameObjectManager.h" />
     <ClInclude Include="GameObjects\Player.h" />
     <ClInclude Include="GameObjects\LightSphere.h" />
+    <ClInclude Include="GameObjects\Powerups.h" />
     <ClInclude Include="GameObjects\Room.h" />
     <ClInclude Include="Globals\LightTypes.h" />
     <ClInclude Include="Globals\Paths.h" />
