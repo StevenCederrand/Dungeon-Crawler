@@ -21,13 +21,15 @@ bool Room::intersection(glm::vec3 position) {
 
 	glm::vec4 maxMinValues = this->getMaxMinValues();
 	//If the position is below the min value or above the max value
+	
 	if (position.x <= maxMinValues.z || position.x >= maxMinValues.x) {
 		return false;
 	}
 	//If the position is below the min value or above the max value
-	if (position.z <= maxMinValues.w || position.x >= maxMinValues.y) {
+	if (position.z <= maxMinValues.w || position.z >= maxMinValues.y) {
 		return false;
 	}
+
 	return true;
 }
 

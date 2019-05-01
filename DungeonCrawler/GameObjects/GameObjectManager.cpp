@@ -169,9 +169,9 @@ void GameObjectManager::addGameObject(GameObject * gameObject)
 			this->m_numberOfEnemies++;
 		}
 		if (objectType == ROOM) {
-			//Room* room = dynamic_cast<Room*>(gameObject);
-			//this->setupMaxMinValues(room);
-			this->m_rooms.push_back(dynamic_cast<Room*>(gameObject));
+			Room* room = dynamic_cast<Room*>(gameObject);
+			this->setupMaxMinValues(room);
+			this->m_rooms.push_back(room);
 		}
 		m_gameObjects.emplace_back(gameObject);
 	}
@@ -393,13 +393,15 @@ void GameObjectManager::roomManager(GameObject* object) {
 	//When the player is not in combat
 	if (m_player->getPlayerState() == Roaming) {
 		//Check to see if the player intersects with the room
-		if (Input::isKeyReleased(GLFW_KEY_SPACE)) {
-
-			for (size_t i = 0; i < m_rooms.size(); i++) {
-				LOG_INFO(vec4ToString(m_rooms.at(i)->getMaxMinValues()));
-				m_rooms.at(i)->intersection(m_player->getPosition());
+		
+		for (size_t i = 0; i < m_rooms.size(); i++) {
+			
+			if (m_rooms.at(i)->intersection(m_player->getPosition())) {
+				LOG_INFO("Room: " + std::to_string(i) + " Max:Min: " + vec4ToString(m_rooms.at(i)->getMaxMinValues()));
+				LOG_INFO("Player: " + vec3ToString(m_player->getPosition()));
 			}
 		}
+
 	}
 
 
@@ -407,10 +409,10 @@ void GameObjectManager::roomManager(GameObject* object) {
 
 void GameObjectManager::setupMaxMinValues(GameObject* object) {
 	glm::vec4 maxMinValues = object->getMaxMinValues();
-	maxMinValues.x -= 10;
-	maxMinValues.y -= 10;
-	maxMinValues.z += 10;
-	maxMinValues.w += 10;
+	maxMinValues.x -= 5;
+	maxMinValues.y -= 5;
+	maxMinValues.z += 5;
+	maxMinValues.w += 5;
 	object->setMaxMinValues(maxMinValues);
 
 }

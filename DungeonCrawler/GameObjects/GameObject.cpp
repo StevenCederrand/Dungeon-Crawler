@@ -108,7 +108,8 @@ void GameObject::setPlayerPosition(const glm::vec3 & position)
 }
 
 void GameObject::setMaxMinValues(const glm::vec4& maxMinValues) {
-	this->m_maxMinValues = maxMinValues;
+	this->m_mesh->setMaxMinValues(maxMinValues);
+	//this->m_maxMinValues = maxMinValues;
 }
 
 void GameObject::setHit()
