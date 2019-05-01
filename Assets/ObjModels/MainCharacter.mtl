@@ -12,4 +12,4 @@ newmtl 03___Default
 	Kd 0.5882 0.5882 0.5882
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-map_Kd whiteTexture.png
+map_Kd RTS_Crate.png

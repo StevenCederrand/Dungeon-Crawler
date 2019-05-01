@@ -6,7 +6,7 @@
 class PowerUps :public GameObject
 {
 public:
-	PowerUps(Mesh* mesh, Type type, float health, float damage, float speed);
+	PowerUps(Mesh* mesh, Type type, float health, float damage, float speed, glm::vec3 position);
 
 	void update(float dt);
 	void trigger();

@@ -38,23 +38,24 @@ PlayState::PlayState() {
 
 	#pragma region Create_Objects
 	ParserData* boxData = m_parser->loadFromObj("MainCharacter.obj");
-	//ParserData* roomData = m_parser->loadFromObj("basementleveltest.obj");
-	//ParserData* roomData = m_parser->loadFromObj("oneRoomAi.obj");
-	//ParserData* roomData = m_parser->loadFromObj("roomWithNodes.obj");
 	ParserData* roomData = m_parser->loadFromObj("collisionroomtest.obj");
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
 	ParserData* powerUpData = m_parser->loadFromObj("LifePowerUp.obj");
+
+	ParserData* enemyData = m_parser->loadFromObj("MFBox.obj");
 
 	m_GLinit->createMesh("Room", roomData);
 	m_GLinit->createMesh("Box", boxData);
 	m_GLinit->createMesh("Sphere", sphereData);
 	m_GLinit->createMesh("PowerUp", powerUpData);
+	m_GLinit->createMesh("Enemy", enemyData);
 	#pragma endregion
 
 
 	Mesh* roomMesh = MeshMap::getMesh("Room");
 	Mesh* boxMesh = MeshMap::getMesh("Box");
 	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
+	Mesh* enemyMesh = MeshMap::getMesh("Enemy");
 
 	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 1.5f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
 	
@@ -95,13 +96,17 @@ PlayState::PlayState() {
 	m_gameObjectManager->nodecollision(roomData);
 	m_parser->writeToBinary();
 
-	m_shooter = new Shooter(boxMesh, SHOOTER);
+	m_shooter = new Shooter(enemyMesh, SHOOTER);
 	m_gameObjectManager->addGameObject(m_shooter);
-	m_walker = new Walker(boxMesh, WALKER);
+	m_walker = new Walker(enemyMesh, WALKER);
 	m_gameObjectManager->addGameObject(m_walker);
 	m_player = new Player(boxMesh, PLAYER);
 	m_gameObjectManager->addGameObject(m_player);
-	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 10, 0, 0);
+	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 10, 0, 0, glm::vec3(10.f, 0.f, 2.f));
+	m_gameObjectManager->addGameObject(m_powerUp);
+	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 10, 0, glm::vec3(2.f, 0.f, 2.f));
+	m_gameObjectManager->addGameObject(m_powerUp);
+	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 0, 10, glm::vec3(-5.f, 0.f, -2.f));
 	m_gameObjectManager->addGameObject(m_powerUp);
 
 	//Used for the player flashlight & shadow mapping from the 

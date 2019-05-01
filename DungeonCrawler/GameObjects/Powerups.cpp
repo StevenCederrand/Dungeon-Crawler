@@ -1,6 +1,6 @@
 #include "Powerups.h"
 
-PowerUps::PowerUps(Mesh* mesh, Type type, float health, float damage, float speed) :
+PowerUps::PowerUps(Mesh* mesh, Type type, float health, float damage, float speed, glm::vec3 position) :
 	GameObject(mesh, type)
 {
 	this->m_healthUp = health;
@@ -8,7 +8,7 @@ PowerUps::PowerUps(Mesh* mesh, Type type, float health, float damage, float spee
 	this->m_speedUp = speed;
 	this->m_type = type; 
 	this->m_trigger = false;
-	this->setPosition(glm::vec3(2.f, 0.f, 2.f));
+	this->setPosition(position);
 }
 
 void PowerUps::update(float dt)

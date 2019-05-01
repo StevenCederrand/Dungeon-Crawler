@@ -254,6 +254,7 @@ void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject
 
 			if (m_broadPhaseBox->checkCollision(*objectBox))
 			{
+				
 				float nx = 0.f, nz = 0.f;
 				float collisionTime = playerBox->swepAABB(newVel, *objectBox, nx, nz);
 
@@ -264,12 +265,6 @@ void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject
 
 				if (collisionTime < 1.0f)
 				{
-
-					float remainingTime = 1.0f - collisionTime;
-					hasCollided = true;
-					float dotprod = (newVel.x * nz + newVel.z * nx) * remainingTime;
-					newVel.x = dotprod * nz;
-					newVel.z = dotprod * nx;
 					HitDescription desc;
 					if (dynamic_cast<PowerUps*>(object))
 					{
@@ -279,10 +274,16 @@ void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject
 						dynamic_cast<PowerUps*>(object)->trigger();
 						continue;
 					}
+					float remainingTime = 1.0f - collisionTime;
+					hasCollided = true;
+					float dotprod = (newVel.x * nz + newVel.z * nx) * remainingTime;
+					newVel.x = dotprod * nz;
+					newVel.z = dotprod * nx;
+					
 					if (dynamic_cast<Walker*>(object))
 					{
 						m_walker = dynamic_cast<Walker*>(object);
-						desc.walker = m_walker; 
+						desc.walker = m_walker;
 						m_player->hit(desc);
 					}
 					if (dynamic_cast<Shooter*>(object))
