@@ -155,9 +155,6 @@ void PlayState::render()
 
 void PlayState::resetPlayer()
 {
-	//Player* player = m_gameObjectManager->getPlayer();
-	//player->setHealth(2.0f);
-
 	delete m_gameObjectManager;
 	delete m_renderer;
 	delete m_lightManager;
@@ -192,17 +189,6 @@ void PlayState::resetPlayer()
 			25.f, m_gameObjectManager);
 
 	}
-	/*
-	for (int i = 0; i < 20; i++)
-	{
-		m_gameObjectManager->addGameObject(new Box(boxMesh, BOX,
-			glm::vec3(
-				Randomizer::single(-15.f, 15.f),
-				0.f,
-				Randomizer::single(-30.f, 30.f)
-			)));
-	}
-	*/
 
 	//create a shooter
 	//m_shooter = new Shooter(boxMesh, SHOOTER);
@@ -224,6 +210,5 @@ void PlayState::resetPlayer()
 	//Used for the player flashlight & shadow mapping from the 
 	//flashlights view
 	m_renderer->preparePlayerLights(m_gameObjectManager->getPlayer());
-
 
 }
