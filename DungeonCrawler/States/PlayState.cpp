@@ -82,7 +82,7 @@ PlayState::PlayState() {
 
 	//m_shooter = new Shooter(boxMesh, SHOOTER);
 	//m_gameObjectManager->addGameObject(m_shooter);
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		m_walker = new Walker(boxMesh, WALKER, room, glm::vec3(
 			Randomizer::single(-25.f, 25.f),
@@ -128,7 +128,6 @@ void PlayState::update(float dt) {
 	}
 }
 
-
 void PlayState::renderImGUI()
 {
 	ImGui::Begin("PlayState");
@@ -156,8 +155,8 @@ void PlayState::render()
 
 void PlayState::resetPlayer()
 {
-	Player* player = m_gameObjectManager->getPlayer();
-	player->setHealth(2.0f);
+	//Player* player = m_gameObjectManager->getPlayer();
+	//player->setHealth(2.0f);
 
 	delete m_gameObjectManager;
 	delete m_renderer;
@@ -193,8 +192,7 @@ void PlayState::resetPlayer()
 			25.f, m_gameObjectManager);
 
 	}
-
-	//check the collsiion and then write to binary
+	/*
 	for (int i = 0; i < 20; i++)
 	{
 		m_gameObjectManager->addGameObject(new Box(boxMesh, BOX,
@@ -204,13 +202,14 @@ void PlayState::resetPlayer()
 				Randomizer::single(-30.f, 30.f)
 			)));
 	}
+	*/
 
 	//create a shooter
-	m_shooter = new Shooter(boxMesh, SHOOTER);
-	m_gameObjectManager->addGameObject(m_shooter);
+	//m_shooter = new Shooter(boxMesh, SHOOTER);
+	//m_gameObjectManager->addGameObject(m_shooter);
 
 	//create a walker
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		m_walker = new Walker(boxMesh, WALKER, room, glm::vec3(
 			Randomizer::single(-25.f, 25.f),
