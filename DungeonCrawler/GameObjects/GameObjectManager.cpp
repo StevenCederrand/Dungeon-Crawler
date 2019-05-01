@@ -4,6 +4,8 @@
 #include <vector>
 #include "../Audio/AudioEngine.h"
 #include "../Globals/Helper.h"
+#include "../System/Input.h"
+
 GameObjectManager::GameObjectManager(Effects* effects)
 {
 	m_effects = effects;
@@ -76,8 +78,14 @@ void GameObjectManager::update(float dt)
 
 
 		if (object->getType() == ROOM) {
-			this->m_maxMinValues = object->getMaxMinValues();
-			LOG_INFO(vec4ToString(this->m_maxMinValues));
+			if (Input::isKeyReleased(GLFW_KEY_SPACE)) {
+				this->m_maxMinValues = object->getMaxMinValues();
+				LOG_WARNING("player position " + vec3ToString(this->m_player->getPosition()));
+				LOG_INFO("Room max:min " + vec4ToString(this->m_maxMinValues));
+			}
+		}
+		if (Input::isKeyReleased(GLFW_KEY_BACKSPACE)) {
+			system("cls");
 		}
 		// Update the object
 		object->setPlayerPosition(m_player->getPosition());
@@ -373,4 +381,11 @@ void GameObjectManager::manageRoom() {
 		//LOG_INFO("WE GUCCI");
 	}
 
+}
+
+bool GameObjectManager::inRoom(glm::vec4 maxMinValues) {
+	float pX = m_player->getPosition().x;
+	float pZ = m_player->getPosition().y; 
+
+	return false;
 }

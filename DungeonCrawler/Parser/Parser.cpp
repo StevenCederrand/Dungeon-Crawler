@@ -60,6 +60,7 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 	std::vector<glm::vec3> maxMinVector;
 	bool newCollider = false;
 	unsigned int currentBox = -2;
+	glm::vec4 maxMin = glm::vec4(-1000, -1000, 1000, 1000); 
 
 	while (std::getline(objFile, line))
 	{
@@ -100,19 +101,23 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 			if (!isParsingCollider && !isParsingNodes) {
 				glm::vec3 vert = glm::vec3(std::stof(attribs[1]), std::stof(attribs[2]), std::stof(attribs[3]));
 				tempVertexBuffer.emplace_back(vert);
-				glm::vec4 maxMin = data->getMaxMinValues();
-				if (std::stof(attribs[1]) > maxMin.x && std::stof(attribs[3]) > maxMin.y)
-				{
-					maxMin.x = std::stof(attribs[1]);
-					maxMin.y = std::stof(attribs[3]);
-					data->setMaxMinValues(maxMin);
 
-				}
-				if (std::stof(attribs[1]) < maxMin.z && std::stof(attribs[3]) < maxMin.w)
+				//Used for marking the max and min coordinates of the room
+				if (vert.x > maxMin.x)
 				{
-					maxMin.z = std::stof(attribs[1]);
-					maxMin.w = std::stof(attribs[3]);
-					data->setMaxMinValues(maxMin);
+					maxMin.x = vert.x;
+					
+				}
+				if (vert.z > maxMin.y) {
+					maxMin.y = vert.z;
+				}
+				if (vert.x < maxMin.z)
+				{
+					maxMin.z = vert.x;
+					
+				}
+				if (vert.z < maxMin.w) {
+					maxMin.w = vert.z;
 				}
 
 			}
@@ -147,7 +152,6 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 				float z = std::stof(attribs[3]);
 				nodeVector.emplace_back(glm::vec3(x, y, z));
 			}
-
 		}
 		else if (attribs[0] == "vt" && !isParsingCollider && !isParsingNodes)
 		{
@@ -172,7 +176,7 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 			}
 		}
 	}
-
+	data->setMaxMinValues(maxMin);
 	
 	objFile.close();
 	tempVertexBuffer.clear();

@@ -32,7 +32,7 @@ private:
 	void handleDeadEnemies(float dt);
 	
 	void manageRoom();
-
+	bool inRoom(glm::vec4 maxMinValues);
 private:
 	int m_numberOfEnemies; //This is per room
 	bool m_isLocked;

@@ -15,7 +15,12 @@
 
 #include "Utility/Randomizer.h"
 #include <chrono>
+#include <thread>
 
+void loadObj(Parser* parser, GLinit* glInit, std::string filename, std::string name) {
+	ParserData* data = parser->loadFromObj(filename);
+	glInit->createMesh(name, data);
+}
 
 PlayState::PlayState() {
 
@@ -42,6 +47,10 @@ PlayState::PlayState() {
 	#pragma endregion
 	
 	#pragma region Create_Objects
+	//std::thread characterLoader(loadObj, &this->m_GLinit, 
+	//	&this->m_parser, "MainCharacter.obj", "Character");
+	//characterLoader.join();
+
 	ParserData* characterData = m_parser->loadFromObj("MainCharacter.obj");
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
 	ParserData* cubeData = m_parser->loadFromObj("box.obj");
@@ -74,39 +83,10 @@ PlayState::PlayState() {
 	Mesh* boxMesh = MeshMap::getMesh("Character");
 	m_player = new Player(boxMesh, PLAYER);
 	m_gameObjectManager->addGameObject(m_player);
-	//this->spawnEnemies(-30.f, 30.f, -15.f, 15.f);
+
+	this->spawnEnemies(-30.f, 30.f, -15.f, 15.f);
 
 	m_parser->writeToBinary();
-	////check the collsiion and then write to binary
-	//bool enemy = false;
-	//for (int i = 0; i < 20; i++) {
-	//	if (!enemy) {
-	//		m_gameObjectManager->addGameObject(new Box(boxMesh, BOX,
-	//			glm::vec3(
-	//				Randomizer::single(-30.f, 30.f),
-	//				0.f,
-	//				Randomizer::single(-15.f, 15.f) //-15.f, 15.f
-	//			)));
-	//		enemy = true;
-	//	}
-	//	else {
-	//		m_gameObjectManager->addGameObject(new Box(cubeMesh, BOX,
-	//			glm::vec3(
-	//				Randomizer::single(-30.f, 30.f),
-	//				0.f,
-	//				Randomizer::single(-15.f, 15.f) //-15.f, 15.f
-	//			)));
-	//	}
-	//}
-	//
-	//m_parser->writeToBinary();
-
-	////m_shooter = new Shooter(boxMesh, SHOOTER);
-	////m_gameObjectManager->addGameObject(m_shooter);
-	//m_walker = new Walker(boxMesh, WALKER);
-	//m_gameObjectManager->addGameObject(m_walker);
-	//m_player = new Player(boxMesh, PLAYER);
-	//m_gameObjectManager->addGameObject(m_player);
 
 	//flashlights view
 	m_renderer->preparePlayerLights(m_gameObjectManager->getPlayer());
