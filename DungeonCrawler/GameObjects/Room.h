@@ -9,8 +9,10 @@ public:
 	~Room();
 
 	void update(float dt);
+	bool intersection(glm::vec3 position);
 
-
+	void setupMaxMinValues();
+private:
 private:
 
 	Type m_type;

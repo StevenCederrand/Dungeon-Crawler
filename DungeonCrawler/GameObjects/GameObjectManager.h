@@ -31,8 +31,9 @@ private:
 	void handlePlayerShooting(float dt, GameObject* object, const glm::vec3& rayDir, float& rayLengthUntilCollision, GameObject* &hitGameObject);
 	void handleDeadEnemies(float dt);
 	
-	void manageRoom();
+	void roomManager(GameObject* object);
 	bool inRoom(glm::vec4 maxMinValues);
+	void setupMaxMinValues(GameObject* object);
 private:
 	int m_numberOfEnemies; //This is per room
 	bool m_isLocked;
@@ -44,6 +45,7 @@ private:
 	AABB* m_broadPhaseBox;
 	glm::vec4 m_maxMinValues;
 	Effects* m_effects; 
+	std::vector<Room*> m_rooms;
 };
 
 #endif

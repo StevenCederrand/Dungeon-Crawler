@@ -401,9 +401,18 @@ void Player::iframeCountdown(float dt)
 	}
 }
 
+void Player::setPlayerState(const EntityState& playerState) {
+	this->playerState = playerState;
+}
+
 void Player::takeDamage(float damageRecieved)
 {
 	m_health = m_health - damageRecieved;
+}
+
+const EntityState& Player::getPlayerState() const
+{
+	return this->playerState;
 }
 
 float Player::getSpeed() const

@@ -62,7 +62,9 @@ void GameObjectManager::update(float dt)
 		float offset = 0.5f;
 		m_effects->addParticles("GunFlareEmitter", m_player->getPosition() + glm::vec3(xAngle, 0.f, zAngle) * offset, 5.f, 0.2f);
 	}
-
+	if (Input::isKeyReleased(GLFW_KEY_BACKSPACE)) {
+		system("cls");
+	}
 	//------ Update all the game objects and check for collision 'n stuff ------
 	for (size_t i = 0; i < m_gameObjects.size(); i++)
 	{
@@ -78,15 +80,9 @@ void GameObjectManager::update(float dt)
 
 
 		if (object->getType() == ROOM) {
-			if (Input::isKeyReleased(GLFW_KEY_SPACE)) {
-				this->m_maxMinValues = object->getMaxMinValues();
-				LOG_WARNING("player position " + vec3ToString(this->m_player->getPosition()));
-				LOG_INFO("Room max:min " + vec4ToString(this->m_maxMinValues));
-			}
+			this->roomManager(object);
 		}
-		if (Input::isKeyReleased(GLFW_KEY_BACKSPACE)) {
-			system("cls");
-		}
+
 		// Update the object
 		object->setPlayerPosition(m_player->getPosition());
 		object->internalUpdate(dt);
@@ -164,14 +160,18 @@ void GameObjectManager::addGameObject(GameObject * gameObject)
 			if (m_player)
 			{
 				constructPlayerBroadPhaseBox();
+				m_player->setPlayerState(Roaming);
 			}
 		}
+		Type objectType = gameObject->getType();
 
-		if (dynamic_cast<Shooter*>(gameObject)) {
+		if (objectType == SHOOTER || objectType == WALKER) {
 			this->m_numberOfEnemies++;
 		}
-		if (dynamic_cast<Walker*>(gameObject)) {
-			this->m_numberOfEnemies++;
+		if (objectType == ROOM) {
+			//Room* room = dynamic_cast<Room*>(gameObject);
+			//this->setupMaxMinValues(room);
+			this->m_rooms.push_back(dynamic_cast<Room*>(gameObject));
 		}
 		m_gameObjects.emplace_back(gameObject);
 	}
@@ -368,24 +368,49 @@ void GameObjectManager::handleDeadEnemies(float dt)
 			}
 		}
 	}
-	this->manageRoom();
 }
 
-void GameObjectManager::manageRoom() {
+void GameObjectManager::roomManager(GameObject* object) {
 
+	//If playerstate == freeRoam ---> 
+	//Check to see if the player crosses the border of the room
+		//if enteredUnchartedRoom ---> 
+			//Spawn the doors, playerstate = fighting
+	//else if playerstate == fighting ---> Don't do this
 
-	if (this->m_numberOfEnemies > 0 && m_isLocked) {
+	//If there are enemies and the room isn't locked
+	//if (m_numberOfEnemies > 0 && !m_isLocked) {
+	//	m_player->setPlayerState(Fighting);
+	//	m_isLocked = true;
+	//	//Spawn doors
+	//}
+	//
+	//if (m_numberOfEnemies == 0 && m_isLocked) {
+	//	m_player->setPlayerState(Roaming);
+	//	m_isLocked = false;
+	//}
+		
+	//When the player is not in combat
+	if (m_player->getPlayerState() == Roaming) {
+		//Check to see if the player intersects with the room
+		if (Input::isKeyReleased(GLFW_KEY_SPACE)) {
 
+			for (size_t i = 0; i < m_rooms.size(); i++) {
+				LOG_INFO(vec4ToString(m_rooms.at(i)->getMaxMinValues()));
+				m_rooms.at(i)->intersection(m_player->getPosition());
+			}
+		}
 	}
-	else {
-		//LOG_INFO("WE GUCCI");
-	}
+
 
 }
 
-bool GameObjectManager::inRoom(glm::vec4 maxMinValues) {
-	float pX = m_player->getPosition().x;
-	float pZ = m_player->getPosition().y; 
+void GameObjectManager::setupMaxMinValues(GameObject* object) {
+	glm::vec4 maxMinValues = object->getMaxMinValues();
+	maxMinValues.x -= 10;
+	maxMinValues.y -= 10;
+	maxMinValues.z += 10;
+	maxMinValues.w += 10;
+	object->setMaxMinValues(maxMinValues);
 
-	return false;
 }

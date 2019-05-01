@@ -82,6 +82,7 @@ PlayState::PlayState() {
 	//Place the player model in the world 
 	Mesh* boxMesh = MeshMap::getMesh("Character");
 	m_player = new Player(boxMesh, PLAYER);
+	
 	m_gameObjectManager->addGameObject(m_player);
 
 	this->spawnEnemies(-30.f, 30.f, -15.f, 15.f);

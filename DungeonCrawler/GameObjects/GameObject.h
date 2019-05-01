@@ -6,6 +6,11 @@
 #include "../Globals/LightTypes.h"
 #include "Collision/HitData.h"
 
+enum EntityState {
+	Fighting, 
+	Roaming
+};
+
 enum Type {
 	PLAYER = 0,
 	WALKER = 1,
