@@ -100,6 +100,21 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 			if (!isParsingCollider && !isParsingNodes) {
 				glm::vec3 vert = glm::vec3(std::stof(attribs[1]), std::stof(attribs[2]), std::stof(attribs[3]));
 				tempVertexBuffer.emplace_back(vert);
+				glm::vec4 maxMin = data->getMaxMinValues();
+				if (std::stof(attribs[1]) > maxMin.x && std::stof(attribs[3]) > maxMin.y)
+				{
+					maxMin.x = std::stof(attribs[1]);
+					maxMin.y = std::stof(attribs[3]);
+					data->setMaxMinValues(maxMin);
+
+				}
+				if (std::stof(attribs[1]) < maxMin.z && std::stof(attribs[3]) < maxMin.w)
+				{
+					maxMin.z = std::stof(attribs[1]);
+					maxMin.w = std::stof(attribs[3]);
+					data->setMaxMinValues(maxMin);
+				}
+
 			}
 			else if (isParsingCollider)
 			{
@@ -308,6 +323,9 @@ void Parser::writeToBinary()
 
 		glm::vec3 ambientColor = data->getAmbientColor();
 		writeBinaryVec3(binaryFile, ambientColor);
+
+		glm::vec4 maxMinValues = data->getMaxMinValues();
+		writeBinaryVec4(binaryFile, maxMinValues);
 
 		GLfloat shininess = data->getShininess();
 		writeBinaryFloat(binaryFile, shininess);
@@ -595,6 +613,45 @@ void Parser::writeBinaryVec3(std::ofstream& binaryFile, glm::vec3 vector)
 	//binaryFile.close();
 }
 
+void Parser::writeBinaryVec4(std::ofstream& binaryFile, glm::vec4 vector) {
+
+	//std::ofstream binaryFile(Binaries + filename, std::ios::binary);
+	if (!binaryFile.is_open())
+	{
+		//LOG_ERROR("Binary file not found " + filename);
+		return;
+	}
+	//create string to have the data in
+	std::string stringvector;
+
+
+	//the string with the data
+	stringvector.append(std::to_string(vector.x));
+	stringvector.append(" ");
+	stringvector.append(std::to_string(vector.y));
+	stringvector.append(" ");
+	stringvector.append(std::to_string(vector.z));
+	stringvector.append(" ");
+	stringvector.append(std::to_string(vector.w));
+	stringvector.append(" ");
+
+
+	//size of the string
+	int indicesStringSize = stringvector.size();
+
+	//make a string of the size ( to write it to the file)
+	std::string indicesStringInt = std::to_string(indicesStringSize);
+	for (size_t i = indicesStringInt.size(); i < 10; i++)
+	{
+		indicesStringInt.append(" ");
+	}
+
+	//write to the file
+	binaryFile.write(indicesStringInt.c_str(), indicesStringInt.size());
+	binaryFile.write(stringvector.c_str(), indicesStringSize);
+
+}
+
 void Parser::writeBinaryFloat(std::ofstream& binaryFile, GLfloat floatValue)
 {
 
@@ -649,6 +706,8 @@ void Parser::loadFromBinary(ParserData* data, const std::string & filename)
 	readBinaryVec3(binaryFile, data, 0);
 	readBinaryVec3(binaryFile, data, 1);
 	readBinaryVec3(binaryFile, data, 2);
+
+	readBinaryVec4(binaryFile, data);
 
 	readBinaryFloat(binaryFile, data,0);
 	readBinaryFloat(binaryFile, data, 1);

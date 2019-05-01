@@ -3,7 +3,7 @@
 #include "Box.h"
 #include <vector>
 #include "../Audio/AudioEngine.h"
-
+#include "../Globals/Helper.h"
 GameObjectManager::GameObjectManager(Effects* effects)
 {
 	m_effects = effects;
@@ -77,6 +77,7 @@ void GameObjectManager::update(float dt)
 
 		if (object->getType() == ROOM) {
 			this->m_maxMinValues = object->getMaxMinValues();
+			LOG_INFO(vec4ToString(this->m_maxMinValues));
 		}
 		// Update the object
 		object->setPlayerPosition(m_player->getPosition());

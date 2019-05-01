@@ -74,7 +74,7 @@ PlayState::PlayState() {
 	Mesh* boxMesh = MeshMap::getMesh("Character");
 	m_player = new Player(boxMesh, PLAYER);
 	m_gameObjectManager->addGameObject(m_player);
-	this->spawnEnemies(-30.f, 30.f, -15.f, 15.f);
+	//this->spawnEnemies(-30.f, 30.f, -15.f, 15.f);
 
 	m_parser->writeToBinary();
 	////check the collsiion and then write to binary

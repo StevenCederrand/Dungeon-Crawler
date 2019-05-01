@@ -172,7 +172,7 @@ const bool GameObject::isCollidable() const
 }
 
 const glm::vec4& GameObject::getMaxMinValues() const {
-	return this->m_maxMinValues;
+	return this->m_mesh->getMaxMinValues();
 }
 
 Mesh * GameObject::getMesh() const

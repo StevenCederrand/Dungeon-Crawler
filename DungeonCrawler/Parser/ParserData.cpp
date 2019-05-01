@@ -180,7 +180,6 @@ const bool ParserData::hasNormalMap() {
 		return true;
 	}
 	return false;
-
 }
 
 const bool ParserData::hasAmbientMap()
