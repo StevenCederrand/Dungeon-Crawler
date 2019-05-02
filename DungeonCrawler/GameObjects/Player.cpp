@@ -12,7 +12,7 @@ Player::Player(Mesh* mesh, Type type) :
 	GameObject(mesh, type)
 {
 	this->setPosition(glm::vec3(0.f, 0.f, 0.f));
-	this->setScale(glm::vec3(0.75f, 0.75f, 0.75f));
+	this->setScale(glm::vec3(0.65f, 0.65f, 0.65f));
 	this->m_defaultSpeed = 7.f;
 	this->m_speed = 7.0f;
 	this->m_health = 4.f;
