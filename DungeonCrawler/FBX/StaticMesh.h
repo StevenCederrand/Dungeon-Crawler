@@ -2,6 +2,11 @@
 
 #include "DisplayCommon.h"
 
+//MAKE EVERYTHING DYNAMIC HERE, MAKE NOTHING CYNAMIC IN WRITECUSTOMFILE
+//CHANGE ALL ARRAYS TO VECTOR OR POINTEERS
+//WRITE NO INDEXES TO THE FILE
+//WRITE ONLY VERTICES IN THE WAY THEY WILL BE USED
+
 class StaticMesh
 {
 private:
@@ -58,3 +63,16 @@ public:
 	bool getIsStatic()const;
 	int getNrOfControlPoints()const;
 };
+
+/*
+MeshHeader myHeader;
+vector<Vertex> Vertices;
+
+-go through FBX file, through control points and polygons and fill in the vertices array.
+- pushing each vertex into Vertices array.
+---------------------- -
+myHeader.vertexCount = Vertices.size();
+myHeader....
+write myHeader to disk.
+file.write(Vertices.data(), sizeof(Vertex) * vertexCount);
+*/
