@@ -14,12 +14,13 @@ public:
 	void hit(const HitDescription& desc);
 	Type getType();
 	float getDamage()const;
+	float getDistanceToPlayer() const;
 	void amIDead();
 	bool getAliveStatus()const;
 
 private:
 	void calculatePath(float dt);
-
+	void moveToTarget(float dt);
 private:
 	float m_health;
 	float m_speed;

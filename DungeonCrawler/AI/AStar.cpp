@@ -47,24 +47,29 @@ bool AStar::isInVector(const std::vector<Node*>& nodeVec, const Node& node)
 	return false;
 }
 
-std::vector<Node> AStar::findPath(const GridCell& start, const GridCell& destination, Room* room)
+
+std::vector<Node> AStar::findPath(GameObject* gameObject, const GridCell& start, const GridCell& destination, Room* room)
 {
 	std::vector<Node*> openList;
 	openList.reserve(250);
 	std::vector<Node*> closedList;
 	closedList.reserve(250);
 	
-	Node* current = new Node(start.x, start.z, nullptr, 0, getHCost(start, destination));
+	const GridCell* goal = &destination;
+
+
+	Node* current = new Node(start.x, start.z, nullptr, 0, getHCost(start, *goal));
 	openList.emplace_back(current);
 	bool noPath = false;
-
-	while (openList.size() > 0 || noPath == false){
-		
+	bool shouldExit = false;
+	
+	while (openList.size() > 0){
+			
 		std::stable_sort(openList.begin(), openList.end(), nodeComparator);
 		current = openList[0];
 		Node* pNode = openList[0];
 
-		if (current->x == destination.x && current->z == destination.z) {
+		if ((current->x == goal->x && current->z == goal->z) || noPath == true || shouldExit == true) {
 
 			std::vector<Node> path;
 			path.reserve(openList.size());
@@ -108,11 +113,19 @@ std::vector<Node> AStar::findPath(const GridCell& start, const GridCell& destina
 
 			const GridCell& c = room->getGrid()->getCell(current->x + (xi * (room->getGrid()->getCellSize())), current->z + (zi * (room->getGrid()->getCellSize())));
 
+			float gCostAdditional = 0.0f;
+			if ((c.info.occupied && c.info.occupant != gameObject))
+			{
+				gCostAdditional = 10.0f;
+			}
+
 			if (!c.valid) continue;
 
 			noValidAdjacentCells = false;
-			float gCost = current->gCost + getHCost(*current, c);
-			float hCost = getHCost(c, destination);
+
+
+			float gCost = current->gCost + getHCost(*current, c) + gCostAdditional;
+			float hCost = getHCost(c, *goal);
 
 			Node* node = new Node(c.x, c.z, pNode, gCost, hCost);
 
@@ -135,7 +148,7 @@ std::vector<Node> AStar::findPath(const GridCell& start, const GridCell& destina
 		if (noValidAdjacentCells)
 		{
 			noPath = true;
-			LOG_TRACE("Took an early exit");
+		
 		}
 
 	}
