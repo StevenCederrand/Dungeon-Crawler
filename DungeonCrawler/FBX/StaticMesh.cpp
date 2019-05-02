@@ -80,7 +80,8 @@ void StaticMesh::PrepareForNewMesh()
 
 void StaticMesh::MakeAllTheVertices()
 {
-	//Add all parts to make the vector
+	//Add all parts to make the vector, This will be sent to write to file along with m_vertexCountVECTOR
+	//to have an expandable vector
 	for (int i = 0; i < m_currentControlPointIndex; i++)//For each vector
 	{
 		Vertex tempVertex;
