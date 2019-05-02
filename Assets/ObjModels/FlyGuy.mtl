@@ -12,7 +12,7 @@ newmtl flyguy
 	Kd 0.5882 0.5882 0.5882
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Kd whiteTexture.png
-	map_Bump FlyGuyNormalMap.png
-	bump FlyGuyNormalMap.png
+map_Kd whiteTexture.png
+map_Bump FlyGuyNormalMap.png
+bump FlyGuyNormalMap.png
 
