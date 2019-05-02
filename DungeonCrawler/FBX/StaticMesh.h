@@ -17,6 +17,7 @@ private:
 	int m_currentControlPoint;			//Will not be needed when writing file
 	int m_currentControlPointIndex;		//Will not be needed when writing file
 	float m_controlPoints[3][100];
+	std::vector<std::vector<float>> m_controlPointsVECTOR;
 	int m_controlPointIndexArr[100];
 	std::vector<int> m_controlPointIndexArrVECTOR;
 
@@ -36,6 +37,9 @@ private:
 	int m_nrOfVerticesPerPolygon;		//Will not be needed when writing file,	3 if triangulated
 
 	void initiateArrays();
+
+	//Special things for sending full vertices
+	std::vector<Vertex> vertexArrVECTOR;
 public:
 	StaticMesh();
 	~StaticMesh();

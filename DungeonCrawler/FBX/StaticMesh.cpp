@@ -86,6 +86,17 @@ void StaticMesh::AddControlPoint(FbxVector4 controlPoint)
 	m_controlPoints[2][m_currentControlPoint] = lz;
 
 	m_currentControlPoint++;
+
+
+	//VECTOR PART
+	std::vector<float> temp;
+	temp.push_back(lx);
+	temp.push_back(ly);
+	temp.push_back(lz);
+
+	m_controlPointsVECTOR.push_back(temp);
+
+	int stop = 0;
 }
 
 void StaticMesh::AddIndexPoint(int index)
