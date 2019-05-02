@@ -304,15 +304,12 @@ void Parser::writeToBinary(ParserData* data, const std::string& filename)
 	glm::vec3 specularColor = data->getSpecularColor();
 	writeBinaryVec3(binaryFile, specularColor);
 
-	glm::vec4 maxMinValues = data->getMaxMinValues();
-	writeBinaryVec4(binaryFile, maxMinValues);
-
-	//GLfloat shininess = data->getShininess();
-	//writeBinaryFloat(binaryFile, shininess);
-
 	glm::vec3 ambientColor = data->getAmbientColor();
 	writeBinaryVec3(binaryFile, ambientColor);
 
+	glm::vec4 maxMinValues = data->getMaxMinValues();
+	writeBinaryVec4(binaryFile, maxMinValues);
+	
 	GLfloat shininess = data->getShininess();
 	writeBinaryFloat(binaryFile, shininess);
 
@@ -689,7 +686,7 @@ void Parser::loadFromBinary(ParserData* data, const std::string & filename)
 	readBinaryVec3(binaryFile, data, 1);
 	readBinaryVec3(binaryFile, data, 2);
 
-	readBinaryVec4(binaryFile, data);
+	readBinaryVec4(binaryFile, data); //This is the maxMinValue
 
 	readBinaryFloat(binaryFile, data,0);
 	readBinaryFloat(binaryFile, data, 1);

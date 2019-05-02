@@ -57,7 +57,7 @@ PlayState::PlayState() {
 	ParserData* roomData = m_parser->loadFromObj("roomWithNodes.obj");
 
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
-	ParserData* cubeData = m_parser->loadFromObj("box.obj");
+	//ParserData* cubeData = m_parser->loadFromObj("box.obj");
 	ParserData* doorData = m_parser->loadFromObj("doorEnd.obj");
 
 	m_GLinit->createMesh("Door", doorData);

@@ -111,7 +111,6 @@ void GameObjectManager::update(float dt)
 		glm::vec3 gunshotCollisionPoint = m_player->getPosition() + rayDirection * rayLengthUntilCollision;
 		if (objectHit)
 		{
-
 			// --------MAYBE DYNAMIC CASY HERE TO CHECK IF WE HIT A ENEMY?--------
 			bool hitEnemy = false;
 			
