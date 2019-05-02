@@ -87,11 +87,11 @@ PlayState::PlayState() {
 	//m_gameObjectManager->addGameObject(m_shooter);
 	for (int i = 0; i < 20; i++)
 	{
-		m_walker = new Walker(boxMesh, WALKER, room, glm::vec3(
+		Box* box = new Box(boxMesh, WALKER, glm::vec3(
 			Randomizer::single(-20.f, 20.f),
 			0.f,
 			Randomizer::single(-25.f, 25.f)));
-		m_gameObjectManager->addGameObject(m_walker);
+		m_gameObjectManager->addGameObject(box);
 	}
 	
 	
