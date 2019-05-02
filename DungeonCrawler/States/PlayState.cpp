@@ -38,28 +38,27 @@ PlayState::PlayState() {
 	#pragma endregion
 
 	#pragma region Create_Objects
-	ParserData* boxData = m_parser->loadFromObj("MainCharacterPosed.obj");
-	//ParserData* roomData = m_parser->loadFromObj("basementleveltest.obj");
-	//ParserData* roomData = m_parser->loadFromObj("oneRoomAi.obj");
-	//ParserData* roomData = m_parser->loadFromObj("roomWithNodes.obj");
+	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
+	ParserData* playerData = m_parser->loadFromObj("MainCharacterPosed.obj");
 	ParserData* roomData = m_parser->loadFromObj("roomWithNodes.obj");
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
 
-	m_GLinit->createMesh("Room", roomData);
 	m_GLinit->createMesh("Box", boxData);
+	m_GLinit->createMesh("Room", roomData);
+	m_GLinit->createMesh("PlayerModel", playerData);
 	m_GLinit->createMesh("Sphere", sphereData);
 	#pragma endregion
 
-	Mesh* roomMesh = MeshMap::getMesh("Room");
 	Mesh* boxMesh = MeshMap::getMesh("Box");
+	Mesh* roomMesh = MeshMap::getMesh("Room");
+	Mesh* playerMesh = MeshMap::getMesh("PlayerModel");
 
 	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 1.5f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
 	
-
 	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
 	m_lightManager->addLight(glm::vec3(0.f, 5.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
 
-	m_player = new Player(boxMesh, PLAYER);
+	m_player = new Player(playerMesh, PLAYER);
 	m_gameObjectManager->addGameObject(m_player);
 
 
@@ -86,10 +85,10 @@ PlayState::PlayState() {
 
 	//m_shooter = new Shooter(boxMesh, SHOOTER);
 	//m_gameObjectManager->addGameObject(m_shooter);
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 20; i++)
 	{
 		m_walker = new Walker(boxMesh, WALKER, room, glm::vec3(
-			Randomizer::single(-25.f, 25.f),
+			Randomizer::single(-20.f, 20.f),
 			0.f,
 			Randomizer::single(-25.f, 25.f)));
 		m_gameObjectManager->addGameObject(m_walker);
@@ -165,8 +164,9 @@ void PlayState::resetPlayer()
 	m_renderer = new Renderer(m_camera, m_lightManager, m_effects);
 	m_gameObjectManager = new GameObjectManager(m_effects);
 
-	Mesh* roomMesh = MeshMap::getMesh("Room");
 	Mesh* boxMesh = MeshMap::getMesh("Box");
+	Mesh* roomMesh = MeshMap::getMesh("Room");
+	Mesh* playerMesh = MeshMap::getMesh("PlayerModel");
 
 	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 1.5f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
 	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
@@ -200,13 +200,13 @@ void PlayState::resetPlayer()
 	for (int i = 0; i < 10; i++)
 	{
 		m_walker = new Walker(boxMesh, WALKER, room, glm::vec3(
-			Randomizer::single(-25.f, 25.f),
+			Randomizer::single(-20.f, 20.f),
 			0.f,
-			Randomizer::single(-35.f, 35.f)));
+			Randomizer::single(-25.f, 25.f)));
 		m_gameObjectManager->addGameObject(m_walker);
 	}
 
-	m_player = new Player(boxMesh, PLAYER);
+	m_player = new Player(playerMesh, PLAYER);
 	m_gameObjectManager->addGameObject(m_player);
 
 	//Used for the player flashlight & shadow mapping from the 
