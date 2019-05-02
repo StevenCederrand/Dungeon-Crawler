@@ -19,7 +19,8 @@ public:
 	void renderImGUI();
 	void render();
 private:
-
+	void resetPlayer();
+	void constructWorld();
 
 private:
 	Parser* m_parser;

@@ -105,6 +105,9 @@ void Renderer::shadowPass() {
 		glBindVertexArray(mesh.first->getVao());
 		glEnableVertexAttribArray(0);
 		for (auto object : mesh.second) {
+
+			if (dynamic_cast<Player*>(object)) continue;
+
 			shadowShader->setMat4("modelMatrix", object->getModelMatrix());
 			glDrawElements(GL_TRIANGLES, mesh.first->getNrOfIndices(), GL_UNSIGNED_INT, NULL);
 		}
@@ -275,7 +278,7 @@ void Renderer::drawQuad() {
 }
 
 void Renderer::configureShadowMapperVM() {
-	glm::vec3 pos = m_playerSpotLight->position + glm::vec3(0, 0.5f, 0);
+	glm::vec3 pos = m_playerSpotLight->position + glm::vec3(0, 1.f, 0);
 	glm::mat4 viewMatrix = glm::lookAt(pos, pos + m_playerSpotLight->direction, glm::vec3(0, 1, 0));
 	m_framebuffer->setViewMatrix(viewMatrix);
 }

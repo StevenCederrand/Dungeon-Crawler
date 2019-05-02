@@ -13,6 +13,7 @@ Player::Player(Mesh* mesh, Type type) :
 	GameObject(mesh, type)
 {
 	this->setPosition(glm::vec3(0.f, 0.f, 0.f));
+	this->setScale(glm::vec3(0.65f, 0.65f, 0.65f));
 	this->m_defaultSpeed = 7.f;
 	this->m_speed = 7.0f;
 	this->m_health = 4.f;
@@ -32,7 +33,7 @@ Player::Player(Mesh* mesh, Type type) :
 	this->m_spotlight->radius = glm::radians(55.0f);
 	this->m_flash = new Light();
 	this->m_flash->color = glm::vec4(1, 1, 1, 0);
-	this->m_flash->position = glm::vec4(getPlayerPosition(), 1);
+	this->m_flash->position = glm::vec4(getPlayerPosition(), 1.0f);
 
 	this->m_chargeStance = false;
 	this->m_shakeIntensity = 0.10f;
