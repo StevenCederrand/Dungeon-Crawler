@@ -78,9 +78,26 @@ void StaticMesh::PrepareForNewMesh()
 	initiateArrays();
 }
 
-void StaticMesh::AddVertexToArrVECTOR()
+void StaticMesh::MakeAllTheVertices()
 {
 	//Add all parts to make the vector
+	for (int i = 0; i < m_currentControlPointIndex; i++)//For each vector
+	{
+		Vertex tempVertex;
+		for (int j = 0; j < 3; j++)
+		{
+			tempVertex.position[j] = m_controlPoints[j][m_controlPointIndexArr[i]];
+		}
+		for (int j = 0; j < 2; j++)
+		{
+			tempVertex.UV[j] = m_UVCoordinates[j][m_UVCoordinateIndexArr[i]];
+		}
+		for (int j = 0; j < 3; j++)
+		{
+			tempVertex.normal[j] = m_normalCoordinateArr[j][i];
+		}
+		vertexArrVECTOR.push_back(tempVertex);
+	}
 
 	m_vertexCountVECTOR++;
 }
@@ -190,6 +207,7 @@ void StaticMesh::CheckMesh()
 		printf("Static = 0");
 	printf("\n\n");
 
+	/*
 	//print vertices
 	for (int i = 0; i < 100; i++)
 	{
@@ -204,9 +222,10 @@ void StaticMesh::CheckMesh()
 			printf("%.2f ", m_normalCoordinateArr[j][i]);
 		printf("\n\n");
 	}
+	*/
 
 	//Only works for triangulated Meshes, This writes the polygons
-	/*
+	
 	for (int i = 0; i < m_nrOfPolygons; i++)
 	{
 		printf("Polygon %i:\n", i);
@@ -240,7 +259,7 @@ void StaticMesh::CheckMesh()
 		}
 		printf("\n");		
 	}
-	*/
+	
 }
 
 void StaticMesh::setNrOfPolygons(int nrOfPolygons)

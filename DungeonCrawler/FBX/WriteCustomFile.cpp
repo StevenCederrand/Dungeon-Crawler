@@ -108,6 +108,7 @@ void WriteCustomFile::WriteMainHeader(int nrOfStaticMeshes, int nrOfBoundingBoxe
 
 void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think it works
 {
+	currentMesh.CheckMesh();
 	MeshHeader lmeshHeader{ 1 };
 
 	std::string nameOfMesh;

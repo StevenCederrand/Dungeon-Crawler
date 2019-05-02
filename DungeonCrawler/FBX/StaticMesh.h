@@ -48,7 +48,7 @@ public:
 	~StaticMesh();
 	void PrepareForNewMesh();
 
-	void AddVertexToArrVECTOR();
+	void MakeAllTheVertices();
 
 	void AddControlPoint(FbxVector4 controlPoint);
 	void AddIndexPoint(int index);
