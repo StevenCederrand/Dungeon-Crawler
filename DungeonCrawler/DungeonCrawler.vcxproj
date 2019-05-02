@@ -154,6 +154,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AI\AStar.cpp" />
+    <ClCompile Include="AI\GridSystem.cpp" />
     <ClCompile Include="Audio\AudioEngine.cpp" />
     <ClCompile Include="Collision\AABB.cpp" />
     <ClCompile Include="GameObjects\Box.cpp" />
@@ -173,6 +175,7 @@
     <ClCompile Include="Graphics\Mesh.cpp" />
     <ClCompile Include="Graphics\MeshMap.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
+    <ClCompile Include="States\GameOverState.cpp" />
     <ClCompile Include="UserInterface\Button.cpp" />
     <ClCompile Include="Parser\ParserData.cpp" />
     <ClCompile Include="Graphics\Shader.cpp" />
@@ -198,6 +201,10 @@
     <ClCompile Include="Vendor\stb\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AI\AStar.h" />
+    <ClInclude Include="AI\GridCell.h" />
+    <ClInclude Include="AI\GridSystem.h" />
+    <ClInclude Include="AI\Node.h" />
     <ClInclude Include="Audio\AudioEngine.h" />
     <ClInclude Include="Collision\AABB.h" />
     <ClInclude Include="Collision\HitData.h" />
@@ -222,6 +229,8 @@
     <ClInclude Include="Graphics\Mesh.h" />
     <ClInclude Include="Graphics\MeshMap.h" />
     <ClInclude Include="Graphics\Renderer.h" />
+    <ClInclude Include="System\Timer.h" />
+    <ClInclude Include="States\GameOverState.h" />
     <ClInclude Include="UserInterface\Button.h" />
     <ClInclude Include="Parser\ParserData.h" />
     <ClInclude Include="Graphics\Shader.h" />

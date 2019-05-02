@@ -15,7 +15,7 @@ using namespace std::chrono_literals;
 
 void loadScreen(const bool& completed) {
 	while (!completed) {
-		LOG_INFO("LOADING");
+		//LOG_INFO("LOADING");
 		std::this_thread::sleep_for(10ms);
 	}
 }

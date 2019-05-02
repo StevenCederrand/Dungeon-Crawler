@@ -79,11 +79,6 @@ void ParserData::setBoundingBox(const std::vector<glm::vec3>& maxMinVector)
 	m_maxMinVector = maxMinVector;
 }
 
-void ParserData::setNodesVector(const std::vector<glm::vec3>& nodesVector)
-{
-	m_nodesVector = nodesVector;
-}
-
 void ParserData::setMaxMinValues(const glm::vec4& maxMinValues) {
 	this->m_maxMinValues = maxMinValues;
 }
@@ -160,12 +155,6 @@ const std::vector<glm::vec3>& ParserData::getMaxMinVector() const
 {
 	return m_maxMinVector;
 }
-
-const std::vector<glm::vec3>& ParserData::getNodesVector() const
-{
-	return m_nodesVector;
-}
-
 const glm::vec4& ParserData::getMaxMinValues() const {
 	return this->m_maxMinValues;
 }

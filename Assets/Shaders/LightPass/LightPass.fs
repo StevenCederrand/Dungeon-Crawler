@@ -134,8 +134,9 @@ vec3 getSumOfSpotlights(vec3 worldPosition) {
 	vec3 col = vec3(1);
 	float radialVal = dot(lightDirection, normalize(-spotlight.direction));
 
-	if(radialVal > spotlight.radius) {
-		return vec3(0.4f);
+	if(radialVal >= spotlight.radius) {
+		//Do Something
+		return vec3(0.2f);
 	}
 	else {
 		return vec3(0);
