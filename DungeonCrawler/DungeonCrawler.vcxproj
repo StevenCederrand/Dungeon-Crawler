@@ -207,7 +207,6 @@
     <ClInclude Include="Collision\HitData.h" />
     <ClInclude Include="FbxImporter\FBXBinReader.h" />
     <ClInclude Include="FbxImporter\FBXParser.h" />
-    <ClInclude Include="FbxImporter\HeaderStruct.h" />
     <ClInclude Include="GameObjects\Box.h" />
     <ClInclude Include="GameObjects\Enemies\Shooter.h" />
     <ClInclude Include="GameObjects\Enemies\Walker.h" />

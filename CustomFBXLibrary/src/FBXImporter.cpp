@@ -18,7 +18,7 @@ namespace FBXImporter {
 	}
 
 	//Function that takes in the path to the .bin file and reads it and return the binary data
-	std::vector<unsigned int> getBinaryData(std::string pathToMesh)
+	void readAndWriteBinaryData(std::string pathToMesh, FBXParserData* fileData)
 	{
 		std::vector<unsigned int> binaryData;
 		
@@ -38,28 +38,26 @@ namespace FBXImporter {
 			FBXImporter::displayVertices();
 
 			std::cout << std::endl;
-			//int a = 1;
-			//std::cout << std::bitset<8>(a) << std::endl;
-			//std::cin.get();
+			
+			binaryToInt(infileBinary, fileData);
+
+
 
 			//Length of file
 			infileBinary.seekg(0, infileBinary.end);
 			int size = infileBinary.tellg();
 			infileBinary.seekg(0, infileBinary.beg);
-
 			//Memory allocation
-			char* binaryBuffer = new char[size];
-
-			//Read the ascii data in one batch
+			char* binaryBuffer = new char[size + 1];
+			//Read the binary data in one batch
 			infileBinary.read(binaryBuffer, size);
+	
 			
+			//Print the binary data in ascii format one index at a time
 			int j = 0;
-
-			//Print the data one index at a time
 			for (size_t i = 0; i < size; i++)
 			{
-				//binaryData = (std::vector<unsigned int>)binaryBuffer[i];
-				std::cout << std::hex << binaryBuffer[i] << " ";
+				std::cout << std::hex  << binaryBuffer[i] << " ";
 				j++;
 
 				//Separates the output with a new line
@@ -74,6 +72,10 @@ namespace FBXImporter {
 			std::cin.get();
 		}
 
-		return binaryData;
+	}
+
+	void binaryToInt(std::ifstream& binaryFile, FBXParserData* fbxParserData)
+	{
+		
 	}
 }

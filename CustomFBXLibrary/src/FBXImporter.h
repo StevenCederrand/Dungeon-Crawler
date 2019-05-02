@@ -4,12 +4,14 @@
 #include <bitset>
 #include <fstream>
 #include <iostream>
+#include "FBXParserData.h"
 
 namespace FBXImporter {
 	void displayMeshName();
 	void displayVertices();
-	//Insert vector
-	
 
-	std::vector<unsigned int> getBinaryData(std::string nameOfMesh);
+
+	void readAndWriteBinaryData(std::string pathToMesh, FBXParserData* fileData);
+
+	void binaryToInt(std::ifstream& binaryFile, FBXParserData* fbxParserData);
 }

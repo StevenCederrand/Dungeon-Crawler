@@ -15,11 +15,12 @@ FBXBinReader::~FBXBinReader()
 {
 }
 
-MainHeader FBXBinReader::binaryMeshReading()
+void FBXBinReader::binaryMeshReading()
 {
 	std::string pathtoMesh = "ourFileBinary.bin";
-	std::vector<unsigned int> binaryFileData = FBXImporter::getBinaryData(pathtoMesh);
+	FBXParserData* fileData = nullptr;
+	FBXImporter::readAndWriteBinaryData(pathtoMesh, fileData);
 
 	//std::cout << binaryFileData << std::endl;
-	return MainHeader();
+	
 }
