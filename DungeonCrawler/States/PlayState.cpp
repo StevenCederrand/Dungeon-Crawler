@@ -172,7 +172,7 @@ void PlayState::resetPlayer()
 	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
 	m_lightManager->addLight(glm::vec3(0.f, 5.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
 	
-	Room* room = new Room(roomMesh, ROOM, glm::vec3(0.f, 0.f, 0.f));
+	Room* room = new Room(roomMesh, ROOM, m_player, glm::vec3(0.f, 0.f, 0.f));
 	m_gameObjectManager->addGameObject(room);
 	
 	for (int i = 0; i < 10; i++)
