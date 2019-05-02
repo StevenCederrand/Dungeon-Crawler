@@ -47,6 +47,7 @@
     <ClCompile Include="Utility\UICamera.cpp" />
     <ClCompile Include="UserInterface\UIManager.cpp" />
     <ClCompile Include="UserInterface\Image.cpp" />
+    <ClCompile Include="States\GameOverState.cpp" />
     <ClCompile Include="AI\GridSystem.cpp" />
     <ClCompile Include="AI\AStar.cpp" />
     <ClCompile Include="GameObjects\Powerups.cpp" />
@@ -112,6 +113,7 @@
     <ClInclude Include="UserInterface\UI.h" />
     <ClInclude Include="UserInterface\UIManager.h" />
     <ClInclude Include="UserInterface\Image.h" />
+    <ClInclude Include="States\GameOverState.h" />
     <ClInclude Include="AI\GridSystem.h" />
     <ClInclude Include="AI\GridCell.h" />
     <ClInclude Include="AI\AStar.h" />

@@ -12,6 +12,7 @@
 #include "GameObjects/Player.h"
 #include "GameObjects/Enemies/Walker.h"
 #include "GameObjects/Enemies/Shooter.h"
+#include "GameOverState.h"
 
 #include "Utility/Randomizer.h"
 #include <chrono>
@@ -37,7 +38,7 @@ PlayState::PlayState() {
 	#pragma endregion
 
 	#pragma region Create_Objects
-	ParserData* boxData = m_parser->loadFromObj("MainCharacter.obj");
+	ParserData* boxData = m_parser->loadFromObj("MainCharacterPosed.obj");
 	//ParserData* roomData = m_parser->loadFromObj("basementleveltest.obj");
 	//ParserData* roomData = m_parser->loadFromObj("oneRoomAi.obj");
 	//ParserData* roomData = m_parser->loadFromObj("roomWithNodes.obj");
@@ -85,7 +86,7 @@ PlayState::PlayState() {
 
 	//m_shooter = new Shooter(boxMesh, SHOOTER);
 	//m_gameObjectManager->addGameObject(m_shooter);
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		m_walker = new Walker(boxMesh, WALKER, room, glm::vec3(
 			Randomizer::single(-25.f, 25.f),
@@ -118,8 +119,16 @@ void PlayState::update(float dt) {
 	m_lightManager->update(dt);
 
 	m_renderer->prepareGameObjects(m_gameObjectManager->getGameObjects());
-}
 
+
+	Player* player = m_gameObjectManager->getPlayer();
+	if (player->getHealth()<=0)
+	{
+		resetPlayer();
+		GameOverState* gameOver = new GameOverState();
+		m_stateManager->pushTemporaryState(gameOver);
+	}
+}
 
 void PlayState::renderImGUI()
 {
@@ -144,4 +153,64 @@ void PlayState::renderImGUI()
 void PlayState::render()
 {
 	m_renderer->render();
+}
+
+void PlayState::resetPlayer()
+{
+	delete m_gameObjectManager;
+	delete m_renderer;
+	delete m_lightManager;
+
+	m_lightManager = new LightManager();
+	m_renderer = new Renderer(m_camera, m_lightManager, m_effects);
+	m_gameObjectManager = new GameObjectManager(m_effects);
+
+	Mesh* roomMesh = MeshMap::getMesh("Room");
+	Mesh* boxMesh = MeshMap::getMesh("Box");
+
+	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 1.5f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
+	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
+	m_lightManager->addLight(glm::vec3(0.f, 5.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
+	
+	Room* room = new Room(roomMesh, ROOM, glm::vec3(0.f, 0.f, 0.f));
+	m_gameObjectManager->addGameObject(room);
+	
+	for (int i = 0; i < 10; i++)
+	{
+		m_lightManager->addLight(
+			// Position
+			glm::vec3(
+				Randomizer::single(-20.f, 20.f),
+				5.f,
+				Randomizer::single(-20.f, 20.f)),
+			// Color
+			glm::vec3(
+				Randomizer::single(0.f, 255.f) / 255.f,
+				Randomizer::single(0.f, 255.f) / 255.f,
+				Randomizer::single(0.f, 255.f) / 255.f),
+			25.f, m_gameObjectManager);
+
+	}
+
+	//create a shooter
+	//m_shooter = new Shooter(boxMesh, SHOOTER);
+	//m_gameObjectManager->addGameObject(m_shooter);
+
+	//create a walker
+	for (int i = 0; i < 10; i++)
+	{
+		m_walker = new Walker(boxMesh, WALKER, room, glm::vec3(
+			Randomizer::single(-25.f, 25.f),
+			0.f,
+			Randomizer::single(-35.f, 35.f)));
+		m_gameObjectManager->addGameObject(m_walker);
+	}
+
+	m_player = new Player(boxMesh, PLAYER);
+	m_gameObjectManager->addGameObject(m_player);
+
+	//Used for the player flashlight & shadow mapping from the 
+	//flashlights view
+	m_renderer->preparePlayerLights(m_gameObjectManager->getPlayer());
+
 }
