@@ -139,8 +139,6 @@ void GameObjectManager::update(float dt)
 			else{
 				m_effects->addParticles("WallSmokeEmitter", gunshotCollisionPoint, 5.f, 0.2f, 5.f);
 			}
-
-			
 		}
 	}
 }
@@ -219,6 +217,7 @@ void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject
 
 			if (m_broadPhaseBox->checkCollision(*objectBox))
 			{
+				
 				float nx = 0.f, nz = 0.f;
 				float collisionTime = playerBox->swepAABB(newVel, *objectBox, nx, nz);
 
@@ -229,17 +228,25 @@ void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject
 
 				if (collisionTime < 1.0f)
 				{
+					HitDescription desc;
+					if (dynamic_cast<PowerUps*>(object))
+					{
+						m_powerup = dynamic_cast<PowerUps*>(object);
+						desc.powerUp = m_powerup;
+						m_player->hit(desc);
+						dynamic_cast<PowerUps*>(object)->trigger();
+						continue;
+					}
 					float remainingTime = 1.0f - collisionTime;
 					hasCollided = true;
 					float dotprod = (newVel.x * nz + newVel.z * nx) * remainingTime;
 					newVel.x = dotprod * nz;
 					newVel.z = dotprod * nx;
-					HitDescription desc;
 
 					if (dynamic_cast<Walker*>(object))
 					{
 						m_walker = dynamic_cast<Walker*>(object);
-						desc.walker = m_walker; 
+						desc.walker = m_walker;
 						m_player->hit(desc);
 					}
 					if (dynamic_cast<Shooter*>(object))
@@ -306,6 +313,15 @@ void GameObjectManager::handleDeadEnemies(float dt)
 			if (!dynamic_cast<Shooter*>(object)->getAliveStatus())
 			{
 				this->m_numberOfEnemies--;
+				delete m_gameObjects[i];
+				m_gameObjects.erase(m_gameObjects.begin() + i);
+				continue;
+			}
+		}
+		if (dynamic_cast<PowerUps*>(object))
+		{
+			if (dynamic_cast<PowerUps*>(object)->powerTriggered())
+			{
 				delete m_gameObjects[i];
 				m_gameObjects.erase(m_gameObjects.begin() + i);
 				continue;

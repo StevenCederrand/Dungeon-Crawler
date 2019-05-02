@@ -36,6 +36,7 @@ private:
 	GameObject* m_player;
 	GameObject* m_walker;
 	GameObject* m_shooter;
+	GameObject* m_powerUp;
 
 	Effects* m_effects;
 };

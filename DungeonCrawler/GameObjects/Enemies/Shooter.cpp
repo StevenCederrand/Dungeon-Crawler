@@ -16,7 +16,6 @@ Shooter::Shooter(Mesh * mesh, Type type) :
 	this->m_amIAlive = true;
 }
 
-
 void Shooter::update(float dt)
 {
 

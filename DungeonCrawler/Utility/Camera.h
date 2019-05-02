@@ -3,7 +3,7 @@
 #include <GLM/glm.hpp>
 #include <vector>
 #include "Ray.h"
-#include "../GameObjects/GameObject.h";
+#include "../GameObjects/GameObject.h"
 
 class Camera {
 

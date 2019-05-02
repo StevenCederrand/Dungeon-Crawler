@@ -147,6 +147,7 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 		}
 		else if (attribs[0] == "f" && !isParsingCollider)
 		{
+
 			std::vector<std::string> attributes = split(line, ' ');
 			for (size_t i = 1; i < attributes.size(); i++)
 			{
@@ -405,7 +406,8 @@ void Parser::parseMaterialFile(const std::string& filename, ParserData* parserDa
 				LOG_INFO(parserData->getNormalMapName());
 			}
 			else {
-				LOG_ERROR(exporterProgram + " .MTL FILES NOT SUPPORTED");
+				LOG_INFO("NORMAL MAP EXISTS");
+				parserData->setNormalMapName(TexturePath + attribs[attribs.size() - 1]);
 			}
 		}
 	}

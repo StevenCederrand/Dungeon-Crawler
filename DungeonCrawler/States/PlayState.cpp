@@ -57,17 +57,22 @@ PlayState::PlayState() {
 	ParserData* roomData = m_parser->loadFromObj("roomWithNodes.obj");
 
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
-	//ParserData* cubeData = m_parser->loadFromObj("box.obj");
 	ParserData* doorData = m_parser->loadFromObj("doorEnd.obj");
+	ParserData* powerUpData = m_parser->loadFromObj("LifePowerUp.obj");
+	ParserData* enemyData = m_parser->loadFromObj("FlyGuy.obj");
 
 	m_GLinit->createMesh("Door", doorData);
+
 	m_GLinit->createMesh("Box", boxData);
 	m_GLinit->createMesh("Room", roomData);
 	m_GLinit->createMesh("PlayerModel", playerData);
 	m_GLinit->createMesh("Sphere", sphereData);
+	m_GLinit->createMesh("PowerUp", powerUpData);
+	m_GLinit->createMesh("Enemy", enemyData);
 	#pragma endregion
 
 
+	
 	//we want to setUp the world
 	constructWorld();
 }
@@ -190,12 +195,24 @@ void PlayState::constructWorld()
 	Mesh* roomMesh = MeshMap::getMesh("Room");
 	Mesh* playerMesh = MeshMap::getMesh("PlayerModel");
 
+	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
+	Mesh* enemyMesh = MeshMap::getMesh("Enemy");
+
+	
+
 	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 1.5f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
 	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
 	m_lightManager->addLight(glm::vec3(0.f, 5.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
 
 	m_player = new Player(playerMesh, PLAYER);
 	m_gameObjectManager->addGameObject(m_player);
+
+	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 10, 0, 0, false, glm::vec3(10.f, 0.f, -5.f));
+	m_gameObjectManager->addGameObject(m_powerUp);
+	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 10, 0, false, glm::vec3(2.f, 0.f, -10.f));
+	m_gameObjectManager->addGameObject(m_powerUp);
+	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 0, 10, true, glm::vec3(-5.f, 0.f, -7.f));
+	m_gameObjectManager->addGameObject(m_powerUp);
 
 	Room * room = new Room(roomMesh, ROOM, m_player, glm::vec3(0.f, 0.f, 0.f));
 	m_gameObjectManager->addGameObject(room);
@@ -217,11 +234,11 @@ void PlayState::constructWorld()
 
 	}
 
-	//m_shooter = new Shooter(boxMesh, SHOOTER);
+	//m_shooter = new Shooter(enemyMesh, SHOOTER);
 	//m_gameObjectManager->addGameObject(m_shooter);
 	for (int i = 0; i < 20; i++)
 	{
-	m_walker = new Walker(boxMesh, WALKER, room, glm::vec3(
+	m_walker = new Walker(enemyMesh, WALKER, room, glm::vec3(
 		Randomizer::single(-20.f, 20.f),
 		0.f,
 		Randomizer::single(-25.f, 25.f)));

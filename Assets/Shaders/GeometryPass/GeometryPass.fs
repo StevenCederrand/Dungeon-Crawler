@@ -35,13 +35,18 @@ void main() {
         //Parallax Mapping
         //aCol = texture(AOSampler, frag_data.uv);
         vec3 viewDirection = normalize((TBN * cameraPosition) - (TBN * frag_data.position));
-        UVs = parallaxMapping(UVs, viewDirection);
-        if(UVs.x > 1.0 || UVs.y > 1.0 || UVs.x < 0.0 || UVs.y < 0.0)
-            discard;
-        //Normal Mapping
+        
+		//Normal Mapping
         normalCol = texture(normalSampler, UVs).rgb;
         normalCol = normalize(normalCol * 2 - 1);
         normalCol = normalize(vec3(frag_data.TBN * normalCol));
+
+        UVs = parallaxMapping(UVs, viewDirection);
+		
+        if(UVs.x > 1.0 || UVs.y > 1.0 || UVs.x < 0.0 || UVs.y < 0.0)
+            discard;
+
+
     }
     vec4 color = texture(textureSampler, UVs);
     normalBuffer.rgb = normalCol.rgb;
