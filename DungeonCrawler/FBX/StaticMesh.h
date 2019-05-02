@@ -1,6 +1,7 @@
 #pragma once
 
 #include "DisplayCommon.h"
+#include <vector>
 
 //MAKE EVERYTHING DYNAMIC HERE, MAKE NOTHING CYNAMIC IN WRITECUSTOMFILE
 //CHANGE ALL ARRAYS TO VECTOR OR POINTEERS
@@ -17,6 +18,7 @@ private:
 	int m_currentControlPointIndex;		//Will not be needed when writing file
 	float m_controlPoints[3][100];
 	int m_controlPointIndexArr[100];
+	std::vector<int> m_controlPointIndexArrVECTOR;
 
 	int m_currentUVCoordinate;			//Will not be needed when writing file
 	int m_currentUVIndex;				//Will not be needed when writing file

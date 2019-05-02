@@ -92,6 +92,10 @@ void StaticMesh::AddIndexPoint(int index)
 {
 	m_controlPointIndexArr[m_currentControlPointIndex] = index;
 	m_currentControlPointIndex++;
+
+
+	//VECTOR PART
+	m_controlPointIndexArrVECTOR.push_back(index);
 }
 
 void StaticMesh::AddUVCoordinate(FbxVector2 uVCoordinate)
