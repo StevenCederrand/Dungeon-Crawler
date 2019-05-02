@@ -54,6 +54,9 @@ PlayState::PlayState() {
 	ParserData* characterData = m_parser->loadFromObj("MainCharacter.obj");
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
 	ParserData* cubeData = m_parser->loadFromObj("box.obj");
+	ParserData* doorData = m_parser->loadFromObj("doorEnd.obj");
+
+	m_GLinit->createMesh("Door", doorData);
 	m_GLinit->createMesh("Character", characterData);
 	m_GLinit->createMesh("Sphere", sphereData);
 	m_GLinit->createMesh("Cube", cubeData);
@@ -81,10 +84,11 @@ PlayState::PlayState() {
 	}
 	//Place the player model in the world 
 	Mesh* boxMesh = MeshMap::getMesh("Character");
+	Mesh* doorMesh = MeshMap::getMesh("Door");
 	m_player = new Player(boxMesh, PLAYER);
 	
 	m_gameObjectManager->addGameObject(m_player);
-
+	m_gameObjectManager->addGameObject(new Box(doorMesh, DOOR, glm::vec3(0.f, 0.f, 0.f)));
 	this->spawnEnemies(-30.f, 30.f, -15.f, 15.f);
 
 	m_parser->writeToBinary();
@@ -109,6 +113,13 @@ void PlayState::update(float dt) {
 	m_effects->update(dt);
 	m_camera->update(dt);
 	m_lightManager->update(dt);
+
+	////If the player has entered a room
+	//if (m_gameObjectManager->enteredRoom(m_player->getPlayerPosition())) {
+	//	//Do stuff
+
+	//}
+
 
 	m_renderer->prepareGameObjects(m_gameObjectManager->getGameObjects());
 }

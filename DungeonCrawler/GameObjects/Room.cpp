@@ -34,12 +34,11 @@ bool Room::intersection(glm::vec3 position) {
 }
 
 void Room::setupMaxMinValues() {
-	LOG_ERROR("SETIP");
 	glm::vec4 maxMinValues = this->getMaxMinValues();
-	maxMinValues.x -= 10;
-	maxMinValues.y -= 10;
-	maxMinValues.z += 10;
-	maxMinValues.w += 10;
+	maxMinValues.x -= 5;
+	maxMinValues.y -= 7;
+	maxMinValues.z += 5;
+	maxMinValues.w += 7;
 	this->setMaxMinValues(maxMinValues);
 
 }

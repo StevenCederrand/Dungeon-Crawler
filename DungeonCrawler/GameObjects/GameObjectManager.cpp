@@ -35,7 +35,9 @@ void GameObjectManager::update(float dt)
 	if (m_broadPhaseBox)
 		m_broadPhaseBox->setParentPosition(m_player->getPosition());
 
-
+	if (Input::isKeyReleased(GLFW_KEY_SPACE)) {
+		
+	}
 	//------ Player collision with map ------
 	bool hasCollided = false;
 	glm::vec3 newVel = glm::vec3(0);
@@ -55,16 +57,14 @@ void GameObjectManager::update(float dt)
 	//------ Player current velocity ( Also used for collision ) ------
 	newVel = m_player->getVelocity();
 
-	//------ Add shooting particle effect
+	//------ Add shooting particle effect ------
 	if (m_player->isShooting()) {
 		float xAngle = cosf(glm::radians(m_player->getAngle()));
 		float zAngle = sinf(glm::radians(m_player->getAngle()));
 		float offset = 0.5f;
 		m_effects->addParticles("GunFlareEmitter", m_player->getPosition() + glm::vec3(xAngle, 0.f, zAngle) * offset, 5.f, 0.2f);
 	}
-	if (Input::isKeyReleased(GLFW_KEY_BACKSPACE)) {
-		system("cls");
-	}
+
 	//------ Update all the game objects and check for collision 'n stuff ------
 	for (size_t i = 0; i < m_gameObjects.size(); i++)
 	{
@@ -111,7 +111,6 @@ void GameObjectManager::update(float dt)
 		glm::vec3 gunshotCollisionPoint = m_player->getPosition() + rayDirection * rayLengthUntilCollision;
 		if (objectHit)
 		{
-			//LOG_TRACE("Ray intersection! collision point: " + std::to_string(gunshotCollisionPoint.x) + ", " + std::to_string(gunshotCollisionPoint.z));
 
 			// --------MAYBE DYNAMIC CASY HERE TO CHECK IF WE HIT A ENEMY?--------
 			bool hitEnemy = false;
@@ -160,7 +159,7 @@ void GameObjectManager::addGameObject(GameObject * gameObject)
 			if (m_player)
 			{
 				constructPlayerBroadPhaseBox();
-				m_player->setPlayerState(Roaming);
+				m_player->setPlayerState(ROAMING);
 			}
 		}
 		Type objectType = gameObject->getType();
@@ -168,10 +167,13 @@ void GameObjectManager::addGameObject(GameObject * gameObject)
 		if (objectType == SHOOTER || objectType == WALKER) {
 			this->m_numberOfEnemies++;
 		}
-		if (objectType == ROOM) {
+		else if (objectType == ROOM) {
 			Room* room = dynamic_cast<Room*>(gameObject);
-			this->setupMaxMinValues(room);
+			//this->setupMaxMinValues(room);
 			this->m_rooms.push_back(room);
+		}
+		else if (objectType == DOOR) {
+			m_doorIndex = m_gameObjects.size();
 		}
 		m_gameObjects.emplace_back(gameObject);
 	}
@@ -204,7 +206,6 @@ std::vector<GameObject*>* GameObjectManager::getVectorPointer()
 {
 	return &m_gameObjects;
 }
-
 
 void GameObjectManager::nodecollision(ParserData* parserData)
 {
@@ -371,48 +372,43 @@ void GameObjectManager::handleDeadEnemies(float dt)
 }
 
 void GameObjectManager::roomManager(GameObject* object) {
-
-	//If playerstate == freeRoam ---> 
-	//Check to see if the player crosses the border of the room
-		//if enteredUnchartedRoom ---> 
-			//Spawn the doors, playerstate = fighting
-	//else if playerstate == fighting ---> Don't do this
-
-	//If there are enemies and the room isn't locked
-	//if (m_numberOfEnemies > 0 && !m_isLocked) {
-	//	m_player->setPlayerState(Fighting);
-	//	m_isLocked = true;
-	//	//Spawn doors
-	//}
-	//
-	//if (m_numberOfEnemies == 0 && m_isLocked) {
-	//	m_player->setPlayerState(Roaming);
-	//	m_isLocked = false;
-	//}
-		
-	//When the player is not in combat
-	if (m_player->getPlayerState() == Roaming) {
-		//Check to see if the player intersects with the room
-		
-		for (size_t i = 0; i < m_rooms.size(); i++) {
-			
-			if (m_rooms.at(i)->intersection(m_player->getPosition())) {
-				LOG_INFO("Room: " + std::to_string(i) + " Max:Min: " + vec4ToString(m_rooms.at(i)->getMaxMinValues()));
-				LOG_INFO("Player: " + vec3ToString(m_player->getPosition()));
+	
+	if (m_numberOfEnemies == 0 && m_isLocked) {
+		m_rooms.erase(m_rooms.begin() + m_currentRoom);
+		m_player->setPlayerState(ROAMING);
+		LOG_WARNING("CLEARED ROOM");
+		for (size_t i = 0; i < m_gameObjects.size(); i++) {
+			if (m_gameObjects.at(i)->getType() == DOOR) {
+				m_doorIndex = i;
+				glm::vec3 objectPosition = m_gameObjects.at(i)->getPosition();
+				m_gameObjects.at(i)->setPosition(glm::vec3(objectPosition.x, 100, objectPosition.z));
+				//Move the bounding box?
+				m_gameObjects.at(i)->setCollidable(false);
+				m_numberOfEnemies = 3; 
 			}
 		}
-
+		m_isLocked = false;
 	}
+		
+	//When the player is not in combat
+	if (m_player->getPlayerState() == ROAMING) {
+		for (size_t i = 0; i < m_rooms.size(); i++) {
+			//if the player has entered an uncharted room
+			if (m_rooms.at(i)->intersection(m_player->getPosition())) {
+				LOG_WARNING("ENTERED ROOM");
 
+				//Lock the doors
+				this->m_isLocked = !m_isLocked;
+				m_gameObjects.at(m_doorIndex)->setCollidable(true);
+				glm::vec3 objectPosition = m_gameObjects.at(i)->getPosition();
+				m_gameObjects.at(m_doorIndex)->setPosition(glm::vec3(objectPosition.x, 0, objectPosition.z));
+				this->m_currentRoom = i;
+				
+				glm::vec4 maxMin = m_rooms.at(i)->getMaxMinValues();
 
-}
-
-void GameObjectManager::setupMaxMinValues(GameObject* object) {
-	glm::vec4 maxMinValues = object->getMaxMinValues();
-	maxMinValues.x -= 5;
-	maxMinValues.y -= 5;
-	maxMinValues.z += 5;
-	maxMinValues.w += 5;
-	object->setMaxMinValues(maxMinValues);
-
+				//Swap the play state to fighting
+				m_player->setPlayerState(FIGHTING);
+			}
+		}
+	}
 }

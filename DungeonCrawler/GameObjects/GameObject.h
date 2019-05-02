@@ -7,8 +7,8 @@
 #include "Collision/HitData.h"
 
 enum EntityState {
-	Fighting, 
-	Roaming
+	FIGHTING, 
+	ROAMING
 };
 
 enum Type {
@@ -18,6 +18,7 @@ enum Type {
 	BOX = 10,
 	ROOM = 11,
 	LIGHTSPHERE = 12,
+	DOOR = 13, 
 	GAMEOBJECT = 20,
 	POWERUPS = 21
 };

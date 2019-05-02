@@ -17,6 +17,7 @@ public:
 	GameObjectManager(Effects* effects);
 	~GameObjectManager();
 
+
 	void update(float dt);
 	void addGameObject(GameObject* gameObject);
 	void constructPlayerBroadPhaseBox();
@@ -26,26 +27,33 @@ public:
 	std::vector<GameObject*>* getVectorPointer();
 	void nodecollision(ParserData* parserData);
 
+	
+
 private:
 	void handlePlayerCollisionAgainstObjects(float dt, GameObject* object, glm::vec3& newVel, bool& hasCollided);
 	void handlePlayerShooting(float dt, GameObject* object, const glm::vec3& rayDir, float& rayLengthUntilCollision, GameObject* &hitGameObject);
 	void handleDeadEnemies(float dt);
 	
 	void roomManager(GameObject* object);
-	bool inRoom(glm::vec4 maxMinValues);
-	void setupMaxMinValues(GameObject* object);
+
+
 private:
 	int m_numberOfEnemies; //This is per room
-	bool m_isLocked;
 	
 	std::vector<GameObject*> m_gameObjects;
 	Player* m_player;
 	Walker* m_walker;
 	Shooter* m_shooter;
 	AABB* m_broadPhaseBox;
-	glm::vec4 m_maxMinValues;
+	glm::vec4 m_maxMinValues; 
 	Effects* m_effects; 
+
+	bool m_isLocked;
 	std::vector<Room*> m_rooms;
+	int m_doorIndex;
+	int m_currentRoom;
+
+	
 };
 
 #endif
