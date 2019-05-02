@@ -33,6 +33,15 @@ namespace FBXImporter {
 
 		else if (infileBinary.is_open())
 		{
+
+			FBXImporter::displayMeshName();
+			FBXImporter::displayVertices();
+
+			std::cout << std::endl;
+			//int a = 1;
+			//std::cout << std::bitset<8>(a) << std::endl;
+			//std::cin.get();
+
 			//Length of file
 			infileBinary.seekg(0, infileBinary.end);
 			int size = infileBinary.tellg();
@@ -40,17 +49,27 @@ namespace FBXImporter {
 
 			//Memory allocation
 			char* binaryBuffer = new char[size];
-			
-			//Read the data one index at a time
+
+			//Read the ascii data in one batch
 			infileBinary.read(binaryBuffer, size);
+			
+			int j = 0;
+
+			//Print the data one index at a time
 			for (size_t i = 0; i < size; i++)
 			{
-				binaryData = (std::vector<unsigned int>)binaryBuffer[i];
-				std::cout << binaryBuffer[i] << std::endl;
+				//binaryData = (std::vector<unsigned int>)binaryBuffer[i];
+				std::cout << std::hex << binaryBuffer[i] << " ";
+				j++;
+
+				//Separates the output with a new line
+				if (j > 15)
+				{
+					std::cout << std::hex << std::endl;
+					j = 0;
+				}
 			}
 
-			FBXImporter::displayMeshName();
-			FBXImporter::displayVertices();
 
 			std::cin.get();
 		}
