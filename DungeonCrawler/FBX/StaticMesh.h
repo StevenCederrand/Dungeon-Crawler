@@ -2,6 +2,7 @@
 
 #include "DisplayCommon.h"
 #include <vector>
+#include "HeaderStructs.h"
 
 //MAKE EVERYTHING DYNAMIC HERE, MAKE NOTHING CYNAMIC IN WRITECUSTOMFILE
 //CHANGE ALL ARRAYS TO VECTOR OR POINTEERS
@@ -39,11 +40,16 @@ private:
 	void initiateArrays();
 
 	//Special things for sending full vertices
+	int m_vertexCountVECTOR;
 	std::vector<Vertex> vertexArrVECTOR;
+
 public:
 	StaticMesh();
 	~StaticMesh();
 	void PrepareForNewMesh();
+
+	void AddVertexToArrVECTOR();
+
 	void AddControlPoint(FbxVector4 controlPoint);
 	void AddIndexPoint(int index);
 	void AddUVCoordinate(FbxVector2 uVCoordinate);

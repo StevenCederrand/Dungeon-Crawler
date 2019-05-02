@@ -17,6 +17,9 @@ StaticMesh::StaticMesh()
 	m_nrOfVerticesPerPolygon = 0;
 
 	initiateArrays();
+
+	//VECTOR STUFF
+	m_vertexCountVECTOR++;
 }
 
 StaticMesh::~StaticMesh()
@@ -73,6 +76,13 @@ void StaticMesh::PrepareForNewMesh()
 	m_nrOfVerticesPerPolygon = 0;
 
 	initiateArrays();
+}
+
+void StaticMesh::AddVertexToArrVECTOR()
+{
+	//Add all parts to make the vector
+
+	m_vertexCountVECTOR++;
 }
 
 void StaticMesh::AddControlPoint(FbxVector4 controlPoint)
