@@ -15,7 +15,8 @@ public:
 	void rotatePlayer();
 	void dash();
 	void dashCd(float dt);
-	
+	void powerUpCd(float dt);
+	void manualReload(float dt);
 	void reloadCd(float dt);
 
 	void weaponSwap();
@@ -90,6 +91,11 @@ private:
 	float m_shake;
 	glm::vec3 m_shakeDir;
 	
+
+	glm::vec3 m_boostResetters;
+	float m_boostTimer;
+	bool m_poweredUp;
+
 	//Debugging Tools
 	bool m_debug;
 };

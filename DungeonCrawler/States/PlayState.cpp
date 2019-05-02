@@ -42,7 +42,7 @@ PlayState::PlayState() {
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
 	ParserData* powerUpData = m_parser->loadFromObj("LifePowerUp.obj");
 
-	ParserData* enemyData = m_parser->loadFromObj("MFBox.obj");
+	ParserData* enemyData = m_parser->loadFromObj("FlyGuy.obj");
 
 	m_GLinit->createMesh("Room", roomData);
 	m_GLinit->createMesh("Box", boxData);
@@ -102,11 +102,11 @@ PlayState::PlayState() {
 	m_gameObjectManager->addGameObject(m_walker);
 	m_player = new Player(boxMesh, PLAYER);
 	m_gameObjectManager->addGameObject(m_player);
-	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 10, 0, 0, glm::vec3(10.f, 0.f, 2.f));
+	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 10, 0, 0, false, glm::vec3(10.f, 0.f, 2.f));
 	m_gameObjectManager->addGameObject(m_powerUp);
-	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 10, 0, glm::vec3(2.f, 0.f, 2.f));
+	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 10, 0, false, glm::vec3(2.f, 0.f, 2.f));
 	m_gameObjectManager->addGameObject(m_powerUp);
-	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 0, 10, glm::vec3(-5.f, 0.f, -2.f));
+	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 0, 10, true, glm::vec3(-5.f, 0.f, -2.f));
 	m_gameObjectManager->addGameObject(m_powerUp);
 
 	//Used for the player flashlight & shadow mapping from the 

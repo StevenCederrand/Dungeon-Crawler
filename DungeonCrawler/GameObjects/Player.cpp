@@ -45,6 +45,10 @@ Player::Player(Mesh* mesh, Type type) :
 	this->m_reloadTime = 0.f;
 	this->m_reloading = false;
 
+	this->m_boostResetters = (glm::vec3(0.f, 0.f, 0.f));
+	this->m_boostTimer = 0.f;
+	this->m_poweredUp = false;
+
 	this->setupSoundVector();
 }
 
@@ -78,11 +82,13 @@ void Player::update(float dt)
 				m_reloading = true;
 				m_reloadTime = 2.f;
 			}
+			manualReload(dt);
 		}
 		if (m_weaponSlot == 2)
 		{
 			shootChargeShot(dt);
 		}
+		powerUpCd(dt);
 		move(dt);
 		dashCd(dt);
 		reloadCd(dt);
@@ -112,12 +118,25 @@ void Player::hit(const HitDescription & desc)
 	{
 		PowerUps* powerUp = dynamic_cast<PowerUps*>(desc.owner);
 		glm::vec3 boosts = powerUp->getBoost();
-		m_health += boosts.x;
-		m_automaticDamage += boosts.y;
-		m_defaultSpeed += boosts.z;
+		if (powerUp->getTimed())
+		{
+			m_poweredUp = true;
+			m_boostTimer = 5.f;
+			m_boostResetters += boosts;
+			m_health += boosts.x;
+			m_automaticDamage += boosts.y;
+			m_defaultSpeed += boosts.z;
+		}
+		else
+		{
+			m_health += boosts.x;
+			m_automaticDamage += boosts.y;
+			m_defaultSpeed += boosts.z;
+		}
+		
 	}
 	
-	LOG_WARNING("Player Health: " + std::to_string(m_health));
+	LOG_WARNING("HP: " + std::to_string(m_health) + "DM: " + std::to_string(m_automaticDamage) + "SP: " + std::to_string(m_defaultSpeed));
 		//"Player health: " + m_health);
 }
 
@@ -302,6 +321,30 @@ void Player::dashCd(float dt)
 	if (m_dashTimer > 0.f)
 	{
 		m_dashTimer -= dt;
+	}
+}
+
+void Player::powerUpCd(float dt)
+{
+	if ((m_boostTimer <= 0) && (m_poweredUp))
+	{
+		m_health -= m_boostResetters.x;
+		m_automaticDamage -= m_boostResetters.y;
+		m_defaultSpeed -= m_boostResetters.z;
+		m_poweredUp = false;
+	}
+	if (m_boostTimer > 0)
+	{
+		m_boostTimer -= dt;
+	}
+}
+
+void Player::manualReload(float dt)
+{
+	if ((Input::isKeyPressed(GLFW_KEY_R)) && (m_reloading == false) && (m_pistolBullets < 8))
+	{
+		m_reloading = true;
+		m_reloadTime = 2.f;
 	}
 }
 
