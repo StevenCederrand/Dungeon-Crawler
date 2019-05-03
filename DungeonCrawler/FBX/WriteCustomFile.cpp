@@ -353,6 +353,30 @@ void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //specia
 
 	outfileReadable << lvertexPosition << "\n\n";
 	outfileReadable.close();
+
+
+	FIX THIS SHIT
+
+	//VECTOR PART
+	BoundingBoxHeaderVECTOR lboundingBoxHeaderVECTOR{ 1 };
+
+	std::string nameOfHitboxVECTOR;
+	for (int i = 0; i < 100; i++)
+	{
+		lboundingBoxHeaderVECTOR.nameOfHitbox[i] = currentMesh.getNameCharacter(i);  //HAS $ IN SPOT 99?
+		nameOfHitboxVECTOR += lboundingBoxHeaderVECTOR.nameOfHitbox[i];
+	}
+
+	lboundingBoxHeaderVECTOR.vertexCount = currentMesh.getVertexCount();
+
+	lboundingBoxHeaderVECTOR.collision = currentMesh.getCollision();
+	lboundingBoxHeaderVECTOR.staticMesh = currentMesh.getIsStatic();
+	lboundingBoxHeaderVECTOR.padding1 = 0;
+	lboundingBoxHeaderVECTOR.padding2 = 0;
+
+	std::ofstream outfileBinaryVECTOR;
+	outfileBinaryVECTOR.open("ourFileBinaryVECTOR.bin", std::ios::out | std::ios::app | std::ios::binary); //writing, append, in binery
+	outfileBinaryVECTOR.write((const char*)&lboundingBoxHeaderVECTOR, sizeof(BoundingBoxHeaderVECTOR));
 }
 
 

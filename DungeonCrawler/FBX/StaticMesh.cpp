@@ -86,24 +86,20 @@ void StaticMesh::MakeAllTheVertices()
 {
 	for (int i = 0; i < m_currentControlPointIndex; i++)//For each vector
 	{
-		//Vertex tempVertex;
-		Vertex tempVertex2;
+		Vertex tempVertex;
 		for (int j = 0; j < 3; j++)
 		{
-			tempVertex2.position[j] = m_controlPointsVECTOR[m_controlPointIndexArrVECTOR[i]][j];
-			//tempVertex.position[j] = m_controlPoints[j][m_controlPointIndexArr[i]];
+			tempVertex.position[j] = m_controlPointsVECTOR[m_controlPointIndexArrVECTOR[i]][j];
 		}
 		for (int j = 0; j < 2; j++)
 		{
-			tempVertex2.UV[j] = m_UVCoordinatesVECTOR[m_UVCoordinateIndexArrVECTOR[i]][j];
-			//tempVertex.UV[j] = m_UVCoordinates[j][m_UVCoordinateIndexArr[i]];
+			tempVertex.UV[j] = m_UVCoordinatesVECTOR[m_UVCoordinateIndexArrVECTOR[i]][j];
 		}
 		for (int j = 0; j < 3; j++)
 		{
-			tempVertex2.normal[j] = m_normalCoordinateArrVECTOR[i][j];
-			//tempVertex.normal[j] = m_normalCoordinateArr[j][i];
+			tempVertex.normal[j] = m_normalCoordinateArrVECTOR[i][j];
 		}
-		vertexArrVECTOR.push_back(tempVertex2);
+		vertexArrVECTOR.push_back(tempVertex);
 		m_vertexCountVECTOR++;
 	}
 }

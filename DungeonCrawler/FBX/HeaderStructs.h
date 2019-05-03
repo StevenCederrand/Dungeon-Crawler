@@ -47,6 +47,16 @@ struct BoundingBoxHeader
 	bool padding2;
 };
 
+struct BoundingBoxHeaderVECTOR
+{
+	char nameOfHitbox[100];
+	unsigned int vertexCount;
+	bool collision; //custom maya attribute
+	bool staticMesh;	//custom maya attribute
+	bool padding1; //Bool reserves 4 bytes, although it is only 1 byte, so might aswell padd them up
+	bool padding2;
+};
+
 //Small info structs
 struct Vertex
 {
