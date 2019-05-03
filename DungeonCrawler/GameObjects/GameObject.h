@@ -37,6 +37,7 @@ public:
 	void setHit();
 
 	virtual void hit(const HitDescription & desc);
+	virtual bool meleeRange();
 	virtual Type getType();
 
 	std::vector<AABB*> getBoundingBoxes() const;

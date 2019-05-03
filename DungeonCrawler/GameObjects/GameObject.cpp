@@ -117,6 +117,11 @@ void GameObject::hit(const HitDescription & desc)
 
 }
 
+bool GameObject::meleeRange()
+{
+	return false;
+}
+
 Type GameObject::getType()
 {
 	return m_type;

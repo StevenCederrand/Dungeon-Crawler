@@ -78,7 +78,7 @@ void GameObjectManager::update(float dt)
 		object->internalUpdate(dt);
 		object->update(dt);
 		object->updateModelMatrix();
-
+		handleEnemyAttacks(object, dt);
 		// Handle collisions if there is any
 		handlePlayerCollisionAgainstObjects(dt, object, newVel, hasCollided);
 
@@ -307,3 +307,25 @@ void GameObjectManager::handleDeadEnemies(float dt)
 		}
 	}
 }
+
+void GameObjectManager::handleEnemyAttacks(GameObject* object, float dt)
+{
+	if (object->meleeRange())
+	{
+		HitDescription desc;
+		if (dynamic_cast<Walker*>(object))
+		{
+			m_walker = dynamic_cast<Walker*>(object);
+			desc.walker = m_walker;
+			m_player->hit(desc);
+		}
+		if (dynamic_cast<Shooter*>(object))
+		{
+			m_shooter = dynamic_cast<Shooter*>(object);
+			desc.shooter = m_shooter;
+			m_player->hit(desc);
+		}
+	}
+}
+
+
