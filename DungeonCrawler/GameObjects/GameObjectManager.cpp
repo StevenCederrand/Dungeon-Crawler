@@ -359,7 +359,7 @@ void GameObjectManager::roomManager(GameObject* object) {
 				//Lock the doors
 				this->m_isLocked = !m_isLocked;
 				m_gameObjects.at(m_doorIndex)->setCollidable(true);
-				glm::vec3 objectPosition = m_gameObjects.at(i)->getPosition();
+				glm::vec3 objectPosition = m_gameObjects.at(m_doorIndex)->getPosition();
 				m_gameObjects.at(m_doorIndex)->setPosition(glm::vec3(objectPosition.x, 0, objectPosition.z));
 				this->m_currentRoom = i;
 				

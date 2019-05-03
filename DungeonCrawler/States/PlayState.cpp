@@ -41,36 +41,25 @@ PlayState::PlayState() {
 	m_gameObjectManager = new GameObjectManager(m_effects);
 	AudioEngine::loadSSO("Game.sso");
 	#pragma endregion
-
-	#pragma region Create_Rooms 
-	//this->createRoom("roomStart.obj", "Room1");
-	//this->createRoom("roomEnd.obj", "Room2");
-	#pragma endregion
-	
+		
 	#pragma region Create_Objects
-	//std::thread characterLoader(loadObj, &this->m_GLinit, 
-	//	&this->m_parser, "MainCharacter.obj", "Character");
-	//characterLoader.join();
-
 	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
 	ParserData* playerData = m_parser->loadFromObj("MainCharacterPosed.obj");
-	//ParserData* roomData = m_parser->loadFromObj("roomWithNodes.obj");
-	ParserData* roomUno = m_parser->loadFromObj("roomStart.obj");
-	ParserData* roomDos = m_parser->loadFromObj("roomEnd.obj");
+	ParserData* doorData = m_parser->loadFromObj("doorEnd.obj");
+	ParserData* roomStart = m_parser->loadFromObj("roomStart.obj");
+	ParserData* roomEnd = m_parser->loadFromObj("roomEnd.obj");
 
 
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
-	ParserData* doorData = m_parser->loadFromObj("doorEnd.obj");
 	ParserData* powerUpData = m_parser->loadFromObj("LifePowerUp.obj");
 	ParserData* enemyData = m_parser->loadFromObj("FlyGuy.obj");
 
 	m_GLinit->createMesh("Door", doorData);
-	m_GLinit->createMesh("RoomUno", roomUno);
-	m_GLinit->createMesh("RoomDos", roomDos);
+	m_GLinit->createMesh("RoomStart", roomStart);
+	m_GLinit->createMesh("RoomEnd", roomEnd);
 
 
 	m_GLinit->createMesh("Box", boxData);
-	//m_GLinit->createMesh("Room", roomData);
 	m_GLinit->createMesh("PlayerModel", playerData);
 	m_GLinit->createMesh("Sphere", sphereData);
 	m_GLinit->createMesh("PowerUp", powerUpData);
@@ -99,14 +88,7 @@ void PlayState::update(float dt) {
 	m_effects->update(dt);
 	m_camera->update(dt);
 	m_lightManager->update(dt);
-
-	////If the player has entered a room
-	//if (m_gameObjectManager->enteredRoom(m_player->getPlayerPosition())) {
-	//	//Do stuff
-
-	//}
-
-
+	
 	m_renderer->prepareGameObjects(m_gameObjectManager->getGameObjects());
 
 
@@ -198,13 +180,12 @@ void PlayState::constructWorld()
 {
 
 	Mesh* boxMesh = MeshMap::getMesh("Box");
-	//Mesh* roomMesh = MeshMap::getMesh("Room");
 	Mesh* playerMesh = MeshMap::getMesh("PlayerModel");
 
 	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
 	Mesh* enemyMesh = MeshMap::getMesh("Enemy");
-	Mesh* roomUn = MeshMap::getMesh("RoomUno");
-	Mesh* roomDo = MeshMap::getMesh("RoomDos");
+	Mesh* roomStart = MeshMap::getMesh("RoomStart");
+	Mesh* roomEnd = MeshMap::getMesh("RoomEnd");
 	Mesh* door = MeshMap::getMesh("Door");
 
 	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 1.5f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
@@ -213,12 +194,12 @@ void PlayState::constructWorld()
 
 
 	//Room * room = new Room(roomMesh, ROOM, m_player, glm::vec3(0.f, 0.f, 0.f));
-	Room* roomUno = new Room(roomUn, ROOM, m_player, glm::vec3(0.f, 0.f, 0.f));
-	Room* roomDos = new Room(roomDo, ROOM, m_player, glm::vec3(0.f, 0.f, 0.f));
-	Box* doorGO = new Box(door, DOOR, glm::vec3(0, 0, 0));
-	m_gameObjectManager->addGameObject(doorGO);
-	m_gameObjectManager->addGameObject(roomUno);
-	m_gameObjectManager->addGameObject(roomDos);
+	Room* r_roomStart = new Room(roomStart, ROOM, m_player);
+	Room* r_roomEnd = new Room(roomEnd, ROOM, m_player);
+
+	m_gameObjectManager->addGameObject(r_roomStart);
+	m_gameObjectManager->addGameObject(r_roomEnd);
+	m_gameObjectManager->addGameObject(new Box(door, DOOR));
 
 	m_player = new Player(playerMesh, PLAYER);
 	m_gameObjectManager->addGameObject(m_player);
@@ -255,7 +236,7 @@ void PlayState::constructWorld()
 	//m_gameObjectManager->addGameObject(m_shooter);
 	for (int i = 0; i < 5; i++)
 	{
-	m_walker = new Walker(enemyMesh, WALKER, roomUno, glm::vec3(
+	m_walker = new Walker(enemyMesh, WALKER, r_roomStart, glm::vec3(
 		Randomizer::single(-10.0f, 10.0f),
 		0.f,
 		Randomizer::single(-10.0f, 10.0f)));
