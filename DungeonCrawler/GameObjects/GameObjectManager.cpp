@@ -133,10 +133,11 @@ void GameObjectManager::update(float dt)
 			objectHit->hit(desc);
 
 			if (hitEnemy){
-				AudioEngine::play("gun_impact_enemy", .5f);
+				AudioEngine::play("gun_impact_enemy", 0.6f);
 				m_effects->addParticles("BloodEmitter", gunshotCollisionPoint, 5.f, 0.2f, 5.f);
 			}
 			else{
+				//AudioEngine::play("gun_impact_wall", 0.5f);
 				m_effects->addParticles("WallSmokeEmitter", gunshotCollisionPoint, 5.f, 0.2f, 5.f);
 			}
 		}
@@ -166,7 +167,6 @@ void GameObjectManager::addGameObject(GameObject * gameObject)
 		}
 		else if (objectType == ROOM) {
 			Room* room = dynamic_cast<Room*>(gameObject);
-			//this->setupMaxMinValues(room);
 			this->m_rooms.push_back(room);
 		}
 		else if (objectType == DOOR) {

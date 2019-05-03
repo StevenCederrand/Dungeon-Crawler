@@ -273,6 +273,7 @@ void Player::shootAutomatic(float dt)
 			if (m_pistolBullets <= 0)
 			{
 				//le click sounds
+				AudioEngine::playOnce("gun_click", 0.5f);
 			}
 		}
 	}
