@@ -21,4 +21,6 @@ public:
 	void WriteMainHeader(int nrOfStaticMeshes, int nrOfBoundingBoxes);
 	void WriteStaticMesh(StaticMesh currentMesh);
 	void WriteBoundingBoxMesh(BoundingBoxMesh currentMesh);
+
+	void SmallFile(); //writes small file
 };

@@ -2,7 +2,9 @@
 
 WriteCustomFile::WriteCustomFile()
 {
-	m_mainHeader = MainHeader{ 1 }; //Creates one mainheader
+	m_mainHeader = MainHeader{ 1 }; //Creates one mainheader	//CHANGE PROBABLY!!, DOESNT NEED TO BE PRIVATE VAR
+
+	SmallFile(); //REMOVE LATER
 }
 
 WriteCustomFile::~WriteCustomFile()
@@ -177,7 +179,8 @@ void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think
 	}
 	outfileReadable << "\n\n";
 	outfileReadable.close();
-	//delete vertex arr?
+
+	delete vArray;
 }
 
 void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //special case for boundingbox mesh with collision from current mesh to bounding box mesh header struct
@@ -234,9 +237,29 @@ void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //specia
 	}
 	outfileReadable << "\n\n";
 	outfileReadable.close();
+
+	delete bbvArray;
+}
+
+void WriteCustomFile::SmallFile()
+{
+	SmallInfoHeader lsmallInfoHeader{ 1 };
+
+	lsmallInfoHeader.intInfo = 1;
+	lsmallInfoHeader.floatInfo = 1.5f;
+	lsmallInfoHeader.charInfo1 = 'a';
+	lsmallInfoHeader.charInfo2 = 'b';
+	lsmallInfoHeader.charInfo3 = 'c';
+	lsmallInfoHeader.charInfo4 = 'd';
+
+	std::ofstream outfileBinary;
+	outfileBinary.open("smallFile.bin", std::ios::out | std::ios::trunc | std::ios::binary); //writing, append, in binery
+	outfileBinary.write((const char*)&lsmallInfoHeader, sizeof(SmallInfoHeader));
+	outfileBinary.close();
 }
 
 
 
 //STUFF I FIX:
+//FIX FILE FOR DYNAMIC MESHES
 //ADD MATERIALS

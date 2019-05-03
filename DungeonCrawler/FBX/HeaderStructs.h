@@ -33,6 +33,16 @@ struct BoundingBoxHeader
 	bool padding2;
 };
 
+struct SmallInfoHeader
+{
+	int intInfo;
+	float floatInfo;
+	char charInfo1;
+	char charInfo2;
+	char charInfo3;
+	char charInfo4;
+};
+
 //Small info structs
 struct Vertex
 {
