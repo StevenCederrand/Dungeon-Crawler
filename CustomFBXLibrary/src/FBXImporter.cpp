@@ -39,34 +39,38 @@ namespace FBXImporter {
 
 			std::cout << std::endl;
 			
-			binaryToInt(infileBinary, fileData);
+			//structured in the way that the custom binary file is written
+			int binaryData = binaryToInt(infileBinary);
+			setStaticMeshCount(fileData, binaryData);
+			std::cout << fileData->getMainHeaderStaticMeshCount();
+			binaryToFloat(infileBinary);
+			std::cin.get();
 
 
-
-			//Length of file
-			infileBinary.seekg(0, infileBinary.end);
-			int size = infileBinary.tellg();
-			infileBinary.seekg(0, infileBinary.beg);
-			//Memory allocation
-			char* binaryBuffer = new char[size + 1];
-			//Read the binary data in one batch
-			infileBinary.read(binaryBuffer, size);
+			////Length of file
+			//infileBinary.seekg(0, infileBinary.end);
+			//int size = infileBinary.tellg();
+			//infileBinary.seekg(0, infileBinary.beg);
+			////Memory allocation
+			//char* binaryBuffer = new char[size + 1];
+			////Read the binary data in one batch
+			//infileBinary.read(binaryBuffer, size);
 	
-			
-			//Print the binary data in ascii format one index at a time
-			int j = 0;
-			for (size_t i = 0; i < size; i++)
-			{
-				std::cout << std::hex  << binaryBuffer[i] << " ";
-				j++;
+			//
+			////Print the binary data in ascii format one index at a time
+			//int j = 0;
+			//for (size_t i = 0; i < size; i++)
+			//{
+			//	std::cout << std::hex  << binaryBuffer[i] << " ";
+			//	j++;
 
-				//Separates the output with a new line
-				if (j > 15)
-				{
-					std::cout << std::hex << std::endl;
-					j = 0;
-				}
-			}
+			//	//Separates the output with a new line
+			//	if (j > 15)
+			//	{
+			//		std::cout << std::hex << std::endl;
+			//		j = 0;
+			//	}
+			//}
 
 
 			std::cin.get();
@@ -74,8 +78,30 @@ namespace FBXImporter {
 
 	}
 
-	void binaryToInt(std::ifstream& binaryFile, FBXParserData* fbxParserData)
+	int binaryToInt(std::ifstream& binaryFile)
 	{
-		
+		//char array to string
+		//string base 2 to base 10
+		char binaryNumber[] = "11111110";
+		int convertedNumber = std::stoi(binaryNumber, nullptr, 2);
+		std::cout << "test 1: " << convertedNumber;
+
+		return convertedNumber;
 	}
+
+	float binaryToFloat(std::ifstream& binaryFile)
+	{
+		char binaryNumber[] = "1111111011111110";
+		float convertedNumber =std::stof(binaryNumber, nullptr);
+		std::cout << "test 1: " << convertedNumber;
+
+		return convertedNumber;
+	}
+
+	void setStaticMeshCount(FBXParserData* fbxParserData, int nrOfMeshes)
+	{
+		fbxParserData->setMainHeaderStaticMeshCount(nrOfMeshes);
+	}
+
+
 }

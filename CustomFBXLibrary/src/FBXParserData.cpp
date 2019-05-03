@@ -14,6 +14,11 @@ void FBXParserData::setVertexHeader(Vertex vertexHeader)
 {
 	this->m_vertexHeader = m_vertexHeader;
 }
+//---------------------
+void FBXParserData::setMainHeaderStaticMeshCount(int staticMeshCount)
+{
+	this->m_mainHeader.staticMeshCount = staticMeshCount;
+}
 
 MainHeader FBXParserData::getMainHeader() const
 {
@@ -28,4 +33,9 @@ MeshHeader FBXParserData::getMeshHeader() const
 Vertex FBXParserData::getVertexHeader() const
 {
 	return this->m_vertexHeader;
+}
+
+int FBXParserData::getMainHeaderStaticMeshCount() const
+{
+	return this->m_mainHeader.staticMeshCount;
 }

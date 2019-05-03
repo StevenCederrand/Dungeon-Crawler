@@ -4,6 +4,7 @@
 #include <bitset>
 #include <fstream>
 #include <iostream>
+#include <string>
 #include "FBXParserData.h"
 
 namespace FBXImporter {
@@ -13,5 +14,8 @@ namespace FBXImporter {
 
 	void readAndWriteBinaryData(std::string pathToMesh, FBXParserData* fileData);
 
-	void binaryToInt(std::ifstream& binaryFile, FBXParserData* fbxParserData);
+	int binaryToInt(std::ifstream& binaryFile);
+	float binaryToFloat(std::ifstream& binaryFile);
+
+	void setStaticMeshCount(FBXParserData* fbxParserData, int nrOfMeshes);
 }

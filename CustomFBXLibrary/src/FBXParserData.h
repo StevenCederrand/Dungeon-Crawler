@@ -7,9 +7,13 @@ public:
 	void setMeshHeader(MeshHeader meshHeader);
 	void setVertexHeader(Vertex vertexHeader);
 
+	void setMainHeaderStaticMeshCount(int staticMeshCount);
+
 	MainHeader getMainHeader()const;
 	MeshHeader getMeshHeader()const;
 	Vertex getVertexHeader()const;
+
+	int getMainHeaderStaticMeshCount()const;
 
 private:
 	MainHeader m_mainHeader;
