@@ -2,13 +2,13 @@
 
 StaticMesh::StaticMesh()
 {
-	m_vertexCount = 0;
+	//m_vertexCount = 0;
 
-	m_currentControlPoint = 0;
-	m_currentControlPointIndex = 0;
-	m_currentUVCoordinate = 0;
-	m_currentUVIndex = 0;
-	m_currentNormalCoordinate = 0;
+	//m_currentControlPoint = 0;
+	//m_currentControlPointIndex = 0;
+	//m_currentUVCoordinate = 0;
+	//m_currentUVIndex = 0;
+	//m_currentNormalCoordinate = 0;
 
 	m_collision = 0;
 	m_staticMesh = 0;
@@ -34,6 +34,7 @@ void StaticMesh::initiateArrays()
 		m_name[i] = ' ';
 	}
 
+	/*
 	for (int i = 0; i < 100; i++)
 	{
 		for (int j = 0; j < 3; j++)
@@ -57,10 +58,12 @@ void StaticMesh::initiateArrays()
 		for (int j = 0; j < 3; j++)
 			m_normalCoordinateArr[j][i] = 0.f;
 	}
+	*/
 }
 
 void StaticMesh::PrepareForNewMesh()
 {
+	/*
 	m_vertexCount = 0;
 
 	m_currentControlPoint = 0;
@@ -68,6 +71,7 @@ void StaticMesh::PrepareForNewMesh()
 	m_currentUVCoordinate = 0;
 	m_currentUVIndex = 0;
 	m_currentNormalCoordinate = 0;
+	*/
 
 	m_collision = 0;
 	m_staticMesh = 0;
@@ -82,9 +86,9 @@ void StaticMesh::PrepareForNewMesh()
 	vertexArrVECTOR.clear();
 }
 
-void StaticMesh::MakeAllTheVertices()
+void StaticMesh::MakeAllTheVertices(int lNrOfVertices)
 {
-	for (int i = 0; i < m_currentControlPointIndex; i++)//For each vector
+	for (int i = 0; i < lNrOfVertices; i++)//For each vector
 	{
 		Vertex tempVertex;
 		for (int j = 0; j < 3; j++)
@@ -110,11 +114,11 @@ void StaticMesh::AddControlPoint(FbxVector4 controlPoint)
 	float ly = controlPoint.mData[1];
 	float lz = controlPoint.mData[2];
 
-	m_controlPoints[0][m_currentControlPoint] = lx;
-	m_controlPoints[1][m_currentControlPoint] = ly;
-	m_controlPoints[2][m_currentControlPoint] = lz;
+	//m_controlPoints[0][m_currentControlPoint] = lx;
+	//m_controlPoints[1][m_currentControlPoint] = ly;
+	//m_controlPoints[2][m_currentControlPoint] = lz;
 
-	m_currentControlPoint++;
+	//m_currentControlPoint++;
 
 
 	//VECTOR PART
@@ -128,8 +132,8 @@ void StaticMesh::AddControlPoint(FbxVector4 controlPoint)
 
 void StaticMesh::AddIndexPoint(int index)
 {
-	m_controlPointIndexArr[m_currentControlPointIndex] = index;
-	m_currentControlPointIndex++;
+	//m_controlPointIndexArr[m_currentControlPointIndex] = index;
+	//m_currentControlPointIndex++;
 
 
 	//VECTOR PART
@@ -141,10 +145,10 @@ void StaticMesh::AddUVCoordinate(FbxVector2 uVCoordinate)
 	float lx = uVCoordinate.mData[0];
 	float ly = uVCoordinate.mData[1];
 
-	m_UVCoordinates[0][m_currentUVCoordinate] = lx;
-	m_UVCoordinates[1][m_currentUVCoordinate] = ly;
+	//m_UVCoordinates[0][m_currentUVCoordinate] = lx;
+	//m_UVCoordinates[1][m_currentUVCoordinate] = ly;
 
-	m_currentUVCoordinate++;
+	//m_currentUVCoordinate++;
 
 
 	//VECTOR PART
@@ -157,8 +161,8 @@ void StaticMesh::AddUVCoordinate(FbxVector2 uVCoordinate)
 
 void StaticMesh::AddUVIndex(int index)
 {
-	m_UVCoordinateIndexArr[m_currentUVIndex] = index;
-	m_currentUVIndex++;
+	//m_UVCoordinateIndexArr[m_currentUVIndex] = index;
+	//m_currentUVIndex++;
 
 
 	//VECTOR PART
@@ -171,11 +175,11 @@ void StaticMesh::AddNormalCoordinate(FbxVector4 normalCoordinate)
 	float ly = normalCoordinate.mData[1];
 	float lz = normalCoordinate.mData[2];
 	
-	m_normalCoordinateArr[0][m_currentNormalCoordinate] = lx;
-	m_normalCoordinateArr[1][m_currentNormalCoordinate] = ly;
-	m_normalCoordinateArr[2][m_currentNormalCoordinate] = lz;
+	//m_normalCoordinateArr[0][m_currentNormalCoordinate] = lx;
+	//m_normalCoordinateArr[1][m_currentNormalCoordinate] = ly;
+	//m_normalCoordinateArr[2][m_currentNormalCoordinate] = lz;
 
-	m_currentNormalCoordinate++;
+	//m_currentNormalCoordinate++;
 
 
 	//VECTOR PART
@@ -189,11 +193,12 @@ void StaticMesh::AddNormalCoordinate(FbxVector4 normalCoordinate)
 
 void StaticMesh::increaseVertexCount()
 {
-	m_vertexCount++;
+	//m_vertexCount++;
 }
 
 void StaticMesh::CheckMesh()
 {
+	/*
 	printf("Name of mesh: ");
 	for (int i = 0; i < 100; i++)
 	{
@@ -228,7 +233,6 @@ void StaticMesh::CheckMesh()
 		printf("Static = 0");
 	printf("\n\n");
 
-	/*
 	//print vertices
 	for (int i = 0; i < 100; i++)
 	{
@@ -243,7 +247,6 @@ void StaticMesh::CheckMesh()
 			printf("%.2f ", m_normalCoordinateArr[j][i]);
 		printf("\n\n");
 	}
-	*/
 
 	//Only works for triangulated Meshes, This writes the polygons
 	
@@ -280,7 +283,7 @@ void StaticMesh::CheckMesh()
 		}
 		printf("\n");		
 	}
-	
+	*/
 }
 
 void StaticMesh::setNrOfPolygons(int nrOfPolygons)
@@ -318,32 +321,38 @@ char StaticMesh::getNameCharacter(int space)const
 
 int StaticMesh::getVertexCount() const
 {
-	return m_vertexCount;
+	//return m_vertexCount;
+	return 0;
 }
 
 float StaticMesh::getControlPoint(int i, int j)const
 {
-	return m_controlPoints[j][i];
+	return 0;
+	//return m_controlPoints[j][i];
 }
 
 int StaticMesh::getControlPointIndex(int index)const
 {
-	return m_controlPointIndexArr[index];
+	return 0;
+	//return m_controlPointIndexArr[index];
 }
 
 float StaticMesh::getUVCoordinate(int i, int j)const
 {
-	return m_UVCoordinates[j][i];
+	return 0;
+	//return m_UVCoordinates[j][i];
 }
 
 int StaticMesh::getUVIndex(int index)const
 {
-	return m_UVCoordinateIndexArr[index];
+	return 0;
+	//return m_UVCoordinateIndexArr[index];
 }
 
 float StaticMesh::getNormal(int i, int j)const
 {
-	return m_normalCoordinateArr[j][i];
+	return 0;
+	//return m_normalCoordinateArr[j][i];
 }
 
 bool StaticMesh::getCollision()const
@@ -358,7 +367,8 @@ bool StaticMesh::getIsStatic()const
 
 int StaticMesh::getNrOfControlPoints()const
 {
-	return m_currentControlPoint;
+	return 0;
+	//return m_currentControlPoint;
 }
 
 int StaticMesh::getVertexCountVECTOR()const

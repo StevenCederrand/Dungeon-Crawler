@@ -93,6 +93,7 @@ void WriteCustomFile::WriteMainHeader(int nrOfStaticMeshes, int nrOfBoundingBoxe
 	m_mainHeader.staticMeshCount = nrOfStaticMeshes;
 	m_mainHeader.boundingBoxCount = nrOfBoundingBoxes;
 
+	/*
 	std::ofstream outfileBinary;
 	outfileBinary.open("ourFileBinary.bin", std::ios::out | std::ios::trunc | std::ios::binary); //trunc to clean
 	outfileBinary.write((const char*)&m_mainHeader, sizeof(MainHeader));
@@ -105,7 +106,7 @@ void WriteCustomFile::WriteMainHeader(int nrOfStaticMeshes, int nrOfBoundingBoxe
 		<< "\nNr of static meshes: " << m_mainHeader.staticMeshCount 
 		<< "\nNr of bounding boxes: " << m_mainHeader.boundingBoxCount << "\n\n";
 	outfileReadable.close();
-
+	*/
 
 	//VECTOR PART
 	std::ofstream outfileBinaryVECTOR;
@@ -124,6 +125,7 @@ void WriteCustomFile::WriteMainHeader(int nrOfStaticMeshes, int nrOfBoundingBoxe
 
 void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think it works
 {
+	/*
 	//currentMesh.CheckMesh();
 	MeshHeader lmeshHeader{ 1 };
 
@@ -214,7 +216,7 @@ void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think
 
 	delete vArray; //need to delete all positions too?
 
-
+	*/
 
 
 	//VECTOR PART
@@ -255,14 +257,14 @@ void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think
 	outfileReadableVECTOR.open("outFileReadableVECTOR.txt", std::ios::out | std::ios::app);
 	outfileReadableVECTOR << "Name of mesh: " << nameOfMeshVECTOR
 		<< "\nVertex count: " << lmeshHeaderVECTOR.vertexCount
-		<< "\n\nCollision: " << lmeshHeader.collision
-		<< "\nStatic mesh: " << lmeshHeader.staticMesh << "\n\n\n";
+		<< "\n\nCollision: " << lmeshHeaderVECTOR.collision
+		<< "\nStatic mesh: " << lmeshHeaderVECTOR.staticMesh << "\n\n\n";
 
 
 	std::string lvertexPositionVECTOR;
 	std::string lvertexUVVECTOR;
 	std::string lvertexNormalVECTOR;
-	for (int i = 0; i < lmeshHeader.vertexCount; i++)
+	for (int i = 0; i < lmeshHeaderVECTOR.vertexCount; i++)
 	{
 		lvertexPositionVECTOR = "\nPosition: ";
 		for (int j = 0; j < 3; j++)
@@ -294,7 +296,7 @@ void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think
 
 void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //special case for boundingbox mesh with collision from current mesh to bounding box mesh header struct
 {
-	currentMesh.CheckMesh();
+	/*
 	BoundingBoxHeader lboundingBoxHeader{ 1 };
 
 	std::string nameOfHitbox;
@@ -354,7 +356,7 @@ void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //specia
 
 	outfileReadable << lvertexPosition << "\n\n";
 	outfileReadable.close();
-
+	*/
 
 	//VECTOR PART
 	BoundingBoxHeaderVECTOR lboundingBoxHeaderVECTOR{ 1 };
@@ -398,7 +400,7 @@ void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //specia
 		<< "\n\nCollision: " << lboundingBoxHeaderVECTOR.collision
 		<< "\nStatic mesh: " << lboundingBoxHeaderVECTOR.staticMesh << "\n\n\n";
 
-	//ERROR
+
 	std::string lvertexPositionVECTOR;
 	for (int i = 0; i < lboundingBoxHeaderVECTOR.vertexCount; i++)
 	{

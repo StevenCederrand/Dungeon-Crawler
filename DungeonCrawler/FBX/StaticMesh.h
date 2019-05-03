@@ -8,10 +8,10 @@
 
 // NR1: ADD VECTOR TO ALL ARRAYS IN THIS FILE - DONE
 // NR2: MAKE FUNCTIONS FOR THEM IN THIS FILE, AND MAKE SURE IT WORKS WHEN USED IN SAVEHIAERARCHY,
-//		SO ALL FUNCTIONS CAN BE REPLACED WITH THOSE FOR THE VECTORS
+//		SO ALL FUNCTIONS CAN BE REPLACED WITH THOSE FOR THE VECTORS - DONE
 //		
-// NR2.5: MAKE A NEW FILE THAT WRITES FULL VERTICES 
-// NR3: REMOVE THE OLD ARRAYS AND USE ONLY ARRAYS, NOW CAN SUPPORT UNLIMITED AMOUNT OF VERTICES
+// NR2.5: MAKE A NEW FILE THAT WRITES FULL VERTICES - DONE
+// NR3: REMOVE THE OLD ARRAYS AND USE ONLY VECTORS, NOW CAN SUPPORT UNLIMITED AMOUNT OF VERTICES
 // NR4: REMOVE UNUSED VARIABLES
 // NR5: WRITE THE VERTICES TO THE FILE
 
@@ -22,24 +22,24 @@ class StaticMesh
 {
 private:
 	char m_name[100];
-	int m_vertexCount;
+	//int m_vertexCount;
 
-	int m_currentControlPoint;			//Will not be needed when writing file
-	int m_currentControlPointIndex;		//Will not be needed when writing file
-	float m_controlPoints[3][100];
+	//int m_currentControlPoint;			//Will not be needed when writing file
+	//int m_currentControlPointIndex;		//Will not be needed when writing file
+	//float m_controlPoints[3][100];
 	std::vector<std::vector<float>> m_controlPointsVECTOR;
-	int m_controlPointIndexArr[100];
+	//int m_controlPointIndexArr[100];
 	std::vector<int> m_controlPointIndexArrVECTOR;
 
-	int m_currentUVCoordinate;			//Will not be needed when writing file
-	int m_currentUVIndex;				//Will not be needed when writing file
-	float m_UVCoordinates[2][100]; //They are 0 to 1, dont need to convert
+	//int m_currentUVCoordinate;			//Will not be needed when writing file
+	//int m_currentUVIndex;				//Will not be needed when writing file
+	//float m_UVCoordinates[2][100]; //They are 0 to 1, dont need to convert
 	std::vector<std::vector<float>> m_UVCoordinatesVECTOR;
-	int m_UVCoordinateIndexArr[100];
+	//int m_UVCoordinateIndexArr[100];
 	std::vector<int> m_UVCoordinateIndexArrVECTOR;
 
-	int m_currentNormalCoordinate;		//Will not be needed when writing file
-	float m_normalCoordinateArr[3][100];
+	//int m_currentNormalCoordinate;		//Will not be needed when writing file
+	//float m_normalCoordinateArr[3][100];
 	std::vector<std::vector<float>> m_normalCoordinateArrVECTOR;
 	//No index arr
 
@@ -60,7 +60,7 @@ public:
 	~StaticMesh();
 	void PrepareForNewMesh();
 
-	void MakeAllTheVertices();
+	void MakeAllTheVertices(int lNrOfVertices);
 
 	void AddControlPoint(FbxVector4 controlPoint);
 	void AddIndexPoint(int index);
