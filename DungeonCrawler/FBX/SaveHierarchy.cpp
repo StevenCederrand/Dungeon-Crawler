@@ -363,7 +363,7 @@ void SaveHierarchy::m_SaveStaticMesh(FbxNode* pNode, bool collision, bool static
 	{
 		printf("WARNING, MESH NOT TRIANGULATED\n");
 	}
-	m_staticMesh.MakeAllTheVertices();
+	m_staticMesh.MakeAllTheVertices(); //ASSEMPLES ALL THE VERTICES
 }
 
 void SaveHierarchy::m_SaveHitboxMesh(FbxNode* pNode, bool collision, bool staticMesh)

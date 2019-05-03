@@ -1,0 +1,26 @@
+Version: 1
+Nr of dynamic meshes: 0
+Nr of static meshes: 3
+Nr of bounding boxes: 3
+
+Name of mesh: Rectangle                                                                                           
+Vertex count: 36
+
+Collision: 0
+Static mesh: 1
+
+
+Name of mesh: Box                                                                                                 
+Vertex count: 36
+
+Collision: 0
+Static mesh: 1
+
+
+Name of mesh: StandingRectangle                                                                                   
+Vertex count: 36
+
+Collision: 0
+Static mesh: 1
+
+

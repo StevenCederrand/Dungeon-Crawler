@@ -25,6 +25,17 @@ struct MeshHeader
 	bool padding2;
 };
 
+struct MeshHeaderVECTOR
+{
+	char nameOfMesh[100];
+	unsigned int vertexCount;
+	//unsigned int materialID; //our different morph characters will use the same material
+	bool collision; //custom maya attribute
+	bool staticMesh;	//custom maya attribute
+	bool padding1; //Bool reserves 4 bytes, although it is only 1 byte, so might aswell padd them up
+	bool padding2;
+};
+
 struct BoundingBoxHeader
 {
 	char nameOfHitbox[100];
