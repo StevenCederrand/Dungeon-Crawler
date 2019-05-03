@@ -191,8 +191,7 @@ void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //specia
 		nameOfHitboxVECTOR += lboundingBoxHeaderVECTOR.nameOfHitbox[i];
 	}
 
-	lboundingBoxHeaderVECTOR.vertexCount = currentMesh.getVertexCountVECTOR();
-
+	lboundingBoxHeaderVECTOR.vertexCount = currentMesh.getVertexCount();
 	lboundingBoxHeaderVECTOR.collision = currentMesh.getCollision();
 	lboundingBoxHeaderVECTOR.staticMesh = currentMesh.getIsStatic();
 	lboundingBoxHeaderVECTOR.padding1 = 0;
@@ -204,7 +203,7 @@ void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //specia
 
 	BoundingBoxVertex *bbvArrayVECTOR = new BoundingBoxVertex[lboundingBoxHeaderVECTOR.vertexCount];
 
-	std::vector<BoundingBoxVertex> allVerticesVECTOR = currentMesh.getVertexArrVECTOR();
+	std::vector<BoundingBoxVertex> allVerticesVECTOR = currentMesh.getVertexArr();
 	for (int i = 0; i < lboundingBoxHeaderVECTOR.vertexCount; i++)
 	{
 		bbvArrayVECTOR[i] = allVerticesVECTOR[i];

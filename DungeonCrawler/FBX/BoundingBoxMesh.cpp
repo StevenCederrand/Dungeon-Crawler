@@ -2,15 +2,11 @@
 
 BoundingBoxMesh::BoundingBoxMesh()
 {
+	m_vertexCount = 0;
 	m_collision = 0;
 	m_staticMesh = 0;
-	m_nrOfPolygons = 0; //DO A CHECK IF 12 and set 0 here
-	m_nrOfVerticesPerPolygon = 0;
 
 	initiateArrays();
-
-	//VECTOR STUFF
-	m_vertexCountVECTOR = 0;
 }
 
 BoundingBoxMesh::~BoundingBoxMesh()
@@ -18,17 +14,21 @@ BoundingBoxMesh::~BoundingBoxMesh()
 
 }
 
+void BoundingBoxMesh::initiateArrays()
+{
+	for (int i = 0; i < 100; i++)
+	{
+		m_name[i] = ' ';
+	}
+}
+
 void BoundingBoxMesh::PrepareForNewMesh()
 {
+	m_vertexCount = 0;
 	m_collision = 0;
 	m_staticMesh = 0;
-	m_nrOfPolygons = 0;
-	m_nrOfVerticesPerPolygon = 0;
 
 	initiateArrays();
-
-	//VECTOR STUFF
-	m_vertexCountVECTOR = 0;
 }
 
 void BoundingBoxMesh::MakeAllTheVertices(int lNrOfVertices)
@@ -41,15 +41,7 @@ void BoundingBoxMesh::MakeAllTheVertices(int lNrOfVertices)
 			tempVertex.position[j] = m_controlPointsVECTOR[m_controlPointIndexArrVECTOR[i]][j];
 		}
 		vertexArrVECTOR.push_back(tempVertex);
-		m_vertexCountVECTOR++;
-	}
-}
-
-void BoundingBoxMesh::initiateArrays()
-{
-	for (int i = 0; i < 100; i++)
-	{
-		m_name[i] = ' ';
+		m_vertexCount++;
 	}
 }
 
@@ -70,16 +62,6 @@ void BoundingBoxMesh::AddControlPoint(FbxVector4 controlPoint)
 void BoundingBoxMesh::AddIndexPoint(int index)
 {
 	m_controlPointIndexArrVECTOR.push_back(index);
-}
-
-void BoundingBoxMesh::setNrOfPolygons(int nrOfPolygons)
-{
-	m_nrOfPolygons = nrOfPolygons;
-}
-
-void BoundingBoxMesh::setNrOfVerticesPerPolygon(int nrOfVerticesPerPolygon)
-{
-	m_nrOfVerticesPerPolygon = nrOfVerticesPerPolygon;
 }
 
 void BoundingBoxMesh::setCollision(bool collision)
@@ -115,12 +97,12 @@ bool BoundingBoxMesh::getIsStatic() const
 	return m_staticMesh;
 }
 
-int BoundingBoxMesh::getVertexCountVECTOR()const
+int BoundingBoxMesh::getVertexCount()const
 {
-	return m_vertexCountVECTOR;
+	return m_vertexCount;
 }
 
-std::vector<BoundingBoxVertex> BoundingBoxMesh::getVertexArrVECTOR()const
+std::vector<BoundingBoxVertex> BoundingBoxMesh::getVertexArr()const
 {
 	return vertexArrVECTOR;
 }
