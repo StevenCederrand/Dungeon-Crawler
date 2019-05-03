@@ -17,19 +17,6 @@ struct MeshHeader
 	char nameOfMesh[100];
 	unsigned int vertexCount;
 	//unsigned int materialID; //our different morph characters will use the same material
-	int vertexIndexArray[100];	//SHOULD BE REMOVED LATER
-	int UVIndexArray[100];		//SHOULD BE REMOVED LATER
-	bool collision; //custom maya attribute
-	bool staticMesh;	//custom maya attribute
-	bool padding1; //Bool reserves 4 bytes, although it is only 1 byte, so might aswell padd them up
-	bool padding2;
-};
-
-struct MeshHeaderVECTOR
-{
-	char nameOfMesh[100];
-	unsigned int vertexCount;
-	//unsigned int materialID; //our different morph characters will use the same material
 	bool collision; //custom maya attribute
 	bool staticMesh;	//custom maya attribute
 	bool padding1; //Bool reserves 4 bytes, although it is only 1 byte, so might aswell padd them up
@@ -37,17 +24,6 @@ struct MeshHeaderVECTOR
 };
 
 struct BoundingBoxHeader
-{
-	char nameOfHitbox[100];
-	unsigned int vertexCount;
-	int vertexIndexArray[36]; //can be exact cus box
-	bool collision; //custom maya attribute
-	bool staticMesh;	//custom maya attribute
-	bool padding1; //Bool reserves 4 bytes, although it is only 1 byte, so might aswell padd them up
-	bool padding2;
-};
-
-struct BoundingBoxHeaderVECTOR
 {
 	char nameOfHitbox[100];
 	unsigned int vertexCount;
