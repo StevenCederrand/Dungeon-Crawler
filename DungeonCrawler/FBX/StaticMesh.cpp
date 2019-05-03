@@ -19,7 +19,7 @@ StaticMesh::StaticMesh()
 	initiateArrays();
 
 	//VECTOR STUFF
-	m_vertexCountVECTOR++;
+	m_vertexCountVECTOR = 0;
 }
 
 StaticMesh::~StaticMesh()
@@ -76,31 +76,36 @@ void StaticMesh::PrepareForNewMesh()
 	m_nrOfVerticesPerPolygon = 0;
 
 	initiateArrays();
+
+	//VECTOR PART
+	m_vertexCountVECTOR = 0;
+	//clear vector
 }
 
 void StaticMesh::MakeAllTheVertices()
 {
-	//Add all parts to make the vector, This will be sent to write to file along with m_vertexCountVECTOR
-	//to have an expandable vector
 	for (int i = 0; i < m_currentControlPointIndex; i++)//For each vector
 	{
 		Vertex tempVertex;
+		Vertex tempVertex2;
 		for (int j = 0; j < 3; j++)
 		{
+			tempVertex2.position[j] = m_controlPointsVECTOR[m_controlPointIndexArrVECTOR[i]][j];
 			tempVertex.position[j] = m_controlPoints[j][m_controlPointIndexArr[i]];
 		}
 		for (int j = 0; j < 2; j++)
 		{
+			tempVertex2.UV[j] = m_UVCoordinatesVECTOR[m_UVCoordinateIndexArrVECTOR[i]][j];
 			tempVertex.UV[j] = m_UVCoordinates[j][m_UVCoordinateIndexArr[i]];
 		}
 		for (int j = 0; j < 3; j++)
 		{
+			tempVertex2.normal[j] = m_normalCoordinateArrVECTOR[i][j];
 			tempVertex.normal[j] = m_normalCoordinateArr[j][i];
 		}
-		vertexArrVECTOR.push_back(tempVertex);
+		vertexArrVECTOR.push_back(tempVertex2);
+		m_vertexCountVECTOR++;
 	}
-
-	m_vertexCountVECTOR++;
 }
 
 void StaticMesh::AddControlPoint(FbxVector4 controlPoint)
@@ -123,8 +128,6 @@ void StaticMesh::AddControlPoint(FbxVector4 controlPoint)
 	temp.push_back(lz);
 
 	m_controlPointsVECTOR.push_back(temp);
-
-	int stop = 0;
 }
 
 void StaticMesh::AddIndexPoint(int index)
@@ -146,12 +149,24 @@ void StaticMesh::AddUVCoordinate(FbxVector2 uVCoordinate)
 	m_UVCoordinates[1][m_currentUVCoordinate] = ly;
 
 	m_currentUVCoordinate++;
+
+
+	//VECTOR PART
+	std::vector<float> temp;
+	temp.push_back(lx);
+	temp.push_back(ly);
+
+	m_UVCoordinatesVECTOR.push_back(temp);
 }
 
 void StaticMesh::AddUVIndex(int index)
 {
-	m_UVCoordinateIndexArr[m_currentUVIndex] = index; //CORRECT
+	m_UVCoordinateIndexArr[m_currentUVIndex] = index;
 	m_currentUVIndex++;
+
+
+	//VECTOR PART
+	m_UVCoordinateIndexArrVECTOR.push_back(index);
 }
 
 void StaticMesh::AddNormalCoordinate(FbxVector4 normalCoordinate)
@@ -165,6 +180,15 @@ void StaticMesh::AddNormalCoordinate(FbxVector4 normalCoordinate)
 	m_normalCoordinateArr[2][m_currentNormalCoordinate] = lz;
 
 	m_currentNormalCoordinate++;
+
+
+	//VECTOR PART
+	std::vector<float> temp;
+	temp.push_back(lx);
+	temp.push_back(ly);
+	temp.push_back(lz);
+
+	m_normalCoordinateArrVECTOR.push_back(temp);
 }
 
 void StaticMesh::increaseVertexCount()
