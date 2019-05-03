@@ -259,8 +259,36 @@ void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think
 		<< "\nStatic mesh: " << lmeshHeader.staticMesh << "\n\n\n";
 
 
+	std::string lvertexPositionVECTOR;
+	std::string lvertexUVVECTOR;
+	std::string lvertexNormalVECTOR;
+	for (int i = 0; i < lmeshHeader.vertexCount; i++)
+	{
+		lvertexPositionVECTOR = "\nPosition: ";
+		for (int j = 0; j < 3; j++)
+		{
+			lvertexPositionVECTOR += std::to_string(vArrayVECTOR[i].position[j]);
+			lvertexPositionVECTOR += " ";
+		}
+		outfileReadableVECTOR << lvertexPositionVECTOR;
 
+		lvertexUVVECTOR = "\nUV: ";
+		for (int j = 0; j < 2; j++)
+		{
+			lvertexUVVECTOR += std::to_string(vArrayVECTOR[i].UV[j]);
+			lvertexUVVECTOR += " ";
+		}
+		outfileReadableVECTOR << lvertexUVVECTOR;
 
+		lvertexNormalVECTOR = "\nnormal: ";
+		for (int j = 0; j < 3; j++)
+		{
+			lvertexNormalVECTOR += std::to_string(vArrayVECTOR[i].normal[j]);
+			lvertexNormalVECTOR += " ";
+		}
+		outfileReadableVECTOR << lvertexNormalVECTOR << "\n";
+	}
+	outfileReadableVECTOR << "\n\n";
 	outfileReadableVECTOR.close();
 }
 
