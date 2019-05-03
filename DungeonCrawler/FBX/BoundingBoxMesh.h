@@ -8,13 +8,8 @@ class BoundingBoxMesh
 {
 private:
 	char m_name[100];
-	int m_vertexCount;
 
-	int m_currentControlPoint;				//Will not be needed when writing file
-	int m_currentControlPointIndex;			//Will not be needed when writing file
-	float m_controlPoints[3][8];
 	std::vector<std::vector<float>> m_controlPointsVECTOR;
-	int m_controlPointIndexArr[36];
 	std::vector<int> m_controlPointIndexArrVECTOR;
 
 	bool m_collision;
@@ -33,13 +28,10 @@ public:
 	~BoundingBoxMesh();
 	void PrepareForNewMesh();
 
-	void MakeAllTheVertices();
+	void MakeAllTheVertices(int lNrOfVertices);
 
 	void AddControlPoint(FbxVector4 controlPoint);
 	void AddIndexPoint(int index);
-
-	void IncreaseVertexCount();
-	void CheckMesh();
 
 	void setNrOfPolygons(int nrOfPolygons);
 	void setNrOfVerticesPerPolygon(int nrOfVerticesPerPolygon);
@@ -50,9 +42,6 @@ public:
 	char getNameCharacter(int space)const;
 	bool getCollision()const;
 	bool getIsStatic()const;
-	int getVertexCount()const;
-	float getControlPoint(int i, int j)const;
-	int getControlPointIndex(int index)const;
 
 	//VECTOR PART
 	int getVertexCountVECTOR()const;

@@ -93,22 +93,6 @@ void WriteCustomFile::WriteMainHeader(int nrOfStaticMeshes, int nrOfBoundingBoxe
 	m_mainHeader.staticMeshCount = nrOfStaticMeshes;
 	m_mainHeader.boundingBoxCount = nrOfBoundingBoxes;
 
-	/*
-	std::ofstream outfileBinary;
-	outfileBinary.open("ourFileBinary.bin", std::ios::out | std::ios::trunc | std::ios::binary); //trunc to clean
-	outfileBinary.write((const char*)&m_mainHeader, sizeof(MainHeader));
-	outfileBinary.close();
-
-	std::ofstream outfileReadable;
-	outfileReadable.open("outFileReadable.txt", std::ios::out | std::ios::trunc);
-	outfileReadable << "Version: " << m_mainHeader.version
-		<< "\nNr of dynamic meshes: " << m_mainHeader.dynamicMeshCount
-		<< "\nNr of static meshes: " << m_mainHeader.staticMeshCount 
-		<< "\nNr of bounding boxes: " << m_mainHeader.boundingBoxCount << "\n\n";
-	outfileReadable.close();
-	*/
-
-	//VECTOR PART
 	std::ofstream outfileBinaryVECTOR;
 	outfileBinaryVECTOR.open("ourFileBinaryVECTOR.bin", std::ios::out | std::ios::trunc | std::ios::binary); //trunc to clean
 	outfileBinaryVECTOR.write((const char*)&m_mainHeader, sizeof(MainHeader));
@@ -125,101 +109,6 @@ void WriteCustomFile::WriteMainHeader(int nrOfStaticMeshes, int nrOfBoundingBoxe
 
 void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think it works
 {
-	/*
-	//currentMesh.CheckMesh();
-	MeshHeader lmeshHeader{ 1 };
-
-	std::string nameOfMesh;
-	for (int i = 0; i < 100; i++)
-	{
-		lmeshHeader.nameOfMesh[i] = currentMesh.getNameCharacter(i);
-		nameOfMesh += lmeshHeader.nameOfMesh[i];
-	}
-
-	lmeshHeader.vertexCount = currentMesh.getVertexCount();
-
-	std::string vertexIndexArrString;
-	for (int i = 0; i < 100; i++)
-	{
-		lmeshHeader.vertexIndexArray[i] = currentMesh.getControlPointIndex(i);
-		if (i % 20 == 0)
-			vertexIndexArrString += "\n";
-		vertexIndexArrString += std::to_string(lmeshHeader.vertexIndexArray[i]);
-		vertexIndexArrString += " ";
-	}
-
-	std::string UVIndexArrString;
-	for (int i = 0; i < 100; i++)
-	{
-		lmeshHeader.UVIndexArray[i] = currentMesh.getUVIndex(i);
-		if (i % 20 == 0)
-			UVIndexArrString += "\n";
-		UVIndexArrString += std::to_string(lmeshHeader.UVIndexArray[i]);
-		UVIndexArrString += " ";
-	}
-
-	lmeshHeader.collision = currentMesh.getCollision();
-	lmeshHeader.staticMesh = currentMesh.getIsStatic();
-	lmeshHeader.padding1 = false;
-	lmeshHeader.padding2 = false;
-
-	std::ofstream outfileBinary;
-	outfileBinary.open("ourFileBinary.bin", std::ios::out | std::ios::app | std::ios::binary); //writing, append, in binery
-	outfileBinary.write((const char*)&lmeshHeader, sizeof(MeshHeader)); //Writes meshHeader info
-
-	std::ofstream outfileReadable;
-	outfileReadable.open("outFileReadable.txt", std::ios::out | std::ios::app);
-	outfileReadable << "Name of mesh: " << nameOfMesh
-		<< "\nVertex count: " << lmeshHeader.vertexCount
-		<< "\n\nVertex index array: " << vertexIndexArrString.c_str()
-		<< "\n\nUV index array: " << UVIndexArrString.c_str() << "\n\nCollision: " << lmeshHeader.collision
-		<< "\nStatic mesh: " << lmeshHeader.staticMesh << "\n\n\n";
-
-	//Creates a vertex pointer to a new vertex array
-	Vertex* vArray = new Vertex[lmeshHeader.vertexCount];
-
-	//I THINK IT WORKS, FLOAT NEEDS SPECIAL CONVERTER
-
-	std::string lvertexPosition;
-	std::string lvertexUV;
-	std::string lvertexNormal;
-	for (int i = 0; i < lmeshHeader.vertexCount; i++)
-	{
-		lvertexPosition += "\nPosition: ";
-		for (int j = 0; j < 3; j++)
-		{
-			vArray[i].position[j] = currentMesh.getControlPoint(i, j);
-			lvertexPosition += std::to_string(vArray[i].position[j]);
-			lvertexPosition += " ";
-		}
-		lvertexUV += "\nUV: ";
-		for (int j = 0; j < 2; j++)
-		{
-			vArray[i].UV[j] = currentMesh.getUVCoordinate(i, j);
-			lvertexUV += std::to_string(vArray[i].UV[j]);
-			lvertexUV += " ";
-		}
-		lvertexNormal += "\nnormal: ";
-		for (int j = 0; j < 3; j++)
-		{
-			vArray[i].normal[j] = currentMesh.getNormal(i, j);
-			lvertexNormal += std::to_string(vArray[i].normal[j]);
-			lvertexNormal += " ";
-		}
-	}
-
-	outfileBinary.write((const char*)vArray, sizeof(Vertex)*lmeshHeader.vertexCount);	//writes all vertices
-	outfileBinary.close();
-
-	outfileReadable << lvertexPosition << lvertexUV << lvertexNormal << "\n\n";
-	outfileReadable.close();	
-
-	delete vArray; //need to delete all positions too?
-
-	*/
-
-
-	//VECTOR PART
 	MeshHeaderVECTOR lmeshHeaderVECTOR{ 1 };
 
 	std::string nameOfMeshVECTOR;
@@ -292,73 +181,11 @@ void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think
 	}
 	outfileReadableVECTOR << "\n\n";
 	outfileReadableVECTOR.close();
+	//delete vertex arr?
 }
 
 void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //special case for boundingbox mesh with collision from current mesh to bounding box mesh header struct
 {
-	/*
-	BoundingBoxHeader lboundingBoxHeader{ 1 };
-
-	std::string nameOfHitbox;
-	for (int i = 0; i < 100; i++)
-	{
-		lboundingBoxHeader.nameOfHitbox[i] = currentMesh.getNameCharacter(i);  //HAS $ IN SPOT 99?
-		nameOfHitbox += lboundingBoxHeader.nameOfHitbox[i];
-	}
-
-	lboundingBoxHeader.vertexCount = currentMesh.getVertexCount();
-
-	std::string vertexIndexArrString;
-	for (int i = 0; i < 36; i++)
-	{
-		lboundingBoxHeader.vertexIndexArray[i] = currentMesh.getControlPointIndex(i);
-		if (i % 20 == 0)
-			vertexIndexArrString += "\n";
-		vertexIndexArrString += std::to_string(lboundingBoxHeader.vertexIndexArray[i]);
-		vertexIndexArrString += " ";
-	}
-
-	lboundingBoxHeader.staticMesh = currentMesh.getIsStatic();
-	lboundingBoxHeader.collision = currentMesh.getCollision();
-	lboundingBoxHeader.padding1 = 0;
-	lboundingBoxHeader.padding2 = 0;
-
-	std::ofstream outfileBinary;
-	outfileBinary.open("ourFileBinary.bin", std::ios::out | std::ios::app | std::ios::binary); //writing, append, in binery
-	outfileBinary.write((const char*)&lboundingBoxHeader, sizeof(BoundingBoxHeader));
-
-	std::ofstream outfileReadable;
-	outfileReadable.open("outFileReadable.txt", std::ios::out | std::ios::app);
-	outfileReadable << "Name of mesh: " << nameOfHitbox
-		<< "\nVertex count: " << lboundingBoxHeader.vertexCount
-		<< "\n\nVertex index array: " << vertexIndexArrString.c_str()
-		<< "\n\nCollision: " << lboundingBoxHeader.collision
-		<< "\nStatic mesh: " << lboundingBoxHeader.staticMesh << "\n\n\n";
-
-
-	//Creates a boundingboxvertex pointer to a new boundingboxvertex array
-	BoundingBoxVertex *bbvArray = new BoundingBoxVertex[lboundingBoxHeader.vertexCount];
-
-	std::string lvertexPosition;
-	for (int i = 0; i < lboundingBoxHeader.vertexCount; i++)
-	{
-		lvertexPosition += "\nPosition: ";
-		for (int j = 0; j < 3; j++)
-		{
-			bbvArray[i].position[j] = currentMesh.getControlPoint(i, j);
-			lvertexPosition += std::to_string(bbvArray[i].position[j]);
-			lvertexPosition += " ";
-		}
-	}
-
-	outfileBinary.write((const char*)bbvArray, sizeof(BoundingBoxVertex)*lboundingBoxHeader.vertexCount);	//writes all vertices
-	outfileBinary.close();
-
-	outfileReadable << lvertexPosition << "\n\n";
-	outfileReadable.close();
-	*/
-
-	//VECTOR PART
 	BoundingBoxHeaderVECTOR lboundingBoxHeaderVECTOR{ 1 };
 
 	std::string nameOfHitboxVECTOR;
@@ -391,8 +218,6 @@ void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //specia
 	outfileBinaryVECTOR.close();
 
 
-
-
 	std::ofstream outfileReadableVECTOR;
 	outfileReadableVECTOR.open("outFileReadableVECTOR.txt", std::ios::out | std::ios::app);
 	outfileReadableVECTOR << "Name of mesh: " << nameOfHitboxVECTOR
@@ -407,14 +232,13 @@ void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //specia
 		lvertexPositionVECTOR = "\nPosition: ";
 		for (int j = 0; j < 3; j++)
 		{
-			bbvArrayVECTOR[i].position[j] = currentMesh.getControlPoint(i, j);
 			lvertexPositionVECTOR += std::to_string(bbvArrayVECTOR[i].position[j]);
 			lvertexPositionVECTOR += " ";
 		}
+
 		outfileReadableVECTOR << lvertexPositionVECTOR << "\n";
 	}
 	outfileReadableVECTOR << "\n\n";
-
 	outfileReadableVECTOR.close();
 }
 

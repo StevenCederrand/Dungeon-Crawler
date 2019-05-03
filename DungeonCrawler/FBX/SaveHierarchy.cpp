@@ -357,7 +357,6 @@ void SaveHierarchy::m_SaveStaticMesh(FbxNode* pNode, bool collision, bool static
 					m_SaveNormals(lMesh, k, lVertexCounterStatic);
 				}
 				lVertexCounterStatic++;
-				m_staticMesh.increaseVertexCount();
 
 				lNrOfVertices++;
 			}
@@ -385,6 +384,9 @@ void SaveHierarchy::m_SaveHitboxMesh(FbxNode* pNode, bool collision, bool static
 	m_SaveMeshName(pNode, collision);
 	m_SaveControlPoints(lMesh, collision);	//Save all controlpoints, to be used by index arr
 
+	int lNrOfVertices = 0;
+
+
 	if (lPolygonSize == 3)
 	{
 		if (lPolygonCount == 12)
@@ -399,7 +401,8 @@ void SaveHierarchy::m_SaveHitboxMesh(FbxNode* pNode, bool collision, bool static
 					m_SaveControlPointsIndex(lMesh, i, j, collision);
 
 					lVertexCounterHit++;
-					m_bBMesh.IncreaseVertexCount();
+
+					lNrOfVertices++;
 				}
 			}
 		}
@@ -412,7 +415,7 @@ void SaveHierarchy::m_SaveHitboxMesh(FbxNode* pNode, bool collision, bool static
 	{
 		printf("WARNING, MESH NOT TRIANGULATED\n");
 	}
-	m_bBMesh.MakeAllTheVertices(); //ASSEMPLES ALL THE VERTICES
+	m_bBMesh.MakeAllTheVertices(lNrOfVertices); //ASSEMPLES ALL THE VERTICES
 }
 
 void SaveHierarchy::m_SaveMeshName(FbxNode* pNode, bool collision)
