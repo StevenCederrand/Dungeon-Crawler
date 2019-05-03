@@ -93,18 +93,18 @@ void WriteCustomFile::WriteMainHeader(int nrOfStaticMeshes, int nrOfBoundingBoxe
 	m_mainHeader.staticMeshCount = nrOfStaticMeshes;
 	m_mainHeader.boundingBoxCount = nrOfBoundingBoxes;
 
-	std::ofstream outfileBinaryVECTOR;
-	outfileBinaryVECTOR.open("ourFileBinary.bin", std::ios::out | std::ios::trunc | std::ios::binary); //trunc to clean
-	outfileBinaryVECTOR.write((const char*)&m_mainHeader, sizeof(MainHeader));
-	outfileBinaryVECTOR.close();
+	std::ofstream outfileBinary;
+	outfileBinary.open("ourFileBinary.bin", std::ios::out | std::ios::trunc | std::ios::binary); //trunc to clean
+	outfileBinary.write((const char*)&m_mainHeader, sizeof(MainHeader));
+	outfileBinary.close();
 
-	std::ofstream outfileReadableVECTOR;
-	outfileReadableVECTOR.open("ourFileReadable.txt", std::ios::out | std::ios::trunc);
-	outfileReadableVECTOR << "Version: " << m_mainHeader.version
+	std::ofstream outfileReadable;
+	outfileReadable.open("ourFileReadable.txt", std::ios::out | std::ios::trunc);
+	outfileReadable << "Version: " << m_mainHeader.version
 		<< "\nNr of dynamic meshes: " << m_mainHeader.dynamicMeshCount
 		<< "\nNr of static meshes: " << m_mainHeader.staticMeshCount
 		<< "\nNr of bounding boxes: " << m_mainHeader.boundingBoxCount << "\n\n";
-	outfileReadableVECTOR.close();
+	outfileReadable.close();
 }
 
 void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think it works
@@ -182,59 +182,58 @@ void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think
 
 void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //special case for boundingbox mesh with collision from current mesh to bounding box mesh header struct
 {
-	BoundingBoxHeader lboundingBoxHeaderVECTOR{ 1 };
+	BoundingBoxHeader lboundingBoxHeader{ 1 };
 
-	std::string nameOfHitboxVECTOR;
+	std::string nameOfHitbox;
 	for (int i = 0; i < 100; i++)
 	{
-		lboundingBoxHeaderVECTOR.nameOfHitbox[i] = currentMesh.getNameCharacter(i);  //HAS $ IN SPOT 99?
-		nameOfHitboxVECTOR += lboundingBoxHeaderVECTOR.nameOfHitbox[i];
+		lboundingBoxHeader.nameOfHitbox[i] = currentMesh.getNameCharacter(i);  //HAS $ IN SPOT 99?
+		nameOfHitbox += lboundingBoxHeader.nameOfHitbox[i];
 	}
 
-	lboundingBoxHeaderVECTOR.vertexCount = currentMesh.getVertexCount();
-	lboundingBoxHeaderVECTOR.collision = currentMesh.getCollision();
-	lboundingBoxHeaderVECTOR.staticMesh = currentMesh.getIsStatic();
-	lboundingBoxHeaderVECTOR.padding1 = 0;
-	lboundingBoxHeaderVECTOR.padding2 = 0;
+	lboundingBoxHeader.vertexCount = currentMesh.getVertexCount();
+	lboundingBoxHeader.collision = currentMesh.getCollision();
+	lboundingBoxHeader.staticMesh = currentMesh.getIsStatic();
+	lboundingBoxHeader.padding1 = 0;
+	lboundingBoxHeader.padding2 = 0;
 
-	std::ofstream outfileBinaryVECTOR;
-	outfileBinaryVECTOR.open("ourFileBinary.bin", std::ios::out | std::ios::app | std::ios::binary); //writing, append, in binery
-	outfileBinaryVECTOR.write((const char*)&lboundingBoxHeaderVECTOR, sizeof(BoundingBoxHeader));
+	std::ofstream outfileBinary;
+	outfileBinary.open("ourFileBinary.bin", std::ios::out | std::ios::app | std::ios::binary); //writing, append, in binery
+	outfileBinary.write((const char*)&lboundingBoxHeader, sizeof(BoundingBoxHeader));
 
-	BoundingBoxVertex *bbvArrayVECTOR = new BoundingBoxVertex[lboundingBoxHeaderVECTOR.vertexCount];
+	BoundingBoxVertex *bbvArray = new BoundingBoxVertex[lboundingBoxHeader.vertexCount];
+	std::vector<BoundingBoxVertex> allVertices = currentMesh.getVertexArr();
 
-	std::vector<BoundingBoxVertex> allVerticesVECTOR = currentMesh.getVertexArr();
-	for (int i = 0; i < lboundingBoxHeaderVECTOR.vertexCount; i++)
+	for (int i = 0; i < lboundingBoxHeader.vertexCount; i++)
 	{
-		bbvArrayVECTOR[i] = allVerticesVECTOR[i];
+		bbvArray[i] = allVertices[i];
 	}
-
-	outfileBinaryVECTOR.write((const char*)bbvArrayVECTOR, sizeof(BoundingBoxVertex)*lboundingBoxHeaderVECTOR.vertexCount);	//writes all vertices
-	outfileBinaryVECTOR.close();
-
-
-	std::ofstream outfileReadableVECTOR;
-	outfileReadableVECTOR.open("ourFileReadable.txt", std::ios::out | std::ios::app);
-	outfileReadableVECTOR << "Name of mesh: " << nameOfHitboxVECTOR
-		<< "\nVertex count: " << lboundingBoxHeaderVECTOR.vertexCount
-		<< "\n\nCollision: " << lboundingBoxHeaderVECTOR.collision
-		<< "\nStatic mesh: " << lboundingBoxHeaderVECTOR.staticMesh << "\n\n\n";
+	outfileBinary.write((const char*)bbvArray, sizeof(BoundingBoxVertex)*lboundingBoxHeader.vertexCount);	//writes all vertices
+	outfileBinary.close();
 
 
-	std::string lvertexPositionVECTOR;
-	for (int i = 0; i < lboundingBoxHeaderVECTOR.vertexCount; i++)
+	std::ofstream outfileReadable;
+	outfileReadable.open("ourFileReadable.txt", std::ios::out | std::ios::app);
+	outfileReadable << "Name of mesh: " << nameOfHitbox
+		<< "\nVertex count: " << lboundingBoxHeader.vertexCount
+		<< "\n\nCollision: " << lboundingBoxHeader.collision
+		<< "\nStatic mesh: " << lboundingBoxHeader.staticMesh << "\n\n\n";
+
+
+	std::string lvertexPosition;
+	for (int i = 0; i < lboundingBoxHeader.vertexCount; i++)
 	{
-		lvertexPositionVECTOR = "\nPosition: ";
+		lvertexPosition = "\nPosition: ";
 		for (int j = 0; j < 3; j++)
 		{
-			lvertexPositionVECTOR += std::to_string(bbvArrayVECTOR[i].position[j]);
-			lvertexPositionVECTOR += " ";
+			lvertexPosition += std::to_string(bbvArray[i].position[j]);
+			lvertexPosition += " ";
 		}
 
-		outfileReadableVECTOR << lvertexPositionVECTOR << "\n";
+		outfileReadable << lvertexPosition << "\n";
 	}
-	outfileReadableVECTOR << "\n\n";
-	outfileReadableVECTOR.close();
+	outfileReadable << "\n\n";
+	outfileReadable.close();
 }
 
 
