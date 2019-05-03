@@ -327,8 +327,6 @@ void SaveHierarchy::m_SaveStaticMesh(FbxNode* pNode, bool collision, bool static
 	int lVertexCounterStatic = 0;
 	int lPolygonSize = lMesh->GetPolygonSize(0); //checks first polygon, all should be 3
 
-	m_staticMesh.setNrOfVerticesPerPolygon(lPolygonSize); //save in m_mesh
-	m_staticMesh.setNrOfPolygons(lPolygonCount);	//save in m_mesh
 	m_SaveMeshName(pNode, collision);
 	m_SaveControlPoints(lMesh, collision);	//Save all controlpoints, to be used by index arr
 

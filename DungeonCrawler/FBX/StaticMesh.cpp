@@ -2,16 +2,11 @@
 
 StaticMesh::StaticMesh()
 {
+	m_vertexCount = 0;
 	m_collision = 0;
 	m_staticMesh = 0;
 
-	m_nrOfPolygons = 0;
-	m_nrOfVerticesPerPolygon = 0;
-
 	initiateArrays();
-
-	//VECTOR STUFF
-	m_vertexCountVECTOR = 0;
 }
 
 StaticMesh::~StaticMesh()
@@ -29,17 +24,18 @@ void StaticMesh::initiateArrays()
 
 void StaticMesh::PrepareForNewMesh()
 {
+	m_vertexCount = 0;
 	m_collision = 0;
 	m_staticMesh = 0;
 
-	m_nrOfPolygons = 0;
-	m_nrOfVerticesPerPolygon = 0;
+	m_controlPoints.clear();
+	m_controlPointIndexArr.clear();
+	m_UVCoordinates.clear();
+	m_UVCoordinateIndexArr.clear();
+	m_normalCoordinateArr.clear();
+	m_vertexArr.clear();
 
 	initiateArrays();
-
-	//VECTOR PART
-	m_vertexCountVECTOR = 0;
-	vertexArrVECTOR.clear();
 }
 
 void StaticMesh::MakeAllTheVertices(int lNrOfVertices)
@@ -49,18 +45,18 @@ void StaticMesh::MakeAllTheVertices(int lNrOfVertices)
 		Vertex tempVertex;
 		for (int j = 0; j < 3; j++)
 		{
-			tempVertex.position[j] = m_controlPointsVECTOR[m_controlPointIndexArrVECTOR[i]][j];
+			tempVertex.position[j] = m_controlPoints[m_controlPointIndexArr[i]][j];
 		}
 		for (int j = 0; j < 2; j++)
 		{
-			tempVertex.UV[j] = m_UVCoordinatesVECTOR[m_UVCoordinateIndexArrVECTOR[i]][j];
+			tempVertex.UV[j] = m_UVCoordinates[m_UVCoordinateIndexArr[i]][j];
 		}
 		for (int j = 0; j < 3; j++)
 		{
-			tempVertex.normal[j] = m_normalCoordinateArrVECTOR[i][j];
+			tempVertex.normal[j] = m_normalCoordinateArr[i][j];
 		}
-		vertexArrVECTOR.push_back(tempVertex);
-		m_vertexCountVECTOR++;
+		m_vertexArr.push_back(tempVertex);
+		m_vertexCount++;
 	}
 }
 
@@ -75,12 +71,12 @@ void StaticMesh::AddControlPoint(FbxVector4 controlPoint)
 	temp.push_back(ly);
 	temp.push_back(lz);
 
-	m_controlPointsVECTOR.push_back(temp);
+	m_controlPoints.push_back(temp);
 }
 
 void StaticMesh::AddIndexPoint(int index)
 {
-	m_controlPointIndexArrVECTOR.push_back(index);
+	m_controlPointIndexArr.push_back(index);
 }
 
 void StaticMesh::AddUVCoordinate(FbxVector2 uVCoordinate)
@@ -92,12 +88,12 @@ void StaticMesh::AddUVCoordinate(FbxVector2 uVCoordinate)
 	temp.push_back(lx);
 	temp.push_back(ly);
 
-	m_UVCoordinatesVECTOR.push_back(temp);
+	m_UVCoordinates.push_back(temp);
 }
 
 void StaticMesh::AddUVIndex(int index)
 {
-	m_UVCoordinateIndexArrVECTOR.push_back(index);
+	m_UVCoordinateIndexArr.push_back(index);
 }
 
 void StaticMesh::AddNormalCoordinate(FbxVector4 normalCoordinate)
@@ -111,17 +107,7 @@ void StaticMesh::AddNormalCoordinate(FbxVector4 normalCoordinate)
 	temp.push_back(ly);
 	temp.push_back(lz);
 
-	m_normalCoordinateArrVECTOR.push_back(temp);
-}
-
-void StaticMesh::setNrOfPolygons(int nrOfPolygons)
-{
-	m_nrOfPolygons = nrOfPolygons;
-}
-
-void StaticMesh::setNrOfVerticesPerPolygon(int nrOfVerticesPerPolygon)
-{
-	m_nrOfVerticesPerPolygon = nrOfVerticesPerPolygon;
+	m_normalCoordinateArr.push_back(temp);
 }
 
 void StaticMesh::setCollision(bool collision)
@@ -157,12 +143,12 @@ bool StaticMesh::getIsStatic()const
 	return m_staticMesh;
 }
 
-int StaticMesh::getVertexCountVECTOR()const
+int StaticMesh::getVertexCount()const
 {
-	return m_vertexCountVECTOR;
+	return m_vertexCount;
 }
 
-std::vector<Vertex> StaticMesh::getVertexArrVECTOR()const
+std::vector<Vertex> StaticMesh::getVertexArr()const
 {
-	return vertexArrVECTOR;
+	return m_vertexArr;
 }
