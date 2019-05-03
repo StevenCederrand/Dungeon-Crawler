@@ -11,6 +11,9 @@ BoundingBoxMesh::BoundingBoxMesh()
 	m_nrOfVerticesPerPolygon = 0;
 
 	initiateArrays();
+
+	//VECTOR STUFF
+	m_vertexCountVECTOR = 0;
 }
 
 BoundingBoxMesh::~BoundingBoxMesh()
@@ -29,6 +32,23 @@ void BoundingBoxMesh::PrepareForNewMesh()
 	m_nrOfVerticesPerPolygon = 0;
 
 	initiateArrays();
+
+	//VECTOR STUFF
+	m_vertexCountVECTOR = 0;
+}
+
+void BoundingBoxMesh::MakeAllTheVertices()
+{
+	for (int i = 0; i < m_currentControlPointIndex; i++)//For each vector
+	{
+		BoundingBoxVertex tempVertex;
+		for (int j = 0; j < 3; j++)
+		{
+			tempVertex.position[j] = m_controlPointsVECTOR[m_controlPointIndexArrVECTOR[i]][j];
+		}
+		vertexArrVECTOR.push_back(tempVertex);
+		m_vertexCountVECTOR++;
+	}
 }
 
 void BoundingBoxMesh::initiateArrays()
@@ -127,12 +147,26 @@ void BoundingBoxMesh::AddControlPoint(FbxVector4 controlPoint)
 	m_controlPoints[2][m_currentControlPoint] = lz;
 
 	m_currentControlPoint++;
+
+
+	//VECTOR PART
+	std::vector<float> temp;
+	temp.push_back(lx);
+	temp.push_back(ly);
+	temp.push_back(lz);
+
+	m_controlPointsVECTOR.push_back(temp);
 }
 
 void BoundingBoxMesh::AddIndexPoint(int index)
 {
 	m_controlPointIndexArr[m_currentControlPointIndex] = index;
 	m_currentControlPointIndex++;
+
+
+
+	//VECTOR PART
+	m_controlPointIndexArrVECTOR.push_back(index);
 }
 
 void BoundingBoxMesh::setNrOfPolygons(int nrOfPolygons)
@@ -191,4 +225,14 @@ float BoundingBoxMesh::getControlPoint(int i, int j)const
 int BoundingBoxMesh::getControlPointIndex(int index)const
 {
 	return m_controlPointIndexArr[index];
+}
+
+int BoundingBoxMesh::getVertexCountVECTOR()const
+{
+	return m_vertexCountVECTOR;
+}
+
+std::vector<BoundingBoxVertex> BoundingBoxMesh::getVertexArrVECTOR()const
+{
+	return vertexArrVECTOR;
 }
