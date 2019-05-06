@@ -32,4 +32,10 @@ public:
 	SaveHierarchy();
 	~SaveHierarchy();
 	void SaveEntireHierarchy(FbxScene* lScene);
+
+	//material
+	void DisplayTextureNames(FbxProperty &pProperty, FbxString& pConnectionString);
+	void DisplayMaterialTextureConnections(FbxSurfaceMaterial* pMaterial, char * header, int pMatId, int l);
+	void DisplayMaterialConnections(FbxMesh* pMesh);
+	void DisplayMaterialMapping(FbxMesh* pMesh);
 };
