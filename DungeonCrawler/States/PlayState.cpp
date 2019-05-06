@@ -39,6 +39,7 @@ PlayState::PlayState() {
 	m_lightManager = new LightManager()	;
 	m_renderer = new Renderer(m_camera, m_lightManager, m_effects);
 	m_gameObjectManager = new GameObjectManager(m_effects);
+	m_projectileManager = new ProjectileManager();
 	AudioEngine::loadSSO("Game.sso");
 	#pragma endregion
 		
@@ -80,19 +81,21 @@ PlayState::~PlayState() {
 	delete m_renderer;
 	delete m_lightManager;
 	delete m_effects;
+	delete m_projectileManager;
 }
 
 void PlayState::update(float dt) {
 
 	m_gameObjectManager->update(dt);
+	m_projectileManager->update(dt);
 	m_effects->update(dt);
 	m_camera->update(dt);
 	m_lightManager->update(dt);
 	
 	m_renderer->prepareGameObjects(m_gameObjectManager->getGameObjects());
 
-
 	Player* player = m_gameObjectManager->getPlayer();
+
 	if (player->getHealth()<=0)
 	{
 		resetPlayer();
@@ -116,8 +119,9 @@ void PlayState::renderImGUI()
 		, " ]");
 
 	ImGui::NewLine();
-	ImGui::Text("Nr of lasers: %i" , m_effects->getTotalAmountOfParticles());
-
+	ImGui::Text("Nr of effects: %i" , m_effects->getTotalAmountOfParticles());
+	ImGui::NewLine();
+	ImGui::Text("Nr of Enemy projectiles: %i", m_projectileManager->getNumberOfEnemyProjectiles());
 	ImGui::End();
 }
 
@@ -188,9 +192,9 @@ void PlayState::constructWorld()
 	Mesh* roomEnd = MeshMap::getMesh("RoomEnd");
 	Mesh* door = MeshMap::getMesh("Door");
 
-	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 1.5f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
-	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
-	m_lightManager->addLight(glm::vec3(0.f, 5.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
+	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(0.0f, 25.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	m_lightManager->addLight(glm::vec3(5.0f), glm::vec3(0.5f, 0.0f, 1.0f), 10.0f, m_gameObjectManager);
+	m_lightManager->addLight(glm::vec3(0.0f, 5.0f, -5.0f), glm::vec3(0.0f, 1.0f, 0.0f), 10.0f, m_gameObjectManager);
 
 
 	//Room * room = new Room(roomMesh, ROOM, m_player, glm::vec3(0.f, 0.f, 0.f));
@@ -203,8 +207,7 @@ void PlayState::constructWorld()
 
 	m_player = new Player(playerMesh, PLAYER);
 	m_gameObjectManager->addGameObject(m_player);
-
-
+	m_projectileManager->setPlayer(m_player);
 
 	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 10, 0, 0, false, glm::vec3(10.f, 0.f, -5.f));
 	m_gameObjectManager->addGameObject(m_powerUp);
@@ -234,13 +237,13 @@ void PlayState::constructWorld()
 
 	//m_shooter = new Shooter(enemyMesh, SHOOTER);
 	//m_gameObjectManager->addGameObject(m_shooter);
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 1; i++)
 	{
-	m_walker = new Walker(enemyMesh, WALKER, r_roomStart, glm::vec3(
+	GameObject* enemy = new Shooter(enemyMesh, SHOOTER, r_roomStart, glm::vec3(
 		Randomizer::single(-10.0f, 10.0f),
 		0.f,
-		Randomizer::single(-10.0f, 10.0f)));
-	m_gameObjectManager->addGameObject(m_walker);
+		Randomizer::single(-10.0f, 10.0f)), m_projectileManager);
+	m_gameObjectManager->addGameObject(enemy);
 	}
 
 	//Used for the player flashlight & shadow mapping from the 

@@ -11,7 +11,7 @@ Room::Room(Mesh * mesh, Type type, GameObject* playerObject, const glm::vec3 & p
 	this->m_type = type;
 	this->m_playerObject = playerObject;
 	this->setScale(glm::vec3(1.f, 0.5f, 1.f));
-	m_gridsystem = new GridSystem(50, 70, 2, this);
+	m_gridsystem = new GridSystem(50, 70, 1, this);
 	m_gridsystem->constructCells();
 }
 

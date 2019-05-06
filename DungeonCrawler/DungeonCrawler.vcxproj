@@ -158,6 +158,8 @@
     <ClCompile Include="AI\GridSystem.cpp" />
     <ClCompile Include="Audio\AudioEngine.cpp" />
     <ClCompile Include="Collision\AABB.cpp" />
+    <ClCompile Include="EnemyProjectile\Projectile.cpp" />
+    <ClCompile Include="EnemyProjectile\ProjectileManager.cpp" />
     <ClCompile Include="GameObjects\Box.cpp" />
     <ClCompile Include="GameObjects\Enemies\Shooter.cpp" />
     <ClCompile Include="GameObjects\Enemies\Walker.cpp" />
@@ -208,6 +210,8 @@
     <ClInclude Include="Audio\AudioEngine.h" />
     <ClInclude Include="Collision\AABB.h" />
     <ClInclude Include="Collision\HitData.h" />
+    <ClInclude Include="EnemyProjectile\Projectile.h" />
+    <ClInclude Include="EnemyProjectile\ProjectileManager.h" />
     <ClInclude Include="GameObjects\Box.h" />
     <ClInclude Include="GameObjects\Enemies\Shooter.h" />
     <ClInclude Include="GameObjects\Enemies\Walker.h" />

@@ -42,6 +42,8 @@ public:
 	void setPlayerPosition(const glm::vec3& position);
 	void setMaxMinValues(const glm::vec4& maxMinValues);
 	void setHit();
+	// Rotates the game object to the desired position
+	void lookAt(const glm::vec3& position);
 
 	virtual void hit(const HitDescription & desc);
 	virtual Type getType();

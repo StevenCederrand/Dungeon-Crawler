@@ -116,7 +116,7 @@ std::vector<Node> AStar::findPath(GameObject* gameObject, const GridCell& start,
 			float gCostAdditional = 0.0f;
 			if ((c.info.occupied && c.info.occupant != gameObject))
 			{
-				gCostAdditional = 10.0f;
+				gCostAdditional = 20.0f;
 			}
 
 			if (!c.valid) continue;

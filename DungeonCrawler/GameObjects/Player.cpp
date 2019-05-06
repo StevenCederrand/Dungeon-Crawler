@@ -191,7 +191,6 @@ void Player::rotatePlayer()
 		0,
 		pos.z - this->getPosition().z);
 	m_angle = glm::degrees(atan2f(m_lookDirection.z, m_lookDirection.x));
-
 	setRotation(glm::vec3(0.f, -m_angle, 0.f));
 }
 

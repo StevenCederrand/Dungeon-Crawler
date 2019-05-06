@@ -1,11 +1,14 @@
 #pragma once
 #ifndef _SHOOTER_H
 #define _SHOOTER_H
-#include "../GameObject.h"
+#include <GameObjects/Room.h>
+#include <AI/AStar.h>
+#include <EnemyProjectile/ProjectileManager.h>
 
 class Shooter : public GameObject {
 public:
-	Shooter(Mesh* mesh, Type type);
+	Shooter(Mesh* mesh, Type type, Room* room, const glm::vec3& position, ProjectileManager* projectileManager);
+	~Shooter();
 	void update(float dt);
 
 
@@ -16,6 +19,10 @@ public:
 	bool getAliveStatus()const;
 
 private:
+	void calculatePath(float dt, bool ignoreTimer);
+	void moveToTarget(float dt);
+
+private:
 
 	float m_health;
 	float m_speed;
@@ -23,6 +30,17 @@ private:
 	bool m_isPlayerClose;
 	Type m_type;
 	bool m_amIAlive;
+
+	float m_castTime;
+	float m_currentCastTime;
+	bool m_castingSpell;
+	float m_maxShootingRange;
+
+	float m_AStarTimer;
+	Room* m_room;
+	AStar* m_Astar;
+	std::vector<Node> m_path;
+	ProjectileManager* m_projectileManager;
 
 };
 
