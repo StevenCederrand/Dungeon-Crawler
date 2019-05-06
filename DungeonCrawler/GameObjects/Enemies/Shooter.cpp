@@ -22,6 +22,16 @@ void Shooter::update(float dt)
 	amIDead();
 }
 
+bool Shooter::meleeRange()
+{
+	if (getDistanceToPlayer() <= 2.5f)
+	{
+		return true;
+	}
+	return false;
+	
+}
+
 void Shooter::hit(const HitDescription & desc)
 {
 	Player* player = dynamic_cast<Player*>(desc.owner);
@@ -51,4 +61,13 @@ void Shooter::amIDead()
 bool Shooter::getAliveStatus() const
 {
 	return m_amIAlive;
+}
+
+float Shooter::getDistanceToPlayer() const
+{
+	float xDir = getPlayerPosition().x - getPosition().x;
+	float zDir = getPlayerPosition().z - getPosition().z;
+	float length = sqrtf(xDir * xDir + zDir * zDir);
+
+	return length;
 }

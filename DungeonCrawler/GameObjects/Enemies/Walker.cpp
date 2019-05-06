@@ -11,8 +11,7 @@
 Walker::Walker(Mesh * mesh, Type type, Room* room, const glm::vec3& position):
 	GameObject(mesh, type)
 {
-
-	this->setScale(glm::vec3(0.5f, 1.5f, 0.5f));
+	this->setScale(glm::vec3(1.f, 1.f, 1.f));
 	this->m_room = room;
 	this->m_health = 1.f;
 	this->m_speed = 6.f;
@@ -43,9 +42,13 @@ void Walker::update(float dt)
 	amIDead();
 }
 
-void Walker::hitPlayer()
+bool Walker::meleeRange()
 {
-	
+	if (getDistanceToPlayer() <= 2.5f)
+	{
+		return true;
+	}
+	return false;
 }
 
 void Walker::hit(const HitDescription & desc)

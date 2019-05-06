@@ -33,8 +33,11 @@ private:
 	void handlePlayerCollisionAgainstObjects(float dt, GameObject* object, glm::vec3& newVel, bool& hasCollided);
 	void handlePlayerShooting(float dt, GameObject* object, const glm::vec3& rayDir, float& rayLengthUntilCollision, GameObject* &hitGameObject);
 	void handleDeadEnemies(float dt);
+	void handleEnemyAttacks(GameObject* object, float dt);
+
 	
 	void roomManager(GameObject* object);
+	void spawner(Room* currentRoom);
 
 
 private:

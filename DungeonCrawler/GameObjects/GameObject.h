@@ -16,9 +16,11 @@ enum Type {
 	WALKER = 1,
 	SHOOTER = 2,
 	BOX = 10,
-	ROOM = 11,
 	LIGHTSPHERE = 12,
 	DOOR = 13, 
+	ROOM = 14,
+	ROOM_EMPTY = 15, 
+	ROOM_BOSS = 16, 
 	GAMEOBJECT = 20,
 	POWERUPS = 21
 };
@@ -44,6 +46,7 @@ public:
 	void setHit();
 
 	virtual void hit(const HitDescription & desc);
+	virtual bool meleeRange();
 	virtual Type getType();
 
 	std::vector<AABB*> getBoundingBoxes() const;

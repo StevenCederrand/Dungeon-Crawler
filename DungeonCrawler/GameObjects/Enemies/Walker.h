@@ -10,7 +10,7 @@ public:
 	~Walker();
 	void update(float dt);
 
-	void hitPlayer();
+	bool meleeRange();
 	void hit(const HitDescription& desc);
 	Type getType();
 	float getDamage()const;
