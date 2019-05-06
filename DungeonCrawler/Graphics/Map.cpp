@@ -28,7 +28,7 @@ void Map::update(float dt, std::vector<GameObject*> gameObject)
 
 	for (size_t i = 0; i < gameObject.size(); i++) {
 		GameObject* object = gameObject[i];
-		if (object->getType() == ROOM) {
+		if (object->getType() == ROOM_EMPTY) {
 			m_rooms.emplace_back(object->getMaxMinValues());
 		}
 	}
