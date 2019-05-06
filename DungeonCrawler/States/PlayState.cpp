@@ -192,9 +192,7 @@ void PlayState::constructWorld()
 	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
 	m_lightManager->addLight(glm::vec3(0.f, 5.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
 
-
-	//Room * room = new Room(roomMesh, ROOM, m_player, glm::vec3(0.f, 0.f, 0.f));
-	Room* r_roomStart = new Room(roomStart, ROOM, m_player);
+	Room* r_roomStart = new Room(roomStart, ROOM_EMPTY, m_player);
 	Room* r_roomEnd = new Room(roomEnd, ROOM, m_player);
 
 	m_gameObjectManager->addGameObject(r_roomStart);
@@ -234,14 +232,14 @@ void PlayState::constructWorld()
 
 	//m_shooter = new Shooter(enemyMesh, SHOOTER);
 	//m_gameObjectManager->addGameObject(m_shooter);
-	for (int i = 0; i < 5; i++)
-	{
-	m_walker = new Walker(enemyMesh, WALKER, r_roomStart, glm::vec3(
-		Randomizer::single(-10.0f, 10.0f),
-		0.f,
-		Randomizer::single(-10.0f, 10.0f)));
-	m_gameObjectManager->addGameObject(m_walker);
-	}
+	//for (int i = 0; i < 5; i++)
+	//{
+	//m_walker = new Walker(enemyMesh, WALKER, r_roomStart, glm::vec3(
+	//	Randomizer::single(-10.0f, 10.0f),
+	//	0.f,
+	//	Randomizer::single(-10.0f, 10.0f)));
+	//m_gameObjectManager->addGameObject(m_walker);
+	//}
 
 	//Used for the player flashlight & shadow mapping from the 
 	//flashlights view

@@ -5,6 +5,8 @@
 #include "../Audio/AudioEngine.h"
 #include "../Globals/Helper.h"
 #include "../System/Input.h"
+#include "../Graphics/MeshMap.h"
+#include "../Utility/Randomizer.h"
 
 GameObjectManager::GameObjectManager(Effects* effects)
 {
@@ -35,9 +37,8 @@ void GameObjectManager::update(float dt)
 	if (m_broadPhaseBox)
 		m_broadPhaseBox->setParentPosition(m_player->getPosition());
 
-	if (Input::isKeyReleased(GLFW_KEY_SPACE)) {
-		
-	}
+
+	
 	//------ Player collision with map ------
 	bool hasCollided = false;
 	glm::vec3 newVel = glm::vec3(0);
@@ -165,7 +166,9 @@ void GameObjectManager::addGameObject(GameObject * gameObject)
 		if (objectType == SHOOTER || objectType == WALKER) {
 			this->m_numberOfEnemies++;
 		}
-		else if (objectType == ROOM) {
+		//No matter the type of room, add it. 
+		else if (objectType == ROOM || objectType == ROOM_EMPTY 
+			|| objectType == ROOM_BOSS) {
 			Room* room = dynamic_cast<Room*>(gameObject);
 			this->m_rooms.push_back(room);
 		}
@@ -352,7 +355,7 @@ void GameObjectManager::handleEnemyAttacks(GameObject* object, float dt)
 
 void GameObjectManager::roomManager(GameObject* object) {
 	
-	if (m_numberOfEnemies == 0 && m_isLocked) {
+	if (m_numberOfEnemies == 0) {
 		m_rooms.erase(m_rooms.begin() + m_currentRoom);
 		m_player->setPlayerState(ROAMING);
 		LOG_WARNING("CLEARED ROOM");
@@ -363,19 +366,21 @@ void GameObjectManager::roomManager(GameObject* object) {
 				m_gameObjects.at(i)->setPosition(glm::vec3(objectPosition.x, 100, objectPosition.z));
 				//Move the bounding box?
 				m_gameObjects.at(i)->setCollidable(false);
+				
 				m_numberOfEnemies = 3; 
 			}
 		}
 		m_isLocked = false;
 	}
-		
+	
 	//When the player is not in combat
 	if (m_player->getPlayerState() == ROAMING) {
 		for (size_t i = 0; i < m_rooms.size(); i++) {
-			//if the player has entered an uncharted room
+			if (m_rooms.at(i)->getType() == ROOM_EMPTY) {
+				continue;
+			}
 			if (m_rooms.at(i)->intersection(m_player->getPosition())) {
 				LOG_WARNING("ENTERED ROOM");
-
 				//Lock the doors
 				this->m_isLocked = !m_isLocked;
 				m_gameObjects.at(m_doorIndex)->setCollidable(true);
@@ -387,7 +392,23 @@ void GameObjectManager::roomManager(GameObject* object) {
 
 				//Swap the play state to fighting
 				m_player->setPlayerState(FIGHTING);
+
+				//Spawn enemies
+				this->spawner(m_rooms.at(i));
 			}
 		}
 	}
+}
+
+void GameObjectManager::spawner(Room* currentRoom) {
+	Mesh* enemyMesh = MeshMap::getMesh("Enemy");
+	for (int i = 0; i < 5; i++)
+	{
+	m_walker = new Walker(enemyMesh, WALKER, currentRoom, glm::vec3(
+		Randomizer::single(-10.0f, 10.0f),
+		0.f,
+		Randomizer::single(-10.0f, 10.0f)));
+	this->addGameObject(m_walker);
+	}
+
 }
