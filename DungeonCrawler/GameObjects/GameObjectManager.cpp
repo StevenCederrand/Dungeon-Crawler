@@ -355,19 +355,15 @@ void GameObjectManager::handleEnemyAttacks(GameObject* object, float dt)
 
 void GameObjectManager::roomManager(GameObject* object) {
 	
-	if (m_numberOfEnemies == 0) {
+	if (m_numberOfEnemies == 0 && m_isLocked) {
 		m_rooms.erase(m_rooms.begin() + m_currentRoom);
 		m_player->setPlayerState(ROAMING);
-		LOG_WARNING("CLEARED ROOM");
 		for (size_t i = 0; i < m_gameObjects.size(); i++) {
 			if (m_gameObjects.at(i)->getType() == DOOR) {
 				m_doorIndex = i;
-				glm::vec3 objectPosition = m_gameObjects.at(i)->getPosition();
-				m_gameObjects.at(i)->setPosition(glm::vec3(objectPosition.x, 100, objectPosition.z));
-				//Move the bounding box?
-				m_gameObjects.at(i)->setCollidable(false);
-				
-				m_numberOfEnemies = 3; 
+				glm::vec3 objectPosition = m_gameObjects.at(m_doorIndex)->getPosition();
+				m_gameObjects.at(m_doorIndex)->setPosition(glm::vec3(objectPosition.x, 100, objectPosition.z));
+				m_gameObjects.at(m_doorIndex)->setCollidable(false);
 			}
 		}
 		m_isLocked = false;
@@ -377,10 +373,12 @@ void GameObjectManager::roomManager(GameObject* object) {
 	if (m_player->getPlayerState() == ROAMING) {
 		for (size_t i = 0; i < m_rooms.size(); i++) {
 			if (m_rooms.at(i)->getType() == ROOM_EMPTY) {
+				glm::vec3 objectPosition = m_gameObjects.at(m_doorIndex)->getPosition();
+				m_gameObjects.at(m_doorIndex)->setPosition(glm::vec3(objectPosition.x, 100, objectPosition.z));
+				m_gameObjects.at(m_doorIndex)->setCollidable(false);
 				continue;
 			}
 			if (m_rooms.at(i)->intersection(m_player->getPosition())) {
-				LOG_WARNING("ENTERED ROOM");
 				//Lock the doors
 				this->m_isLocked = !m_isLocked;
 				m_gameObjects.at(m_doorIndex)->setCollidable(true);
@@ -401,13 +399,14 @@ void GameObjectManager::roomManager(GameObject* object) {
 }
 
 void GameObjectManager::spawner(Room* currentRoom) {
+
 	Mesh* enemyMesh = MeshMap::getMesh("Enemy");
 	for (int i = 0; i < 5; i++)
 	{
 	m_walker = new Walker(enemyMesh, WALKER, currentRoom, glm::vec3(
-		Randomizer::single(-10.0f, 10.0f),
+		Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),
 		0.f,
-		Randomizer::single(-10.0f, 10.0f)));
+		Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)));
 	this->addGameObject(m_walker);
 	}
 
