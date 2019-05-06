@@ -1,13 +1,15 @@
-#ifndef _WALKER_H
-#define _WALKER_H
+#ifndef _BOSS_H
+#define _BOSS_H
 #include <GameObjects/Room.h>
 #include <AI/AStar.h>
 
-class Walker : public GameObject {
+class Boss : public GameObject
+{
 public:
-	Walker(Mesh* mesh, Type type, Room* room, const glm::vec3& position);
-	~Walker();
+	Boss(Mesh* mesh, Type type, Room* room, const glm::vec3& position);
+	~Boss();
 	void update(float dt);
+
 
 	bool meleeRange();
 	void hit(const HitDescription& desc);
@@ -20,7 +22,9 @@ public:
 private:
 	void calculatePath(float dt);
 	void moveToTarget(float dt);
+
 private:
+
 	float m_health;
 	float m_speed;
 	float m_damage;
@@ -28,10 +32,11 @@ private:
 	Type m_type;
 	bool m_amIAlive;
 
+
 	float m_AStarTimer;
 	Room* m_room;
 	AStar* m_Astar;
 	std::vector<Node> m_path;
 };
 
-#endif // !_WALKER_H
+#endif

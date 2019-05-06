@@ -85,6 +85,8 @@ void Renderer::render() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	
 	this->renderEffects();
+	
+
 }
 
 void Renderer::shadowPass() {

@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Enemies/Walker.h"
 #include "Enemies/Shooter.h"
+#include "Enemies/Boss.h"
 #include "Powerups.h"
 #include "GameObject.h"
 #include "Graphics/Effects.h"
@@ -47,6 +48,7 @@ private:
 	Walker* m_walker;
 	Shooter* m_shooter;
 	PowerUps* m_powerup;
+	Boss* m_boss;
 	AABB* m_broadPhaseBox;
 	glm::vec4 m_maxMinValues; 
 	Effects* m_effects; 

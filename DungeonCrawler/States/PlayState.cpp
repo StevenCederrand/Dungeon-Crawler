@@ -52,7 +52,7 @@ PlayState::PlayState() {
 
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
 	ParserData* powerUpData = m_parser->loadFromObj("LifePowerUp.obj");
-	ParserData* enemyData = m_parser->loadFromObj("FlyGuy.obj");
+	ParserData* enemyData = m_parser->loadFromObj("FlyGuyConverted.obj");
 
 	m_GLinit->createMesh("Door", doorData);
 	m_GLinit->createMesh("RoomStart", roomStart);
@@ -234,6 +234,8 @@ void PlayState::constructWorld()
 
 	//m_shooter = new Shooter(enemyMesh, SHOOTER);
 	//m_gameObjectManager->addGameObject(m_shooter);
+	m_boss = new Boss(enemyMesh, BOSS, r_roomStart, glm::vec3(2.f, 0.f, 10.f));
+	m_gameObjectManager->addGameObject(m_boss);
 	for (int i = 0; i < 5; i++)
 	{
 	m_walker = new Walker(enemyMesh, WALKER, r_roomStart, glm::vec3(

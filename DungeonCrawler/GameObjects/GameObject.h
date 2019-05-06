@@ -15,6 +15,7 @@ enum Type {
 	PLAYER = 0,
 	WALKER = 1,
 	SHOOTER = 2,
+	BOSS = 3,
 	BOX = 10,
 	ROOM = 11,
 	LIGHTSPHERE = 12,

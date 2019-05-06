@@ -8,6 +8,7 @@
 #include "Enemies/Shooter.h"
 #include "../Audio/AudioEngine.h"
 #include "../Utility/Randomizer.h"
+#include "Enemies/Boss.h"
 #include "Powerups.h"
 
 Player::Player(Mesh* mesh, Type type) :
@@ -75,9 +76,9 @@ void Player::update(float dt)
 	}
 	if (!m_debug)
 	{
-		weaponSwap();
-		if (m_weaponSlot == 1)
-		{
+		//weaponSwap();
+		//if (m_weaponSlot == 1)
+		//{
 			shootAutomatic(dt);
 			if ((m_pistolBullets <= 0) && (m_reloading == false) && (m_spraying == false))
 			{
@@ -85,11 +86,11 @@ void Player::update(float dt)
 				m_reloadTime = 2.f;
 			}
 			manualReload(dt);
-		}
-		if (m_weaponSlot == 2)
-		{
-			shootChargeShot(dt);
-		}
+		//}
+		//if (m_weaponSlot == 2)
+		//{
+			//shootChargeShot(dt);
+		//}
 		powerUpCd(dt);
 		move(dt);
 		dashCd(dt);
@@ -113,6 +114,11 @@ void Player::hit(const HitDescription & desc)
 		{
 			Shooter* shooter = dynamic_cast<Shooter*>(desc.owner);
 			m_health -= shooter->getDamage();
+		}
+		if (type == Type::BOSS)
+		{
+			Boss* boss = dynamic_cast<Boss*>(desc.owner);
+			m_health -= boss->getDamage();
 		}
 		m_iframes = 2.f;
 	}

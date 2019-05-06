@@ -1,4 +1,3 @@
-#pragma once
 #ifndef _SHOOTER_H
 #define _SHOOTER_H
 #include "../GameObject.h"
