@@ -3,7 +3,7 @@
 #define _POWERUPS_H
 #include "GameObject.h"
 
-class PowerUps :public GameObject
+class PowerUps : public GameObject
 {
 public:
 	PowerUps(Mesh* mesh, Type type, float health, float damage, float speed, bool timed, glm::vec3 position);

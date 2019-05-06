@@ -19,6 +19,10 @@ public:
 	void renderImGUI();
 	void render();
 private:
+
+	void createRoom(std::string filename, std::string key);
+	void spawnEnemies(int minX, int maxX, int minZ, int maxZ);
+	
 	void resetPlayer();
 	void constructWorld();
 

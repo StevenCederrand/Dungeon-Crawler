@@ -11,29 +11,9 @@
 #include <thread>
 #include "PlayState.h"
 
-
-
 using namespace std::chrono_literals;
 
-void temp(bool& completed) {
-	for (size_t i = 0; i < 1000; i++)
-	{
-		LOG_INFO(i);
-	}
-	completed = true;
-}
-
-void temp3(PlayState*& state, bool& completed) {
-	if (state == nullptr) {
-		state = new PlayState();
-	}
-	else {
-		LOG_WARNING("STATE ALREADY INTIALIZED");
-	}
-	completed = true;
-}
-
-void temp2(const bool& completed) {
+void loadScreen(const bool& completed) {
 	while (!completed) {
 		//LOG_INFO("LOADING");
 		std::this_thread::sleep_for(10ms);
@@ -91,7 +71,7 @@ void MenuState::update(float dt) {
 		bool completed = false;
 
 		//Have a side thread output text while it's loading
-		std::thread b(temp2, std::ref(completed));
+		std::thread b(loadScreen, std::ref(completed));
 
 		//The main thread will then create the playstate
 		PlayState* state = new PlayState();

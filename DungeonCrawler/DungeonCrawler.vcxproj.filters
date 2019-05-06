@@ -119,6 +119,7 @@
     <ClInclude Include="AI\AStar.h" />
     <ClInclude Include="AI\Node.h" />
     <ClInclude Include="GameObjects\Powerups.h" />
+    <ClInclude Include="Globals\Helper.h" />
     <ClInclude Include="System\Timer.h" />
   </ItemGroup>
 </Project>

@@ -10,7 +10,7 @@ Camera* Camera::active = nullptr;
 
 Camera::Camera()
 {
-	m_position = glm::vec3(0.f, 10.f, -10.f);
+	m_position = glm::vec3(0.f, 30.f, -10.f);
 	m_lookDirection = glm::vec3(0.f, -1.f, 1.f);
 
 	m_yaw = 0.f;

@@ -10,7 +10,11 @@ public:
 	~Room();
 
 	void update(float dt);
+	bool intersection(glm::vec3 position);
+
+	void setupMaxMinValues();
 	GridSystem* getGrid() const;
+private:
 
 private:
 	GridSystem* m_gridsystem;

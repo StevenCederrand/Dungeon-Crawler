@@ -107,6 +107,10 @@ void GameObject::setPlayerPosition(const glm::vec3 & position)
 	m_playerPosition = position;
 }
 
+void GameObject::setMaxMinValues(const glm::vec4& maxMinValues) {
+	this->m_mesh->setMaxMinValues(maxMinValues);
+}
+
 void GameObject::setHit()
 {
 	m_colorTintFadeDuration = 2.f;
@@ -170,6 +174,10 @@ const glm::vec3 & GameObject::getColorTint() const
 const bool GameObject::isCollidable() const
 {
 	return m_isCollidable;
+}
+
+const glm::vec4& GameObject::getMaxMinValues() const {
+	return this->m_mesh->getMaxMinValues();
 }
 
 Mesh * GameObject::getMesh() const

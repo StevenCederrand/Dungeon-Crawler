@@ -3,6 +3,8 @@
 #include "Box.h"
 #include <vector>
 #include "../Audio/AudioEngine.h"
+#include "../Globals/Helper.h"
+#include "../System/Input.h"
 
 GameObjectManager::GameObjectManager(Effects* effects)
 {
@@ -27,12 +29,15 @@ GameObjectManager::~GameObjectManager()
 
 void GameObjectManager::update(float dt)
 {	
+	//LOG_INFO(std::to_string(this->m_numberOfEnemies));
 	handleDeadEnemies(dt);
 	//------ Player collision broadphasebox ( Used to speed up collision checking against map ) ------
 	if (m_broadPhaseBox)
 		m_broadPhaseBox->setParentPosition(m_player->getPosition());
 
-
+	if (Input::isKeyReleased(GLFW_KEY_SPACE)) {
+		
+	}
 	//------ Player collision with map ------
 	bool hasCollided = false;
 	glm::vec3 newVel = glm::vec3(0);
@@ -52,7 +57,7 @@ void GameObjectManager::update(float dt)
 	//------ Player current velocity ( Also used for collision ) ------
 	newVel = m_player->getVelocity();
 
-	//------ Add shooting particle effect
+	//------ Add shooting particle effect ------
 	if (m_player->isShooting()) {
 		float xAngle = cosf(glm::radians(m_player->getAngle()));
 		float zAngle = sinf(glm::radians(m_player->getAngle()));
@@ -71,6 +76,11 @@ void GameObjectManager::update(float dt)
 		// when doing the collision detection and handling below
 		if (m_player == object) {
 			continue;
+		}
+
+
+		if (object->getType() == ROOM) {
+			this->roomManager(object);
 		}
 
 		// Update the object
@@ -101,8 +111,6 @@ void GameObjectManager::update(float dt)
 		glm::vec3 gunshotCollisionPoint = m_player->getPosition() + rayDirection * rayLengthUntilCollision;
 		if (objectHit)
 		{
-			//LOG_TRACE("Ray intersection! collision point: " + std::to_string(gunshotCollisionPoint.x) + ", " + std::to_string(gunshotCollisionPoint.z));
-
 			// --------MAYBE DYNAMIC CASY HERE TO CHECK IF WE HIT A ENEMY?--------
 			bool hitEnemy = false;
 			
@@ -125,10 +133,11 @@ void GameObjectManager::update(float dt)
 			objectHit->hit(desc);
 
 			if (hitEnemy){
-				AudioEngine::play("gun_impact_enemy", .5f);
+				AudioEngine::play("gun_impact_enemy", 0.6f);
 				m_effects->addParticles("BloodEmitter", gunshotCollisionPoint, 5.f, 0.2f, 5.f);
 			}
 			else{
+				//AudioEngine::play("gun_impact_wall", 0.5f);
 				m_effects->addParticles("WallSmokeEmitter", gunshotCollisionPoint, 5.f, 0.2f, 5.f);
 			}
 		}
@@ -148,7 +157,20 @@ void GameObjectManager::addGameObject(GameObject * gameObject)
 			if (m_player)
 			{
 				constructPlayerBroadPhaseBox();
+				m_player->setPlayerState(ROAMING);
 			}
+		}
+		Type objectType = gameObject->getType();
+
+		if (objectType == SHOOTER || objectType == WALKER) {
+			this->m_numberOfEnemies++;
+		}
+		else if (objectType == ROOM) {
+			Room* room = dynamic_cast<Room*>(gameObject);
+			this->m_rooms.push_back(room);
+		}
+		else if (objectType == DOOR) {
+			m_doorIndex = m_gameObjects.size();
 		}
 		m_gameObjects.emplace_back(gameObject);
 	}
@@ -181,8 +203,6 @@ std::vector<GameObject*>* GameObjectManager::getVectorPointer()
 {
 	return &m_gameObjects;
 }
-
-
 
 void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject * object, glm::vec3& newVel, bool& hasCollided)
 {
@@ -222,7 +242,7 @@ void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject
 					float dotprod = (newVel.x * nz + newVel.z * nx) * remainingTime;
 					newVel.x = dotprod * nz;
 					newVel.z = dotprod * nx;
-					
+
 					if (dynamic_cast<Walker*>(object))
 					{
 						m_walker = dynamic_cast<Walker*>(object);
@@ -281,8 +301,9 @@ void GameObjectManager::handleDeadEnemies(float dt)
 		{
 			if (!dynamic_cast<Walker*>(object)->getAliveStatus())
 			{
+				this->m_numberOfEnemies--;
 				delete m_gameObjects[i];
-				m_gameObjects.erase(m_gameObjects.begin()+ i);
+				m_gameObjects.erase(m_gameObjects.begin() + i);
 				continue;
 			}
 		}
@@ -291,6 +312,7 @@ void GameObjectManager::handleDeadEnemies(float dt)
 		{
 			if (!dynamic_cast<Shooter*>(object)->getAliveStatus())
 			{
+				this->m_numberOfEnemies--;
 				delete m_gameObjects[i];
 				m_gameObjects.erase(m_gameObjects.begin() + i);
 				continue;
@@ -328,4 +350,44 @@ void GameObjectManager::handleEnemyAttacks(GameObject* object, float dt)
 	}
 }
 
+void GameObjectManager::roomManager(GameObject* object) {
+	
+	if (m_numberOfEnemies == 0 && m_isLocked) {
+		m_rooms.erase(m_rooms.begin() + m_currentRoom);
+		m_player->setPlayerState(ROAMING);
+		LOG_WARNING("CLEARED ROOM");
+		for (size_t i = 0; i < m_gameObjects.size(); i++) {
+			if (m_gameObjects.at(i)->getType() == DOOR) {
+				m_doorIndex = i;
+				glm::vec3 objectPosition = m_gameObjects.at(i)->getPosition();
+				m_gameObjects.at(i)->setPosition(glm::vec3(objectPosition.x, 100, objectPosition.z));
+				//Move the bounding box?
+				m_gameObjects.at(i)->setCollidable(false);
+				m_numberOfEnemies = 3; 
+			}
+		}
+		m_isLocked = false;
+	}
+		
+	//When the player is not in combat
+	if (m_player->getPlayerState() == ROAMING) {
+		for (size_t i = 0; i < m_rooms.size(); i++) {
+			//if the player has entered an uncharted room
+			if (m_rooms.at(i)->intersection(m_player->getPosition())) {
+				LOG_WARNING("ENTERED ROOM");
 
+				//Lock the doors
+				this->m_isLocked = !m_isLocked;
+				m_gameObjects.at(m_doorIndex)->setCollidable(true);
+				glm::vec3 objectPosition = m_gameObjects.at(m_doorIndex)->getPosition();
+				m_gameObjects.at(m_doorIndex)->setPosition(glm::vec3(objectPosition.x, 0, objectPosition.z));
+				this->m_currentRoom = i;
+				
+				glm::vec4 maxMin = m_rooms.at(i)->getMaxMinValues();
+
+				//Swap the play state to fighting
+				m_player->setPlayerState(FIGHTING);
+			}
+		}
+	}
+}

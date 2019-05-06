@@ -55,6 +55,7 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 	std::vector<glm::vec3> maxMinVector;
 	bool newCollider = false;
 	unsigned int currentBox = -2;
+	glm::vec4 maxMin = glm::vec4(-1000, -1000, 1000, 1000); 
 
 	while (std::getline(objFile, line))
 	{
@@ -89,6 +90,25 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 			if (!isParsingCollider) {
 				glm::vec3 vert = glm::vec3(std::stof(attribs[1]), std::stof(attribs[2]), std::stof(attribs[3]));
 				tempVertexBuffer.emplace_back(vert);
+
+				//Used for marking the max and min coordinates of the room
+				if (vert.x > maxMin.x)
+				{
+					maxMin.x = vert.x;
+					
+				}
+				if (vert.z > maxMin.y) {
+					maxMin.y = vert.z;
+				}
+				if (vert.x < maxMin.z)
+				{
+					maxMin.z = vert.x;
+					
+				}
+				if (vert.z < maxMin.w) {
+					maxMin.w = vert.z;
+				}
+
 			}
 			else if (isParsingCollider)
 			{
@@ -139,7 +159,7 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 			}
 		}
 	}
-
+	data->setMaxMinValues(maxMin);
 	
 	objFile.close();
 	tempVertexBuffer.clear();
@@ -288,6 +308,9 @@ void Parser::writeToBinary(ParserData* data, const std::string& filename)
 	glm::vec3 ambientColor = data->getAmbientColor();
 	writeBinaryVec3(binaryFile, ambientColor);
 
+	glm::vec4 maxMinValues = data->getMaxMinValues();
+	writeBinaryVec4(binaryFile, maxMinValues);
+	
 	GLfloat shininess = data->getShininess();
 	writeBinaryFloat(binaryFile, shininess);
 
@@ -571,6 +594,45 @@ void Parser::writeBinaryVec3(std::ofstream& binaryFile, glm::vec3 vector)
 	//binaryFile.close();
 }
 
+void Parser::writeBinaryVec4(std::ofstream& binaryFile, glm::vec4 vector) {
+
+	//std::ofstream binaryFile(Binaries + filename, std::ios::binary);
+	if (!binaryFile.is_open())
+	{
+		//LOG_ERROR("Binary file not found " + filename);
+		return;
+	}
+	//create string to have the data in
+	std::string stringvector;
+
+
+	//the string with the data
+	stringvector.append(std::to_string(vector.x));
+	stringvector.append(" ");
+	stringvector.append(std::to_string(vector.y));
+	stringvector.append(" ");
+	stringvector.append(std::to_string(vector.z));
+	stringvector.append(" ");
+	stringvector.append(std::to_string(vector.w));
+	stringvector.append(" ");
+
+
+	//size of the string
+	int indicesStringSize = stringvector.size();
+
+	//make a string of the size ( to write it to the file)
+	std::string indicesStringInt = std::to_string(indicesStringSize);
+	for (size_t i = indicesStringInt.size(); i < 10; i++)
+	{
+		indicesStringInt.append(" ");
+	}
+
+	//write to the file
+	binaryFile.write(indicesStringInt.c_str(), indicesStringInt.size());
+	binaryFile.write(stringvector.c_str(), indicesStringSize);
+
+}
+
 void Parser::writeBinaryFloat(std::ofstream& binaryFile, GLfloat floatValue)
 {
 
@@ -625,6 +687,8 @@ void Parser::loadFromBinary(ParserData* data, const std::string & filename)
 	readBinaryVec3(binaryFile, data, 0);
 	readBinaryVec3(binaryFile, data, 1);
 	readBinaryVec3(binaryFile, data, 2);
+
+	readBinaryVec4(binaryFile, data); //This is the maxMinValue
 
 	readBinaryFloat(binaryFile, data,0);
 	readBinaryFloat(binaryFile, data, 1);
@@ -839,6 +903,42 @@ void Parser::readBinaryVec3(std::ifstream & binaryFile, ParserData * parserData,
 	{
 		parserData->setAmbientColor(tempGL.x, tempGL.y, tempGL.z);
 	}
+	vecString.clear();
+}
+
+void Parser::readBinaryVec4(std::ifstream& binaryFile, ParserData* parserData)
+{
+
+	//read the value first (how big the other read should be)
+	char* textInt = new char[10];
+	binaryFile.read(textInt, 10);
+
+	//convert it  from char* to int
+	char* tempa;
+	int readSize = strtol(textInt, &tempa, 10);
+	delete[] textInt;
+
+	//make a char pointer to read to, readsize is the size
+	char* text = new char[readSize + 1];
+	binaryFile.read(text, readSize);
+
+	//make a vector string and fill it with the split function
+	text[readSize] = '\0';
+	std::string stringText = text;
+	delete[] text;
+	std::vector<std::string> vecString = split(stringText, ' ');
+
+	//fill the parserData with the Information
+
+	glm::vec4 tempGL;
+	tempGL.x = std::stof(vecString[0], NULL);
+	tempGL.y = std::stof(vecString[1], NULL);
+	tempGL.z = std::stof(vecString[2], NULL);
+	tempGL.w = std::stof(vecString[3], NULL);
+
+
+	parserData->setMaxMinValues(tempGL);
+
 	vecString.clear();
 }
 //shininess==0, normalMapStrength==1
