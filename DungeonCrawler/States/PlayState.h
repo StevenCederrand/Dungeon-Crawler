@@ -9,6 +9,7 @@
 #include "Graphics/LightManager.h"
 #include <list>
 #include "Graphics/Effects.h"
+#include "../Graphics/Map.h"
 
 class PlayState : public State {
 public:
@@ -39,6 +40,7 @@ private:
 	GameObject* m_powerUp;
 
 	Effects* m_effects;
+	Map* m_map;
 };
 
 #endif

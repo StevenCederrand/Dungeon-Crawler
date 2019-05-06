@@ -172,6 +172,7 @@
     <ClCompile Include="Graphics\Framebuffer.cpp" />
     <ClCompile Include="Graphics\GLinit.cpp" />
     <ClCompile Include="Graphics\LightManager.cpp" />
+    <ClCompile Include="Graphics\Map.cpp" />
     <ClCompile Include="Graphics\Mesh.cpp" />
     <ClCompile Include="Graphics\MeshMap.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
@@ -226,6 +227,7 @@
     <ClInclude Include="Graphics\Framebuffer.h" />
     <ClInclude Include="Graphics\GLinit.h" />
     <ClInclude Include="Graphics\LightManager.h" />
+    <ClInclude Include="Graphics\Map.h" />
     <ClInclude Include="Graphics\Mesh.h" />
     <ClInclude Include="Graphics\MeshMap.h" />
     <ClInclude Include="Graphics\Renderer.h" />

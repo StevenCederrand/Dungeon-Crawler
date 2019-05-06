@@ -6,10 +6,11 @@
 #include "Globals/Settings.h"
 #define MESH_VECTOR_RESERVE_SIZE 150
 
-Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects)
+Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects, Map* map)
 {
 	m_camera = camera;
 	m_lightManager = lightManager;
+	m_map = map;
 	m_framebuffer = new Framebuffer();
 	glEnable(GL_DEPTH_TEST);
 	//Generate framebuffers & textures
@@ -85,6 +86,7 @@ void Renderer::render() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	
 	this->renderEffects();
+	this->renderMap();
 }
 
 void Renderer::shadowPass() {
@@ -205,6 +207,47 @@ void Renderer::lightPass() {
 	lightShader->setVec3("cameraPosition", m_camera->getPosition());
 	drawQuad();
 	lightShader->unuse();
+}
+
+void Renderer::renderMap()
+{
+	Shader* mapShader = ShaderMap::getShader("MapShader");
+	mapShader->use();
+	
+	std::vector<glm::vec4> maxMinValues = m_map->getRoomCoordinates();
+	float tempValue = float(1) / float(45);
+
+	mapShader->setMat4("viewMatrix", m_camera->getViewMatrix());
+	mapShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+
+	for (size_t i = 0; i < maxMinValues.size(); i++)
+	{
+		glm::mat4 modelmatrix = glm::mat4(1.0f);
+		modelmatrix = glm::translate(modelmatrix, glm::vec3(0.0f, 10.0f, 0.0f));
+		
+		modelmatrix = glm::translate(modelmatrix, glm::vec3(
+			maxMinValues[i].x * tempValue,
+			-maxMinValues[i].y * tempValue,
+			0.0f));
+
+		modelmatrix = glm::scale(modelmatrix, glm::vec3(1.0f, 1.0f, 0.f));
+
+		mapShader->setMat4("modelMatrix", modelmatrix);
+		glBindVertexArray(m_map->getVao());
+		glEnableVertexAttribArray(0);
+		glDrawArrays(GL_TRIANGLES, 0, 12);
+
+	}
+
+	glDisableVertexAttribArray(0);
+	glBindVertexArray(0);
+
+
+
+
+
+
+	mapShader->unuse();
 }
 
 void Renderer::bindMesh(Mesh * mesh, Shader* shader)

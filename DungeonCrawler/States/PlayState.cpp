@@ -27,6 +27,7 @@ PlayState::PlayState() {
 
 	m_parser = new Parser();
 	m_GLinit = new GLinit();
+	m_map = new Map();
 
 	#pragma region Init
 	m_camera = new Camera();
@@ -37,7 +38,7 @@ PlayState::PlayState() {
 
 	Camera::active = m_camera;
 	m_lightManager = new LightManager()	;
-	m_renderer = new Renderer(m_camera, m_lightManager, m_effects);
+	m_renderer = new Renderer(m_camera, m_lightManager, m_effects, m_map);
 	m_gameObjectManager = new GameObjectManager(m_effects);
 	AudioEngine::loadSSO("Game.sso");
 	#pragma endregion
@@ -80,6 +81,7 @@ PlayState::~PlayState() {
 	delete m_renderer;
 	delete m_lightManager;
 	delete m_effects;
+	delete m_map;
 }
 
 void PlayState::update(float dt) {
@@ -88,7 +90,8 @@ void PlayState::update(float dt) {
 	m_effects->update(dt);
 	m_camera->update(dt);
 	m_lightManager->update(dt);
-	
+	m_map->update(dt, m_gameObjectManager->getGameObjects());
+
 	m_renderer->prepareGameObjects(m_gameObjectManager->getGameObjects());
 
 
@@ -169,7 +172,7 @@ void PlayState::resetPlayer()
 	delete m_lightManager;
 
 	m_lightManager = new LightManager();
-	m_renderer = new Renderer(m_camera, m_lightManager, m_effects);
+	m_renderer = new Renderer(m_camera, m_lightManager, m_effects, m_map);
 	m_gameObjectManager = new GameObjectManager(m_effects);
 	//we want to setUp the world
 	constructWorld();

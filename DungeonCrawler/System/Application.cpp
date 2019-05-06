@@ -166,6 +166,7 @@ void Application::initShaders() {
 	shader = ShaderMap::createShader("ShadowPass", "ShadowPass/ShadowPass.vs", "ShadowPass/ShadowPass.fs");
 	shader = ShaderMap::createShader("EffectsShader", "EffectsShader.vs", "EffectsShader.fs");
 	shader = ShaderMap::createShader("UIShader", "UI.vs", "UI.fs");
+	shader = ShaderMap::createShader("MapShader", "Map.vs", "Map.fs");
 }
 
 

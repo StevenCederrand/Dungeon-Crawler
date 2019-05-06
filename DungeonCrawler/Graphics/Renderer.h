@@ -9,12 +9,13 @@
 #include <map>
 #include "Shader.h"
 #include "Effects.h"
+#include "Map.h"
 
 
 class Renderer
 {
 public:
-	Renderer(Camera* camera, LightManager* lightManager, Effects* effects);
+	Renderer(Camera* camera, LightManager* lightManager, Effects* effects, Map* map);
 	~Renderer();
 
 	void prepareGameObjects(const std::vector<GameObject*>& gameObjects);
@@ -34,6 +35,7 @@ private:
 	void geometryPass();
 	void renderEffects();
 	void lightPass();
+	void renderMap();
 
 	bool initRenderQuad();	
 	void drawQuad();
@@ -53,6 +55,7 @@ private:
 	LightManager* m_lightManager;
 	Camera* m_camera;
 	Effects* m_effects;
+	Map* m_map;
 
 	unsigned int m_rQuadVAO;
 	unsigned int m_rQuadVBO;
