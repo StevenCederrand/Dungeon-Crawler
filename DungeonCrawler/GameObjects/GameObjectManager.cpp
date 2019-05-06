@@ -80,7 +80,8 @@ void GameObjectManager::update(float dt)
 		}
 
 
-		if (object->getType() == ROOM) {
+		if (object->getType() == ROOM || object->getType() == ROOM_EMPTY
+			|| object->getType() == ROOM_BOSS) {
 			this->roomManager(object);
 		}
 
@@ -169,6 +170,7 @@ void GameObjectManager::addGameObject(GameObject * gameObject)
 		//No matter the type of room, add it. 
 		else if (objectType == ROOM || objectType == ROOM_EMPTY 
 			|| objectType == ROOM_BOSS) {
+
 			Room* room = dynamic_cast<Room*>(gameObject);
 			this->m_rooms.push_back(room);
 		}
@@ -373,6 +375,7 @@ void GameObjectManager::roomManager(GameObject* object) {
 	if (m_player->getPlayerState() == ROAMING) {
 		for (size_t i = 0; i < m_rooms.size(); i++) {
 			if (m_rooms.at(i)->getType() == ROOM_EMPTY) {
+				//If the room is of type empty then we just set the door position to something
 				glm::vec3 objectPosition = m_gameObjects.at(m_doorIndex)->getPosition();
 				m_gameObjects.at(m_doorIndex)->setPosition(glm::vec3(objectPosition.x, 100, objectPosition.z));
 				m_gameObjects.at(m_doorIndex)->setCollidable(false);

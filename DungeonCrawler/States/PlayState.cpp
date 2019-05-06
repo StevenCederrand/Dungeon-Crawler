@@ -156,9 +156,6 @@ void PlayState::spawnEnemies(int minX, int maxX, int minZ, int maxZ) {
 		}
 	}
 
-	//m_shooter = new Shooter(boxMesh, SHOOTER);
-	//m_gameObjectManager->addGameObject(m_shooter);
-	//m_walker = new Walker(boxMesh, WALKER);
 	m_gameObjectManager->addGameObject(m_walker);
 }
 
@@ -183,7 +180,6 @@ void PlayState::constructWorld()
 	Mesh* playerMesh = MeshMap::getMesh("PlayerModel");
 
 	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
-	Mesh* enemyMesh = MeshMap::getMesh("Enemy");
 	Mesh* roomStart = MeshMap::getMesh("RoomStart");
 	Mesh* roomEnd = MeshMap::getMesh("RoomEnd");
 	Mesh* door = MeshMap::getMesh("Door");
@@ -193,7 +189,7 @@ void PlayState::constructWorld()
 	m_lightManager->addLight(glm::vec3(0.f, 5.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
 
 	Room* r_roomStart = new Room(roomStart, ROOM_EMPTY, m_player);
-	Room* r_roomEnd = new Room(roomEnd, ROOM, m_player);
+	Room* r_roomEnd = new Room(roomEnd, ROOM_EMPTY, m_player);
 
 	m_gameObjectManager->addGameObject(r_roomStart);
 	m_gameObjectManager->addGameObject(r_roomEnd);
@@ -202,16 +198,12 @@ void PlayState::constructWorld()
 	m_player = new Player(playerMesh, PLAYER);
 	m_gameObjectManager->addGameObject(m_player);
 
-
-
 	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 10, 0, 0, false, glm::vec3(10.f, 0.f, -5.f));
 	m_gameObjectManager->addGameObject(m_powerUp);
 	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 10, 0, false, glm::vec3(2.f, 0.f, -10.f));
 	m_gameObjectManager->addGameObject(m_powerUp);
 	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 0, 10, true, glm::vec3(-5.f, 0.f, -7.f));
 	m_gameObjectManager->addGameObject(m_powerUp);
-
-
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -229,17 +221,6 @@ void PlayState::constructWorld()
 		25.f, m_gameObjectManager);
 
 	}
-
-	//m_shooter = new Shooter(enemyMesh, SHOOTER);
-	//m_gameObjectManager->addGameObject(m_shooter);
-	//for (int i = 0; i < 5; i++)
-	//{
-	//m_walker = new Walker(enemyMesh, WALKER, r_roomStart, glm::vec3(
-	//	Randomizer::single(-10.0f, 10.0f),
-	//	0.f,
-	//	Randomizer::single(-10.0f, 10.0f)));
-	//m_gameObjectManager->addGameObject(m_walker);
-	//}
 
 	//Used for the player flashlight & shadow mapping from the 
 	//flashlights view
