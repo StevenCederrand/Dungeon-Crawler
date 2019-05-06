@@ -30,6 +30,14 @@ GridSystem* Room::getGrid() const
 	return m_gridsystem;
 }
 
+void Room::calculateCentrePosition() {
+
+	glm::vec2 OB = glm::vec2(this->getMaxMinValues().x, this->getMaxMinValues().y);
+	glm::vec2 OC = glm::vec2(this->getMaxMinValues().z, this->getMaxMinValues().w);
+
+	this->centrePosition = (OB + OC) * 0.5f;
+}
+
 bool Room::intersection(glm::vec3 position) {
 
 	glm::vec4 maxMinValues = this->getMaxMinValues();

@@ -15,8 +15,9 @@ public:
 	void setupMaxMinValues();
 	GridSystem* getGrid() const;
 private:
-
+	void calculateCentrePosition();
 private:
+	glm::vec2 centrePosition;
 	GridSystem* m_gridsystem;
 	Type m_type;
 	GameObject* m_playerObject;
