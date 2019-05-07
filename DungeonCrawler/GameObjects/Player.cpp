@@ -31,10 +31,11 @@ Player::Player(Mesh* mesh, Type type) :
 	this->m_shakeDir = glm::vec3(0.f, 0.f, 0.f);
 
 	this->m_spotlight = new Spotlight();
-	this->m_spotlight->position = this->getPlayerPosition();
-	this->m_spotlight->radius = glm::radians(55.0f);
+	this->m_spotlight->position = this->getPlayerPosition() + glm::vec3(0.0f, 1.0f, 0.0f);
+	this->m_spotlight->radius = glm::cos(glm::radians(12.5f));
+	this->m_spotlight->outerRadius = glm::cos(glm::radians(17.5f));
 	this->m_flash = new Light();
-	this->m_flash->color = glm::vec4(1, 1, 1, 0);
+	this->m_flash->color = glm::vec4(0.25, 0.25, 0.25, 0);
 	this->m_flash->position = glm::vec4(getPlayerPosition(), 1.0f);
 
 	this->m_chargeStance = false;
@@ -229,7 +230,7 @@ Light* Player::getFlash() {
 void Player::spotlightHandler() {
 	this->m_spotlight->direction = this->getLookDirection();
 	this->m_spotlight->position = this->getPosition();
-	this->m_flash->position = glm::vec4(this->getPosition(), 1);
+	this->m_flash->position = glm::vec4(this->getPosition() + glm::vec3(0.0f, 2.f, 0.0f), 1.0);
 }
 
 void Player::setupSoundVector() {
@@ -377,7 +378,7 @@ void Player::reloadCd(float dt)
 void Player::shootProjectile(float dt)
 {
 	m_shootingCooldown = 0.25f;
-	this->m_flash->color.a = 5;
+	this->m_flash->color.a = 2.5f;
 	m_canShoot = false;
 	m_shooting = true;
 	AudioEngine::play("pl_gun_shot", 0.8f);

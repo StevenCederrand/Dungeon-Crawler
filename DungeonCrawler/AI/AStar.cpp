@@ -1,6 +1,7 @@
 #include "AStar.h"
 #include <algorithm>
 #include <System/Log.h>
+
 bool nodeComparator(const Node* n1, const Node* n2)
 {
 	if (n2->fCost > n1->fCost) 

@@ -435,7 +435,7 @@ void GameObjectManager::roomManager(GameObject* object) {
 
 void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
 
-	Mesh* enemyMesh = MeshMap::getMesh("Enemy");
+	/*Mesh* enemyMesh = MeshMap::getMesh("Enemy");
 	for (int i = 0; i < numberOfEnemies; i++)
 	{
 		m_walker = new Walker(enemyMesh, WALKER, currentRoom, glm::vec3(
@@ -452,7 +452,7 @@ void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
 			0.f,
 			Randomizer::single(-10.0f, 10.0f)), m_projectileManager);
 		this->addGameObject(enemy);
-	}
+	}*/
 
 
 }

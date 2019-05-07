@@ -6,6 +6,7 @@ struct Spotlight {
 	glm::vec3 position;
 	glm::vec3 direction;
 	float radius;
+	float outerRadius;
 };
 
 struct Light {

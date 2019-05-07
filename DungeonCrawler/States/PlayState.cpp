@@ -167,9 +167,9 @@ void PlayState::constructWorld()
 	m_projectileManager->setPlayer(m_player);
 
 	m_gameObjectManager->addGameObject(m_powerUp);
-	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 10, 0, false, glm::vec3(2.f, 1.5f, -10.f));
+	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 10, 0, false, glm::vec3(2.f, 0.5f, -10.f));
 	m_gameObjectManager->addGameObject(m_powerUp);
-	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 0, 10, true, glm::vec3(-5.f, 1.5f, -7.f));
+	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 0, 10, true, glm::vec3(-5.f, 0.5f, -7.f));
 	m_gameObjectManager->addGameObject(m_powerUp);
 
 	for (int i = 0; i < 5; i++)

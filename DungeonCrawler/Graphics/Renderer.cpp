@@ -198,7 +198,6 @@ void Renderer::renderProjectiles()
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
-	glEnableVertexAttribArray(3);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_projectileManager->getTextureID());
@@ -208,8 +207,7 @@ void Renderer::renderProjectiles()
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
-	glDisableVertexAttribArray(3);
-
+	
 	glBindVertexArray(0);
 
 	effectsShader->unuse();
@@ -227,7 +225,8 @@ void Renderer::lightPass() {
 		lightShader->setVec3("spotlight.position", m_playerSpotLight->position);
 		lightShader->setVec3("spotlight.direction", m_playerSpotLight->direction);
 		lightShader->setFloat("spotlight.radius", m_playerSpotLight->radius);
-		
+		lightShader->setFloat("spotlight.outerRadius", m_playerSpotLight->outerRadius);
+
 		lightShader->setVec4("flashPosition", m_playerLight->position);
 		lightShader->setVec4("flashColor", m_playerLight->color);
 	}
@@ -310,7 +309,7 @@ void Renderer::drawQuad() {
 }
 
 void Renderer::configureShadowMapperVM() {
-	glm::vec3 pos = m_playerSpotLight->position + glm::vec3(0, 1.f, 0);
+	glm::vec3 pos = m_playerSpotLight->position;
 	glm::mat4 viewMatrix = glm::lookAt(pos, pos + m_playerSpotLight->direction, glm::vec3(0, 1, 0));
 	m_framebuffer->setViewMatrix(viewMatrix);
 }
