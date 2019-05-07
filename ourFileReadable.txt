@@ -1,4 +1,4 @@
-Version: 2
+Version: 3
 Nr of dynamic meshes: 0
 Nr of static meshes: 3
 Nr of bounding boxes: 3

@@ -9,7 +9,7 @@ class StaticMesh
 private:
 	char m_name[100];
 	unsigned int m_vertexCount;
-	unsigned int m_materialID;
+	int m_materialID;
 	bool m_collision;
 	bool m_staticMesh;
 

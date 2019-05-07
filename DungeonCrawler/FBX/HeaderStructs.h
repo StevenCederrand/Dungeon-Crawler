@@ -16,7 +16,7 @@ struct MeshHeader
 {
 	char nameOfMesh[100];
 	unsigned int vertexCount;
-	unsigned int materialID;  //which material it uses
+	int materialID;  //which material it uses, needs to be able to be -1
 	bool collision; //custom maya attribute
 	bool staticMesh;	//custom maya attribute
 	bool padding1; //Bool reserves 4 bytes, although it is only 1 byte, so might aswell padd them up
@@ -56,9 +56,11 @@ struct BoundingBoxVertex
 	float position[3];
 };
 
-//Write all materials header after vertices
+//Write all materials header after vertices, maybe liek this?
 struct Material
 {
+	char Albedo[100];
+	char Normal[100];
 	unsigned int materialID;
 	unsigned int nrOfTextures; //Will be 2 right now, albedo and normalmap
 	//texture buffer pointer

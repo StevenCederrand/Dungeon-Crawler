@@ -87,7 +87,7 @@ void WriteCustomFile::CreateCustomFile()
 
 void WriteCustomFile::WriteMainHeader(int nrOfStaticMeshes, int nrOfBoundingBoxes, int nrOfMaterial) //works
 {
-	m_mainHeader.version = '2';
+	m_mainHeader.version = '3';
 	m_mainHeader.padding1 = ' ';
 	m_mainHeader.padding2 = ' ';
 	m_mainHeader.padding3 = ' ';

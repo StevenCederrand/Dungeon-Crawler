@@ -3,6 +3,7 @@
 StaticMesh::StaticMesh()
 {
 	m_vertexCount = 0;
+	m_materialID = 0;
 	m_collision = 0;
 	m_staticMesh = 0;
 
@@ -24,6 +25,7 @@ void StaticMesh::initiateArrays()
 
 void StaticMesh::PrepareForNewMesh()
 {
+	m_materialID = 0;
 	m_vertexCount = 0;
 	m_collision = 0;
 	m_staticMesh = 0;

@@ -17,6 +17,7 @@ private:
 	int m_nrOfStaticMesh;
 	int m_nrOfBoundingBox;
 	int m_nrOfMaterial;
+	std::vector<int> m_uniqueMaterial;
 
 	void m_SaveControlPoints(FbxMesh* pMesh, bool collision);
 	void m_SaveControlPointsIndex(FbxMesh* pMesh, int i, int j, bool collision);
@@ -35,6 +36,7 @@ public:
 	void SaveEntireHierarchy(FbxScene* lScene);
 
 	//material
+	void CheckUniqueMaterial(FbxNode* pNode);
 	void SaveMaterial(FbxMesh* pMesh);
 	void DisplayTextureNames(FbxProperty &pProperty, FbxString& pConnectionString);
 	void DisplayMaterialTextureConnections(FbxSurfaceMaterial* pMaterial, char * header, int pMatId, int l);
