@@ -27,11 +27,20 @@ struct BoundingBoxHeader
 {
 	char nameOfHitbox[100];
 	unsigned int vertexCount;
-	int vertexIndexArray[36]; //can be exact cus box
 	bool collision; //custom maya attribute
 	bool staticMesh;	//custom maya attribute
 	bool padding1; //Bool reserves 4 bytes, although it is only 1 byte, so might aswell padd them up
 	bool padding2;
+};
+
+struct SmallInfoHeader
+{
+	int intInfo;
+	float floatInfo;
+	char charInfo1;
+	char charInfo2;
+	char charInfo3;
+	char charInfo4;
 };
 
 //Small info structs
