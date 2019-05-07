@@ -1,6 +1,10 @@
 #include "Walker.h"
-
-
+#include "../GameObjectManager.h"
+#include "../Player.h"
+#include <list>
+#include <chrono>
+#include <iostream>
+#include <chrono>
 
 Walker::Walker(Mesh * mesh, Type type, Room* room, const glm::vec3& position):
 	GameObject(mesh, type)
@@ -105,7 +109,7 @@ void Walker::calculatePath(float dt)
 	if (m_room->getGrid()->failedGettingGridCell())
 		canRunAStar = false;
 
-	m_AStarTimer += dt;
+	m_AStarTimer += dt; 
 
 	// Runs every half second
 	if (m_AStarTimer >= 1.f) {

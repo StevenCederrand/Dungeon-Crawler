@@ -39,6 +39,7 @@ private:
 
 	
 	void roomManager(GameObject* object);
+	void spawner(Room* currentRoom, int numberOfEnemies);
 
 
 private:

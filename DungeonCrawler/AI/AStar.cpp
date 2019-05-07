@@ -1,7 +1,6 @@
 #include "AStar.h"
 #include <algorithm>
 #include <System/Log.h>
-
 bool nodeComparator(const Node* n1, const Node* n2)
 {
 	if (n2->fCost > n1->fCost) 
@@ -56,7 +55,6 @@ std::vector<Node> AStar::findPath(GameObject* gameObject, const GridCell& start,
 	closedList.reserve(250);
 	
 	const GridCell* goal = &destination;
-
 
 	Node* current = new Node(start.x, start.z, nullptr, 0, getHCost(start, *goal));
 	openList.emplace_back(current);

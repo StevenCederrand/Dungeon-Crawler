@@ -19,11 +19,6 @@
 #include <chrono>
 #include <thread>
 
-void loadObj(Parser* parser, GLinit* glInit, std::string filename, std::string name) {
-	ParserData* data = parser->loadFromObj(filename);
-	glInit->createMesh(name, data);
-}
-
 PlayState::PlayState() {
 
 	m_parser = new Parser();
@@ -68,8 +63,6 @@ PlayState::PlayState() {
 	m_GLinit->createMesh("Enemy", enemyData);
 	#pragma endregion
 
-
-	
 	//we want to setUp the world
 	constructWorld();
 }
@@ -126,43 +119,6 @@ void PlayState::renderImGUI()
 void PlayState::render() {
 	m_renderer->render();
 }
-//A general function that creates is targeted to room creation
-void PlayState::createRoom(std::string filename, std::string key) {
-	ParserData* roomData = m_parser->loadFromObj(filename);
-	Mesh* room = m_GLinit->createMesh(key, roomData);
-	//m_gameObjectManager->addGameObject(new Room(room, ROOM, glm::vec3(0.f, 0.f, 0.f)));
-}
-
-void PlayState::spawnEnemies(int minX, int maxX, int minZ, int maxZ) {
-	Mesh* boxMesh = MeshMap::getMesh("Character");
-	Mesh* cubeMesh = MeshMap::getMesh("Cube");
-	//check the collsiion and then write to binary
-	bool enemy = false;
-	for (int i = 0; i < 20; i++) {
-		if (!enemy) {
-			enemy = true;
-			m_gameObjectManager->addGameObject(new Box(boxMesh, BOX,
-				glm::vec3(
-					Randomizer::single(minX, maxX), //-30.f, 30.f
-					0.f,
-					Randomizer::single(minZ, maxZ) //-15.f, 15.f
-				)));
-		}
-		else {
-			m_gameObjectManager->addGameObject(new Box(cubeMesh, BOX,
-				glm::vec3(
-					Randomizer::single(minX, maxX),
-					0.f,
-					Randomizer::single(minZ, maxZ) //-15.f, 15.f
-				)));
-		}
-	}
-
-	//m_shooter = new Shooter(boxMesh, SHOOTER);
-	//m_gameObjectManager->addGameObject(m_shooter);
-	//m_walker = new Walker(boxMesh, WALKER);
-	m_gameObjectManager->addGameObject(m_walker);
-}
 
 void PlayState::resetPlayer()
 {
@@ -186,18 +142,15 @@ void PlayState::constructWorld()
 	Mesh* healthPlaneMesh = MeshMap::getMesh("HealthPlane");
 
 	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
-	Mesh* enemyMesh = MeshMap::getMesh("Enemy");
 	Mesh* roomStart = MeshMap::getMesh("RoomStart");
 	Mesh* roomEnd = MeshMap::getMesh("RoomEnd");
 	Mesh* door = MeshMap::getMesh("Door");
 
-	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 1.5f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
+	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 10.0f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
 	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
 	m_lightManager->addLight(glm::vec3(0.f, 5.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
 
-
-	//Room * room = new Room(roomMesh, ROOM, m_player, glm::vec3(0.f, 0.f, 0.f));
-	Room* r_roomStart = new Room(roomStart, ROOM, m_player);
+	Room* r_roomStart = new Room(roomStart, ROOM_EMPTY, m_player);
 	Room* r_roomEnd = new Room(roomEnd, ROOM, m_player);
 
 	m_gameObjectManager->addGameObject(r_roomStart);
@@ -216,8 +169,6 @@ void PlayState::constructWorld()
 	m_gameObjectManager->addGameObject(m_powerUp);
 	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 0, 10, true, glm::vec3(-5.f, 1.5f, -7.f));
 	m_gameObjectManager->addGameObject(m_powerUp);
-
-
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -238,16 +189,9 @@ void PlayState::constructWorld()
 
 	//m_shooter = new Shooter(enemyMesh, SHOOTER);
 	//m_gameObjectManager->addGameObject(m_shooter);
-	m_boss = new Boss(enemyMesh, BOSS, r_roomStart, glm::vec3(2.f, 0.f, 12.f));
-	m_gameObjectManager->addGameObject(m_boss);
-	for (int i = 0; i < 5; i++)
-	{
-	m_walker = new Walker(enemyMesh, WALKER, r_roomStart, glm::vec3(
-		Randomizer::single(-10.0f, 10.0f),
-		0.f,
-		Randomizer::single(-10.0f, 10.0f)));
-	m_gameObjectManager->addGameObject(m_walker);
-	}
+	//m_boss = new Boss(enemyMesh, BOSS, r_roomStart, glm::vec3(2.f, 0.f, 12.f));
+	//m_gameObjectManager->addGameObject(m_boss);
+
 
 	//Used for the player flashlight & shadow mapping from the 
 	//flashlights view

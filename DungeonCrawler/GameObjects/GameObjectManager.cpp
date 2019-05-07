@@ -5,6 +5,8 @@
 #include "../Audio/AudioEngine.h"
 #include "../Globals/Helper.h"
 #include "../System/Input.h"
+#include "../Graphics/MeshMap.h"
+#include "../Utility/Randomizer.h"
 
 GameObjectManager::GameObjectManager(Effects* effects)
 {
@@ -37,9 +39,8 @@ void GameObjectManager::update(float dt)
 	if (m_broadPhaseBox)
 		m_broadPhaseBox->setParentPosition(m_player->getPosition());
 
-	if (Input::isKeyReleased(GLFW_KEY_SPACE)) {
-		
-	}
+
+	
 	//------ Player collision with map ------
 	bool hasCollided = false;
 	glm::vec3 newVel = glm::vec3(0);
@@ -81,7 +82,8 @@ void GameObjectManager::update(float dt)
 		}
 
 
-		if (object->getType() == ROOM) {
+		if (object->getType() == ROOM || object->getType() == ROOM_EMPTY
+			|| object->getType() == ROOM_BOSS) {
 			this->roomManager(object);
 		}
 
@@ -172,7 +174,10 @@ void GameObjectManager::addGameObject(GameObject * gameObject)
 		if (objectType == SHOOTER || objectType == WALKER || objectType == BOSS) {
 			this->m_numberOfEnemies++;
 		}
-		else if (objectType == ROOM) {
+		//No matter the type of room, add it. 
+		else if (objectType == ROOM || objectType == ROOM_EMPTY 
+			|| objectType == ROOM_BOSS) {
+
 			Room* room = dynamic_cast<Room*>(gameObject);
 			this->m_rooms.push_back(room);
 		}
@@ -382,41 +387,61 @@ void GameObjectManager::handleEnemyAttacks(GameObject* object, float dt)
 void GameObjectManager::roomManager(GameObject* object) {
 	
 	if (m_numberOfEnemies == 0 && m_isLocked) {
+		//Remove the room from the vector of uncleared rooms
 		m_rooms.erase(m_rooms.begin() + m_currentRoom);
+		//Reset the player
 		m_player->setPlayerState(ROAMING);
-		LOG_WARNING("CLEARED ROOM");
+		//Find the 'door' object
 		for (size_t i = 0; i < m_gameObjects.size(); i++) {
 			if (m_gameObjects.at(i)->getType() == DOOR) {
+				//Remove the door
 				m_doorIndex = i;
-				glm::vec3 objectPosition = m_gameObjects.at(i)->getPosition();
-				m_gameObjects.at(i)->setPosition(glm::vec3(objectPosition.x, 100, objectPosition.z));
-				//Move the bounding box?
-				m_gameObjects.at(i)->setCollidable(false);
-				m_numberOfEnemies = 3; 
+				glm::vec3 objectPosition = m_gameObjects.at(m_doorIndex)->getPosition();
+				m_gameObjects.at(m_doorIndex)->setPosition(glm::vec3(objectPosition.x, 100, objectPosition.z));
+				m_gameObjects.at(m_doorIndex)->setCollidable(false);
 			}
 		}
+		//Unlock the room
 		m_isLocked = false;
 	}
-		
+	
 	//When the player is not in combat
 	if (m_player->getPlayerState() == ROAMING) {
 		for (size_t i = 0; i < m_rooms.size(); i++) {
-			//if the player has entered an uncharted room
+			if (m_rooms.at(i)->getType() == ROOM_EMPTY) {
+				//If the room is of type empty then we just set the door position to something
+				glm::vec3 objectPosition = m_gameObjects.at(m_doorIndex)->getPosition();
+				m_gameObjects.at(m_doorIndex)->setPosition(glm::vec3(objectPosition.x, 100, objectPosition.z));
+				m_gameObjects.at(m_doorIndex)->setCollidable(false);
+				continue;
+			}
 			if (m_rooms.at(i)->intersection(m_player->getPosition())) {
-				LOG_WARNING("ENTERED ROOM");
-
+				this->m_currentRoom = i;				
 				//Lock the doors
 				this->m_isLocked = !m_isLocked;
-				m_gameObjects.at(m_doorIndex)->setCollidable(true);
+				//Spawn the door
+				//m_gameObjects.at(m_doorIndex)->setCollidable(true);
 				glm::vec3 objectPosition = m_gameObjects.at(m_doorIndex)->getPosition();
-				m_gameObjects.at(m_doorIndex)->setPosition(glm::vec3(objectPosition.x, 0, objectPosition.z));
-				this->m_currentRoom = i;
-				
-				glm::vec4 maxMin = m_rooms.at(i)->getMaxMinValues();
-
+				m_gameObjects.at(m_doorIndex)->setPosition(glm::vec3(objectPosition.x, 0, objectPosition.z));				
 				//Swap the play state to fighting
 				m_player->setPlayerState(FIGHTING);
+				//Spawn enemies
+				this->spawner(m_rooms.at(i), Randomizer::single(1, 3));
 			}
 		}
 	}
+}
+
+void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
+
+	Mesh* enemyMesh = MeshMap::getMesh("Enemy");
+	for (int i = 0; i < numberOfEnemies; i++)
+	{
+	m_walker = new Walker(enemyMesh, WALKER, currentRoom, glm::vec3(
+		Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),
+		0.f,
+		Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)));
+	this->addGameObject(m_walker);
+	}
+
 }

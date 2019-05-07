@@ -14,6 +14,11 @@ static std::string vec3ToString(const glm::vec3& vec) {
 		+ std::to_string(vec.y) + " Z: " + std::to_string(vec.z) + "\n";
 	return x;
 }
+static std::string vec2ToString(const glm::vec2& vec) {
+	std::string x = "X: " + std::to_string(vec.x) + " Y: "
+		+ std::to_string(vec.y) + "\n";
+	return x;
+}
 
 
 #endif
