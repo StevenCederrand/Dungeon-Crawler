@@ -1,4 +1,3 @@
-#pragma once
 #ifndef _SHOOTER_H
 #define _SHOOTER_H
 #include "../GameObject.h"
@@ -15,6 +14,7 @@ public:
 	void amIDead();
 	bool getAliveStatus()const;
 	float getDistanceToPlayer()const;
+	void attackCooldown(float dt);
 
 private:
 
@@ -24,6 +24,7 @@ private:
 	bool m_isPlayerClose;
 	Type m_type;
 	bool m_amIAlive;
+	float m_attackCooldown;
 
 };
 

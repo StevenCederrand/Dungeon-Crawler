@@ -15,6 +15,7 @@ GameObjectManager::GameObjectManager(Effects* effects)
 	m_player = nullptr;
 	m_walker = nullptr;
 	m_shooter = nullptr;
+	m_boss = nullptr;
 }
 
 GameObjectManager::~GameObjectManager()
@@ -129,6 +130,11 @@ void GameObjectManager::update(float dt)
 				hitEnemy = true;
 				objectHit->setHit();
 			}
+			if (dynamic_cast<Boss*>(objectHit))
+			{
+				hitEnemy = true;
+				objectHit->setHit();
+			}
 
 			HitDescription desc;
 			desc.player = m_player;
@@ -164,7 +170,7 @@ void GameObjectManager::addGameObject(GameObject * gameObject)
 		}
 		Type objectType = gameObject->getType();
 
-		if (objectType == SHOOTER || objectType == WALKER) {
+		if (objectType == SHOOTER || objectType == WALKER || objectType == BOSS) {
 			this->m_numberOfEnemies++;
 		}
 		//No matter the type of room, add it. 
@@ -260,6 +266,12 @@ void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject
 						desc.shooter = m_shooter;
 						m_player->hit(desc);
 					}
+					if (dynamic_cast<Boss*>(object))
+					{
+						m_boss = dynamic_cast<Boss*>(object);
+						desc.boss = m_boss;
+						m_player->hit(desc);
+					}
 				}
 			}
 		}
@@ -323,6 +335,16 @@ void GameObjectManager::handleDeadEnemies(float dt)
 				continue;
 			}
 		}
+		if (dynamic_cast<Boss*>(object))
+		{
+			if (!dynamic_cast<Boss*>(object)->getAliveStatus())
+			{
+				this->m_numberOfEnemies--;
+				delete m_gameObjects[i];
+				m_gameObjects.erase(m_gameObjects.begin() + i);
+				continue;
+			}
+		}
 		if (dynamic_cast<PowerUps*>(object))
 		{
 			if (dynamic_cast<PowerUps*>(object)->powerTriggered())
@@ -350,6 +372,12 @@ void GameObjectManager::handleEnemyAttacks(GameObject* object, float dt)
 		{
 			m_shooter = dynamic_cast<Shooter*>(object);
 			desc.shooter = m_shooter;
+			m_player->hit(desc);
+		}
+		if (dynamic_cast<Boss*>(object))
+		{
+			m_boss = dynamic_cast<Boss*>(object);
+			desc.boss = m_boss;
 			m_player->hit(desc);
 		}
 	}

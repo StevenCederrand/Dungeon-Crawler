@@ -14,18 +14,21 @@ Shooter::Shooter(Mesh * mesh, Type type) :
 	this->m_type = type;
 	this->setPosition(glm::vec3(10.f, 0.f, 2.f));
 	this->m_amIAlive = true;
+	m_attackCooldown = 0.f;
 }
 
 void Shooter::update(float dt)
 {
 
 	amIDead();
+	attackCooldown(dt);
 }
 
 bool Shooter::meleeRange()
 {
-	if (getDistanceToPlayer() <= 2.5f)
+	if ((getDistanceToPlayer() <= 2.5f) && (m_attackCooldown <= 0.f))
 	{
+		m_attackCooldown = 2.5f;
 		return true;
 	}
 	return false;
@@ -70,4 +73,12 @@ float Shooter::getDistanceToPlayer() const
 	float length = sqrtf(xDir * xDir + zDir * zDir);
 
 	return length;
+}
+
+void Shooter::attackCooldown(float dt)
+{
+	if (m_attackCooldown > 0.f)
+	{
+		m_attackCooldown -= dt;
+	}
 }
