@@ -21,7 +21,8 @@ enum Type {
 	LIGHTSPHERE = 12,
 	DOOR = 13, 
 	GAMEOBJECT = 20,
-	POWERUPS = 21
+	POWERUPS = 21,
+	HEALTHPLANE = 22
 };
 
 class GameObject {

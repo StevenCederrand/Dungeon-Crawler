@@ -52,6 +52,7 @@
     <ClCompile Include="AI\AStar.cpp" />
     <ClCompile Include="GameObjects\Powerups.cpp" />
     <ClCompile Include="GameObjects\Enemies\Boss.cpp" />
+    <ClCompile Include="GameObjects\HealthPlane.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -123,5 +124,6 @@
     <ClInclude Include="Globals\Helper.h" />
     <ClInclude Include="System\Timer.h" />
     <ClInclude Include="GameObjects\Enemies\Boss.h" />
+    <ClInclude Include="GameObjects\HealthPlane.h" />
   </ItemGroup>
 </Project>

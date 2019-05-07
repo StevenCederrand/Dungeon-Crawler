@@ -38,6 +38,7 @@ private:
 	GameObject* m_shooter;
 	GameObject* m_powerUp;
 	GameObject* m_boss;
+	GameObject* m_healthPlane;
 
 	Effects* m_effects;
 };

@@ -13,5 +13,4 @@ newmtl FlyGuy_initialShadingGroup
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
 map_Kd FlyGuyLowPoly_albedo.png
-map_Bump FlyGuyLowPoly_normal.png
 bump FlyGuyLowPoly_normal.png

@@ -11,6 +11,7 @@
 #include "Graphics/Effects.h"
 #include "Parser/Parser.h"
 #include "Room.h"
+#include "HealthPlane.h"
 
 
 class GameObjectManager {
@@ -49,6 +50,7 @@ private:
 	Shooter* m_shooter;
 	PowerUps* m_powerup;
 	Boss* m_boss;
+	HealthPlane* m_healthPlane;
 	AABB* m_broadPhaseBox;
 	glm::vec4 m_maxMinValues; 
 	Effects* m_effects; 

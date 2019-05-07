@@ -12,6 +12,7 @@
 #include "GameObjects/Player.h"
 #include "GameObjects/Enemies/Walker.h"
 #include "GameObjects/Enemies/Shooter.h"
+#include "GameObjects/HealthPlane.h"
 #include "GameOverState.h"
 
 #include "Utility/Randomizer.h"
@@ -48,6 +49,7 @@ PlayState::PlayState() {
 	ParserData* doorData = m_parser->loadFromObj("doorEnd.obj");
 	ParserData* roomStart = m_parser->loadFromObj("roomStart.obj");
 	ParserData* roomEnd = m_parser->loadFromObj("roomEnd.obj");
+	ParserData* healthPlane = m_parser->loadFromObj("HealthPlane.obj");
 
 
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
@@ -57,7 +59,7 @@ PlayState::PlayState() {
 	m_GLinit->createMesh("Door", doorData);
 	m_GLinit->createMesh("RoomStart", roomStart);
 	m_GLinit->createMesh("RoomEnd", roomEnd);
-
+	m_GLinit->createMesh("HealthPlane", healthPlane);
 
 	m_GLinit->createMesh("Box", boxData);
 	m_GLinit->createMesh("PlayerModel", playerData);
@@ -181,6 +183,7 @@ void PlayState::constructWorld()
 
 	Mesh* boxMesh = MeshMap::getMesh("Box");
 	Mesh* playerMesh = MeshMap::getMesh("PlayerModel");
+	Mesh* healthPlaneMesh = MeshMap::getMesh("HealthPlane");
 
 	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
 	Mesh* enemyMesh = MeshMap::getMesh("Enemy");
@@ -200,17 +203,18 @@ void PlayState::constructWorld()
 	m_gameObjectManager->addGameObject(r_roomStart);
 	m_gameObjectManager->addGameObject(r_roomEnd);
 	m_gameObjectManager->addGameObject(new Box(door, DOOR));
-
+	
 	m_player = new Player(playerMesh, PLAYER);
 	m_gameObjectManager->addGameObject(m_player);
+	//m_healthPlane = new HealthPlane(healthPlaneMesh, HEALTHPLANE);
+	//m_gameObjectManager->addGameObject(m_healthPlane);
 
 
-
-	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 10, 0, 0, false, glm::vec3(10.f, 0.f, -5.f));
+	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 10, 0, 0, false, glm::vec3(10.f, 1.5f, -5.f));
 	m_gameObjectManager->addGameObject(m_powerUp);
-	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 10, 0, false, glm::vec3(2.f, 0.f, -10.f));
+	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 10, 0, false, glm::vec3(2.f, 1.5f, -10.f));
 	m_gameObjectManager->addGameObject(m_powerUp);
-	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 0, 10, true, glm::vec3(-5.f, 0.f, -7.f));
+	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 0, 10, true, glm::vec3(-5.f, 1.5f, -7.f));
 	m_gameObjectManager->addGameObject(m_powerUp);
 
 
@@ -234,7 +238,7 @@ void PlayState::constructWorld()
 
 	//m_shooter = new Shooter(enemyMesh, SHOOTER);
 	//m_gameObjectManager->addGameObject(m_shooter);
-	m_boss = new Boss(enemyMesh, BOSS, r_roomStart, glm::vec3(2.f, 0.f, 9.f));
+	m_boss = new Boss(enemyMesh, BOSS, r_roomStart, glm::vec3(2.f, 0.f, 12.f));
 	m_gameObjectManager->addGameObject(m_boss);
 	for (int i = 0; i < 5; i++)
 	{

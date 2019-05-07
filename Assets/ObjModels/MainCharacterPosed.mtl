@@ -13,3 +13,4 @@ newmtl MainCharacter
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
 map_Kd MainCharacter_albedo_1024.png
+bump MainCharacter_normal_1024.png
