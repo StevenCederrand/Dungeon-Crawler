@@ -9,7 +9,7 @@ Projectile::Projectile(const glm::vec3& startPosition, const std::vector<Node>& 
 	m_cellSize = cellSize;
 	m_isAtDestination = false;
 
-	m_aabb = new AABB(glm::vec3(-1.0f, 0.0f, -1.0f), glm::vec3(1.0f, 0.0f, 1.0f));
+	m_aabb = new AABB(glm::vec3(-0.35f, 0.0f, -0.35f), glm::vec3(0.35f, 0.0f, 0.35f));
 }
 
 Projectile::~Projectile()

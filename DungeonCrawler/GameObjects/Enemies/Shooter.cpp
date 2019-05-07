@@ -9,12 +9,12 @@ Shooter::Shooter(Mesh* mesh, Type type, Room* room, const glm::vec3& position, P
 {
 	this->m_room = room;
 	this->m_projectileManager = projectileManager;
-	this->m_health = 1.0f;
-	this->m_speed = 6.0f;
-	this->m_damage = 1.0f;
+	this->m_health = 10.0f;
+	this->m_speed = 8.0f;
+	this->m_damage = 0.5f;
 	this->m_currentCastTime = 0.0f;
-	this->m_maxShootingRange = 20.f;
-	this->m_castTime = 5.0f;
+	this->m_maxShootingRange = 15.f;
+	this->m_castTime = 1.5f;
 	this->m_isPlayerClose = false;
 	this->m_type = type;
 	this->m_amIAlive = true;
@@ -36,7 +36,7 @@ void Shooter::update(float dt)
 	if (lengthToPlayer > m_maxShootingRange)
 	{
 		// use A*
-		calculatePath(dt, false);
+		calculatePath(dt, false, true);
 		moveToTarget(dt);
 	}
 	else
@@ -59,9 +59,11 @@ void Shooter::update(float dt)
 			// Find a path using A* and create some kind of projectile that travels that path
 			m_castingSpell = false;
 			m_currentCastTime = 0.0f;
-			calculatePath(dt, true);
-			LOG_TRACE("BOOM");
-			m_projectileManager->spawnProjectile(new Projectile(getPosition(), m_path, m_damage, 12.0f, m_room->getGrid()->getCellSize()));
+			m_path.clear();
+			calculatePath(dt, true, false);
+			
+			if(m_path.size() > 0)
+				m_projectileManager->spawnProjectile(new Projectile(getPosition() + glm::vec3(0.0f, 1.0f, 0.0f), m_path, m_damage, 16.0f, m_room->getGrid()->getCellSize()));
 		}
 	}
 
@@ -74,7 +76,6 @@ void Shooter::hit(const HitDescription & desc)
 	Player* player = dynamic_cast<Player*>(desc.owner);
 	m_health -= player->getDamage();
 	amIDead();
-	LOG_WARNING("Shooter Health: " + std::to_string(m_health));
 }
 
 Type Shooter::getType()
@@ -100,13 +101,14 @@ bool Shooter::getAliveStatus() const
 	return m_amIAlive;
 }
 
-void Shooter::calculatePath(float dt, bool ignoreTimer)
+void Shooter::calculatePath(float dt, bool ignoreTimer, bool occupy)
 {
 
 	bool canRunAStar = true;
 
 	// Get the cell and occupy it
-	const GridCell& myCell = m_room->getGrid()->getCell(getPosition().x, getPosition().z, true, this);
+
+	const GridCell& myCell = m_room->getGrid()->getCell(getPosition().x, getPosition().z, occupy, this);
 	if (m_room->getGrid()->failedGettingGridCell())
 		canRunAStar = false;
 

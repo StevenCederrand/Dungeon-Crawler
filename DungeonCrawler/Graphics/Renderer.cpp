@@ -6,7 +6,7 @@
 #include "Globals/Settings.h"
 #define MESH_VECTOR_RESERVE_SIZE 150
 
-Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects)
+Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects, ProjectileManager* projectileManager)
 {
 	m_camera = camera;
 	m_lightManager = lightManager;
@@ -31,7 +31,8 @@ Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects)
 		(float)ScreenResolutionX / (float)ScreenResolutionY, NEAR_CLIP, FAR_CLIP);
 	m_framebuffer->setProjectionMatrix(projectionMatrix);
 
-	m_effects = effects; // Point to effect class
+	m_effects = effects;
+	m_projectileManager = projectileManager;
 }
 
 Renderer::~Renderer() {
@@ -85,6 +86,7 @@ void Renderer::render() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	
 	this->renderEffects();
+	this->renderProjectiles();
 }
 
 void Renderer::shadowPass() {
@@ -179,6 +181,36 @@ void Renderer::renderEffects()
 
 		glBindVertexArray(0);
 	}
+
+	effectsShader->unuse();
+	glDisable(GL_BLEND);
+}
+
+void Renderer::renderProjectiles()
+{
+	glEnable(GL_BLEND);
+	Shader* effectsShader = ShaderMap::getShader("EffectsShader");
+	effectsShader->use();
+	effectsShader->setMat4("viewMatrix", m_camera->getViewMatrix());
+	effectsShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+
+	glBindVertexArray(m_projectileManager->getVAO());
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(3);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_projectileManager->getTextureID());
+	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, m_projectileManager->getNumberOfEnemyProjectiles());
+	glBindTexture(GL_TEXTURE_2D, NULL);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
+	glDisableVertexAttribArray(3);
+
+	glBindVertexArray(0);
 
 	effectsShader->unuse();
 	glDisable(GL_BLEND);

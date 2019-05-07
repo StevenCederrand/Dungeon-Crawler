@@ -29,6 +29,7 @@ float AStar::getHCost(const GridCell& start, const GridCell& destination)
 
 float AStar::getHCost(const Node& start, const GridCell& destination)
 {
+
 	float diffX = start.x - destination.x;
 	float diffZ = start.z - destination.z;
 
@@ -122,7 +123,6 @@ std::vector<Node> AStar::findPath(GameObject* gameObject, const GridCell& start,
 			if (!c.valid) continue;
 
 			noValidAdjacentCells = false;
-
 
 			float gCost = current->gCost + getHCost(*current, c) + gCostAdditional;
 			float hCost = getHCost(c, *goal);

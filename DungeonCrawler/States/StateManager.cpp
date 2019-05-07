@@ -26,6 +26,7 @@ void StateManager::pushTemporaryState(State * newState)
 {
 	newState->setManager(this);
 	m_states.emplace_back(newState);
+	m_stateWasChanged = true;
 }
 
 void StateManager::setState(State* newState)
@@ -34,6 +35,7 @@ void StateManager::setState(State* newState)
 		clearStates();
 		newState->setManager(this);
 		m_states.emplace_back(newState);
+		m_stateWasChanged = true;
 	}
 	else {
 		printf("Warning: Trying to push a new state which is a nullptr!\n");
@@ -59,6 +61,16 @@ void StateManager::render()
 	if (!m_states.empty()) {
 		m_states.back()->render();
 	}
+}
+
+const bool StateManager::wasStateChanged() const
+{
+	return m_stateWasChanged;;
+}
+
+void StateManager::resetWasStateChanged()
+{
+	m_stateWasChanged = false;
 }
 
 void StateManager::clearStates()

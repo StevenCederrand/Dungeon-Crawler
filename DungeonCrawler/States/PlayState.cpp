@@ -37,9 +37,9 @@ PlayState::PlayState() {
 
 	Camera::active = m_camera;
 	m_lightManager = new LightManager()	;
-	m_renderer = new Renderer(m_camera, m_lightManager, m_effects);
+	m_projectileManager = new ProjectileManager(m_GLinit);
+	m_renderer = new Renderer(m_camera, m_lightManager, m_effects, m_projectileManager);
 	m_gameObjectManager = new GameObjectManager(m_effects);
-	m_projectileManager = new ProjectileManager();
 	AudioEngine::loadSSO("Game.sso");
 	#pragma endregion
 		
@@ -173,7 +173,7 @@ void PlayState::resetPlayer()
 	delete m_lightManager;
 
 	m_lightManager = new LightManager();
-	m_renderer = new Renderer(m_camera, m_lightManager, m_effects);
+	m_renderer = new Renderer(m_camera, m_lightManager, m_effects, m_projectileManager);
 	m_gameObjectManager = new GameObjectManager(m_effects);
 	//we want to setUp the world
 	constructWorld();
@@ -237,13 +237,22 @@ void PlayState::constructWorld()
 
 	//m_shooter = new Shooter(enemyMesh, SHOOTER);
 	//m_gameObjectManager->addGameObject(m_shooter);
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < 10; i++)
 	{
-	GameObject* enemy = new Shooter(enemyMesh, SHOOTER, r_roomStart, glm::vec3(
-		Randomizer::single(-10.0f, 10.0f),
-		0.f,
-		Randomizer::single(-10.0f, 10.0f)), m_projectileManager);
-	m_gameObjectManager->addGameObject(enemy);
+		GameObject* enemy = new Shooter(enemyMesh, SHOOTER, r_roomStart, glm::vec3(
+			Randomizer::single(-10.0f, 10.0f),
+			0.f,
+			Randomizer::single(-10.0f, 10.0f)), m_projectileManager);
+		m_gameObjectManager->addGameObject(enemy);
+	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		GameObject* enemy = new Walker(enemyMesh, WALKER, r_roomStart, glm::vec3(
+			Randomizer::single(-10.0f, 10.0f),
+			0.f,
+			Randomizer::single(-10.0f, 10.0f)));
+		m_gameObjectManager->addGameObject(enemy);
 	}
 
 	//Used for the player flashlight & shadow mapping from the 

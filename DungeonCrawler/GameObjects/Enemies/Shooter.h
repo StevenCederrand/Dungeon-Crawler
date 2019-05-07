@@ -19,7 +19,7 @@ public:
 	bool getAliveStatus()const;
 
 private:
-	void calculatePath(float dt, bool ignoreTimer);
+	void calculatePath(float dt, bool ignoreTimer, bool occupy);
 	void moveToTarget(float dt);
 
 private:
