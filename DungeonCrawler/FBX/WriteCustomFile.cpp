@@ -245,6 +245,11 @@ void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //specia
 	delete bbvArray;
 }
 
+void WriteCustomFile::WriteMaterial(Material currentMaterial)
+{
+	//WRITE THE MATERIAL TO FILE
+}
+
 void WriteCustomFile::SmallFile()
 {
 	SmallInfoHeader lsmallInfoHeader{ 1 };
@@ -261,7 +266,6 @@ void WriteCustomFile::SmallFile()
 	outfileBinary.write((const char*)&lsmallInfoHeader, sizeof(SmallInfoHeader));
 	outfileBinary.close();
 }
-
 
 
 //STUFF I FIX:

@@ -133,6 +133,36 @@ void SaveHierarchy::m_SaveStaticMeshNode(FbxNode* pNode)
 				m_SaveStaticMesh(pNode, collisionBool, staticMeshBool);	//saves relevant info in m_mesh
 				m_file.WriteStaticMesh(m_staticMesh);	//sends m_mesh to file writer for static mesh
 				m_staticMesh.PrepareForNewMesh();
+
+				//write materialInfo
+				FbxMesh* lMesh = (FbxMesh*)pNode->GetNodeAttribute();
+				SaveMaterial(lMesh);
+
+				//do check if this material has already been written
+
+				bool exists = false;
+
+				m_materialIDSent.push_back(m_Material.materialID);
+				if (m_materialIDSent.size() >= 2)
+				{
+					for (int j = 0; j < m_materialIDSent.size()-1; j++ && exists == false)
+					{
+						if (m_materialIDSent[m_materialIDSent.size() - 1] == m_materialIDSent[j])
+						{
+							exists = true;
+						}
+					}
+				}
+
+				if (exists == false)
+				{
+					m_file.WriteMaterial(m_Material);
+				}
+				else if (exists == true)
+				{
+					m_materialIDSent.pop_back();
+				}
+
 			}
 			else  //dynamic
 			{
@@ -331,11 +361,6 @@ void SaveHierarchy::m_SaveStaticMesh(FbxNode* pNode, bool collision, bool static
 
 	FbxMesh* lMesh = (FbxMesh*)pNode->GetNodeAttribute();
 
-	//materialTest
-	DisplayMaterialConnections(lMesh);
-	SaveMaterial(lMesh);
-
-
 	int lPolygonCount = lMesh->GetPolygonCount();
 	int lVertexCounterStatic = 0;
 	int lPolygonSize = lMesh->GetPolygonSize(0); //checks first polygon, all should be 3
@@ -489,19 +514,14 @@ void SaveHierarchy::CheckUniqueMaterial(FbxNode* pNode) //checks if the meshes m
 					if (lMatId >= 0)
 					{
 						int nr = lMaterial->GetUniqueID(); //MAKES UNIQUE ID
-						m_staticMesh.setMaterialID(nr);
-
 						m_uniqueMaterial.push_back(nr);
+
 						bool exists = false;
-						for (int j = 0; j < m_uniqueMaterial.size(); j++ && exists == false)
+						for (int j = 0; j < m_uniqueMaterial.size()-1; j++ && exists == false)
 						{
 							if (m_uniqueMaterial[m_uniqueMaterial.size()-1] == m_uniqueMaterial[j])
 							{
 								exists = true;
-							}
-							if ((m_uniqueMaterial.size()-1) == j)
-							{
-								exists = false;
 							}
 						}
 						if (exists == false)
@@ -517,13 +537,186 @@ void SaveHierarchy::CheckUniqueMaterial(FbxNode* pNode) //checks if the meshes m
 			m_staticMesh.setMaterialID(-1);
 		}
 	}
+	printf("nrOFmaterial %i \n", m_nrOfMaterial);
 }
 
 void SaveHierarchy::SaveMaterial(FbxMesh* pMesh)
 {
-	
+	SaveMaterialConnections(pMesh);
 }
 
+void SaveHierarchy::SaveMaterialConnections(FbxMesh* pMesh)
+{
+	int i, l, lPolygonCount = pMesh->GetPolygonCount();
+
+	char header[MAT_HEADER_LENGTH];
+
+	DisplayString("    Polygons Material Connections");
+
+	//check whether the material maps with only one mesh
+	bool lIsAllSame = true;
+	for (l = 0; l < pMesh->GetElementMaterialCount(); l++)
+	{
+
+		FbxGeometryElementMaterial* lMaterialElement = pMesh->GetElementMaterial(l);
+		if (lMaterialElement->GetMappingMode() == FbxGeometryElement::eByPolygon)
+		{
+			lIsAllSame = false;
+			break;
+		}
+	}
+
+	//For eAllSame mapping type, just out the material and texture mapping info once
+	if (lIsAllSame)
+	{
+		if (pMesh->GetElementMaterialCount() != 0)
+		{
+			for (l = 0; l < pMesh->GetElementMaterialCount(); l++)
+			{
+
+				FbxGeometryElementMaterial* lMaterialElement = pMesh->GetElementMaterial(l);
+				if (lMaterialElement->GetMappingMode() == FbxGeometryElement::eAllSame)
+				{
+					FbxSurfaceMaterial* lMaterial = pMesh->GetNode()->GetMaterial(lMaterialElement->GetIndexArray().GetAt(0));
+					int lMatId = lMaterialElement->GetIndexArray().GetAt(0);
+					if (lMatId >= 0)
+					{
+						int nr = lMaterial->GetUniqueID(); //GETS UNIQUE ID
+						m_staticMesh.setMaterialID(nr);
+						m_Material.materialID = nr;
+
+						DisplayInt("        All polygons share the same material in mesh ", l);
+						SaveMaterialTextureConnections(lMaterial, lMatId, l);
+					}
+				}
+			}
+		}
+		//no material
+		else if (pMesh->GetElementMaterialCount() == 0)		//no material
+		{
+			m_staticMesh.setMaterialID(-1);
+			m_Material.materialID = -1;
+		}
+	}
+
+	//For eByPolygon mapping type, just out the material and texture mapping info once
+	else
+	{
+		for (i = 0; i < lPolygonCount; i++)
+		{
+			DisplayInt("        Polygon ", i);
+
+			for (l = 0; l < pMesh->GetElementMaterialCount(); l++)
+			{
+
+				FbxGeometryElementMaterial* lMaterialElement = pMesh->GetElementMaterial(l);
+				FbxSurfaceMaterial* lMaterial = NULL;
+				int lMatId = -1;
+				lMaterial = pMesh->GetNode()->GetMaterial(lMaterialElement->GetIndexArray().GetAt(i));
+				lMatId = lMaterialElement->GetIndexArray().GetAt(i);
+
+				if (lMatId >= 0)
+				{
+					SaveMaterialTextureConnections(lMaterial, lMatId, l);
+				}
+			}
+		}
+	}
+}
+
+void SaveHierarchy::SaveMaterialTextureConnections(FbxSurfaceMaterial* pMaterial, int pMatId, int l)
+{
+	if (!pMaterial)
+		return;
+
+	FbxProperty lProperty;
+
+	//Diffuse Textures
+	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sDiffuse);
+	SaveTextureNames(lProperty, 1);
+
+	//Normal Map Textures
+	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sNormalMap);
+	SaveTextureNames(lProperty, 2);
+
+	m_Material.whatShader = 1;
+	//material ready to be written to file
+}
+
+void SaveHierarchy::SaveTextureNames(FbxProperty &pProperty, int mapKind)
+{
+	int lLayeredTextureCount = pProperty.GetSrcObjectCount<FbxLayeredTexture>();
+	if (lLayeredTextureCount > 0)
+	{
+		for (int j = 0; j < lLayeredTextureCount; ++j)
+		{
+			FbxLayeredTexture *lLayeredTexture = pProperty.GetSrcObject<FbxLayeredTexture>(j);
+			int lNbTextures = lLayeredTexture->GetSrcObjectCount<FbxTexture>();
+
+			for (int k = 0; k < lNbTextures; ++k)
+			{
+
+			}
+		}
+	}
+	else
+	{
+		//no layered texture simply get on the property
+		int lNbTextures = pProperty.GetSrcObjectCount<FbxTexture>();
+
+		if (lNbTextures > 0)
+		{
+
+			for (int j = 0; j < lNbTextures; ++j)
+			{
+				FbxTexture* lTexture = pProperty.GetSrcObject<FbxTexture>(j);
+				FbxFileTexture* lTextureFile = pProperty.GetSrcObject<FbxFileTexture>(j);
+				if (lTexture)
+				{
+
+					//the path to the file, save the last part only?
+					std::string nameOfTexture = lTextureFile->GetFileName();
+					int fileStart = nameOfTexture.find_last_of("/");
+					std::string nameOfTextureLastPart = nameOfTexture.substr(fileStart + 1);
+					int nameOfTextureLastPartLength = nameOfTextureLastPart.length();
+
+					//1 = albedo 2 = normal
+					if (mapKind == 1)
+					{
+						for (int k = 0; k < nameOfTextureLastPartLength; k++) //100 spaces in the variable
+						{
+							m_Material.nameOfAlbedo[k] = nameOfTextureLastPart[k];
+						}
+						for (int k = nameOfTextureLastPartLength; k < 100; k++)
+						{
+							m_Material.nameOfAlbedo[k] = ' ';
+						}
+						m_Material.nrOfTextures++;
+					}
+					else if (mapKind == 2)
+					{
+						for (int k = 0; k < nameOfTextureLastPartLength; k++) //100 spaces in the variable
+						{
+							m_Material.nameOfNormal[k] = nameOfTextureLastPart[k];
+						}
+						for (int k = nameOfTextureLastPartLength; k < 100; k++)
+						{
+							m_Material.nameOfNormal[k] = ' ';
+						}
+						m_Material.nrOfTextures++;
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+
+
+/*
+//Save texture names in m_Material
 void SaveHierarchy::DisplayTextureNames(FbxProperty &pProperty, FbxString& pConnectionString)
 {
 	int lLayeredTextureCount = pProperty.GetSrcObjectCount<FbxLayeredTexture>();
@@ -568,9 +761,24 @@ void SaveHierarchy::DisplayTextureNames(FbxProperty &pProperty, FbxString& pConn
 				{
 					pConnectionString += "\"";
 					pConnectionString += (char*)lTexture->GetName();
-					std::string boi = lTextureFile->GetFileName(); //GETS TGE PATH
 					pConnectionString += "\"";
 					pConnectionString += " ";
+
+					//the path to the file, save the last part only?
+					std::string nameOfTexture = lTextureFile->GetFileName();
+					int fileStart = nameOfTexture.find_last_of("/");
+					std::string nameOfTextureLastPart = nameOfTexture.substr(fileStart+1);
+					
+					//should check if albedo or normal, then write it in write file
+					int nameOfTextureLastPartLength = nameOfTextureLastPart.length();
+					for (int k = 0; k < nameOfTextureLastPartLength; k++) //100 spaces in the variable
+					{
+						m_Material.nameOfAlbedo[k] = nameOfTextureLastPart[k];
+					}
+					for (int k = nameOfTextureLastPartLength; k < 100; k++)
+					{
+						m_Material.nameOfAlbedo[k] = ' ';
+					}
 				}
 			}
 			pConnectionString += "of ";
@@ -601,7 +809,6 @@ void SaveHierarchy::DisplayMaterialTextureConnections(FbxSurfaceMaterial* pMater
 
 
 
-	/*
 	//DiffuseFactor Textures
 	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sDiffuseFactor);
 	DisplayTextureNames(lProperty, lConnectionString);
@@ -653,7 +860,6 @@ void SaveHierarchy::DisplayMaterialTextureConnections(FbxSurfaceMaterial* pMater
 	//ReflectionFactor Textures
 	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sReflectionFactor);
 	DisplayTextureNames(lProperty, lConnectionString);
-	*/
 
 
 	//Update header with material info
@@ -692,28 +898,32 @@ void SaveHierarchy::DisplayMaterialConnections(FbxMesh* pMesh)
 	//For eAllSame mapping type, just out the material and texture mapping info once
 	if (lIsAllSame)
 	{
-		for (l = 0; l < pMesh->GetElementMaterialCount(); l++)
+		if (pMesh->GetElementMaterialCount() != 0)
 		{
-
-			FbxGeometryElementMaterial* lMaterialElement = pMesh->GetElementMaterial(l);
-			if (lMaterialElement->GetMappingMode() == FbxGeometryElement::eAllSame)
+			for (l = 0; l < pMesh->GetElementMaterialCount(); l++)
 			{
-				FbxSurfaceMaterial* lMaterial = pMesh->GetNode()->GetMaterial(lMaterialElement->GetIndexArray().GetAt(0));
-				int lMatId = lMaterialElement->GetIndexArray().GetAt(0);
-				if (lMatId >= 0)
-				{
-					int nr = lMaterial->GetUniqueID(); //GETS UNIQUE ID
-					m_staticMesh.setMaterialID(nr);
 
-					DisplayInt("        All polygons share the same material in mesh ", l);
-					DisplayMaterialTextureConnections(lMaterial, header, lMatId, l);
+				FbxGeometryElementMaterial* lMaterialElement = pMesh->GetElementMaterial(l);
+				if (lMaterialElement->GetMappingMode() == FbxGeometryElement::eAllSame)
+				{
+					FbxSurfaceMaterial* lMaterial = pMesh->GetNode()->GetMaterial(lMaterialElement->GetIndexArray().GetAt(0));
+					int lMatId = lMaterialElement->GetIndexArray().GetAt(0);
+					if (lMatId >= 0)
+					{
+						//int nr = lMaterial->GetUniqueID(); //GETS UNIQUE ID
+						//m_staticMesh.setMaterialID(nr);
+
+						DisplayInt("        All polygons share the same material in mesh ", l);
+						DisplayMaterialTextureConnections(lMaterial, header, lMatId, l);
+					}
 				}
 			}
 		}
-
 		//no material
-		if (l == 0)
-			DisplayString("        no material applied");
+		else if (pMesh->GetElementMaterialCount() == 0)		//no material
+		{
+			//m_staticMesh.setMaterialID(-1);
+		}
 	}
 
 	//For eByPolygon mapping type, just out the material and texture mapping info once
@@ -803,3 +1013,8 @@ void SaveHierarchy::DisplayMaterialMapping(FbxMesh* pMesh)
 
 	DisplayString("");
 }
+*/
+
+
+NEXT STEP: make sure the material is loaded in on the right place, after vertices
+GIve them a path to assets so they can find the textures

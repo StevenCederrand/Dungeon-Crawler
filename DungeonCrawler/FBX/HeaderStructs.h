@@ -59,20 +59,11 @@ struct BoundingBoxVertex
 //Write all materials header after vertices, maybe liek this?
 struct Material
 {
-	char Albedo[100];
-	char Normal[100];
+	char nameOfAlbedo[100];
+	char nameOfNormal[100];
 	unsigned int materialID;
 	unsigned int nrOfTextures; //Will be 2 right now, albedo and normalmap
+	unsigned int whatShader;
 	//texture buffer pointer
 	//shader int pointer
-};
-
-struct Texture
-{
-	//texture buffer
-};
-
-struct ShaderOption
-{
-	//what shader it should use
 };

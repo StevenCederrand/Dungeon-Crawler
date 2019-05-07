@@ -12,12 +12,16 @@ private:
 	StaticMesh m_staticMesh; //will only be one, load one at a time, replaced
 	BoundingBoxMesh m_bBMesh;
 	MainHeader m_mainHeader;
+
+	Material m_Material;
+
 	WriteCustomFile m_file; //will only be one, never replaced
 	int m_nrOfNodes;
 	int m_nrOfStaticMesh;
 	int m_nrOfBoundingBox;
 	int m_nrOfMaterial;
 	std::vector<int> m_uniqueMaterial;
+	std::vector<int> m_materialIDSent;
 
 	void m_SaveControlPoints(FbxMesh* pMesh, bool collision);
 	void m_SaveControlPointsIndex(FbxMesh* pMesh, int i, int j, bool collision);
@@ -38,6 +42,9 @@ public:
 	//material
 	void CheckUniqueMaterial(FbxNode* pNode);
 	void SaveMaterial(FbxMesh* pMesh);
+	void SaveMaterialConnections(FbxMesh* pMesh);
+	void SaveMaterialTextureConnections(FbxSurfaceMaterial* pMaterial, int pMatId, int l);
+	void SaveTextureNames(FbxProperty &pProperty, int mapKind);
 	void DisplayTextureNames(FbxProperty &pProperty, FbxString& pConnectionString);
 	void DisplayMaterialTextureConnections(FbxSurfaceMaterial* pMaterial, char * header, int pMatId, int l);
 	void DisplayMaterialConnections(FbxMesh* pMesh);
