@@ -358,16 +358,21 @@ void GameObjectManager::handleEnemyAttacks(GameObject* object, float dt)
 void GameObjectManager::roomManager(GameObject* object) {
 	
 	if (m_numberOfEnemies == 0 && m_isLocked) {
+		//Remove the room from the vector of uncleared rooms
 		m_rooms.erase(m_rooms.begin() + m_currentRoom);
+		//Reset the player
 		m_player->setPlayerState(ROAMING);
+		//Find the 'door' object
 		for (size_t i = 0; i < m_gameObjects.size(); i++) {
 			if (m_gameObjects.at(i)->getType() == DOOR) {
+				//Remove the door
 				m_doorIndex = i;
 				glm::vec3 objectPosition = m_gameObjects.at(m_doorIndex)->getPosition();
 				m_gameObjects.at(m_doorIndex)->setPosition(glm::vec3(objectPosition.x, 100, objectPosition.z));
 				m_gameObjects.at(m_doorIndex)->setCollidable(false);
 			}
 		}
+		//Unlock the room
 		m_isLocked = false;
 	}
 	
@@ -382,29 +387,26 @@ void GameObjectManager::roomManager(GameObject* object) {
 				continue;
 			}
 			if (m_rooms.at(i)->intersection(m_player->getPosition())) {
+				this->m_currentRoom = i;				
 				//Lock the doors
 				this->m_isLocked = !m_isLocked;
+				//Spawn the door
 				//m_gameObjects.at(m_doorIndex)->setCollidable(true);
 				glm::vec3 objectPosition = m_gameObjects.at(m_doorIndex)->getPosition();
-				m_gameObjects.at(m_doorIndex)->setPosition(glm::vec3(objectPosition.x, 0, objectPosition.z));
-				this->m_currentRoom = i;
-				
-				glm::vec4 maxMin = m_rooms.at(i)->getMaxMinValues();
-
+				m_gameObjects.at(m_doorIndex)->setPosition(glm::vec3(objectPosition.x, 0, objectPosition.z));				
 				//Swap the play state to fighting
 				m_player->setPlayerState(FIGHTING);
-
 				//Spawn enemies
-				this->spawner(m_rooms.at(i));
+				this->spawner(m_rooms.at(i), Randomizer::single(1, 3));
 			}
 		}
 	}
 }
 
-void GameObjectManager::spawner(Room* currentRoom) {
+void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
 
 	Mesh* enemyMesh = MeshMap::getMesh("Enemy");
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < numberOfEnemies; i++)
 	{
 	m_walker = new Walker(enemyMesh, WALKER, currentRoom, glm::vec3(
 		Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),

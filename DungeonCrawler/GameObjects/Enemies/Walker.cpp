@@ -2,7 +2,6 @@
 #include "../GameObjectManager.h"
 #include "../Player.h"
 #include <list>
-#include <System/Log.h>
 #include <chrono>
 #include <iostream>
 #include <chrono>
@@ -100,7 +99,7 @@ void Walker::calculatePath(float dt)
 	if (m_room->getGrid()->failedGettingGridCell())
 		canRunAStar = false;
 
-	m_AStarTimer += dt;
+	m_AStarTimer += dt; 
 
 	// Runs every half second
 	if (m_AStarTimer >= 1.f) {

@@ -12,9 +12,12 @@ public:
 	void update(float dt);
 	bool intersection(glm::vec3 position);
 
-	void setupMaxMinValues();
 	GridSystem* getGrid() const;
+
+	const glm::vec2& getCentrePosition() const;
+
 private:
+	void setupMaxMinValues();
 	void calculateCentrePosition();
 private:
 	glm::vec2 centrePosition;
