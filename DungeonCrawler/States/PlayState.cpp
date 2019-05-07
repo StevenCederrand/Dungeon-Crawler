@@ -150,7 +150,7 @@ void PlayState::constructWorld()
 	Mesh* roomEnd = MeshMap::getMesh("RoomEnd");
 	Mesh* door = MeshMap::getMesh("Door");
 
-	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(-5.f, 10.0f, 0.f), glm::vec3(0.8f, .8f, 0.8f));
+	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(0.8f, 0.8f, 0.8f));
 	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
 	m_lightManager->addLight(glm::vec3(0.f, 5.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
 
@@ -189,28 +189,8 @@ void PlayState::constructWorld()
 
 	}
 
-	/*for (int i = 0; i < 10; i++)
-	{
-		GameObject* enemy = new Shooter(enemyMesh, SHOOTER, r_roomStart, glm::vec3(
-			Randomizer::single(-10.0f, 10.0f),
-			0.f,
-			Randomizer::single(-10.0f, 10.0f)), m_projectileManager);
-		m_gameObjectManager->addGameObject(enemy);
-	}
-
-	for (int i = 0; i < 5; i++)
-	{
-		GameObject* enemy = new Walker(enemyMesh, WALKER, r_roomStart, glm::vec3(
-			Randomizer::single(-10.0f, 10.0f),
-			0.f,
-			Randomizer::single(-10.0f, 10.0f)));
-		m_gameObjectManager->addGameObject(enemy);
-	}
-*/
 	//m_boss = new Boss(enemyMesh, BOSS, r_roomStart, glm::vec3(2.f, 0.f, 12.f));
 	//m_gameObjectManager->addGameObject(m_boss);
-
-
 
 	//Used for the player flashlight & shadow mapping from the 
 	//flashlights view

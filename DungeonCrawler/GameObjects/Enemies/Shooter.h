@@ -10,14 +10,12 @@ public:
 	~Shooter();
 	void update(float dt);
 
-	bool meleeRange();
 	void hit(const HitDescription& desc);
 	Type getType();
 	float getDamage()const;
 	void amIDead();
 	bool getAliveStatus()const;
 	float getDistanceToPlayer()const;
-	void attackCooldown(float dt);
 
 private:
 	void calculatePath(float dt, bool ignoreTimer, bool occupy);
