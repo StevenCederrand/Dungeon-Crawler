@@ -48,15 +48,15 @@ void MenuState::createUIElements()
 		glm::vec2((float)Application::windowWidth * 0.5f, (float)Application::windowHeight * 0.5),
 		glm::vec2(150.f, 100.f),
 		m_glInit,
-		"playbtn_active.png",
-		"playbtn_inactive.png");
+		"Play-Sel.png",
+		"Play-UnSel.png");
 
 	m_exitButton = new Button(
 		glm::vec2((float)Application::windowWidth * 0.5f, (float)Application::windowHeight * 0.30),
 		glm::vec2(150.f, 100.f),
 		m_glInit,
-		"exitbtn_active.png",
-		"exitbtn_inactive.png");
+		"Exit-Sel.png",
+		"Exit-UnSel.png");
 
 	m_uiManager->registerUIElement(m_logo);
 	m_uiManager->registerUIElement(m_playButton);

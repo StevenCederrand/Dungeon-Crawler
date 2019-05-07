@@ -43,8 +43,8 @@ void WinState::renderImGUI() {
 void WinState::registerUIButtons() {
 	this->m_return = new Button(glm::vec2(Application::windowWidth * 0.3, Application::windowHeight * 0.2f),
 		glm::vec2(400.f, 150.f), this->m_glInit,
-		"mainmenubtn_active.png",
-		"mainmenubtn_inactive.png");
+		"MainMenu-Sel.png",
+		"MainMenu-UnSel.png");
 
 	this->m_uiManager->registerUIElement(this->m_return);
 }
