@@ -5,11 +5,13 @@
 #include "Player.h"
 #include "Enemies/Walker.h"
 #include "Enemies/Shooter.h"
+#include "Enemies/Boss.h"
 #include "Powerups.h"
 #include "GameObject.h"
 #include "Graphics/Effects.h"
 #include "Parser/Parser.h"
 #include "Room.h"
+#include "HealthPlane.h"
 
 
 class GameObjectManager {
@@ -33,8 +35,11 @@ private:
 	void handlePlayerCollisionAgainstObjects(float dt, GameObject* object, glm::vec3& newVel, bool& hasCollided);
 	void handlePlayerShooting(float dt, GameObject* object, const glm::vec3& rayDir, float& rayLengthUntilCollision, GameObject* &hitGameObject);
 	void handleDeadEnemies(float dt);
+	void handleEnemyAttacks(GameObject* object, float dt);
+
 	
 	void roomManager(GameObject* object);
+	void spawner(Room* currentRoom, int numberOfEnemies);
 
 
 private:
@@ -45,6 +50,8 @@ private:
 	Walker* m_walker;
 	Shooter* m_shooter;
 	PowerUps* m_powerup;
+	Boss* m_boss;
+	HealthPlane* m_healthPlane;
 	AABB* m_broadPhaseBox;
 	glm::vec4 m_maxMinValues; 
 	Effects* m_effects; 

@@ -1,26 +1,27 @@
-#ifndef _SHOOTER_H
-#define _SHOOTER_H
+#ifndef _BOSS_H
+#define _BOSS_H
 #include <GameObjects/Room.h>
 #include <AI/AStar.h>
-#include <EnemyProjectile/ProjectileManager.h>
 
-class Shooter : public GameObject {
+class Boss : public GameObject
+{
 public:
-	Shooter(Mesh* mesh, Type type, Room* room, const glm::vec3& position, ProjectileManager* projectileManager);
-	~Shooter();
+	Boss(Mesh* mesh, Type type, Room* room, const glm::vec3& position);
+	~Boss();
 	void update(float dt);
+
 
 	bool meleeRange();
 	void hit(const HitDescription& desc);
 	Type getType();
 	float getDamage()const;
+	float getDistanceToPlayer() const;
 	void amIDead();
 	bool getAliveStatus()const;
-	float getDistanceToPlayer()const;
 	void attackCooldown(float dt);
 
 private:
-	void calculatePath(float dt, bool ignoreTimer, bool occupy);
+	void calculatePath(float dt);
 	void moveToTarget(float dt);
 
 private:
@@ -33,17 +34,11 @@ private:
 	bool m_amIAlive;
 	float m_attackCooldown;
 
-	float m_castTime;
-	float m_currentCastTime;
-	bool m_castingSpell;
-	float m_maxShootingRange;
 
 	float m_AStarTimer;
 	Room* m_room;
 	AStar* m_Astar;
 	std::vector<Node> m_path;
-	ProjectileManager* m_projectileManager;
-
 };
 
-#endif // !_SHOOTER_H
+#endif

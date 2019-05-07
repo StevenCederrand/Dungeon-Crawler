@@ -19,7 +19,7 @@ void GridSystem::constructCells()
 	int x_nrOfCells = m_width / m_cellSize;
 	int z_nrOfCells = m_length / m_cellSize;
 	const std::vector<AABB*>& boundingBoxes = m_room->getBoundingBoxes();
-	const glm::vec2 centerPos = glm::vec2(m_room->getPosition().x, m_room->getPosition().z);
+	const glm::vec2 centerPos = glm::vec2(m_room->getCentrePosition().x, m_room->getCentrePosition().y);
 
 	for (int z = 0; z < z_nrOfCells; z++)
 	{
@@ -33,13 +33,11 @@ void GridSystem::constructCells()
 				AABB* bb = boundingBoxes[i];
 				valid = bb->checkCollisionWithCell(cellPos, m_cellSize * 0.5f);
 			}
-			
 			m_cells.emplace_back(GridCell(cellPos.x, cellPos.y, valid));
 		}
 	}
 
 }
-float t = 0.f;
 
 void GridSystem::update(float dt)
 {
@@ -88,13 +86,6 @@ void GridSystem::update(float dt)
 
 	}
 
-	/*t += dt;
-	if (t > 0.5)
-	{
-		t = 0.f;
-		LOG_TRACE("Occupied cells: " + std::to_string(m_occupiedCells.size()));
-	}
-*/
 }
 
 const GridCell& GridSystem::getCell(float x, float z)
@@ -189,8 +180,8 @@ const bool GridSystem::failedGettingGridCell() const
 
 const int GridSystem::getCellIndex(float x, float z)
 {
-	int cx = (x + m_width * 0.5) / m_cellSize;
-	int cz = (z + m_length * 0.5) / m_cellSize;
+	int cx = ((x - m_room->getCentrePosition().x) + m_width * 0.5) / m_cellSize;
+	int cz = ((z - m_room->getCentrePosition().y) + m_length * 0.5) / m_cellSize;
 
 	int index = cx + cz * (m_width / m_cellSize);
 

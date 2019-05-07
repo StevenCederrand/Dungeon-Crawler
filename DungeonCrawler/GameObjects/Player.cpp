@@ -8,6 +8,7 @@
 #include "Enemies/Shooter.h"
 #include "../Audio/AudioEngine.h"
 #include "../Utility/Randomizer.h"
+#include "Enemies/Boss.h"
 #include "Powerups.h"
 
 Player::Player(Mesh* mesh, Type type) :
@@ -17,7 +18,7 @@ Player::Player(Mesh* mesh, Type type) :
 	this->setScale(glm::vec3(0.65f, 0.65f, 0.65f));
 	this->m_defaultSpeed = 7.f;
 	this->m_speed = 7.0f;
-	this->m_health = 4.f;
+	this->m_health = 232132134.f;
 	this->m_damage = 1.f;
 	this->m_automaticDamage = 1.f;
 	this->m_chargeDamage = 10.f;
@@ -75,9 +76,9 @@ void Player::update(float dt)
 	}
 	if (!m_debug)
 	{
-		weaponSwap();
-		if (m_weaponSlot == 1)
-		{
+		//weaponSwap();
+		//if (m_weaponSlot == 1)
+		//{
 			shootAutomatic(dt);
 			if ((m_pistolBullets <= 0) && (m_reloading == false) && (m_spraying == false))
 			{
@@ -85,11 +86,11 @@ void Player::update(float dt)
 				m_reloadTime = 2.f;
 			}
 			manualReload(dt);
-		}
-		if (m_weaponSlot == 2)
-		{
-			shootChargeShot(dt);
-		}
+		//}
+		//if (m_weaponSlot == 2)
+		//{
+			//shootChargeShot(dt);
+		//}
 		powerUpCd(dt);
 		move(dt);
 		dashCd(dt);
@@ -113,6 +114,11 @@ void Player::hit(const HitDescription & desc)
 		{
 			Shooter* shooter = dynamic_cast<Shooter*>(desc.owner);
 			m_health -= shooter->getDamage();
+		}
+		if (type == Type::BOSS)
+		{
+			Boss* boss = dynamic_cast<Boss*>(desc.owner);
+			m_health -= boss->getDamage();
 		}
 		m_iframes = 2.f;
 	}

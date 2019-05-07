@@ -408,6 +408,7 @@ void Parser::parseMaterialFile(const std::string& filename, ParserData* parserDa
 			else {
 				LOG_INFO("NORMAL MAP EXISTS");
 				parserData->setNormalMapName(TexturePath + attribs[attribs.size() - 1]);
+				
 			}
 		}
 	}

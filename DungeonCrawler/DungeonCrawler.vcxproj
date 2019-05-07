@@ -161,10 +161,12 @@
     <ClCompile Include="EnemyProjectile\Projectile.cpp" />
     <ClCompile Include="EnemyProjectile\ProjectileManager.cpp" />
     <ClCompile Include="GameObjects\Box.cpp" />
+    <ClCompile Include="GameObjects\Enemies\Boss.cpp" />
     <ClCompile Include="GameObjects\Enemies\Shooter.cpp" />
     <ClCompile Include="GameObjects\Enemies\Walker.cpp" />
     <ClCompile Include="GameObjects\GameObject.cpp" />
     <ClCompile Include="GameObjects\GameObjectManager.cpp" />
+    <ClCompile Include="GameObjects\HealthPlane.cpp" />
     <ClCompile Include="GameObjects\Player.cpp" />
     <ClCompile Include="GameObjects\LightSphere.cpp" />
     <ClCompile Include="GameObjects\Powerups.cpp" />
@@ -213,10 +215,12 @@
     <ClInclude Include="EnemyProjectile\Projectile.h" />
     <ClInclude Include="EnemyProjectile\ProjectileManager.h" />
     <ClInclude Include="GameObjects\Box.h" />
+    <ClInclude Include="GameObjects\Enemies\Boss.h" />
     <ClInclude Include="GameObjects\Enemies\Shooter.h" />
     <ClInclude Include="GameObjects\Enemies\Walker.h" />
     <ClInclude Include="GameObjects\GameObject.h" />
     <ClInclude Include="GameObjects\GameObjectManager.h" />
+    <ClInclude Include="GameObjects\HealthPlane.h" />
     <ClInclude Include="GameObjects\Player.h" />
     <ClInclude Include="GameObjects\LightSphere.h" />
     <ClInclude Include="GameObjects\Powerups.h" />

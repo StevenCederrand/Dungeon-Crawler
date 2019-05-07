@@ -21,9 +21,6 @@ public:
 	void render();
 private:
 
-	void createRoom(std::string filename, std::string key);
-	void spawnEnemies(int minX, int maxX, int minZ, int maxZ);
-	
 	void resetPlayer();
 	void constructWorld();
 
@@ -39,6 +36,8 @@ private:
 	GameObject* m_shooter;
 	GameObject* m_powerUp;
 	ProjectileManager* m_projectileManager;
+	GameObject* m_boss;
+	GameObject* m_healthPlane;
 	Effects* m_effects;
 };
 

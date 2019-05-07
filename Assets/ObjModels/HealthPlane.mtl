@@ -10,4 +10,4 @@ newmtl wire_008110135
 	Ka 0.0314 0.4314 0.5294
 	Kd 0.0314 0.4314 0.5294
 	Ks 0.3500 0.3500 0.3500
-map_Kd whiteTexture.png
+map_Kd HPBar.png

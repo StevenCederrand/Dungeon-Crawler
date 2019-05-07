@@ -1,17 +1,18 @@
 #include "Room.h"
 #include "../System/Log.h"
-#include "../Globals/Helper.h"
 #include <System/Log.h>
 
 Room::Room(Mesh * mesh, Type type, GameObject* playerObject, const glm::vec3 & position) :
 	GameObject(mesh, type, position)
 {
 	this->setupMaxMinValues();
-
+	this->calculateCentrePosition();
 	this->m_type = type;
 	this->m_playerObject = playerObject;
 	this->setScale(glm::vec3(1.f, 0.5f, 1.f));
-	m_gridsystem = new GridSystem(50, 70, 1, this);
+	float length = this->getMaxMinValues().y - this->getMaxMinValues().w;
+	float width = this->getMaxMinValues().x - this->getMaxMinValues().z;
+	m_gridsystem = new GridSystem(width, length, 2, this);
 	m_gridsystem->constructCells();
 }
 
@@ -28,6 +29,19 @@ void Room::update(float dt)
 GridSystem* Room::getGrid() const
 {
 	return m_gridsystem;
+}
+
+const glm::vec2& Room::getCentrePosition() const {
+	return this->centrePosition;
+}
+
+void Room::calculateCentrePosition() {
+
+	glm::vec2 OB = glm::vec2(this->getMaxMinValues().x, this->getMaxMinValues().y);
+	glm::vec2 OC = glm::vec2(this->getMaxMinValues().z, this->getMaxMinValues().w);
+
+
+	this->centrePosition = (OB + OC) * 0.5f;
 }
 
 bool Room::intersection(glm::vec3 position) {

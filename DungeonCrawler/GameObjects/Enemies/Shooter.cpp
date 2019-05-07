@@ -162,3 +162,13 @@ void Shooter::moveToTarget(float dt)
 
 	}
 }
+
+float Shooter::getDistanceToPlayer() const
+{
+	float xDir = getPlayerPosition().x - getPosition().x;
+	float zDir = getPlayerPosition().z - getPosition().z;
+	float length = sqrtf(xDir * xDir + zDir * zDir);
+
+	return length;
+}
+
