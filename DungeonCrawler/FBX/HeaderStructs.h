@@ -16,7 +16,6 @@ struct MeshHeader
 {
 	char nameOfMesh[100];
 	unsigned int vertexCount;
-	//nr of Texture?
 	unsigned int materialID;  //which material it uses
 	bool collision; //custom maya attribute
 	bool staticMesh;	//custom maya attribute
@@ -57,8 +56,11 @@ struct BoundingBoxVertex
 	float position[3];
 };
 
+//Write all materials header after vertices
 struct Material
 {
+	unsigned int materialID;
+	unsigned int nrOfTextures; //Will be 2 right now, albedo and normalmap
 	//texture buffer pointer
 	//shader int pointer
 };

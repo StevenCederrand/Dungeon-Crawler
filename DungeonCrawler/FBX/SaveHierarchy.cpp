@@ -333,6 +333,7 @@ void SaveHierarchy::m_SaveStaticMesh(FbxNode* pNode, bool collision, bool static
 
 	//materialTest
 	DisplayMaterialConnections(lMesh);
+	SaveMaterial(lMesh);
 
 
 	int lPolygonCount = lMesh->GetPolygonCount();
@@ -456,6 +457,11 @@ void SaveHierarchy::m_PrintChildName(FbxMesh* pMesh)
 
 
 //MATERIAL TEST STUFF
+void SaveHierarchy::SaveMaterial(FbxMesh* pMesh)
+{
+	
+}
+
 void SaveHierarchy::DisplayTextureNames(FbxProperty &pProperty, FbxString& pConnectionString)
 {
 	int lLayeredTextureCount = pProperty.GetSrcObjectCount<FbxLayeredTexture>();

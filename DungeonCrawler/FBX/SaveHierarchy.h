@@ -35,6 +35,7 @@ public:
 	void SaveEntireHierarchy(FbxScene* lScene);
 
 	//material
+	void SaveMaterial(FbxMesh* pMesh);
 	void DisplayTextureNames(FbxProperty &pProperty, FbxString& pConnectionString);
 	void DisplayMaterialTextureConnections(FbxSurfaceMaterial* pMaterial, char * header, int pMatId, int l);
 	void DisplayMaterialConnections(FbxMesh* pMesh);
