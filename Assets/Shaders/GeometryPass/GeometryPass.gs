@@ -85,7 +85,12 @@ void main() {
         gl_Position = vertex;
         frag_data.uv = geom_data[i].uv;
         frag_data.position = vec3(modelMatrix * vec4(geom_data[i].position, 1.0f));
-        frag_data.TBN = TBN();
+        if(hasNormalMap == 1) {
+            frag_data.TBN = TBN();
+        }
+        else {
+            frag_data.TBN = mat3(0);
+        }
         frag_data.normal = mat3(transpose(inverse(modelMatrix))) * getNormal();
         EmitVertex();
     }

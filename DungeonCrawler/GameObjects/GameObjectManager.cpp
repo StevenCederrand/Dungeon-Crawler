@@ -3,14 +3,21 @@
 #include "Box.h"
 #include <vector>
 #include "../Audio/AudioEngine.h"
+#include "../Globals/Helper.h"
+#include "../System/Input.h"
+#include "../Graphics/MeshMap.h"
+#include "../Utility/Randomizer.h"
 
-GameObjectManager::GameObjectManager(Effects* effects)
+GameObjectManager::GameObjectManager(Effects* effects, ProjectileManager* projectileManager)
 {
 	m_effects = effects;
+	m_projectileManager = projectileManager;
 	m_broadPhaseBox = nullptr;
 	m_player = nullptr;
 	m_walker = nullptr;
 	m_shooter = nullptr;
+	m_boss = nullptr;
+	m_healthPlane = nullptr;
 }
 
 GameObjectManager::~GameObjectManager()
@@ -27,12 +34,14 @@ GameObjectManager::~GameObjectManager()
 
 void GameObjectManager::update(float dt)
 {	
+	//LOG_INFO(std::to_string(this->m_numberOfEnemies));
 	handleDeadEnemies(dt);
 	//------ Player collision broadphasebox ( Used to speed up collision checking against map ) ------
 	if (m_broadPhaseBox)
 		m_broadPhaseBox->setParentPosition(m_player->getPosition());
 
 
+	
 	//------ Player collision with map ------
 	bool hasCollided = false;
 	glm::vec3 newVel = glm::vec3(0);
@@ -52,7 +61,7 @@ void GameObjectManager::update(float dt)
 	//------ Player current velocity ( Also used for collision ) ------
 	newVel = m_player->getVelocity();
 
-	//------ Add shooting particle effect
+	//------ Add shooting particle effect ------
 	if (m_player->isShooting()) {
 		float xAngle = cosf(glm::radians(m_player->getAngle()));
 		float zAngle = sinf(glm::radians(m_player->getAngle()));
@@ -73,12 +82,18 @@ void GameObjectManager::update(float dt)
 			continue;
 		}
 
+
+		if (object->getType() == ROOM || object->getType() == ROOM_EMPTY
+			|| object->getType() == ROOM_BOSS) {
+			this->roomManager(object);
+		}
+
 		// Update the object
 		object->setPlayerPosition(m_player->getPosition());
 		object->internalUpdate(dt);
 		object->update(dt);
 		object->updateModelMatrix();
-
+		handleEnemyAttacks(object, dt);
 		// Handle collisions if there is any
 		handlePlayerCollisionAgainstObjects(dt, object, newVel, hasCollided);
 
@@ -101,8 +116,6 @@ void GameObjectManager::update(float dt)
 		glm::vec3 gunshotCollisionPoint = m_player->getPosition() + rayDirection * rayLengthUntilCollision;
 		if (objectHit)
 		{
-			//LOG_TRACE("Ray intersection! collision point: " + std::to_string(gunshotCollisionPoint.x) + ", " + std::to_string(gunshotCollisionPoint.z));
-
 			// --------MAYBE DYNAMIC CASY HERE TO CHECK IF WE HIT A ENEMY?--------
 			bool hitEnemy = false;
 			
@@ -119,20 +132,24 @@ void GameObjectManager::update(float dt)
 				hitEnemy = true;
 				objectHit->setHit();
 			}
+			if (dynamic_cast<Boss*>(objectHit))
+			{
+				hitEnemy = true;
+				objectHit->setHit();
+			}
 
 			HitDescription desc;
 			desc.player = m_player;
 			objectHit->hit(desc);
 
 			if (hitEnemy){
-				AudioEngine::play("gun_impact_enemy", .5f);
+				AudioEngine::play("gun_impact_enemy", 0.6f);
 				m_effects->addParticles("BloodEmitter", gunshotCollisionPoint, 5.f, 0.2f, 5.f);
 			}
 			else{
+				//AudioEngine::play("gun_impact_wall", 0.5f);
 				m_effects->addParticles("WallSmokeEmitter", gunshotCollisionPoint, 5.f, 0.2f, 5.f);
 			}
-
-			
 		}
 	}
 }
@@ -150,7 +167,23 @@ void GameObjectManager::addGameObject(GameObject * gameObject)
 			if (m_player)
 			{
 				constructPlayerBroadPhaseBox();
+				m_player->setPlayerState(ROAMING);
 			}
+		}
+		Type objectType = gameObject->getType();
+
+		if (objectType == SHOOTER || objectType == WALKER || objectType == BOSS) {
+			this->m_numberOfEnemies++;
+		}
+		//No matter the type of room, add it. 
+		else if (objectType == ROOM || objectType == ROOM_EMPTY 
+			|| objectType == ROOM_BOSS) {
+
+			Room* room = dynamic_cast<Room*>(gameObject);
+			this->m_rooms.push_back(room);
+		}
+		else if (objectType == DOOR) {
+			m_doorIndex = m_gameObjects.size();
 		}
 		m_gameObjects.emplace_back(gameObject);
 	}
@@ -184,8 +217,6 @@ std::vector<GameObject*>* GameObjectManager::getVectorPointer()
 	return &m_gameObjects;
 }
 
-
-
 void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject * object, glm::vec3& newVel, bool& hasCollided)
 {
 	// If the object is collidable then handle collision
@@ -199,6 +230,7 @@ void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject
 
 			if (m_broadPhaseBox->checkCollision(*objectBox))
 			{
+				
 				float nx = 0.f, nz = 0.f;
 				float collisionTime = playerBox->swepAABB(newVel, *objectBox, nx, nz);
 
@@ -209,22 +241,37 @@ void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject
 
 				if (collisionTime < 1.0f)
 				{
+					HitDescription desc;
+					if (dynamic_cast<PowerUps*>(object))
+					{
+						m_powerup = dynamic_cast<PowerUps*>(object);
+						desc.powerUp = m_powerup;
+						m_player->hit(desc);
+						dynamic_cast<PowerUps*>(object)->trigger();
+						continue;
+					}
 					float remainingTime = 1.0f - collisionTime;
 					hasCollided = true;
 					float dotprod = (newVel.x * nz + newVel.z * nx) * remainingTime;
 					newVel.x = dotprod * nz;
 					newVel.z = dotprod * nx;
-					HitDescription desc;
+
 					if (dynamic_cast<Walker*>(object))
 					{
 						m_walker = dynamic_cast<Walker*>(object);
-						desc.walker = m_walker; 
+						desc.walker = m_walker;
 						m_player->hit(desc);
 					}
 					if (dynamic_cast<Shooter*>(object))
 					{
 						m_shooter = dynamic_cast<Shooter*>(object);
 						desc.shooter = m_shooter;
+						m_player->hit(desc);
+					}
+					if (dynamic_cast<Boss*>(object))
+					{
+						m_boss = dynamic_cast<Boss*>(object);
+						desc.boss = m_boss;
 						m_player->hit(desc);
 					}
 				}
@@ -273,8 +320,9 @@ void GameObjectManager::handleDeadEnemies(float dt)
 		{
 			if (!dynamic_cast<Walker*>(object)->getAliveStatus())
 			{
+				this->m_numberOfEnemies--;
 				delete m_gameObjects[i];
-				m_gameObjects.erase(m_gameObjects.begin()+ i);
+				m_gameObjects.erase(m_gameObjects.begin() + i);
 				continue;
 			}
 		}
@@ -283,10 +331,128 @@ void GameObjectManager::handleDeadEnemies(float dt)
 		{
 			if (!dynamic_cast<Shooter*>(object)->getAliveStatus())
 			{
+				this->m_numberOfEnemies--;
+				delete m_gameObjects[i];
+				m_gameObjects.erase(m_gameObjects.begin() + i);
+				continue;
+			}
+		}
+		if (dynamic_cast<Boss*>(object))
+		{
+			if (!dynamic_cast<Boss*>(object)->getAliveStatus())
+			{
+				this->m_numberOfEnemies--;
+				delete m_gameObjects[i];
+				m_gameObjects.erase(m_gameObjects.begin() + i);
+				continue;
+			}
+		}
+		if (dynamic_cast<PowerUps*>(object))
+		{
+			if (dynamic_cast<PowerUps*>(object)->powerTriggered())
+			{
 				delete m_gameObjects[i];
 				m_gameObjects.erase(m_gameObjects.begin() + i);
 				continue;
 			}
 		}
 	}
+}
+
+void GameObjectManager::handleEnemyAttacks(GameObject* object, float dt)
+{
+	if (object->meleeRange())
+	{
+		HitDescription desc;
+		if (dynamic_cast<Walker*>(object))
+		{
+			m_walker = dynamic_cast<Walker*>(object);
+			desc.walker = m_walker;
+			m_player->hit(desc);
+		}
+		if (dynamic_cast<Shooter*>(object))
+		{
+			m_shooter = dynamic_cast<Shooter*>(object);
+			desc.shooter = m_shooter;
+			m_player->hit(desc);
+		}
+		if (dynamic_cast<Boss*>(object))
+		{
+			m_boss = dynamic_cast<Boss*>(object);
+			desc.boss = m_boss;
+			m_player->hit(desc);
+		}
+	}
+}
+
+void GameObjectManager::roomManager(GameObject* object) {
+	
+	if (m_numberOfEnemies == 0 && m_isLocked) {
+		//Remove the room from the vector of uncleared rooms
+		m_rooms.erase(m_rooms.begin() + m_currentRoom);
+		//Reset the player
+		m_player->setPlayerState(ROAMING);
+		//Find the 'door' object
+		for (size_t i = 0; i < m_gameObjects.size(); i++) {
+			if (m_gameObjects.at(i)->getType() == DOOR) {
+				//Remove the door
+				m_doorIndex = i;
+				glm::vec3 objectPosition = m_gameObjects.at(m_doorIndex)->getPosition();
+				m_gameObjects.at(m_doorIndex)->setPosition(glm::vec3(objectPosition.x, 100, objectPosition.z));
+				m_gameObjects.at(m_doorIndex)->setCollidable(false);
+			}
+		}
+		//Unlock the room
+		m_isLocked = false;
+	}
+	
+	//When the player is not in combat
+	if (m_player->getPlayerState() == ROAMING) {
+		for (size_t i = 0; i < m_rooms.size(); i++) {
+			if (m_rooms.at(i)->getType() == ROOM_EMPTY) {
+				//If the room is of type empty then we just set the door position to something
+				glm::vec3 objectPosition = m_gameObjects.at(m_doorIndex)->getPosition();
+				m_gameObjects.at(m_doorIndex)->setPosition(glm::vec3(objectPosition.x, 100, objectPosition.z));
+				m_gameObjects.at(m_doorIndex)->setCollidable(false);
+				continue;
+			}
+			if (m_rooms.at(i)->intersection(m_player->getPosition())) {
+				this->m_currentRoom = i;				
+				//Lock the doors
+				this->m_isLocked = !m_isLocked;
+				//Spawn the door
+				//m_gameObjects.at(m_doorIndex)->setCollidable(true);
+				glm::vec3 objectPosition = m_gameObjects.at(m_doorIndex)->getPosition();
+				m_gameObjects.at(m_doorIndex)->setPosition(glm::vec3(objectPosition.x, 0, objectPosition.z));				
+				//Swap the play state to fighting
+				m_player->setPlayerState(FIGHTING);
+				//Spawn enemies
+				this->spawner(m_rooms.at(i), Randomizer::single(1, 3));
+			}
+		}
+	}
+}
+
+void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
+
+	Mesh* enemyMesh = MeshMap::getMesh("Enemy");
+	for (int i = 0; i < numberOfEnemies; i++)
+	{
+		m_walker = new Walker(enemyMesh, WALKER, currentRoom, glm::vec3(
+			Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),
+			0.f,
+			Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)));
+		this->addGameObject(m_walker);
+	}
+
+	for (int i = 0; i < numberOfEnemies; i++)
+	{
+		GameObject* enemy = new Shooter(enemyMesh, SHOOTER, currentRoom, glm::vec3(
+			Randomizer::single(-10.0f, 10.0f),
+			0.f,
+			Randomizer::single(-10.0f, 10.0f)), m_projectileManager);
+		this->addGameObject(enemy);
+	}
+
+
 }

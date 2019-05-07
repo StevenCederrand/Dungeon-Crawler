@@ -17,11 +17,15 @@ public:
 	void renderImGUI();
 	void render();
 
+	const bool wasStateChanged() const;
+	void resetWasStateChanged();
+
 private:
 	void clearStates();
 
 private:
 	std::vector<State*> m_states;
+	bool m_stateWasChanged;
 };
 
 #endif

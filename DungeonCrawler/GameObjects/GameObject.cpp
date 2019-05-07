@@ -1,5 +1,9 @@
 #include "GameObject.h"
 #include <GLM/gtx/transform.hpp>
+#include <GLM/gtx/compatibility.hpp>
+#include <GLM/gtc/quaternion.hpp>
+#include <GLM//gtx/quaternion.hpp>
+#include <System/Log.h>
 
 GameObject::GameObject(Mesh * mesh, Type type, const glm::vec3 & position)
 {
@@ -107,14 +111,35 @@ void GameObject::setPlayerPosition(const glm::vec3 & position)
 	m_playerPosition = position;
 }
 
+void GameObject::setMaxMinValues(const glm::vec4& maxMinValues) {
+	this->m_mesh->setMaxMinValues(maxMinValues);
+}
+
 void GameObject::setHit()
 {
 	m_colorTintFadeDuration = 2.f;
 }
 
+void GameObject::lookAt(const glm::vec3& position)
+{
+	glm::vec3 direction = glm::vec3(
+		position.x - this->getPosition().x,
+		0,
+		position.z - this->getPosition().z);
+	float angle = glm::degrees(atan2f(direction.z, direction.x));
+
+	setRotation(glm::vec3(0.0f, -angle, 0.0f));
+		
+}
+
 void GameObject::hit(const HitDescription & desc)
 {
 
+}
+
+bool GameObject::meleeRange()
+{
+	return false;
 }
 
 Type GameObject::getType()
@@ -165,6 +190,10 @@ const glm::vec3 & GameObject::getColorTint() const
 const bool GameObject::isCollidable() const
 {
 	return m_isCollidable;
+}
+
+const glm::vec4& GameObject::getMaxMinValues() const {
+	return this->m_mesh->getMaxMinValues();
 }
 
 Mesh * GameObject::getMesh() const

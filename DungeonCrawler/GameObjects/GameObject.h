@@ -6,15 +6,25 @@
 #include "../Globals/LightTypes.h"
 #include "Collision/HitData.h"
 
+enum EntityState {
+	FIGHTING, 
+	ROAMING
+};
+
 enum Type {
 	PLAYER = 0,
 	WALKER = 1,
 	SHOOTER = 2,
+	BOSS = 3,
 	BOX = 10,
-	ROOM = 11,
 	LIGHTSPHERE = 12,
+	DOOR = 13, 
+	ROOM = 14,
+	ROOM_EMPTY = 15, 
+	ROOM_BOSS = 16, 
 	GAMEOBJECT = 20,
-	POWERUPS = 21
+	POWERUPS = 21,
+	HEALTHPLANE = 22
 };
 
 class GameObject {
@@ -34,9 +44,13 @@ public:
 	void setScale(const glm::vec3& scale);
 	void setRotation(const glm::vec3 rotation);
 	void setPlayerPosition(const glm::vec3& position);
+	void setMaxMinValues(const glm::vec4& maxMinValues);
 	void setHit();
+	// Rotates the game object to the desired position
+	void lookAt(const glm::vec3& position);
 
 	virtual void hit(const HitDescription & desc);
+	virtual bool meleeRange();
 	virtual Type getType();
 
 	std::vector<AABB*> getBoundingBoxes() const;
@@ -48,6 +62,7 @@ public:
 	const glm::vec3& getColorTint() const;
 	const glm::mat4& getModelMatrix() const;
 	const bool isCollidable() const;
+	const glm::vec4& getMaxMinValues() const;
 
 	Mesh* getMesh() const;
 
@@ -65,6 +80,8 @@ private:
 	float m_colorTintFadeDuration;
 	bool m_isCollidable;
 	std::vector<AABB*> m_boundingBoxes;
+	glm::vec4 m_maxMinValues;
+
 	Type m_type;
 };
 

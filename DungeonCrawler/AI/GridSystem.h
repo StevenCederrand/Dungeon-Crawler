@@ -16,8 +16,12 @@ public:
 	void update(float dt);
 
 	const GridCell& getCell(float x, float z);
+	const GridCell& getCell(float x, float z, bool occupy, GameObject* occupant);
+	void occupyCellWithIndex(int index, GameObject* occupant);
+	
 	const int& getCellSize() const;
 	const bool failedGettingGridCell() const;
+	const int getCellIndex(float x, float z);
 
 private:
 	std::vector<GridCell> m_cells;
@@ -27,6 +31,8 @@ private:
 	int m_length;
 	int m_cellSize;
 	bool m_errorGettingGridCell;
+
+	std::vector<GridCell*> m_occupiedCells;
 
 };
 

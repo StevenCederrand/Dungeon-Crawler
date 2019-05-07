@@ -1,6 +1,6 @@
 #include "Powerups.h"
 
-Powerups::Powerups(Mesh* mesh, Type type, float health, float damage, float speed) :
+PowerUps::PowerUps(Mesh* mesh, Type type, float health, float damage, float speed, bool timed, glm::vec3 position) :
 	GameObject(mesh, type)
 {
 	this->m_healthUp = health;
@@ -8,23 +8,36 @@ Powerups::Powerups(Mesh* mesh, Type type, float health, float damage, float spee
 	this->m_speedUp = speed;
 	this->m_type = type; 
 	this->m_trigger = false;
+	this->setPosition(position);
+	this->m_timed = timed;
 }
 
-void Powerups::update(float dt)
+void PowerUps::update(float dt)
 {
 
-	trigger();
 }
 
-void Powerups::trigger()
+void PowerUps::trigger()
 {
-	if (m_trigger == true)
-	{
-		
-	}
+	this->m_trigger = true;
 }
 
-bool Powerups::powerTrigger()
+bool PowerUps::powerTriggered()
 {
 	return m_trigger;
+}
+
+bool PowerUps::getTimed() const
+{
+	return m_timed;
+}
+
+glm::vec3 PowerUps::getBoost() const
+{
+	return glm::vec3(m_healthUp, m_damageUp, m_speedUp);
+}
+
+Type PowerUps::getType()
+{
+	return this->m_type;
 }

@@ -2,6 +2,8 @@
 #define PLAYER_h
 #include "GameObject.h"
 #include <string>
+
+
 class Player : public GameObject {
 public:
 	Player(Mesh* mesh, Type type);
@@ -15,7 +17,8 @@ public:
 	void rotatePlayer();
 	void dash();
 	void dashCd(float dt);
-	
+	void powerUpCd(float dt);
+	void manualReload(float dt);
 	void reloadCd(float dt);
 
 	void weaponSwap();
@@ -30,9 +33,10 @@ public:
 	void setHealth(float health);
 	void setDamage(float damage);
 	void iframeCountdown(float dt);
-
+	void setPlayerState(const EntityState& playerState);
 	void takeDamage(float damageRecieved);
 
+	const EntityState& getPlayerState() const;
 	float getSpeed()const;
 	float getHealth()const;
 	float getDamage()const;
@@ -89,7 +93,13 @@ private:
 	std::vector<std::string> m_walkSounds;
 	float m_shake;
 	glm::vec3 m_shakeDir;
+	EntityState playerState;
 	
+
+	glm::vec3 m_boostResetters;
+	float m_boostTimer;
+	bool m_poweredUp;
+
 	//Debugging Tools
 	bool m_debug;
 };

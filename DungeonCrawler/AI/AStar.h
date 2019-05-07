@@ -9,9 +9,8 @@ public:
 	AStar();
 	~AStar();
 	
-	std::vector<Node> findPath(const GridCell& start, const GridCell& destination, Room* room);
+	std::vector<Node> findPath(GameObject* gameObject, const GridCell& start, const GridCell& destination, Room* room);
 	
-
 private:
 	float getHCost(const GridCell& start, const GridCell& destination);
 	float getHCost(const Node& start, const GridCell& destination);

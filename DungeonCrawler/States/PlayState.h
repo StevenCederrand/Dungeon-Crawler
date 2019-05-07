@@ -9,6 +9,7 @@
 #include "Graphics/LightManager.h"
 #include <list>
 #include "Graphics/Effects.h"
+#include <EnemyProjectile/ProjectileManager.h>
 
 class PlayState : public State {
 public:
@@ -20,6 +21,8 @@ public:
 	void render();
 private:
 
+	void resetPlayer();
+	void constructWorld();
 
 private:
 	Parser* m_parser;
@@ -31,7 +34,10 @@ private:
 	GameObject* m_player;
 	GameObject* m_walker;
 	GameObject* m_shooter;
-
+	GameObject* m_powerUp;
+	ProjectileManager* m_projectileManager;
+	GameObject* m_boss;
+	GameObject* m_healthPlane;
 	Effects* m_effects;
 };
 

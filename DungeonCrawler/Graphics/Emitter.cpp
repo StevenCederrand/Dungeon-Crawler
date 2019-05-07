@@ -121,7 +121,7 @@ void Emitter::setupGraphicBuffers()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, NULL, NULL);
 	glBindBuffer(GL_ARRAY_BUFFER, NULL);
 
-	// Buffer for vertices
+	// Buffer for uv
 	glBindBuffer(GL_ARRAY_BUFFER, m_uvVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(m_uv_buffer_data), m_uv_buffer_data, GL_STATIC_DRAW);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, NULL, NULL);
@@ -134,7 +134,7 @@ void Emitter::setupGraphicBuffers()
 	glBindBuffer(GL_ARRAY_BUFFER, NULL);
 	glVertexAttribDivisor(2, 1);
 
-	// Buffer for centerPositions
+	// Buffer for color
 	glBindBuffer(GL_ARRAY_BUFFER, m_colorVBO);
 	glBufferData(GL_ARRAY_BUFFER, MAX_PARTICLES * sizeof(glm::vec4), NULL, GL_DYNAMIC_DRAW);
 	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, NULL, NULL);

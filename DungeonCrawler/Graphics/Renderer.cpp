@@ -6,7 +6,7 @@
 #include "Globals/Settings.h"
 #define MESH_VECTOR_RESERVE_SIZE 150
 
-Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects)
+Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects, ProjectileManager* projectileManager)
 {
 	m_camera = camera;
 	m_lightManager = lightManager;
@@ -31,7 +31,8 @@ Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects)
 		(float)ScreenResolutionX / (float)ScreenResolutionY, NEAR_CLIP, FAR_CLIP);
 	m_framebuffer->setProjectionMatrix(projectionMatrix);
 
-	m_effects = effects; // Point to effect class
+	m_effects = effects;
+	m_projectileManager = projectileManager;
 }
 
 Renderer::~Renderer() {
@@ -70,11 +71,6 @@ void Renderer::preparePlayerLights(Player* player) {
 
 void Renderer::render() {
 
-	//if (m_playerLight != nullptr) {
-	//	std::string vec = std::to_string(m_playerLight->position.x) + " " +
-	//		std::to_string(m_playerLight->position.y) + " " + std::to_string(m_playerLight->position.z);
-	//	LOG_INFO(vec);
-	//}
 
 	this->shadowPass();
 	this->geometryPass();
@@ -90,6 +86,7 @@ void Renderer::render() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	
 	this->renderEffects();
+	this->renderProjectiles();
 }
 
 void Renderer::shadowPass() {
@@ -110,6 +107,9 @@ void Renderer::shadowPass() {
 		glBindVertexArray(mesh.first->getVao());
 		glEnableVertexAttribArray(0);
 		for (auto object : mesh.second) {
+
+			if (dynamic_cast<Player*>(object)) continue;
+
 			shadowShader->setMat4("modelMatrix", object->getModelMatrix());
 			glDrawElements(GL_TRIANGLES, mesh.first->getNrOfIndices(), GL_UNSIGNED_INT, NULL);
 		}
@@ -181,6 +181,36 @@ void Renderer::renderEffects()
 
 		glBindVertexArray(0);
 	}
+
+	effectsShader->unuse();
+	glDisable(GL_BLEND);
+}
+
+void Renderer::renderProjectiles()
+{
+	glEnable(GL_BLEND);
+	Shader* effectsShader = ShaderMap::getShader("EffectsShader");
+	effectsShader->use();
+	effectsShader->setMat4("viewMatrix", m_camera->getViewMatrix());
+	effectsShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+
+	glBindVertexArray(m_projectileManager->getVAO());
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(3);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_projectileManager->getTextureID());
+	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, m_projectileManager->getNumberOfEnemyProjectiles());
+	glBindTexture(GL_TEXTURE_2D, NULL);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
+	glDisableVertexAttribArray(3);
+
+	glBindVertexArray(0);
 
 	effectsShader->unuse();
 	glDisable(GL_BLEND);
@@ -280,7 +310,7 @@ void Renderer::drawQuad() {
 }
 
 void Renderer::configureShadowMapperVM() {
-	glm::vec3 pos = m_playerSpotLight->position + glm::vec3(0, 0.5f, 0);
+	glm::vec3 pos = m_playerSpotLight->position + glm::vec3(0, 1.f, 0);
 	glm::mat4 viewMatrix = glm::lookAt(pos, pos + m_playerSpotLight->direction, glm::vec3(0, 1, 0));
 	m_framebuffer->setViewMatrix(viewMatrix);
 }

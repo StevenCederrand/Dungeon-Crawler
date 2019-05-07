@@ -2,25 +2,25 @@
 #include "../GameObjectManager.h"
 #include "../Player.h"
 #include <list>
-#include <System/Log.h>
 #include <chrono>
 #include <iostream>
-
+#include <chrono>
 
 Walker::Walker(Mesh * mesh, Type type, Room* room, const glm::vec3& position):
 	GameObject(mesh, type)
 {
 
+	this->setScale(glm::vec3(1.f, 1.f, 1.f));
 	this->m_room = room;
 	this->m_health = 1.f;
-	this->m_speed = 3.f;
+	this->m_speed = 6.f;
 	this->m_damage = 1.f;
 	this->m_isPlayerClose = false;
 	this->m_type = type;
 	this->m_amIAlive = true;
 	setPosition(position);
 	m_Astar = new AStar();
-
+	m_attackCooldown = 0.f;
 }
 
 Walker::~Walker()
@@ -31,13 +31,25 @@ Walker::~Walker()
 
 void Walker::update(float dt)
 {
-	calculatePath(dt);
+	float lengthToPlayer = getDistanceToPlayer();
+	int playerCellIndex = m_room->getGrid()->getCellIndex(getPlayerPosition().x, getPlayerPosition().z);
+
+	if (lengthToPlayer > 2.5f) {
+		calculatePath(dt);
+		moveToTarget(dt);
+	}
 	amIDead();
+	attackCooldown(dt);
 }
 
-void Walker::hitPlayer()
+bool Walker::meleeRange()
 {
-	
+	if ((getDistanceToPlayer() <= 2.5f) && (m_attackCooldown <= 0.f))
+	{
+		m_attackCooldown = 2.f;
+		return true;
+	}
+	return false;
 }
 
 void Walker::hit(const HitDescription & desc)
@@ -45,7 +57,6 @@ void Walker::hit(const HitDescription & desc)
 	Player* player = dynamic_cast<Player*>(desc.owner);
 	m_health -= player->getDamage();
 	amIDead();
-	LOG_WARNING("Walker Health: " + std::to_string(m_health));
 }
 
 Type Walker::getType()
@@ -56,6 +67,15 @@ Type Walker::getType()
 float Walker::getDamage() const
 {
 	return this->m_damage;
+}
+
+float Walker::getDistanceToPlayer() const
+{
+	float xDir = getPlayerPosition().x - getPosition().x;
+	float zDir = getPlayerPosition().z - getPosition().z;
+	float length = sqrtf(xDir * xDir + zDir * zDir);
+
+	return length;
 }
 
 void Walker::amIDead()
@@ -71,16 +91,30 @@ bool Walker::getAliveStatus() const
 	return m_amIAlive;
 }
 
+void Walker::attackCooldown(float dt)
+{
+	if (m_attackCooldown > 0.f)
+	{
+		m_attackCooldown -= dt;
+	}
+}
+
 void Walker::calculatePath(float dt)
 {
-	m_AStarTimer += dt;
+
+	bool canRunAStar = true;
+
+	// Get the cell and occupy it
+	const GridCell& myCell = m_room->getGrid()->getCell(getPosition().x, getPosition().z, true, this);
+	if (m_room->getGrid()->failedGettingGridCell())
+		canRunAStar = false;
+
+	m_AStarTimer += dt; 
 
 	// Runs every half second
-	if (m_AStarTimer >= 0.5f) {
+	if (m_AStarTimer >= 1.f) {
 		m_AStarTimer = 0.0f;
 		
-		bool canRunAStar = true;
-
 		// Get the cells that the player and the walker is standing on
 		// and also checks if the error flag has been set, if so then A* can't be run, otherwise
 		// it will crash when player is on a invalid cell or outside the cell system
@@ -88,18 +122,19 @@ void Walker::calculatePath(float dt)
 		if (m_room->getGrid()->failedGettingGridCell() || !playerCell.valid)
 			canRunAStar = false;
 		
-		const GridCell& myCell = m_room->getGrid()->getCell(getPosition().x, getPosition().z);
-		if (m_room->getGrid()->failedGettingGridCell())
-			canRunAStar = false;
 
 		// If there was no errors getting the cells then run A* star and get
 		// the vector of nodes
 		if (canRunAStar) {
-			m_path = m_Astar->findPath(myCell, playerCell, m_room);
+			m_path = m_Astar->findPath(this, myCell, playerCell, m_room);
 		}
 	}
 
-	
+
+}
+
+void Walker::moveToTarget(float dt)
+{
 	// If there is nodes in the path vector then 
 	// move to them and pop them when being close enough
 	if (m_path.size() > 0)
@@ -111,9 +146,10 @@ void Walker::calculatePath(float dt)
 		float xDir = currentNode.x - myPos.x;
 		float zDir = currentNode.z - myPos.z;
 		float length = sqrtf(xDir * xDir + zDir * zDir);
-				
-		glm::vec3 velocity = (glm::vec3(xDir, 0.f, zDir) / length) * m_speed * dt;
-		
+
+		glm::vec3 velocity = (glm::vec3(xDir, 0.0f, zDir) / length) * m_speed * dt;
+		this->lookAt(getPlayerPosition());
+
 		// Move towards the node
 		translate(velocity);
 
@@ -124,6 +160,5 @@ void Walker::calculatePath(float dt)
 		}
 
 	}
-
 }
 

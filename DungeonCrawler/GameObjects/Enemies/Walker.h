@@ -1,4 +1,3 @@
-#pragma once
 #ifndef _WALKER_H
 #define _WALKER_H
 #include <GameObjects/Room.h>
@@ -10,16 +9,18 @@ public:
 	~Walker();
 	void update(float dt);
 
-	void hitPlayer();
+	bool meleeRange();
 	void hit(const HitDescription& desc);
 	Type getType();
 	float getDamage()const;
+	float getDistanceToPlayer() const;
 	void amIDead();
 	bool getAliveStatus()const;
+	void attackCooldown(float dt);
 
 private:
 	void calculatePath(float dt);
-
+	void moveToTarget(float dt);
 private:
 	float m_health;
 	float m_speed;
@@ -27,6 +28,7 @@ private:
 	bool m_isPlayerClose;
 	Type m_type;
 	bool m_amIAlive;
+	float m_attackCooldown;
 
 	float m_AStarTimer;
 	Room* m_room;

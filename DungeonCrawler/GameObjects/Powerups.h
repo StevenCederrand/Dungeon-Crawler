@@ -3,19 +3,27 @@
 #define _POWERUPS_H
 #include "GameObject.h"
 
-class Powerups :public GameObject
+class PowerUps : public GameObject
 {
 public:
-	Powerups(Mesh* mesh, Type type, float health, float damage, float speed);
+	PowerUps(Mesh* mesh, Type type, float health, float damage, float speed, bool timed, glm::vec3 position);
 
 	void update(float dt);
 	void trigger();
-	bool powerTrigger();
+	bool powerTriggered();
+
+
+	bool getTimed() const;
+	glm::vec3 getBoost() const;
+	Type getType();
+
 private:
 
 	float m_healthUp;
 	float m_damageUp;
 	float m_speedUp;
+
+	bool m_timed;
 
 	Type m_type;
 

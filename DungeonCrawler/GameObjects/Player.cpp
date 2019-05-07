@@ -7,14 +7,18 @@
 #include "Enemies/Walker.h"
 #include "Enemies/Shooter.h"
 #include "../Audio/AudioEngine.h"
+#include "../Utility/Randomizer.h"
+#include "Enemies/Boss.h"
+#include "Powerups.h"
 
 Player::Player(Mesh* mesh, Type type) :
 	GameObject(mesh, type)
 {
 	this->setPosition(glm::vec3(0.f, 0.f, 0.f));
+	this->setScale(glm::vec3(0.65f, 0.65f, 0.65f));
 	this->m_defaultSpeed = 7.f;
 	this->m_speed = 7.0f;
-	this->m_health = 4.f;
+	this->m_health = 232132134.f;
 	this->m_damage = 1.f;
 	this->m_automaticDamage = 1.f;
 	this->m_chargeDamage = 10.f;
@@ -31,7 +35,7 @@ Player::Player(Mesh* mesh, Type type) :
 	this->m_spotlight->radius = glm::radians(55.0f);
 	this->m_flash = new Light();
 	this->m_flash->color = glm::vec4(1, 1, 1, 0);
-	this->m_flash->position = glm::vec4(getPlayerPosition(), 1);
+	this->m_flash->position = glm::vec4(getPlayerPosition(), 1.0f);
 
 	this->m_chargeStance = false;
 	this->m_shakeIntensity = 0.10f;
@@ -43,6 +47,10 @@ Player::Player(Mesh* mesh, Type type) :
 	this->m_pistolBullets = 8;
 	this->m_reloadTime = 0.f;
 	this->m_reloading = false;
+
+	this->m_boostResetters = (glm::vec3(0.f, 0.f, 0.f));
+	this->m_boostTimer = 0.f;
+	this->m_poweredUp = false;
 
 	this->setupSoundVector();
 }
@@ -68,20 +76,22 @@ void Player::update(float dt)
 	}
 	if (!m_debug)
 	{
-		weaponSwap();
-		if (m_weaponSlot == 1)
-		{
+		//weaponSwap();
+		//if (m_weaponSlot == 1)
+		//{
 			shootAutomatic(dt);
 			if ((m_pistolBullets <= 0) && (m_reloading == false) && (m_spraying == false))
 			{
 				m_reloading = true;
 				m_reloadTime = 2.f;
 			}
-		}
-		if (m_weaponSlot == 2)
-		{
-			shootChargeShot(dt);
-		}
+			manualReload(dt);
+		//}
+		//if (m_weaponSlot == 2)
+		//{
+			//shootChargeShot(dt);
+		//}
+		powerUpCd(dt);
 		move(dt);
 		dashCd(dt);
 		reloadCd(dt);
@@ -105,11 +115,37 @@ void Player::hit(const HitDescription & desc)
 			Shooter* shooter = dynamic_cast<Shooter*>(desc.owner);
 			m_health -= shooter->getDamage();
 		}
+		if (type == Type::BOSS)
+		{
+			Boss* boss = dynamic_cast<Boss*>(desc.owner);
+			m_health -= boss->getDamage();
+		}
 		m_iframes = 2.f;
 	}
-	
-	LOG_WARNING("Player Health: " + std::to_string(m_health));
-		//"Player health: " + m_health);
+	if (type == Type::POWERUPS)
+	{
+		PowerUps* powerUp = dynamic_cast<PowerUps*>(desc.owner);
+		glm::vec3 boosts = powerUp->getBoost();
+		if (powerUp->getTimed())
+		{
+			m_poweredUp = true;
+			m_boostTimer = 5.f;
+			m_boostResetters += boosts;
+			m_health += boosts.x;
+			m_automaticDamage += boosts.y;
+			m_defaultSpeed += boosts.z;
+		}
+		else
+		{
+			m_health += boosts.x;
+			m_automaticDamage += boosts.y;
+			m_defaultSpeed += boosts.z;
+		}
+		
+	}
+
+	LOG_WARNING("HP: " + std::to_string(m_health) + "DM: " + std::to_string(m_automaticDamage) + "SP: " + std::to_string(m_defaultSpeed));
+
 }
 
 Type Player::getType()
@@ -121,26 +157,31 @@ void Player::move(float dt)
 {
 	m_movementDirection = glm::vec3(0.f);
 
+	bool inMotion = false;
 	rotatePlayer();
 	if (Input::isKeyHeldDown(GLFW_KEY_W))
 	{
 		m_movementDirection.z =  -this->m_speed * dt;
-		AudioEngine::playOnce(m_walkSounds.at(0), 0.4f);
+		inMotion = true;
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_A))
 	{
 		m_movementDirection.x = -this->m_speed * dt;
-		AudioEngine::playOnce(m_walkSounds.at(1), 0.4f);
+		inMotion = true;
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_S))
 	{
 		m_movementDirection.z = this->m_speed * dt;
-		AudioEngine::playOnce(m_walkSounds.at(2), 0.4f);
+		inMotion = true;
 	}
 	if (Input::isKeyHeldDown(GLFW_KEY_D))
 	{
 		m_movementDirection.x = this->m_speed * dt;
-		AudioEngine::playOnce(m_walkSounds.at(0), 0.4f);
+		inMotion = true;
+	}
+
+	if (inMotion) {
+		AudioEngine::playOnce(m_walkSounds.at(1), 0.5f);
 	}
 	setVelocity(m_movementDirection);
 	
@@ -156,7 +197,6 @@ void Player::rotatePlayer()
 		0,
 		pos.z - this->getPosition().z);
 	m_angle = glm::degrees(atan2f(m_lookDirection.z, m_lookDirection.x));
-
 	setRotation(glm::vec3(0.f, -m_angle, 0.f));
 }
 
@@ -238,6 +278,7 @@ void Player::shootAutomatic(float dt)
 			if (m_pistolBullets <= 0)
 			{
 				//le click sounds
+				AudioEngine::playOnce("gun_click", 0.5f);
 			}
 		}
 	}
@@ -293,6 +334,30 @@ void Player::dashCd(float dt)
 	if (m_dashTimer > 0.f)
 	{
 		m_dashTimer -= dt;
+	}
+}
+
+void Player::powerUpCd(float dt)
+{
+	if ((m_boostTimer <= 0) && (m_poweredUp))
+	{
+		m_health -= m_boostResetters.x;
+		m_automaticDamage -= m_boostResetters.y;
+		m_defaultSpeed -= m_boostResetters.z;
+		m_poweredUp = false;
+	}
+	if (m_boostTimer > 0)
+	{
+		m_boostTimer -= dt;
+	}
+}
+
+void Player::manualReload(float dt)
+{
+	if ((Input::isKeyPressed(GLFW_KEY_R)) && (m_reloading == false) && (m_pistolBullets < 8))
+	{
+		m_reloading = true;
+		m_reloadTime = 2.f;
 	}
 }
 
@@ -395,9 +460,18 @@ void Player::iframeCountdown(float dt)
 	}
 }
 
+void Player::setPlayerState(const EntityState& playerState) {
+	this->playerState = playerState;
+}
+
 void Player::takeDamage(float damageRecieved)
 {
 	m_health = m_health - damageRecieved;
+}
+
+const EntityState& Player::getPlayerState() const
+{
+	return this->playerState;
 }
 
 float Player::getSpeed() const
