@@ -16,6 +16,7 @@ Walker::Walker(Mesh * mesh, Type type, Room* room, const glm::vec3& position):
 	setCollidable(true);
 	setPosition(position);
 	m_Astar = new AStar();
+	m_attackCooldown = 0.f;
 }
 
 Walker::~Walker()
@@ -34,12 +35,14 @@ void Walker::update(float dt)
 		moveToTarget(dt);
 	}
 	amIDead();
+	attackCooldown(dt);
 }
 
 bool Walker::meleeRange()
 {
-	if (getDistanceToPlayer() <= 2.5f)
+	if ((getDistanceToPlayer() <= 2.5f) && (m_attackCooldown <= 0.f))
 	{
+		m_attackCooldown = 2.f;
 		return true;
 	}
 	return false;
@@ -82,6 +85,14 @@ void Walker::amIDead()
 bool Walker::getAliveStatus() const
 {
 	return m_amIAlive;
+}
+
+void Walker::attackCooldown(float dt)
+{
+	if (m_attackCooldown > 0.f)
+	{
+		m_attackCooldown -= dt;
+	}
 }
 
 void Walker::calculatePath(float dt)

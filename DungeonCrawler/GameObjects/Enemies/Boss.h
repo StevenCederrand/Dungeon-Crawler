@@ -18,6 +18,7 @@ public:
 	float getDistanceToPlayer() const;
 	void amIDead();
 	bool getAliveStatus()const;
+	void attackCooldown(float dt);
 
 private:
 	void calculatePath(float dt);
@@ -31,6 +32,7 @@ private:
 	bool m_isPlayerClose;
 	Type m_type;
 	bool m_amIAlive;
+	float m_attackCooldown;
 
 
 	float m_AStarTimer;

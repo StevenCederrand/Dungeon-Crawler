@@ -11,6 +11,7 @@ Boss::Boss(Mesh* mesh, Type type, Room* room, const glm::vec3& position):
 	this->m_type = type;
 	this->m_amIAlive = true;
 	this->m_room = room;
+	m_attackCooldown = 0.f;
 	
 	setCollidable(true);
 	setPosition(position);
@@ -32,12 +33,14 @@ void Boss::update(float dt)
 		moveToTarget(dt);
 	}
 	amIDead();
+	attackCooldown(dt);
 }
 
 bool Boss::meleeRange()
 {
-	if (getDistanceToPlayer() <= 2.5f)
+	if ((getDistanceToPlayer() <= 2.5f) && (m_attackCooldown <= 0.f))
 	{
+		m_attackCooldown = 3.f;
 		return true;
 	}
 	return false;
@@ -80,6 +83,14 @@ void Boss::amIDead()
 bool Boss::getAliveStatus() const
 {
 	return m_amIAlive;
+}
+
+void Boss::attackCooldown(float dt)
+{
+	if (m_attackCooldown > 0.f)
+	{
+		m_attackCooldown -= dt;
+	}
 }
 
 void Boss::calculatePath(float dt)

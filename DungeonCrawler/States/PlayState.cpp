@@ -234,7 +234,7 @@ void PlayState::constructWorld()
 
 	//m_shooter = new Shooter(enemyMesh, SHOOTER);
 	//m_gameObjectManager->addGameObject(m_shooter);
-	m_boss = new Boss(enemyMesh, BOSS, r_roomStart, glm::vec3(2.f, 0.f, 10.f));
+	m_boss = new Boss(enemyMesh, BOSS, r_roomStart, glm::vec3(2.f, 0.f, 9.f));
 	m_gameObjectManager->addGameObject(m_boss);
 	for (int i = 0; i < 5; i++)
 	{
