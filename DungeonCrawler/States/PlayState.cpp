@@ -150,7 +150,7 @@ void PlayState::constructWorld()
 	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
 	m_lightManager->addLight(glm::vec3(0.f, 5.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
 
-	Room* r_roomStart = new Room(roomStart, ROOM_EMPTY, m_player);
+	Room* r_roomStart = new Room(roomStart, ROOM, m_player);
 	Room* r_roomEnd = new Room(roomEnd, ROOM, m_player);
 
 	m_gameObjectManager->addGameObject(r_roomStart);
