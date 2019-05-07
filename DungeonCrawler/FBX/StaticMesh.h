@@ -8,7 +8,8 @@ class StaticMesh
 {
 private:
 	char m_name[100];
-	int m_vertexCount;
+	unsigned int m_vertexCount;
+	unsigned int m_materialID;
 	bool m_collision;
 	bool m_staticMesh;
 
@@ -38,12 +39,14 @@ public:
 	void setCollision(bool collision);
 	void setStaticMesh(bool staticMesh);
 	void setName(const char name[], int nameSize);
+	void setMaterialID(int materialID);
 
 	char getNameCharacter(int space)const;
 	bool getCollision()const;
 	bool getIsStatic()const;
 	int getVertexCount()const;
 	std::vector<Vertex> getVertexArr()const;
+	int getMaterialID()const;
 };
 
 /*

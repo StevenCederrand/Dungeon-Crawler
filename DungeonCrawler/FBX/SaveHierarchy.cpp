@@ -9,6 +9,7 @@ SaveHierarchy::SaveHierarchy()
 	m_nrOfNodes = 0;
 	m_nrOfStaticMesh = 0;
 	m_nrOfBoundingBox = 0;
+	m_nrOfMaterial = 0;
 }
 
 SaveHierarchy::~SaveHierarchy()
@@ -27,7 +28,7 @@ void SaveHierarchy::SaveEntireHierarchy(FbxScene* lScene)
 		{
 			m_calculateNrOfNodes(lRootNode->GetChild(i));
 		}
-		m_file.WriteMainHeader(m_nrOfStaticMesh, m_nrOfBoundingBox); //MainHeader
+		m_file.WriteMainHeader(m_nrOfStaticMesh, m_nrOfBoundingBox, m_nrOfMaterial); //MainHeader
 		//printf("FINAL Number of Nodes: %i\n", m_nrOfNodes);
 
 		//Write Meshes
@@ -77,8 +78,10 @@ void SaveHierarchy::m_calculateNrOfNodes(FbxNode* pNode)
 	if (collisionBool)
 		m_nrOfBoundingBox++;
 	else
+	{
 		m_nrOfStaticMesh++;
-
+		m_nrOfMaterial++;
+	}
 	// Recursively print the children.
 	for (int j = 0; j < pNode->GetChildCount(); j++)
 	{
@@ -516,10 +519,19 @@ void SaveHierarchy::DisplayMaterialTextureConnections(FbxSurfaceMaterial* pMater
 	//Show all the textures
 
 	FbxProperty lProperty;
+
+
 	//Diffuse Textures
 	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sDiffuse);
 	DisplayTextureNames(lProperty, lConnectionString);
 
+	//Normal Map Textures
+	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sNormalMap);
+	DisplayTextureNames(lProperty, lConnectionString);
+
+
+
+	/*
 	//DiffuseFactor Textures
 	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sDiffuseFactor);
 	DisplayTextureNames(lProperty, lConnectionString);
@@ -531,7 +543,6 @@ void SaveHierarchy::DisplayMaterialTextureConnections(FbxSurfaceMaterial* pMater
 	//EmissiveFactor Textures
 	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sEmissiveFactor);
 	DisplayTextureNames(lProperty, lConnectionString);
-
 
 	//Ambient Textures
 	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sAmbient);
@@ -556,11 +567,7 @@ void SaveHierarchy::DisplayMaterialTextureConnections(FbxSurfaceMaterial* pMater
 	//Bump Textures
 	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sBump);
 	DisplayTextureNames(lProperty, lConnectionString);
-
-	//Normal Map Textures
-	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sNormalMap);
-	DisplayTextureNames(lProperty, lConnectionString);
-
+	
 	//Transparent Textures
 	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sTransparentColor);
 	DisplayTextureNames(lProperty, lConnectionString);
@@ -576,6 +583,8 @@ void SaveHierarchy::DisplayMaterialTextureConnections(FbxSurfaceMaterial* pMater
 	//ReflectionFactor Textures
 	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sReflectionFactor);
 	DisplayTextureNames(lProperty, lConnectionString);
+	*/
+
 
 	//Update header with material info
 	bool lStringOverflow = (lConnectionString.GetLen() + 10 >= MAT_HEADER_LENGTH); // allow for string length and some padding for "%d"
@@ -623,6 +632,9 @@ void SaveHierarchy::DisplayMaterialConnections(FbxMesh* pMesh)
 				int lMatId = lMaterialElement->GetIndexArray().GetAt(0);
 				if (lMatId >= 0)
 				{
+					int nr = lMaterial->GetUniqueID();
+					m_staticMesh.setMaterialID(nr);
+
 					DisplayInt("        All polygons share the same material in mesh ", l);
 					DisplayMaterialTextureConnections(lMaterial, header, lMatId, l);
 				}

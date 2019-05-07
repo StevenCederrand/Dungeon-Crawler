@@ -9,14 +9,15 @@ struct MainHeader
 	unsigned int dynamicMeshCount; //morph	//custom attribute
 	unsigned int staticMeshCount;  //regular
 	unsigned int boundingBoxCount;
-	//unsigned int materialCount;
+	unsigned int materialCount;
 };
 
 struct MeshHeader
 {
 	char nameOfMesh[100];
 	unsigned int vertexCount;
-	//unsigned int materialID; //our different morph characters will use the same material
+	//nr of Texture?
+	unsigned int materialID;  //which material it uses
 	bool collision; //custom maya attribute
 	bool staticMesh;	//custom maya attribute
 	bool padding1; //Bool reserves 4 bytes, although it is only 1 byte, so might aswell padd them up

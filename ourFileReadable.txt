@@ -2,9 +2,11 @@ Version: 2
 Nr of dynamic meshes: 0
 Nr of static meshes: 3
 Nr of bounding boxes: 3
+Nr of materials: 3
 
 Name of mesh: Rectangle                                                                                           
 Vertex count: 36
+material ID: 48
 
 Collision: 0
 Static mesh: 1
@@ -158,6 +160,7 @@ normal: 0.000000 0.000000 -1.000000
 
 Name of mesh: Box                                                                                                 
 Vertex count: 36
+material ID: 49
 
 Collision: 0
 Static mesh: 1
@@ -311,6 +314,7 @@ normal: 0.000000 0.000000 -1.000000
 
 Name of mesh: StandingRectangle                                                                                   
 Vertex count: 36
+material ID: 50
 
 Collision: 0
 Static mesh: 1

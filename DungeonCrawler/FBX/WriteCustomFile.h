@@ -18,7 +18,7 @@ private:
 public:
 	WriteCustomFile();
 	~WriteCustomFile();
-	void WriteMainHeader(int nrOfStaticMeshes, int nrOfBoundingBoxes);
+	void WriteMainHeader(int nrOfStaticMeshes, int nrOfBoundingBoxes, int nrOfMaterial);
 	void WriteStaticMesh(StaticMesh currentMesh);
 	void WriteBoundingBoxMesh(BoundingBoxMesh currentMesh);
 

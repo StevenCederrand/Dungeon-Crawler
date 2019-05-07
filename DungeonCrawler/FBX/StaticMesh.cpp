@@ -128,6 +128,11 @@ void StaticMesh::setName(const char name[], int nameSize)
 	}
 }
 
+void StaticMesh::setMaterialID(int materialID)
+{
+	m_materialID = materialID;
+}
+
 char StaticMesh::getNameCharacter(int space)const
 {
 	return m_name[space];
@@ -151,4 +156,9 @@ int StaticMesh::getVertexCount()const
 std::vector<Vertex> StaticMesh::getVertexArr()const
 {
 	return m_vertexArr;
+}
+
+int StaticMesh::getMaterialID()const
+{
+	return m_materialID;
 }

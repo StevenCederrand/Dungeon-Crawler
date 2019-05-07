@@ -85,7 +85,7 @@ void WriteCustomFile::CreateCustomFile()
 	*/
 }
 
-void WriteCustomFile::WriteMainHeader(int nrOfStaticMeshes, int nrOfBoundingBoxes) //works
+void WriteCustomFile::WriteMainHeader(int nrOfStaticMeshes, int nrOfBoundingBoxes, int nrOfMaterial) //works
 {
 	m_mainHeader.version = '2';
 	m_mainHeader.padding1 = ' ';
@@ -94,6 +94,7 @@ void WriteCustomFile::WriteMainHeader(int nrOfStaticMeshes, int nrOfBoundingBoxe
 	m_mainHeader.dynamicMeshCount = 0;
 	m_mainHeader.staticMeshCount = nrOfStaticMeshes;
 	m_mainHeader.boundingBoxCount = nrOfBoundingBoxes;
+	m_mainHeader.materialCount = nrOfMaterial;
 
 	std::ofstream outfileBinary;
 	outfileBinary.open("ourFileBinary.bin", std::ios::out | std::ios::trunc | std::ios::binary); //trunc to clean
@@ -105,7 +106,8 @@ void WriteCustomFile::WriteMainHeader(int nrOfStaticMeshes, int nrOfBoundingBoxe
 	outfileReadable << "Version: " << m_mainHeader.version
 		<< "\nNr of dynamic meshes: " << m_mainHeader.dynamicMeshCount
 		<< "\nNr of static meshes: " << m_mainHeader.staticMeshCount
-		<< "\nNr of bounding boxes: " << m_mainHeader.boundingBoxCount << "\n\n";
+		<< "\nNr of bounding boxes: " << m_mainHeader.boundingBoxCount
+		<< "\nNr of materials: " << m_mainHeader.materialCount << "\n\n";
 	outfileReadable.close();
 }
 
@@ -121,6 +123,7 @@ void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think
 	}
 
 	lmeshHeader.vertexCount = currentMesh.getVertexCount();
+	lmeshHeader.materialID = currentMesh.getMaterialID();
 	lmeshHeader.collision = currentMesh.getCollision();
 	lmeshHeader.staticMesh = currentMesh.getIsStatic();
 	lmeshHeader.padding1 = false;
@@ -145,6 +148,7 @@ void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think
 	outfileReadable.open("ourFileReadable.txt", std::ios::out | std::ios::app);
 	outfileReadable << "Name of mesh: " << nameOfMesh
 		<< "\nVertex count: " << lmeshHeader.vertexCount
+		<< "\nmaterial ID: " << lmeshHeader.materialID
 		<< "\n\nCollision: " << lmeshHeader.collision
 		<< "\nStatic mesh: " << lmeshHeader.staticMesh << "\n\n\n";
 
