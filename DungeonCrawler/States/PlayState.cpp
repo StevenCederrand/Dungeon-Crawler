@@ -27,13 +27,15 @@ PlayState::PlayState() {
 	#pragma region Init
 	m_camera = new Camera();
 	m_effects = new Effects(m_GLinit);
-	m_effects->createEmitter("BloodEmitter", "BloodParticle.png", 0.5f);
-	m_effects->createEmitter("WallSmokeEmitter", "WallSmoke.png", 0.5f);
+	m_effects->createEmitter("BloodEmitter", "BloodParticle.png", 0.50f);
+	m_effects->createEmitter("WallSmokeEmitter", "WallSmoke.png", 0.50f);
+	m_effects->createEmitter("ProjectileExplosionEmitter", "whitePuff00.png", 0.50f);
+	m_effects->createEmitter("EnemyHoverEmitter", "WallSmoke.png", 0.30f);
 	m_effects->createEmitter("GunFlareEmitter", "GunFlare.png", 0.25f);
 
 	Camera::active = m_camera;
 	m_lightManager = new LightManager()	;
-	m_projectileManager = new ProjectileManager(m_GLinit);
+	m_projectileManager = new ProjectileManager(m_GLinit, m_effects);
 	m_renderer = new Renderer(m_camera, m_lightManager, m_effects, m_projectileManager);
 	m_gameObjectManager = new GameObjectManager(m_effects, m_projectileManager);
 	AudioEngine::loadSSO("Game.sso");

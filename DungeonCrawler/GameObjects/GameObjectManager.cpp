@@ -66,7 +66,7 @@ void GameObjectManager::update(float dt)
 		float xAngle = cosf(glm::radians(m_player->getAngle()));
 		float zAngle = sinf(glm::radians(m_player->getAngle()));
 		float offset = 0.5f;
-		m_effects->addParticles("GunFlareEmitter", m_player->getPosition() + glm::vec3(xAngle, 0.f, zAngle) * offset, 5.f, 0.2f);
+		m_effects->addParticles("GunFlareEmitter", m_player->getPosition() + glm::vec3(xAngle, 0.f, zAngle) * offset, glm::vec3(5.0f, 0.0f, 5.0f), 0.2f);
 	}
 
 	//------ Update all the game objects and check for collision 'n stuff ------
@@ -144,11 +144,11 @@ void GameObjectManager::update(float dt)
 
 			if (hitEnemy){
 				AudioEngine::play("gun_impact_enemy", 0.6f);
-				m_effects->addParticles("BloodEmitter", gunshotCollisionPoint, 5.f, 0.2f, 5.f);
+				m_effects->addParticles("BloodEmitter", gunshotCollisionPoint, glm::vec3(5.0f, 0.0f, 5.0f), 0.2f, 5.f);
 			}
 			else{
 				//AudioEngine::play("gun_impact_wall", 0.5f);
-				m_effects->addParticles("WallSmokeEmitter", gunshotCollisionPoint, 5.f, 0.2f, 5.f);
+				m_effects->addParticles("WallSmokeEmitter", gunshotCollisionPoint, glm::vec3(5.0f, 0.0f, 5.0f), 0.2f, 5.f);
 			}
 		}
 	}
@@ -450,7 +450,7 @@ void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
 		GameObject* enemy = new Shooter(enemyMesh, SHOOTER, currentRoom, glm::vec3(
 			Randomizer::single(-10.0f, 10.0f),
 			0.f,
-			Randomizer::single(-10.0f, 10.0f)), m_projectileManager);
+			Randomizer::single(-10.0f, 10.0f)), m_projectileManager, m_effects);
 		this->addGameObject(enemy);
 	}
 

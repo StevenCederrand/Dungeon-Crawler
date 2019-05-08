@@ -12,7 +12,7 @@ public:
 	~Emitter();
 
 	void update(float dt);
-	void addParticle(const glm::vec3& pos, float speed, float lifetime, int numberOfParticles = 1);
+	void addParticle(const glm::vec3& pos, const glm::vec3& velocity, float lifetime, int numberOfParticles = 1);
 	const GLuint getVAO() const;
 	const GLuint getTextureID() const;
 	const unsigned int getNumberOfParticles() const;
