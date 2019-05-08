@@ -57,7 +57,6 @@
     <ClCompile Include="GameObjects\HealthPlane.cpp" />
 
     <ClCompile Include="States\WinState.cpp" />
-
     <ClCompile Include="Globals\Settings.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -135,11 +134,20 @@
     <ClInclude Include="GameObjects\HealthPlane.h" />
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    <ClInclude Include="States\WinState.h" />
+=======
+>>>>>>> 85cdb8f720b376468ab6c56fadbb9e1b7f766be5
+<<<<<<< HEAD
     <ClInclude Include="States\WinState.h" />
 =======
 
 >>>>>>> 14ca9baa3c87783e0cc898156b5337aa9e6522cb
+<<<<<<< HEAD
 =======
 >>>>>>> 620da18079b41fda6a19aea180d2f51a34fe3ba4
+=======
+>>>>>>> e80772b5aeea240851a45e44c5ed0996bfb94cf8
+>>>>>>> 85cdb8f720b376468ab6c56fadbb9e1b7f766be5
   </ItemGroup>
 </Project>

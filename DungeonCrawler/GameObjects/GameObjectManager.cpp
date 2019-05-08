@@ -448,9 +448,9 @@ void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
 	for (int i = 0; i < numberOfEnemies; i++)
 	{
 		GameObject* enemy = new Shooter(enemyMesh, SHOOTER, currentRoom, glm::vec3(
-			Randomizer::single(-10.0f, 10.0f),
+			Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),
 			0.f,
-			Randomizer::single(-10.0f, 10.0f)), m_projectileManager);
+			Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)), m_projectileManager);
 		this->addGameObject(enemy);
 	}
 
