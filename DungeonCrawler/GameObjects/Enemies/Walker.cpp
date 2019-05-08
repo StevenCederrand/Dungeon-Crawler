@@ -9,6 +9,7 @@
 Walker::Walker(Mesh * mesh, Type type, Room* room, const glm::vec3& position):
 	GameObject(mesh, type)
 {
+
 	this->setScale(glm::vec3(1.f, 1.f, 1.f));
 	this->m_room = room;
 	this->m_health = 1.f;
@@ -17,7 +18,6 @@ Walker::Walker(Mesh * mesh, Type type, Room* room, const glm::vec3& position):
 	this->m_isPlayerClose = false;
 	this->m_type = type;
 	this->m_amIAlive = true;
-	setCollidable(true);
 	setPosition(position);
 	m_Astar = new AStar();
 	m_attackCooldown = 0.f;
@@ -136,7 +136,7 @@ void Walker::calculatePath(float dt)
 void Walker::moveToTarget(float dt)
 {
 	// If there is nodes in the path vector then 
-// move to them and pop them when being close enough
+	// move to them and pop them when being close enough
 	if (m_path.size() > 0)
 	{
 		int index = m_path.size() - 1;
@@ -147,7 +147,8 @@ void Walker::moveToTarget(float dt)
 		float zDir = currentNode.z - myPos.z;
 		float length = sqrtf(xDir * xDir + zDir * zDir);
 
-		glm::vec3 velocity = (glm::vec3(xDir, 0.f, zDir) / length) * m_speed * dt;
+		glm::vec3 velocity = (glm::vec3(xDir, 0.0f, zDir) / length) * m_speed * dt;
+		this->lookAt(getPlayerPosition());
 
 		// Move towards the node
 		translate(velocity);

@@ -2,7 +2,7 @@
 #include <System/Application.h>
 #include "MenuState.h"
 #include "Vendor/ImGui/imgui.h"
-
+#include <Globals/Settings.h>
 
 GameOverState::GameOverState()
 {
@@ -11,23 +11,23 @@ GameOverState::GameOverState()
 	m_glInit = new GLinit();
 
 	m_logo = new Image(
-		glm::vec2((float)Application::windowWidth * 0.5f, (float)Application::windowHeight *0.8f),
+		glm::vec2((float)Settings::getScreenWidth() * 0.5f, (float)Settings::getScreenHeight() * 0.8f),
 		glm::vec2(300.f, 200.f),
 		m_glInit,
 		"logo.png");
 
 	m_dead = new Image(
-		glm::vec2((float)Application::windowWidth * 0.5f, (float)Application::windowHeight * 0.5f),
+		glm::vec2((float)Settings::getScreenWidth() * 0.5f, (float)Settings::getScreenHeight() * 0.5f),
 		glm::vec2(300.f, 100.f),
 		m_glInit,
 		"Dead-New.png");
 
-	m_playAgain = new Button(glm::vec2(Application::windowWidth * 0.7, Application::windowHeight * 0.2f),
+	m_playAgain = new Button(glm::vec2(Settings::getScreenWidth() * 0.7, Settings::getScreenHeight() * 0.2f),
 		glm::vec2(400.f, 150.f), m_glInit,
 		"PlayAgain-Sel.png",
 		"PlayAgain-Unsel.png");
 
-	m_menu = new Button(glm::vec2(Application::windowWidth * 0.3, Application::windowHeight * 0.2f),
+	m_menu = new Button(glm::vec2(Settings::getScreenWidth() * 0.3, Settings::getScreenHeight() * 0.2f),
 		glm::vec2(400.f, 150.f), m_glInit,
 		"MainMenu-Sel.png",
 		"MainMenu-UnSel.png");

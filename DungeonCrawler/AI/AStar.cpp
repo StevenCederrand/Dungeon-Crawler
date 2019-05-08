@@ -1,6 +1,7 @@
 #include "AStar.h"
 #include <algorithm>
 #include <System/Log.h>
+
 bool nodeComparator(const Node* n1, const Node* n2)
 {
 	if (n2->fCost > n1->fCost) 
@@ -28,6 +29,7 @@ float AStar::getHCost(const GridCell& start, const GridCell& destination)
 
 float AStar::getHCost(const Node& start, const GridCell& destination)
 {
+
 	float diffX = start.x - destination.x;
 	float diffZ = start.z - destination.z;
 
@@ -114,13 +116,12 @@ std::vector<Node> AStar::findPath(GameObject* gameObject, const GridCell& start,
 			float gCostAdditional = 0.0f;
 			if ((c.info.occupied && c.info.occupant != gameObject))
 			{
-				gCostAdditional = 10.0f;
+				gCostAdditional = 20.0f;
 			}
 
 			if (!c.valid) continue;
 
 			noValidAdjacentCells = false;
-
 
 			float gCost = current->gCost + getHCost(*current, c) + gCostAdditional;
 			float hCost = getHCost(c, *goal);

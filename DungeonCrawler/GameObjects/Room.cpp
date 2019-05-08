@@ -10,7 +10,6 @@ Room::Room(Mesh * mesh, Type type, GameObject* playerObject, const glm::vec3 & p
 	this->m_type = type;
 	this->m_playerObject = playerObject;
 	this->setScale(glm::vec3(1.f, 0.5f, 1.f));
-
 	float length = this->getMaxMinValues().y - this->getMaxMinValues().w;
 	float width = this->getMaxMinValues().x - this->getMaxMinValues().z;
 	m_gridsystem = new GridSystem(width, length, 2, this);

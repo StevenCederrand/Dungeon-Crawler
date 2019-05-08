@@ -1,5 +1,6 @@
 #include "WinState.h"
 #include <System/Application.h>
+#include <Globals/Settings.h>
 #include "Vendor/ImGui/imgui.h"
 
 WinState::WinState() {
@@ -41,7 +42,7 @@ void WinState::renderImGUI() {
 }
 
 void WinState::registerUIButtons() {
-	this->m_return = new Button(glm::vec2(Application::windowWidth * 0.3, Application::windowHeight * 0.2f),
+	this->m_return = new Button(glm::vec2(Settings::getScreenWidth() * 0.3, Settings::getScreenHeight() * 0.2f),
 		glm::vec2(400.f, 150.f), this->m_glInit,
 		"MainMenu-Sel.png",
 		"MainMenu-UnSel.png");

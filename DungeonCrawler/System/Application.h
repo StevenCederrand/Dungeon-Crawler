@@ -4,10 +4,9 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "Input.h"
-#include "../Globals/Settings.h"
 #include "../Audio/AudioEngine.h"
 #include "States/StateManager.h"
-
+#include <Globals/Settings.h>
 class Application
 {
 public:
@@ -18,9 +17,7 @@ public:
 	void initShaders();
 	void run();
 
-	static int windowWidth;
-	static int windowHeight;
-
+	
 private:
 	void renderImGUI();
 
@@ -29,7 +26,7 @@ private:
 	Input* m_input;
 	StateManager* m_stateManager;
 	AudioEngine* m_audioEngine;
-
+	Settings m_settings;
 	bool m_vsync;
 };
 
