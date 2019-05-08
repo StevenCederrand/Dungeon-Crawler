@@ -2,7 +2,7 @@
 #include <GLM/gtx/transform.hpp>
 #include <GLM/gtc/matrix_transform.hpp>
 
-#include "System/Application.h"
+#include <Globals/Settings.h>
 #include "System/Input.h"
 #include "System/Log.h"
 
@@ -140,7 +140,7 @@ void Camera::move(float dt)
 
 void Camera::snapMouseToMiddle()
 {
-	glfwSetCursorPos(glfwGetCurrentContext(),(float)Application::windowWidth / 2.f, (float)Application::windowHeight / 2.f);
+	glfwSetCursorPos(glfwGetCurrentContext(),(float)Settings::getScreenWidth() / 2.f, (float)Settings::getScreenHeight() / 2.f);
 	glfwGetCursorPos(glfwGetCurrentContext(), &m_currentMousePosition.x, &m_currentMousePosition.y);
 	m_lastMousePosition = m_currentMousePosition;
 }
@@ -153,7 +153,7 @@ void Camera::setDistanceToOrbitPoint(float distance)
 
 void Camera::setProjectionMatrix()
 {
-	m_projectionMatrix = glm::perspective(glm::radians(FOV), (float)Application::windowWidth / (float)Application::windowHeight, NEAR_CLIPPING, FAR_CLIPPING);
+	m_projectionMatrix = glm::perspective(glm::radians(FOV), (float)Settings::getScreenWidth() / (float)Settings::getScreenHeight(), NEAR_CLIPPING, FAR_CLIPPING);
 }
 
 void Camera::setViewMatrix()
@@ -198,7 +198,7 @@ const Ray Camera::getRayFromScreen(float x, float y, float w, float h) const
 const glm::vec3 Camera::getMouseWorldPos()
 {
 	glfwGetCursorPos(glfwGetCurrentContext(), &m_mousePos.x, &m_mousePos.y);
-	Ray ray = Camera::active->getRayFromScreen(static_cast<float>(m_mousePos.x), static_cast<float>(m_mousePos.y), 1280, 720);
+	Ray ray = Camera::active->getRayFromScreen(static_cast<float>(m_mousePos.x), static_cast<float>(m_mousePos.y), Settings::getScreenWidth(), Settings::getScreenHeight());
 
 	glm::vec3 planeNormal(0.f, 1.f, 0.f); // we might not want to hardcode this, idk
 	float dis = 0;

@@ -2,7 +2,7 @@
 #include <GLM/gtx/transform.hpp>
 #include <GLM/gtc/matrix_transform.hpp>
 
-#include <System/Application.h>
+#include <Globals/Settings.h>
 
 UICamera::UICamera()
 {
@@ -16,9 +16,9 @@ UICamera::UICamera()
 	//m_projectionMatrix = glm::perspective(glm::radians(m_fov), (float)Application::windowWidth / (float)Application::windowHeight, m_nearplane, m_farplane);
 	m_projectionMatrix = glm::ortho(
 		0.0f,
-		(float)Application::windowWidth,
+		(float)Settings::getScreenWidth(),
 		0.0f,
-		(float)Application::windowHeight);
+		(float)Settings::getScreenHeight());
 }
 
 UICamera::~UICamera()

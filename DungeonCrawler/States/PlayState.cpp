@@ -151,8 +151,7 @@ void PlayState::constructWorld()
 	Mesh* door = MeshMap::getMesh("Door");
 
 	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(0.8f, 0.8f, 0.8f));
-	m_lightManager->addLight(glm::vec3(5.f), glm::vec3(0.5f, 0.f, 1.f), 10.f, m_gameObjectManager);
-	m_lightManager->addLight(glm::vec3(0.f, 5.f, -5.f), glm::vec3(0.0f, 1.f, 0.f), 10.f, m_gameObjectManager);
+	
 
 	Room* r_roomStart = new Room(roomStart, ROOM, m_player);
 	Room* r_roomEnd = new Room(roomEnd, ROOM, m_player);
@@ -178,7 +177,7 @@ void PlayState::constructWorld()
 		// Position
 		glm::vec3(
 			Randomizer::single(-20.f, 20.f),
-			5.f,
+			15.f,
 			Randomizer::single(-20.f, 20.f)),
 		// Color
 		glm::vec3(

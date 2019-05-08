@@ -1,7 +1,6 @@
 #ifndef FRAMEBUFFER_h
 #define FRAMEBUFFER_h
 #include <GL/glew.h>
-#include "../Globals/Settings.h"
 #include <GLM/glm.hpp>
 
 class Framebuffer {

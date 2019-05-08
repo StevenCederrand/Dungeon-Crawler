@@ -55,7 +55,7 @@
     <ClCompile Include="EnemyProjectile\ProjectileManager.cpp" />
     <ClCompile Include="GameObjects\Enemies\Boss.cpp" />
     <ClCompile Include="GameObjects\HealthPlane.cpp" />
-
+    <ClCompile Include="Globals\Settings.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -130,6 +130,5 @@
     <ClInclude Include="EnemyProjectile\ProjectileManager.h" />
     <ClInclude Include="GameObjects\Enemies\Boss.h" />
     <ClInclude Include="GameObjects\HealthPlane.h" />
-
   </ItemGroup>
 </Project>

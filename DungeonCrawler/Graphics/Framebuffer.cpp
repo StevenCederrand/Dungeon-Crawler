@@ -1,4 +1,5 @@
 #include "Framebuffer.h"
+#include <Globals/Settings.h>
 #include "../System/Log.h"
 
 Framebuffer::Framebuffer() {
@@ -42,7 +43,7 @@ void Framebuffer::genRenderBuffer() {
 	glGenRenderbuffers(1, &this->m_rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, this->m_rbo);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
-								ScreenResolutionX, ScreenResolutionY);
+								Settings::getScreenWidth(), Settings::getScreenHeight());
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, this->m_rbo);
 }
 
@@ -62,8 +63,7 @@ void Framebuffer::genDeferredBuffers() {
 	//Generate position texture
 	glGenTextures(1, &this->m_positionBuffer);
 	glBindTexture(GL_TEXTURE_2D, this->m_positionBuffer);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, ScreenResolutionX,
-		ScreenResolutionY, 0, GL_RGB, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, Settings::getScreenWidth(), Settings::getScreenHeight(), 0, GL_RGB, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->m_positionBuffer, 0);
@@ -72,8 +72,7 @@ void Framebuffer::genDeferredBuffers() {
 	//Generate normal texture
 	glGenTextures(1, &this->m_normalBuffer);
 	glBindTexture(GL_TEXTURE_2D, this->m_normalBuffer);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, ScreenResolutionX,
-		ScreenResolutionY, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, Settings::getScreenWidth(), Settings::getScreenHeight(), 0, GL_RGBA, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, this->m_normalBuffer, 0);
@@ -82,7 +81,7 @@ void Framebuffer::genDeferredBuffers() {
 	//Generate colour texture
 	glGenTextures(1, &this->m_colourBuffer);
 	glBindTexture(GL_TEXTURE_2D, this->m_colourBuffer);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, ScreenResolutionX, ScreenResolutionY, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Settings::getScreenWidth(), Settings::getScreenHeight(), 0, GL_RGBA, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, this->m_colourBuffer, 0);
@@ -95,7 +94,7 @@ void Framebuffer::genDeferredBuffers() {
 void Framebuffer::genShadowMappingBuffers() {
 	glGenTextures(1, &this->m_depthMap);
 	glBindTexture(GL_TEXTURE_2D, this->m_depthMap);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, ScreenResolutionX, ScreenResolutionY,
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, Settings::getScreenWidth(), Settings::getScreenHeight(),
 		0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

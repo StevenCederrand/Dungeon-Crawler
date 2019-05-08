@@ -3,7 +3,7 @@
 #include "Renderer.h"
 #include "ShaderMap.h"
 #include "../System/Log.h"
-#include "Globals/Settings.h"
+#include <Globals/Settings.h>
 #define MESH_VECTOR_RESERVE_SIZE 150
 
 Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects, ProjectileManager* projectileManager)
@@ -28,7 +28,7 @@ Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects,
 
 	//Create a new light projection matrix -- This doens't need to be created every frame
 	glm::mat4 projectionMatrix = glm::perspective(glm::radians(LIGHTFOV),
-		(float)ScreenResolutionX / (float)ScreenResolutionY, NEAR_CLIP, FAR_CLIP);
+		(float)Settings::getScreenWidth() / (float)Settings::getScreenHeight(), NEAR_CLIP, FAR_CLIP);
 	m_framebuffer->setProjectionMatrix(projectionMatrix);
 
 	m_effects = effects;
@@ -81,7 +81,7 @@ void Renderer::render() {
 	m_framebuffer->bindFrameBuffer();
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); //write to default framebuffer
 	glBlitFramebuffer(
-		0, 0, ScreenResolutionX, ScreenResolutionY, 0, 0, ScreenResolutionX, ScreenResolutionY, GL_DEPTH_BUFFER_BIT, GL_NEAREST
+		0, 0, Settings::getScreenWidth(), Settings::getScreenHeight(), 0, 0, Settings::getScreenWidth(), Settings::getScreenHeight(), GL_DEPTH_BUFFER_BIT, GL_NEAREST
 	);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	
