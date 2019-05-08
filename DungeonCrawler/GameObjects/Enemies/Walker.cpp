@@ -5,11 +5,12 @@
 #include <chrono>
 #include <iostream>
 #include <chrono>
+#include <Utility/Randomizer.h>
 
-Walker::Walker(Mesh * mesh, Type type, Room* room, const glm::vec3& position):
+Walker::Walker(Mesh * mesh, Type type, Room* room, const glm::vec3& position, Effects* effects):
 	GameObject(mesh, type)
 {
-
+	this->m_effects = effects;
 	this->setScale(glm::vec3(1.f, 1.f, 1.f));
 	this->m_room = room;
 	this->m_health = 1.f;
@@ -31,8 +32,15 @@ Walker::~Walker()
 
 void Walker::update(float dt)
 {
+
 	float lengthToPlayer = getDistanceToPlayer();
 	int playerCellIndex = m_room->getGrid()->getCellIndex(getPlayerPosition().x, getPlayerPosition().z);
+
+	m_hoverEffectTimer += dt;
+	if (m_hoverEffectTimer >= 0.05f) {
+		m_hoverEffectTimer = 0.0f;
+		m_effects->addParticles("EnemyHoverEmitter", getPosition(), glm::vec3(Randomizer::single(-100.0f, 100.0f) / 100.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 100.0f), 1.0f, 1);
+	}
 
 	if (lengthToPlayer > 2.5f) {
 		calculatePath(dt);

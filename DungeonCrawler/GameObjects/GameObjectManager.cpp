@@ -445,7 +445,7 @@ void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
 		m_walker = new Walker(enemyMesh, WALKER, currentRoom, glm::vec3(
 			Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),
 			0.f,
-			Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)));
+			Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)), m_effects);
 		this->addGameObject(m_walker);
 	}
 
