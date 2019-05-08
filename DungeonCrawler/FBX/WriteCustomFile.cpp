@@ -247,7 +247,36 @@ void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //specia
 
 void WriteCustomFile::WriteMaterial(Material currentMaterial)
 {
-	//WRITE THE MATERIAL TO FILE
+	Material lMaterial{ 1 };
+
+	std::string nameOfAlbedo;
+	std::string nameOfNormal;
+	for (int i = 0; i < 100; i++)
+	{
+		lMaterial.nameOfAlbedo[i] = currentMaterial.nameOfAlbedo[i];  //HAS $ IN SPOT 99?
+		lMaterial.nameOfNormal[i] = currentMaterial.nameOfNormal[i];
+		nameOfAlbedo += lMaterial.nameOfAlbedo[i];
+		nameOfNormal += lMaterial.nameOfNormal[i];
+	}
+
+	lMaterial.materialID = currentMaterial.materialID;
+	lMaterial.nrOfTextures = currentMaterial.nrOfTextures;
+	lMaterial.whatShader = currentMaterial.whatShader;
+
+	std::ofstream outfileBinary;
+	outfileBinary.open("ourFileBinary.bin", std::ios::out | std::ios::app | std::ios::binary); //writing, append, in binery
+	outfileBinary.write((const char*)&lMaterial, sizeof(Material));
+
+
+	std::ofstream outfileReadable;
+	outfileReadable.open("ourFileReadable.txt", std::ios::out | std::ios::app);
+	outfileReadable << "Name of albedo Texture: " << nameOfAlbedo
+		<< "\nName of normalmap: " << nameOfNormal
+		<< "\nMaterial ID: " << lMaterial.materialID
+		<< "\nNr of Textures: " << lMaterial.nrOfTextures
+		<< "\nWhat Shader: " << lMaterial.whatShader << "\n\n\n";
+
+	outfileReadable.close();
 }
 
 void WriteCustomFile::SmallFile()

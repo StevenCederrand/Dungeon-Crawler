@@ -160,7 +160,7 @@ normal: 0.000000 0.000000 -1.000000
 
 Name of mesh: Box                                                                                                 
 Vertex count: 36
-material ID: 48
+material ID: 0
 
 Collision: 0
 Static mesh: 1
@@ -314,7 +314,7 @@ normal: 0.000000 0.000000 -1.000000
 
 Name of mesh: StandingRectangle                                                                                   
 Vertex count: 36
-material ID: 48
+material ID: 0
 
 Collision: 0
 Static mesh: 1
@@ -464,6 +464,20 @@ normal: 0.000000 1.000000 0.000000
 Position: -2.000000 4.000000 2.000000 
 UV: 0.184833 0.501881 
 normal: 0.000000 1.000000 0.000000 
+
+
+Name of albedo Texture: Wall Color.jpg                                                                                      
+Name of normalmap: brickwall_normal.jpg                                                                                
+Material ID: 48
+Nr of Textures: 2
+What Shader: 1
+
+
+Name of albedo Texture: FlyGuyLowPoly_albedo.tga                                                                            
+Name of normalmap: FlyGuyLowPoly_normal.tga                                                                            
+Material ID: 49
+Nr of Textures: 2
+What Shader: 1
 
 
 Name of mesh: RectangleHitbox                                                                                     

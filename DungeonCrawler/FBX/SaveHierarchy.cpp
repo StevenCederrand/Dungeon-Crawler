@@ -37,6 +37,12 @@ void SaveHierarchy::SaveEntireHierarchy(FbxScene* lScene)
 			m_SaveStaticMeshNode(lRootNode->GetChild(i));
 		}
 
+		//Write Material
+		for (int i = 0; i < lRootNode->GetChildCount(); i++)
+		{
+			m_SaveMaterial(lRootNode->GetChild(i));
+		}
+
 		//Write Hitboxes
 		for (int i = 0; i < lRootNode->GetChildCount(); i++)
 		{
@@ -133,36 +139,6 @@ void SaveHierarchy::m_SaveStaticMeshNode(FbxNode* pNode)
 				m_SaveStaticMesh(pNode, collisionBool, staticMeshBool);	//saves relevant info in m_mesh
 				m_file.WriteStaticMesh(m_staticMesh);	//sends m_mesh to file writer for static mesh
 				m_staticMesh.PrepareForNewMesh();
-
-				//write materialInfo
-				FbxMesh* lMesh = (FbxMesh*)pNode->GetNodeAttribute();
-				SaveMaterial(lMesh);
-
-				//do check if this material has already been written
-
-				bool exists = false;
-
-				m_materialIDSent.push_back(m_Material.materialID);
-				if (m_materialIDSent.size() >= 2)
-				{
-					for (int j = 0; j < m_materialIDSent.size()-1; j++ && exists == false)
-					{
-						if (m_materialIDSent[m_materialIDSent.size() - 1] == m_materialIDSent[j])
-						{
-							exists = true;
-						}
-					}
-				}
-
-				if (exists == false)
-				{
-					m_file.WriteMaterial(m_Material);
-				}
-				else if (exists == true)
-				{
-					m_materialIDSent.pop_back();
-				}
-
 			}
 			else  //dynamic
 			{
@@ -239,6 +215,107 @@ void SaveHierarchy::m_SaveStaticHitboxNode(FbxNode* pNode)
 		printf("\n");
 		m_SaveStaticHitboxNode(pNode->GetChild(j));	//Deeper in the tree
 	}
+}
+
+void SaveHierarchy::m_SaveMaterial(FbxNode*pNode)
+{
+	FbxNodeAttribute::EType nodeType = pNode->GetNodeAttributeByIndex(0)->GetAttributeType();
+	bool collisionBool = false;
+	bool staticMeshBool = false;
+
+	FbxProperty collision = pNode->FindProperty("Collision", true);
+	if (collision.IsValid())
+	{
+		FbxBool collisionBoolFbx = collision.Get<bool>();
+		collisionBool = collisionBoolFbx;
+	}
+	else
+	{
+		printf("Collision Bool not found");
+	}
+
+	FbxProperty staticMesh = pNode->FindProperty("StaticMesh", true);
+	if (staticMesh.IsValid())
+	{
+		FbxBool staticMeshBoolFbx = staticMesh.Get<bool>();
+		staticMeshBool = staticMeshBoolFbx;
+	}
+	else
+	{
+		printf("Static Mesh Bool not found");
+	}
+
+	switch (nodeType)
+	{
+	default:
+		break;
+	case FbxNodeAttribute::eMesh:	//if its a mesh
+		if (collisionBool)
+		{
+
+		}
+		else
+		{
+			if (staticMeshBool)   //if its static
+			{
+				//write materialInfo
+				FbxMesh* lMesh = (FbxMesh*)pNode->GetNodeAttribute();
+				SaveMaterial(lMesh);
+
+				//do check if this material has already been written
+
+				bool exists = false;
+
+				m_materialIDSent.push_back(m_Material.materialID);
+				if (m_materialIDSent.size() >= 2)
+				{
+					for (int j = 0; j < m_materialIDSent.size() - 1; j++ && exists == false)
+					{
+						if (m_materialIDSent[m_materialIDSent.size() - 1] == m_materialIDSent[j])
+						{
+							exists = true;
+						}
+					}
+				}
+
+				if (exists == false)
+				{
+					m_file.WriteMaterial(m_Material);
+				}
+				else if (exists == true)
+				{
+					m_materialIDSent.pop_back();
+				}
+
+			}
+			else  //dynamic
+			{
+
+			}
+		}
+		break;
+	}
+
+	m_ResetMaterial();
+
+	// Recursively print the children.
+	for (int j = 0; j < pNode->GetChildCount(); j++)
+	{
+		printf("\n");
+		m_SaveMaterial(pNode->GetChild(j));	//Deeper in the tree
+	}
+}
+
+void SaveHierarchy::m_ResetMaterial()
+{
+	for (int i = 0; i < 100; i++)
+	{
+		m_Material.nameOfAlbedo[i] = ' ';
+		m_Material.nameOfNormal[i] = ' ';
+	}
+	m_Material.materialID = 0;
+	m_Material.nrOfTextures = 0;
+	m_Material.whatShader = 0;
 }
 
 void SaveHierarchy::m_SaveControlPoints(FbxMesh* pMesh, bool collision)
@@ -710,311 +787,3 @@ void SaveHierarchy::SaveTextureNames(FbxProperty &pProperty, int mapKind)
 		}
 	}
 }
-
-
-
-
-
-/*
-//Save texture names in m_Material
-void SaveHierarchy::DisplayTextureNames(FbxProperty &pProperty, FbxString& pConnectionString)
-{
-	int lLayeredTextureCount = pProperty.GetSrcObjectCount<FbxLayeredTexture>();
-	if (lLayeredTextureCount > 0)
-	{
-		for (int j = 0; j < lLayeredTextureCount; ++j)
-		{
-			FbxLayeredTexture *lLayeredTexture = pProperty.GetSrcObject<FbxLayeredTexture>(j);
-			int lNbTextures = lLayeredTexture->GetSrcObjectCount<FbxTexture>();
-			pConnectionString += " Texture ";
-
-			for (int k = 0; k < lNbTextures; ++k)
-			{
-				//lConnectionString += k;
-				pConnectionString += "\"";
-				pConnectionString += (char*)lLayeredTexture->GetName();
-				pConnectionString += "\"";
-				pConnectionString += " ";
-			}
-			pConnectionString += "of ";
-			pConnectionString += pProperty.GetName();
-			pConnectionString += " on layer ";
-			pConnectionString += j;
-		}
-		pConnectionString += " |";
-	}
-	else
-	{
-		//no layered texture simply get on the property
-		int lNbTextures = pProperty.GetSrcObjectCount<FbxTexture>();
-
-		if (lNbTextures > 0)
-		{
-			pConnectionString += " Texture ";
-			pConnectionString += " ";
-
-			for (int j = 0; j < lNbTextures; ++j)
-			{
-				FbxTexture* lTexture = pProperty.GetSrcObject<FbxTexture>(j);
-				FbxFileTexture* lTextureFile = pProperty.GetSrcObject<FbxFileTexture>(j);
-				if (lTexture)
-				{
-					pConnectionString += "\"";
-					pConnectionString += (char*)lTexture->GetName();
-					pConnectionString += "\"";
-					pConnectionString += " ";
-
-					//the path to the file, save the last part only?
-					std::string nameOfTexture = lTextureFile->GetFileName();
-					int fileStart = nameOfTexture.find_last_of("/");
-					std::string nameOfTextureLastPart = nameOfTexture.substr(fileStart+1);
-					
-					//should check if albedo or normal, then write it in write file
-					int nameOfTextureLastPartLength = nameOfTextureLastPart.length();
-					for (int k = 0; k < nameOfTextureLastPartLength; k++) //100 spaces in the variable
-					{
-						m_Material.nameOfAlbedo[k] = nameOfTextureLastPart[k];
-					}
-					for (int k = nameOfTextureLastPartLength; k < 100; k++)
-					{
-						m_Material.nameOfAlbedo[k] = ' ';
-					}
-				}
-			}
-			pConnectionString += "of ";
-			pConnectionString += pProperty.GetName();
-			pConnectionString += " |";
-		}
-	}
-}
-
-void SaveHierarchy::DisplayMaterialTextureConnections(FbxSurfaceMaterial* pMaterial, char * header, int pMatId, int l)
-{
-	if (!pMaterial)
-		return;
-
-	FbxString lConnectionString = "            Material %d -- ";
-	//Show all the textures
-
-	FbxProperty lProperty;
-
-
-	//Diffuse Textures
-	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sDiffuse);
-	DisplayTextureNames(lProperty, lConnectionString);
-
-	//Normal Map Textures
-	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sNormalMap);
-	DisplayTextureNames(lProperty, lConnectionString);
-
-
-
-	//DiffuseFactor Textures
-	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sDiffuseFactor);
-	DisplayTextureNames(lProperty, lConnectionString);
-
-	//Emissive Textures
-	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sEmissive);
-	DisplayTextureNames(lProperty, lConnectionString);
-
-	//EmissiveFactor Textures
-	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sEmissiveFactor);
-	DisplayTextureNames(lProperty, lConnectionString);
-
-	//Ambient Textures
-	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sAmbient);
-	DisplayTextureNames(lProperty, lConnectionString);
-
-	//AmbientFactor Textures
-	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sAmbientFactor);
-	DisplayTextureNames(lProperty, lConnectionString);
-
-	//Specular Textures
-	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sSpecular);
-	DisplayTextureNames(lProperty, lConnectionString);
-
-	//SpecularFactor Textures
-	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sSpecularFactor);
-	DisplayTextureNames(lProperty, lConnectionString);
-
-	//Shininess Textures
-	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sShininess);
-	DisplayTextureNames(lProperty, lConnectionString);
-
-	//Bump Textures
-	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sBump);
-	DisplayTextureNames(lProperty, lConnectionString);
-	
-	//Transparent Textures
-	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sTransparentColor);
-	DisplayTextureNames(lProperty, lConnectionString);
-
-	//TransparencyFactor Textures
-	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sTransparencyFactor);
-	DisplayTextureNames(lProperty, lConnectionString);
-
-	//Reflection Textures
-	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sReflection);
-	DisplayTextureNames(lProperty, lConnectionString);
-
-	//ReflectionFactor Textures
-	lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sReflectionFactor);
-	DisplayTextureNames(lProperty, lConnectionString);
-
-
-	//Update header with material info
-	bool lStringOverflow = (lConnectionString.GetLen() + 10 >= MAT_HEADER_LENGTH); // allow for string length and some padding for "%d"
-	if (lStringOverflow)
-	{
-		// Truncate string!
-		lConnectionString = lConnectionString.Left(MAT_HEADER_LENGTH - 10);
-		lConnectionString = lConnectionString + "...";
-	}
-	FBXSDK_sprintf(header, MAT_HEADER_LENGTH, lConnectionString.Buffer(), pMatId, l);
-	DisplayString(header);
-}
-
-void SaveHierarchy::DisplayMaterialConnections(FbxMesh* pMesh)
-{
-	int i, l, lPolygonCount = pMesh->GetPolygonCount();
-
-	char header[MAT_HEADER_LENGTH];
-
-	DisplayString("    Polygons Material Connections");
-
-	//check whether the material maps with only one mesh
-	bool lIsAllSame = true;
-	for (l = 0; l < pMesh->GetElementMaterialCount(); l++)
-	{
-
-		FbxGeometryElementMaterial* lMaterialElement = pMesh->GetElementMaterial(l);
-		if (lMaterialElement->GetMappingMode() == FbxGeometryElement::eByPolygon)
-		{
-			lIsAllSame = false;
-			break;
-		}
-	}
-
-	//For eAllSame mapping type, just out the material and texture mapping info once
-	if (lIsAllSame)
-	{
-		if (pMesh->GetElementMaterialCount() != 0)
-		{
-			for (l = 0; l < pMesh->GetElementMaterialCount(); l++)
-			{
-
-				FbxGeometryElementMaterial* lMaterialElement = pMesh->GetElementMaterial(l);
-				if (lMaterialElement->GetMappingMode() == FbxGeometryElement::eAllSame)
-				{
-					FbxSurfaceMaterial* lMaterial = pMesh->GetNode()->GetMaterial(lMaterialElement->GetIndexArray().GetAt(0));
-					int lMatId = lMaterialElement->GetIndexArray().GetAt(0);
-					if (lMatId >= 0)
-					{
-						//int nr = lMaterial->GetUniqueID(); //GETS UNIQUE ID
-						//m_staticMesh.setMaterialID(nr);
-
-						DisplayInt("        All polygons share the same material in mesh ", l);
-						DisplayMaterialTextureConnections(lMaterial, header, lMatId, l);
-					}
-				}
-			}
-		}
-		//no material
-		else if (pMesh->GetElementMaterialCount() == 0)		//no material
-		{
-			//m_staticMesh.setMaterialID(-1);
-		}
-	}
-
-	//For eByPolygon mapping type, just out the material and texture mapping info once
-	else
-	{
-		for (i = 0; i < lPolygonCount; i++)
-		{
-			DisplayInt("        Polygon ", i);
-
-			for (l = 0; l < pMesh->GetElementMaterialCount(); l++)
-			{
-
-				FbxGeometryElementMaterial* lMaterialElement = pMesh->GetElementMaterial(l);
-				FbxSurfaceMaterial* lMaterial = NULL;
-				int lMatId = -1;
-				lMaterial = pMesh->GetNode()->GetMaterial(lMaterialElement->GetIndexArray().GetAt(i));
-				lMatId = lMaterialElement->GetIndexArray().GetAt(i);
-
-				if (lMatId >= 0)
-				{
-					DisplayMaterialTextureConnections(lMaterial, header, lMatId, l);
-				}
-			}
-		}
-	}
-}
-
-void SaveHierarchy::DisplayMaterialMapping(FbxMesh* pMesh)
-{
-	const char* lMappingTypes[] = { "None", "By Control Point", "By Polygon Vertex", "By Polygon", "By Edge", "All Same" };
-	const char* lReferenceMode[] = { "Direct", "Index", "Index to Direct" };
-
-	int lMtrlCount = 0;
-	FbxNode* lNode = NULL;
-	if (pMesh) {
-		lNode = pMesh->GetNode();
-		if (lNode)
-			lMtrlCount = lNode->GetMaterialCount();
-	}
-
-	for (int l = 0; l < pMesh->GetElementMaterialCount(); l++)
-	{
-		FbxGeometryElementMaterial* leMat = pMesh->GetElementMaterial(l);
-		if (leMat)
-		{
-			char header[100];
-			FBXSDK_sprintf(header, 100, "    Material Element %d: ", l);
-			DisplayString(header);
-
-
-			DisplayString("           Mapping: ", lMappingTypes[leMat->GetMappingMode()]);
-			DisplayString("           ReferenceMode: ", lReferenceMode[leMat->GetReferenceMode()]);
-
-			int lMaterialCount = 0;
-			FbxString lString;
-
-			if (leMat->GetReferenceMode() == FbxGeometryElement::eDirect ||
-				leMat->GetReferenceMode() == FbxGeometryElement::eIndexToDirect)
-			{
-				lMaterialCount = lMtrlCount;
-			}
-
-			if (leMat->GetReferenceMode() == FbxGeometryElement::eIndex ||
-				leMat->GetReferenceMode() == FbxGeometryElement::eIndexToDirect)
-			{
-				int i;
-
-				lString = "           Indices: ";
-
-				int lIndexArrayCount = leMat->GetIndexArray().GetCount();
-				for (i = 0; i < lIndexArrayCount; i++)
-				{
-					lString += leMat->GetIndexArray().GetAt(i);
-
-					if (i < lIndexArrayCount - 1)
-					{
-						lString += ", ";
-					}
-				}
-
-				lString += "\n";
-
-				FBXSDK_printf(lString);
-			}
-		}
-	}
-
-	DisplayString("");
-}
-*/
-
-
-NEXT STEP: make sure the material is loaded in on the right place, after vertices
-GIve them a path to assets so they can find the textures

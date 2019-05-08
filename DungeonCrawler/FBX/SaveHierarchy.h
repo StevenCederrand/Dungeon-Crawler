@@ -30,6 +30,8 @@ private:
 	void m_calculateNrOfNodes(FbxNode* pNode);
 	void m_SaveStaticMeshNode(FbxNode* pNode);
 	void m_SaveStaticHitboxNode(FbxNode* pNode);
+	void m_SaveMaterial(FbxNode* pNode);
+	void m_ResetMaterial();
 	void m_SaveStaticMesh(FbxNode* pNode, bool collision, bool staticMesh);
 	void m_SaveHitboxMesh(FbxNode* pNode, bool collision, bool staticMesh);
 	void m_SaveMeshName(FbxNode* pNode, bool collision);
