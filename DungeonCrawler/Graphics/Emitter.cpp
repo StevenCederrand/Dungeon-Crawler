@@ -71,7 +71,7 @@ void Emitter::update(float dt)
 
 }
 
-void Emitter::addParticle(const glm::vec3& pos, float speed, float lifetime, int numberOfParticles)
+void Emitter::addParticle(const glm::vec3& pos, const glm::vec3& velocity, float lifetime, int numberOfParticles)
 {
 
 	for (int i = 0; i < numberOfParticles; i++)
@@ -82,7 +82,7 @@ void Emitter::addParticle(const glm::vec3& pos, float speed, float lifetime, int
 		size_t pIndex = getFirstUnusedParticle();
 		Particle & p = m_particles[pIndex];
 		p.center = pos + glm::vec3(Randomizer::single(-1.f, 1.f) / 6.f, 0.5f, Randomizer::single(-1.f, 1.f) / 6.f);
-		p.velocity = glm::vec3(0.f, Randomizer::single(speed / 2.f, speed), 0.f);
+		p.velocity = velocity;
 		p.lifetime = lifetime;
 		p.initialLifetime = lifetime;
 		p.color = glm::vec4(1.f);

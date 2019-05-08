@@ -3,17 +3,18 @@
 #include "Projectile.h"
 #include <GameObjects/Player.h>
 #include <Graphics/GLinit.h>
+#include <Graphics/Effects.h>
+
 #define MAX_PROJECTILE 50
 
 class ProjectileManager {
 public:
-	ProjectileManager(GLinit* glInit);
+	ProjectileManager(GLinit* glInit, Effects* effects);
 	~ProjectileManager();
 
 	void setPlayer(GameObject* player);
 	void update(float dt);
-	void render();
-
+	
 	void spawnProjectile(Projectile* projectile);
 
 	const GLuint& getVAO() const;
@@ -39,7 +40,8 @@ private:
 	std::vector<Projectile*> m_projectiles;
 	std::vector<glm::vec3> m_centerPosBuffer;
 	Player* m_player;
-	int m_size;
+	Effects* m_effects;
+	float m_size;
 };
 
 #endif

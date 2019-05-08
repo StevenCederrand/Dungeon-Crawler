@@ -3,10 +3,10 @@
 #include <GameObjects/Room.h>
 #include <AI/AStar.h>
 #include <EnemyProjectile/ProjectileManager.h>
-
+#include <Graphics/Effects.h>
 class Shooter : public GameObject {
 public:
-	Shooter(Mesh* mesh, Type type, Room* room, const glm::vec3& position, ProjectileManager* projectileManager);
+	Shooter(Mesh* mesh, Type type, Room* room, const glm::vec3& position, ProjectileManager* projectileManager, Effects* effects);
 	~Shooter();
 	void update(float dt);
 
@@ -33,6 +33,7 @@ private:
 
 	float m_castTime;
 	float m_currentCastTime;
+	float m_hoverEffectTimer;
 	bool m_castingSpell;
 	float m_maxShootingRange;
 
@@ -41,7 +42,7 @@ private:
 	AStar* m_Astar;
 	std::vector<Node> m_path;
 	ProjectileManager* m_projectileManager;
-
+	Effects* m_effects;
 };
 
 #endif // !_SHOOTER_H

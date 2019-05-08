@@ -3,12 +3,14 @@
 #include "../Player.h"
 #include <list>
 #include <System/Log.h>
+#include <Utility/Randomizer.h>
 
-Shooter::Shooter(Mesh* mesh, Type type, Room* room, const glm::vec3& position, ProjectileManager* projectileManager) :
+Shooter::Shooter(Mesh* mesh, Type type, Room* room, const glm::vec3& position, ProjectileManager* projectileManager, Effects* effects) :
 	GameObject(mesh, type)
 {
 	this->m_room = room;
 	this->m_projectileManager = projectileManager;
+	this->m_effects = effects;
 	this->m_health = 10.0f;
 	this->m_speed = 8.0f;
 	this->m_damage = 0.5f;
@@ -29,6 +31,12 @@ Shooter::~Shooter()
 
 void Shooter::update(float dt)
 {
+
+	m_hoverEffectTimer += dt;
+	if (m_hoverEffectTimer >= 0.05f) {
+		m_hoverEffectTimer = 0.0f;
+		m_effects->addParticles("EnemyHoverEmitter", getPosition(), glm::vec3(Randomizer::single(-100.0f,100.0f) / 100.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 100.0f), 1.0f, 1);
+	}
 
 	float lengthToPlayer = glm::length(getPosition() - getPlayerPosition());
 	this->lookAt(getPlayerPosition());
@@ -52,6 +60,7 @@ void Shooter::update(float dt)
 
 	if (m_castingSpell)
 	{
+		
 		m_currentCastTime += dt;
 
 		if (m_currentCastTime >= m_castTime)
@@ -63,7 +72,7 @@ void Shooter::update(float dt)
 			calculatePath(dt, true, false);
 			
 			if(m_path.size() > 0)
-				m_projectileManager->spawnProjectile(new Projectile(getPosition() + glm::vec3(0.0f, 1.0f, 0.0f), m_path, m_damage, 16.0f, m_room->getGrid()->getCellSize()));
+				m_projectileManager->spawnProjectile(new Projectile(getPosition() + glm::vec3(0.0f, 2.0f, 0.0f), m_path, m_damage, 16.0f, m_room->getGrid()->getCellSize()));
 		}
 	}
 

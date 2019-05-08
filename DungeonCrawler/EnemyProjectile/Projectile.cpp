@@ -9,7 +9,7 @@ Projectile::Projectile(const glm::vec3& startPosition, const std::vector<Node>& 
 	m_cellSize = cellSize;
 	m_isAtDestination = false;
 
-	m_aabb = new AABB(glm::vec3(-0.35f, 0.0f, -0.35f), glm::vec3(0.35f, 0.0f, 0.35f));
+	m_aabb = new AABB(glm::vec3(-m_cellSize * 0.25f, 0.0f, -m_cellSize * 0.25f), glm::vec3(m_cellSize * 0.25f, 0.0f, m_cellSize * 0.25f));
 }
 
 Projectile::~Projectile()
@@ -38,7 +38,7 @@ void Projectile::update(float dt)
 		m_aabb->setParentPosition(m_position);
 
 		// If being close enough then pop it from the path vector
-		if (length <= m_cellSize * 0.5f)
+		if (length <= m_cellSize * 0.25f)
 		{
 			m_path.erase(m_path.begin() + index);
 		}

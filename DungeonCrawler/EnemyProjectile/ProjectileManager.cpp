@@ -1,10 +1,13 @@
 #include "ProjectileManager.h"
 #include <System/Log.h>
-ProjectileManager::ProjectileManager(GLinit* glInit)
+#include <Utility/Randomizer.h>
+
+ProjectileManager::ProjectileManager(GLinit* glInit, Effects* effects)
 {
 	m_player = nullptr;
+	m_effects = effects;
 	m_textureID = glInit->createTexture("GunFlare.png", true, true);
-	m_size = 1.0f;
+	m_size = 0.5f;
 	m_vertex_buffer_data[0] = -m_size;
 	m_vertex_buffer_data[1] = -m_size;
 	m_vertex_buffer_data[2] =  0.0f;
@@ -59,6 +62,18 @@ void ProjectileManager::update(float dt)
 
 			if (proj->getAABB()->checkCollision(*m_player->getBoundingBoxes()[0]))
 			{
+				for (int i = 0; i < 10; i++) {
+					m_effects->addParticles("BloodEmitter", m_player->getPosition(),
+						glm::vec3(Randomizer::single(-100.0f, 100.0f) / 100.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 100.0f),
+						0.75f,
+						1);
+
+					m_effects->addParticles("ProjectileExplosionEmitter", m_player->getPosition(),
+						glm::vec3(Randomizer::single(-100.0f, 100.0f) / 10.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 10.0f),
+						0.50f,
+						1);
+
+				}
 				m_player->setHealth(m_player->getHealth() - proj->getDamage());
 				delete proj;
 				m_projectiles.erase(m_projectiles.begin() + i);
@@ -67,6 +82,15 @@ void ProjectileManager::update(float dt)
 
 			if (proj->isAtDestination())
 			{
+				for (int i = 0; i < 10; i++) {
+					
+					m_effects->addParticles("ProjectileExplosionEmitter", proj->getPosition(),
+						glm::vec3(Randomizer::single(-100.0f, 100.0f) / 50.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 50.0f),
+						0.75f,
+						1);
+
+				}
+
 				delete proj;
 				m_projectiles.erase(m_projectiles.begin() + i);
 				continue;
