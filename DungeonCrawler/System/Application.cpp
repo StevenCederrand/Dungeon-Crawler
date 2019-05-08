@@ -121,6 +121,13 @@ void Application::run()
 		m_stateManager->update(dt);
 		m_stateManager->render();
 
+		if (m_stateManager->wasStateChanged())
+		{
+			lastTime = static_cast<float>(glfwGetTime());
+			m_stateManager->resetWasStateChanged();
+		}
+
+
 		// SOUND STUFF
 		this->m_audioEngine->update();
 

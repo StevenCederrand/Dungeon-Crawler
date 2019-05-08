@@ -51,9 +51,15 @@
     <ClCompile Include="AI\GridSystem.cpp" />
     <ClCompile Include="AI\AStar.cpp" />
     <ClCompile Include="GameObjects\Powerups.cpp" />
+    <ClCompile Include="EnemyProjectile\Projectile.cpp" />
+    <ClCompile Include="EnemyProjectile\ProjectileManager.cpp" />
     <ClCompile Include="GameObjects\Enemies\Boss.cpp" />
     <ClCompile Include="GameObjects\HealthPlane.cpp" />
+<<<<<<< HEAD
     <ClCompile Include="States\WinState.cpp" />
+=======
+
+>>>>>>> 14ca9baa3c87783e0cc898156b5337aa9e6522cb
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -124,8 +130,14 @@
     <ClInclude Include="GameObjects\Powerups.h" />
     <ClInclude Include="Globals\Helper.h" />
     <ClInclude Include="System\Timer.h" />
+    <ClInclude Include="EnemyProjectile\Projectile.h" />
+    <ClInclude Include="EnemyProjectile\ProjectileManager.h" />
     <ClInclude Include="GameObjects\Enemies\Boss.h" />
     <ClInclude Include="GameObjects\HealthPlane.h" />
+<<<<<<< HEAD
     <ClInclude Include="States\WinState.h" />
+=======
+
+>>>>>>> 14ca9baa3c87783e0cc898156b5337aa9e6522cb
   </ItemGroup>
 </Project>

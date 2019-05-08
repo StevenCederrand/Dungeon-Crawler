@@ -12,12 +12,12 @@
 #include "Parser/Parser.h"
 #include "Room.h"
 #include "HealthPlane.h"
-
+#include <EnemyProjectile/ProjectileManager.h>
 
 class GameObjectManager {
 
 public:
-	GameObjectManager(Effects* effects);
+	GameObjectManager(Effects* effects, ProjectileManager* projectileManager);
 	~GameObjectManager();
 
 
@@ -55,6 +55,7 @@ private:
 	AABB* m_broadPhaseBox;
 	glm::vec4 m_maxMinValues; 
 	Effects* m_effects; 
+	ProjectileManager* m_projectileManager;
 
 	bool m_isLocked;
 	std::vector<Room*> m_rooms;

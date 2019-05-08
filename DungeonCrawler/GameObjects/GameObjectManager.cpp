@@ -8,9 +8,10 @@
 #include "../Graphics/MeshMap.h"
 #include "../Utility/Randomizer.h"
 
-GameObjectManager::GameObjectManager(Effects* effects)
+GameObjectManager::GameObjectManager(Effects* effects, ProjectileManager* projectileManager)
 {
 	m_effects = effects;
+	m_projectileManager = projectileManager;
 	m_broadPhaseBox = nullptr;
 	m_player = nullptr;
 	m_walker = nullptr;
@@ -437,11 +438,20 @@ void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
 	Mesh* enemyMesh = MeshMap::getMesh("Enemy");
 	for (int i = 0; i < numberOfEnemies; i++)
 	{
-	m_walker = new Walker(enemyMesh, WALKER, currentRoom, glm::vec3(
-		Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),
-		0.f,
-		Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)));
-	this->addGameObject(m_walker);
+		m_walker = new Walker(enemyMesh, WALKER, currentRoom, glm::vec3(
+			Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),
+			0.f,
+			Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)));
+		this->addGameObject(m_walker);
+	}
+
+	for (int i = 0; i < numberOfEnemies; i++)
+	{
+		GameObject* enemy = new Shooter(enemyMesh, SHOOTER, currentRoom, glm::vec3(
+			Randomizer::single(-10.0f, 10.0f),
+			0.f,
+			Randomizer::single(-10.0f, 10.0f)), m_projectileManager);
+		this->addGameObject(enemy);
 	}
 
 }
