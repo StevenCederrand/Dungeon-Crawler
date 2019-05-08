@@ -55,8 +55,10 @@
     <ClCompile Include="EnemyProjectile\ProjectileManager.cpp" />
     <ClCompile Include="GameObjects\Enemies\Boss.cpp" />
     <ClCompile Include="GameObjects\HealthPlane.cpp" />
+
     <ClCompile Include="States\WinState.cpp" />
     <ClCompile Include="Globals\Settings.cpp" />
+
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -131,6 +133,14 @@
     <ClInclude Include="EnemyProjectile\ProjectileManager.h" />
     <ClInclude Include="GameObjects\Enemies\Boss.h" />
     <ClInclude Include="GameObjects\HealthPlane.h" />
+<<<<<<< HEAD
     <ClInclude Include="States\WinState.h" />
+=======
+<<<<<<< HEAD
+    <ClInclude Include="States\WinState.h" />
+=======
+
+>>>>>>> 14ca9baa3c87783e0cc898156b5337aa9e6522cb
+>>>>>>> e80772b5aeea240851a45e44c5ed0996bfb94cf8
   </ItemGroup>
 </Project>

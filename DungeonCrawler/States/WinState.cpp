@@ -10,7 +10,6 @@ WinState::WinState() {
 	
 
 	this->registerUIButtons();
-
 }
 
 WinState::~WinState() {
