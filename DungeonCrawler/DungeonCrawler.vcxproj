@@ -181,6 +181,7 @@
     <ClCompile Include="Graphics\MeshMap.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
     <ClCompile Include="States\GameOverState.cpp" />
+    <ClCompile Include="States\WinState.cpp" />
     <ClCompile Include="UserInterface\Button.cpp" />
     <ClCompile Include="Parser\ParserData.cpp" />
     <ClCompile Include="Graphics\Shader.cpp" />
@@ -238,6 +239,7 @@
     <ClInclude Include="Graphics\Mesh.h" />
     <ClInclude Include="Graphics\MeshMap.h" />
     <ClInclude Include="Graphics\Renderer.h" />
+    <ClInclude Include="States\WinState.h" />
     <ClInclude Include="System\Timer.h" />
     <ClInclude Include="States\GameOverState.h" />
     <ClInclude Include="UserInterface\Button.h" />

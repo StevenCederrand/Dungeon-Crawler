@@ -20,17 +20,17 @@ GameOverState::GameOverState()
 		glm::vec2((float)Settings::getScreenWidth() * 0.5f, (float)Settings::getScreenHeight() * 0.5f),
 		glm::vec2(300.f, 100.f),
 		m_glInit,
-		"dead.png");
+		"Dead-New.png");
 
 	m_playAgain = new Button(glm::vec2(Settings::getScreenWidth() * 0.7, Settings::getScreenHeight() * 0.2f),
 		glm::vec2(400.f, 150.f), m_glInit,
-		"playagainbtn_active.png",
-		"playagainbtn_inactive.png");
+		"PlayAgain-Sel.png",
+		"PlayAgain-Unsel.png");
 
 	m_menu = new Button(glm::vec2(Settings::getScreenWidth() * 0.3, Settings::getScreenHeight() * 0.2f),
 		glm::vec2(400.f, 150.f), m_glInit,
-		"mainmenubtn_active.png",
-		"mainmenubtn_inactive.png");
+		"MainMenu-Sel.png",
+		"MainMenu-UnSel.png");
 
 	m_manager->registerUIElement(m_playAgain);
 	m_manager->registerUIElement(m_menu);
