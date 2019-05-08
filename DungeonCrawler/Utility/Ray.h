@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _RAY_h
+#define _RAY_h
 #include <GLM/glm.hpp>
 
 class Ray
@@ -15,7 +16,7 @@ public:
 private:
 	
 };
-
+#endif
 
 inline Ray::Ray(glm::vec3 pos, glm::vec3 dir) 
 {

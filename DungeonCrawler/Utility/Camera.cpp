@@ -29,6 +29,16 @@ Camera::Camera()
 	snapMouseToMiddle();
 	setProjectionMatrix();
 	calculateCameraAxis();
+	unsigned char pixels[16 * 16 * 4];
+	memset(pixels, 0xff, sizeof(pixels));
+
+	GLFWimage image;
+	image.width = 16;
+	image.height = 16;
+	image.pixels = pixels;
+	
+	GLFWcursor* cursor = glfwCreateCursor(&image, 0, 0);
+	glfwSetCursor(glfwGetCurrentContext(), cursor);
 }
 
 Camera::~Camera()
