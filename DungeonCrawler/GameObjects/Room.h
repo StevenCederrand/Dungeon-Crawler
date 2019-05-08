@@ -17,6 +17,7 @@ public:
 	const glm::vec2& getCentrePosition() const;
 
 private:
+	void resetMaxMinValues();
 	void setupMaxMinValues();
 	void calculateCentrePosition();
 private:

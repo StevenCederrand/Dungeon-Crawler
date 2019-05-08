@@ -18,6 +18,7 @@ Room::Room(Mesh * mesh, Type type, GameObject* playerObject, const glm::vec3 & p
 
 Room::~Room()
 {
+	this->resetMaxMinValues();
 	delete m_gridsystem;
 }
 
@@ -57,6 +58,15 @@ bool Room::intersection(glm::vec3 position) {
 	}
 
 	return true;
+}
+
+void Room::resetMaxMinValues() {
+	glm::vec4 maxMinValues = this->getMaxMinValues();
+	maxMinValues.x += 5;
+	maxMinValues.y += 7;
+	maxMinValues.z -= 5;
+	maxMinValues.w -= 7;
+	this->setMaxMinValues(maxMinValues);
 }
 
 void Room::setupMaxMinValues() {
