@@ -2,7 +2,6 @@
 #define _RENDERER_H
 #include "Utility/Camera.h"
 #include "GameObjects/GameObject.h"
-#include "../Globals/Settings.h"
 #include "LightManager.h"
 #include "Framebuffer.h"
 #include <vector>

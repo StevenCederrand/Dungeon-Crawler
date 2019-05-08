@@ -171,6 +171,7 @@
     <ClCompile Include="GameObjects\LightSphere.cpp" />
     <ClCompile Include="GameObjects\Powerups.cpp" />
     <ClCompile Include="GameObjects\Room.cpp" />
+    <ClCompile Include="Globals\Settings.cpp" />
     <ClCompile Include="Graphics\Effects.cpp" />
     <ClCompile Include="Graphics\Emitter.cpp" />
     <ClCompile Include="Graphics\Framebuffer.cpp" />
