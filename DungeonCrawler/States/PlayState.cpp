@@ -12,7 +12,7 @@
 #include "GameObjects/Player.h"
 #include "GameObjects/Enemies/Walker.h"
 #include "GameObjects/Enemies/Shooter.h"
-#include "GameObjects/HealthPlane.h"
+
 #pragma endregion
 
 #pragma region State_Includes
@@ -38,11 +38,6 @@ PlayState::PlayState() {
 	m_effects->createEmitter("EnemyHoverEmitter", "WallSmoke.png", 0.30f);
 	m_effects->createEmitter("GunFlareEmitter", "GunFlare.png", 0.25f);
 
-	Camera::active = m_camera;
-	m_lightManager = new LightManager()	;
-	m_projectileManager = new ProjectileManager(m_GLinit, m_effects);
-	m_renderer = new Renderer(m_camera, m_lightManager, m_effects, m_projectileManager);
-	m_gameObjectManager = new GameObjectManager(m_effects, m_projectileManager);
 	AudioEngine::loadSSO("Game.sso");
 	#pragma endregion
 		
@@ -52,8 +47,6 @@ PlayState::PlayState() {
 	ParserData* doorData = m_parser->loadFromObj("doorEnd.obj");
 	ParserData* roomStart = m_parser->loadFromObj("roomStart.obj");
 	ParserData* roomEnd = m_parser->loadFromObj("roomEnd.obj");
-	ParserData* healthPlane = m_parser->loadFromObj("HealthPlane.obj");
-
 
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
 	ParserData* powerUpData = m_parser->loadFromObj("LifePowerUp.obj");
@@ -62,7 +55,6 @@ PlayState::PlayState() {
 	m_GLinit->createMesh("Door", doorData);
 	m_GLinit->createMesh("RoomStart", roomStart);
 	m_GLinit->createMesh("RoomEnd", roomEnd);
-	m_GLinit->createMesh("HealthPlane", healthPlane);
 
 	m_GLinit->createMesh("Box", boxData);
 	m_GLinit->createMesh("PlayerModel", playerData);
@@ -84,10 +76,12 @@ PlayState::~PlayState() {
 	delete m_lightManager;
 	delete m_effects;
 	delete m_projectileManager;
+	delete m_playerHealthBar;
 }
 
 void PlayState::update(float dt) {
 
+	m_playerHealthBar->update(dt);
 	m_gameObjectManager->update(dt);
 	m_projectileManager->update(dt);
 	m_effects->update(dt);
@@ -141,10 +135,9 @@ void PlayState::resetPlayer()
 	delete m_gameObjectManager;
 	delete m_renderer;
 	delete m_lightManager;
-
-	m_lightManager = new LightManager();
-	m_renderer = new Renderer(m_camera, m_lightManager, m_effects, m_projectileManager);
-	m_gameObjectManager = new GameObjectManager(m_effects, m_projectileManager);
+	delete m_playerHealthBar;
+	delete m_projectileManager;
+	
 	//we want to setUp the world
 	constructWorld();
 }
@@ -152,18 +145,21 @@ void PlayState::resetPlayer()
 
 void PlayState::constructWorld()
 {
+	Mesh* playerMesh = MeshMap::getMesh("PlayerModel");
+	m_player = new Player(playerMesh, PLAYER);
+	m_playerHealthBar = new PlayerHealthBar(m_GLinit, dynamic_cast<Player*>(m_player));
+
+	Camera::active = m_camera;
+	m_lightManager = new LightManager();
+	m_projectileManager = new ProjectileManager(m_GLinit, m_effects);
+	m_renderer = new Renderer(m_camera, m_lightManager, m_effects, m_projectileManager, m_playerHealthBar);
+	m_gameObjectManager = new GameObjectManager(m_effects, m_projectileManager);
 
 	Mesh* boxMesh = MeshMap::getMesh("Box");
-	Mesh* playerMesh = MeshMap::getMesh("PlayerModel");
-	Mesh* healthPlaneMesh = MeshMap::getMesh("HealthPlane");
-
 	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
 	Mesh* roomStart = MeshMap::getMesh("RoomStart");
 	Mesh* roomEnd = MeshMap::getMesh("RoomEnd");
 	Mesh* door = MeshMap::getMesh("Door");
-
-	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(0.8f, 0.8f, 0.8f));
-	
 
 	Room* r_roomStart = new Room(roomStart, ROOM, m_player);
 	Room* r_roomEnd = new Room(roomEnd, ROOM, m_player);
@@ -171,10 +167,8 @@ void PlayState::constructWorld()
 	m_gameObjectManager->addGameObject(r_roomStart);
 	m_gameObjectManager->addGameObject(r_roomEnd);
 	m_gameObjectManager->addGameObject(new Box(door, DOOR));
-	
-	m_player = new Player(playerMesh, PLAYER);
 	m_gameObjectManager->addGameObject(m_player);
-
+	
 	m_projectileManager->setPlayer(m_player);
 
 	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 10, 0, 0, false, glm::vec3(4.f, 0.5f, -2.f));
@@ -184,6 +178,7 @@ void PlayState::constructWorld()
 	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 0, 10, true, glm::vec3(-5.f, 0.5f, -7.f));
 	m_gameObjectManager->addGameObject(m_powerUp);
 
+	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(0.8f, 0.8f, 0.8f));
 	for (int i = 0; i < 5; i++)
 	{
 	m_lightManager->addLight(

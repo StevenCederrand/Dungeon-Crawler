@@ -28,6 +28,7 @@ Image::Image(const glm::vec2& position, const glm::vec2& size, GLinit* glInit, c
 Image::~Image()
 {
 	glDeleteBuffers(1, &m_vbo);
+	glDeleteTextures(1, &m_texID);
 	glDeleteVertexArrays(1, &m_vao);
 }
 

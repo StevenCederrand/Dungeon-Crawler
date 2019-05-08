@@ -9,11 +9,12 @@
 #include "Shader.h"
 #include "Effects.h"
 #include <EnemyProjectile/ProjectileManager.h>
+#include <GUI/PlayerHealthBar.h>
 
 class Renderer
 {
 public:
-	Renderer(Camera* camera, LightManager* lightManager, Effects* effects, ProjectileManager* projectileManager);
+	Renderer(Camera* camera, LightManager* lightManager, Effects* effects, ProjectileManager* projectileManager, PlayerHealthBar* playerHealthBar);
 	~Renderer();
 
 	void prepareGameObjects(const std::vector<GameObject*>& gameObjects);
@@ -32,6 +33,7 @@ private:
 	void geometryPass();
 	void renderEffects();
 	void renderProjectiles();
+	void renderHealthBar();
 	void lightPass();
 
 	bool initRenderQuad();	
@@ -52,6 +54,7 @@ private:
 	Camera* m_camera;
 	Effects* m_effects;
 	ProjectileManager* m_projectileManager;
+	PlayerHealthBar* m_playerHealthBar;
 
 	unsigned int m_rQuadVAO;
 	unsigned int m_rQuadVBO;

@@ -75,6 +75,7 @@ void Player::update(float dt)
 	{
 		m_debug = !m_debug;
 	}
+	
 	if (!m_debug)
 	{
 		//weaponSwap();

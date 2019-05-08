@@ -6,7 +6,7 @@
 #include <Globals/Settings.h>
 #define MESH_VECTOR_RESERVE_SIZE 150
 
-Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects, ProjectileManager* projectileManager)
+Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects, ProjectileManager* projectileManager, PlayerHealthBar* playerHealthBar)
 {
 	m_camera = camera;
 	m_lightManager = lightManager;
@@ -33,6 +33,7 @@ Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects,
 
 	m_effects = effects;
 	m_projectileManager = projectileManager;
+	m_playerHealthBar = playerHealthBar;
 }
 
 Renderer::~Renderer() {
@@ -85,6 +86,7 @@ void Renderer::render() {
 	);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	
+	this->renderHealthBar();
 	this->renderEffects();
 	this->renderProjectiles();
 }
@@ -211,6 +213,32 @@ void Renderer::renderProjectiles()
 	glBindVertexArray(0);
 
 	effectsShader->unuse();
+	glDisable(GL_BLEND);
+}
+
+void Renderer::renderHealthBar()
+{
+	glEnable(GL_BLEND);
+	Shader* uiShader = ShaderMap::getShader("UIShader");
+	uiShader->use();
+	uiShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+	uiShader->setMat4("viewMatrix", m_camera->getViewMatrix());
+	uiShader->setMat4("modelMatrix", m_playerHealthBar->getModelMatrix());
+
+	glBindVertexArray(m_playerHealthBar->getVAO());
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_playerHealthBar->getTextureID());
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glBindTexture(GL_TEXTURE_2D, NULL);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glBindVertexArray(0);
+
+	uiShader->unuse();
 	glDisable(GL_BLEND);
 }
 
