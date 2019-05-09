@@ -33,15 +33,17 @@ namespace FBXImporter {
 
 		else if (infileBinary.is_open())
 		{
-
+			std::cout << "--------------------FBX Importer lib file-------------------------------" << std::endl;
 			FBXImporter::displayMeshName();
 			FBXImporter::displayVertices();
 			std::cout << std::endl;
-			std::cout << infileBinary.gcount() << std::endl;
+			std::cout << "GeometryCount: " << infileBinary.gcount() << std::endl;
 
-			displayMainHeader(infileBinary);
-			displayMeshHeader(infileBinary);
-			displayVertexHeader(infileBinary);
+			displayMainHeader(infileBinary, fileData);
+			displayMeshHeader(infileBinary, fileData);
+			displayBoundingBoxHeader(infileBinary, fileData);
+			displayVertexHeader(infileBinary, fileData);
+			displayBoundingBoxVertexHeader(infileBinary, fileData);
 
 			//for (int i = 0; i < m_staticMeshCount; i++)
 			//{
@@ -143,10 +145,11 @@ namespace FBXImporter {
 	}
 
 	//First
-	void displayMainHeader(std::ifstream& infileBinary)
+	void displayMainHeader(std::ifstream& infileBinary, FBXParserData* fileData)
 	{
 		char version = binaryToChar(infileBinary);
-		std::cout << version << " ";
+		std::cout << "Version: " << version << " " << std::endl;
+		setVersion(fileData, version);
 
 		char paddingOne = binaryToChar(infileBinary);
 		std::cout << paddingOne << " ";
@@ -155,22 +158,23 @@ namespace FBXImporter {
 		std::cout << paddingTwo << " ";
 
 		char paddingThree = binaryToChar(infileBinary);
-		std::cout << paddingThree << " ";
+		std::cout << paddingThree << " " << std::endl;
 
 		unsigned int dynamicMeshCount = (unsigned int)binaryToInt(infileBinary);
-		std::cout << dynamicMeshCount << " ";
+		std::cout << "DynamicMeshCount: " << dynamicMeshCount << " " << std::endl;
+		setDynamicMeshCount(fileData, dynamicMeshCount);
 
 		unsigned int staticMeshCount = (unsigned int)binaryToInt(infileBinary);
-		std::cout << staticMeshCount << " ";
-		m_staticMeshCount = staticMeshCount;
-		
+		std::cout << "StaticMeshCount: " << staticMeshCount << " " << std::endl;
+		setStaticMeshCount(fileData, staticMeshCount);
+
 		unsigned int boundingBoxCount = (unsigned int)binaryToInt(infileBinary);
-		std::cout << boundingBoxCount << " " << std::endl;
-		m_boundingBoxMeshCount = boundingBoxCount;
+		std::cout << "BoundingBoxCount: " << boundingBoxCount << " " << std::endl << std::endl;
+		setBoundBoxCount(fileData, boundingBoxCount);
 	}
 
 	//Second
-	void displayMeshHeader(std::ifstream& infileBinary)
+	void displayMeshHeader(std::ifstream& infileBinary, FBXParserData* fileData)
 	{
 		char version;
 
@@ -180,42 +184,29 @@ namespace FBXImporter {
 			std::cout << version;
 		}
 
+		std::cout << std::endl;
+
 		unsigned int vertexCount = (unsigned int)binaryToInt(infileBinary);
-		std::cout << vertexCount << " ";
-		m_staticMeshVertexCount = vertexCount;
+		std::cout << "VertexCount: " << vertexCount << " " << std::endl;
+		setVertexCountOfMesh(fileData, vertexCount);
 
 		bool collision = binaryToBool(infileBinary);
-		std::cout << collision << " ";
+		std::cout << "Collision: "<< collision << " " << std::endl;
+		setCollisionOfMesh(fileData, collision);
 
 		bool staticMesh = binaryToBool(infileBinary);
-		std::cout << staticMesh << " ";
+		std::cout << "StaticMesh: " << staticMesh << " " << std::endl;
+		setStaticMesh(fileData, staticMesh);
 
 		bool paddingOne = binaryToBool(infileBinary);
-		std::cout << paddingOne << " ";
+		std::cout << "PaddingOne: " << paddingOne << " " << std::endl;
 
 		bool paddingTwo = binaryToBool(infileBinary);
-		std::cout << paddingTwo << std::endl;
+		std::cout << "PaddingTwo: " << paddingTwo << std::endl;
 	}
 
-	//Third
-	void displayVertexHeader(std::ifstream& infileBinary)
-	{
-		//Need the static mesh count from the mesh header
-		for (int i = 0; i < m_boundingBoxVertexCount; i++)
-		{
-			float positionX = binaryToFloat(infileBinary);
-			std::cout << positionX << " ";
-
-			float positionY = binaryToFloat(infileBinary);
-			std::cout << positionY << " ";
-
-			float positionZ = binaryToFloat(infileBinary);
-			std::cout << positionZ << " " << std::endl;
-		}
-	}
-
-	//fourth
-	void displayBoundingBoxHeader(std::ifstream& infileBinary)
+	//third
+	void displayBoundingBoxHeader(std::ifstream& infileBinary, FBXParserData* fileData)
 	{
 		char nameOfHitBox;
 
@@ -227,25 +218,72 @@ namespace FBXImporter {
 
 		unsigned int vertexCount = (unsigned int)binaryToInt(infileBinary);
 		std::cout << vertexCount << " ";
-		m_boundingBoxMeshCount = vertexCount;
+		setVertexCountOfBoundingBoxMesh(fileData, vertexCount);
 
 		bool collision = binaryToBool(infileBinary);
 		std::cout << collision << " ";
+		setCollisionOfBoundingBoxMesh(fileData, collision);
 
 		bool staticMesh = binaryToBool(infileBinary);
-		std::cout << staticMesh << " ";
+		setStaticBoundingBoxMesh(fileData, staticMesh);
 
 		bool paddingOne = binaryToBool(infileBinary);
-		std::cout << paddingOne << " ";
+		std::cout << staticMesh << "PaddingOne: "<< " ";
 
 		bool paddingTwo = binaryToBool(infileBinary);
+		std::cout << paddingOne << "PaddingTwo: " << " ";
 		std::cout << paddingTwo << std::endl;
 	}
 
-	//fifth
-	void displayBoundingBoxVertexHeader(std::ifstream& infileBinary)
+	//fourth
+	void displayVertexHeader(std::ifstream& infileBinary, FBXParserData* fileData)
 	{
+		//Need the static mesh count from the mesh header
+		for (int i = 0; i < fileData->getMeshHeader().vertexCount; i++)
+		{
+			float positionX = binaryToFloat(infileBinary);
+			std::cout << "X: " << positionX << " ";
+
+			float positionY = binaryToFloat(infileBinary);
+			std::cout << "Y: " << positionY << " ";
+
+			float positionZ = binaryToFloat(infileBinary);
+			std::cout << "z: " << positionZ << " ";
+
+			float positionU = binaryToFloat(infileBinary);
+			std::cout << "U: " << positionU << " ";
+
+			float positionV = binaryToFloat(infileBinary);
+			std::cout << "V: " << positionV << " ";
+
+			float positionNX = binaryToFloat(infileBinary);
+			std::cout << "NX: " << positionNX << " ";
+
+			float positionNY = binaryToFloat(infileBinary);
+			std::cout << "NY: " << positionNY << " ";
+
+			float positionNZ = binaryToFloat(infileBinary);
+			std::cout << "NZ: " << positionNZ << " " << std::endl;
+		}
+	}
+
+
+	//fifth
+	void displayBoundingBoxVertexHeader(std::ifstream& infileBinary, FBXParserData* fileData)
+	{
+		std::cout << "BoundingBoxVertices: " << std::endl;
 		//Need the bounding box mesh count from the mesh header
+		for (int i = 0; i < fileData->getBoundingBoxHeader().vertexCount; i++)
+		{
+			float positionX = binaryToFloat(infileBinary);
+			std::cout << "X: " << positionX << " ";
+
+			float positionY = binaryToFloat(infileBinary);
+			std::cout << "Y: " << positionY << " ";
+
+			float positionZ = binaryToFloat(infileBinary);
+			std::cout << "z: " << positionZ << " " << std::endl;
+		}
 	}
 
 	int binaryToInt(std::ifstream& binaryFile)
@@ -288,10 +326,101 @@ namespace FBXImporter {
 		return convertedCharacter;
 	}
 
-	void setStaticMeshCount(FBXParserData* fbxParserData, int nrOfMeshes)
+	//--------------------------------------------------------------------------
+	//------------------------------MainHeader----------------------------------
+	void setVersion(FBXParserData* fileData, char versionNr)
 	{
-		fbxParserData->setMainHeaderStaticMeshCount(nrOfMeshes);
+		fileData->setMainHeaderVersion(versionNr);
 	}
 
+	void setDynamicMeshCount(FBXParserData* fileData, unsigned int dynamicMeshCount)
+	{
+		fileData->setMainHeaderDynamicMeshCount(dynamicMeshCount);
+	}
 
+	void setStaticMeshCount(FBXParserData* fileData, unsigned int nrOfMeshes)
+	{
+		fileData->setMainHeaderStaticMeshCount(nrOfMeshes);
+	}
+
+	void setBoundBoxCount(FBXParserData* fileData, unsigned int nrOfBoundingBoxMeshes)
+	{
+		fileData->setMainHeaderBoundBoxCount(nrOfBoundingBoxMeshes);
+	}
+	//---------------------------------------------------------------------------
+
+	//---------------------------------------------------------------------------
+	//------------------------------Mesh Header----------------------------------
+	void setNameOfMesh(FBXParserData* fileData, char nameOfMesh[])
+	{
+		//fileData->setMeshHeaderNameOfMesh(nameOfMesh);
+	}
+
+	void setVertexCountOfMesh(FBXParserData* fileData, unsigned int vertexCount)
+	{
+		fileData->setMeshHeaderVertexCountOfMesh(vertexCount);
+	}
+
+	void setCollisionOfMesh(FBXParserData* fileData, bool collision)
+	{
+		fileData->setMeshHeaderCollisionOfMesh(collision);
+	}
+
+	void setStaticMesh(FBXParserData* fileData, bool staticMesh)
+	{
+		fileData->setMeshHeaderStaticMesh(staticMesh);
+	}
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//--------------------------Bounding Box Header-------------------------------
+	void setNameOfBoundingBoxMesh(FBXParserData* fileData, char nameOfBoundingBox[])
+	{
+		//fileData->setBBHeaderNameOfBoundingBoxMesh(nameOfBoundingBox);
+	}
+
+	void setVertexCountOfBoundingBoxMesh(FBXParserData* fileData, unsigned int vertexCount)
+	{
+		fileData->setBBHeaderVertexCountOfBoundingBoxMesh(vertexCount);
+	}
+
+	void setCollisionOfBoundingBoxMesh(FBXParserData* fileData, bool collision)
+	{
+		fileData->setBBHeaderCollisionOfBoundingBoxMesh(collision);
+	}
+
+	void setStaticBoundingBoxMesh(FBXParserData* fileData, bool staticBoundingBoxMesh)
+	{
+		fileData->setBBHeaderStaticBoundingBoxMesh(staticBoundingBoxMesh);
+	}
+	//-----------------------------------------------------------------------------
+
+	//-----------------------------------------------------------------------------
+	//----------------------------Mesh Vertex Header-------------------------------
+	void setPositionVertexOfMesh(FBXParserData* fileData, float positionVertex[])
+	{
+		//fileData->setMVHeaderPositionVertexOfMesh(positionVertex);
+	}
+
+	void setUVOfMesh(FBXParserData* fileData, float UV[])
+	{
+		//fileData->setMVHeaderUVOfMesh(UV);
+	}
+
+	void setNormalOfMesh(FBXParserData* fileData, float normal[])
+	{
+		//fileData->setMVHeaderNormalOfMesh(normal);
+	}
+
+	//------------------------------------------------------------------------------
+
+
+	//------------------------------------------------------------------------------
+	//---------------------------Bounding Box Vertex--------------------------------
+	void setPositionOfBoundingBox(FBXParserData* fileData, float normal[])
+	{
+		fileData->setBBVHeaderPositionOfBoundingBox(normal);
+	}
+
+	//------------------------------------------------------------------------------
 }

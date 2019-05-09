@@ -14,12 +14,12 @@ namespace FBXImporter {
 
 	void readAndWriteBinaryData(std::string pathToMesh, FBXParserData* fileData);
 	
-	void displayMainHeader(std::ifstream& binaryFile);
-	void displayMeshHeader(std::ifstream& binaryFile);
-	void displayVertexHeader(std::ifstream& binaryFile);
+	void displayMainHeader(std::ifstream& binaryFile, FBXParserData* filedata);
+	void displayMeshHeader(std::ifstream& binaryFile, FBXParserData* fileData);
+	void displayBoundingBoxHeader(std::ifstream& binaryFile, FBXParserData* fileData);
 
-	void displayBoundingBoxHeader(std::ifstream& binaryFile);
-	void displayBoundingBoxVertexHeader(std::ifstream& binaryFile);
+	void displayVertexHeader(std::ifstream& binaryFile, FBXParserData* fileData);
+	void displayBoundingBoxVertexHeader(std::ifstream& binaryFile, FBXParserData* fileData);
 
 	int binaryToInt(std::ifstream& binaryFile);
 	float binaryToFloat(std::ifstream& binaryFile);
@@ -27,12 +27,30 @@ namespace FBXImporter {
 	char binaryToChar(std::ifstream& binaryFile);
 
 
-	void setStaticMeshCount(FBXParserData* fbxParserData, int nrOfMeshes);
+	//Struct set functions in order
+	//MainHeader
+	void setVersion(FBXParserData* fileData, char versionNr);
+	void setDynamicMeshCount(FBXParserData* fileData, unsigned int dynamicMeshCount);
+	void setStaticMeshCount(FBXParserData* fileData, unsigned int nrOfMeshes);
+	void setBoundBoxCount(FBXParserData* fileData, unsigned int nrOfBoundingBoxMeshes);
 
-	//Temporary variables(should use the FBXParserDatas structs instead
-	unsigned int m_staticMeshCount;
-	unsigned int m_boundingBoxMeshCount;
+	//MeshHeader
+	void setNameOfMesh(FBXParserData* fileData, char nameOfMesh[]);
+	void setVertexCountOfMesh(FBXParserData* fileData, unsigned int vertexCount);
+	void setCollisionOfMesh(FBXParserData* fileData, bool collision);
+	void setStaticMesh(FBXParserData* fileData, bool staticMesh);
 
-	unsigned int m_staticMeshVertexCount;
-	unsigned int m_boundingBoxVertexCount;
+	//BoundingBoxHeader
+	void setNameOfBoundingBoxMesh(FBXParserData* fileData, char nameOfBoundingBox[]);
+	void setVertexCountOfBoundingBoxMesh(FBXParserData* fileData, unsigned int vertexCount);
+	void setCollisionOfBoundingBoxMesh(FBXParserData* fileData, bool collision);
+	void setStaticBoundingBoxMesh(FBXParserData* fileData, bool staticBoundingBoxMesh);
+
+	//Vertex
+	void setPositionVertexOfMesh(FBXParserData* fileData, float positionVertex[]);
+	void setUVOfMesh(FBXParserData* fileData, float UV[]);
+	void setNormalOfMesh(FBXParserData* fileData, float normal[]);
+
+	//BoundingBoxVertex
+	void setPositionOfBoundingBox(FBXParserData* fileData, float normal[]);
 }
