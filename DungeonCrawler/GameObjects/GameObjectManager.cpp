@@ -8,9 +8,10 @@
 #include "../Graphics/MeshMap.h"
 #include "../Utility/Randomizer.h"
 
-GameObjectManager::GameObjectManager(Effects* effects)
+GameObjectManager::GameObjectManager(Effects* effects, ProjectileManager* projectileManager)
 {
 	m_effects = effects;
+	m_projectileManager = projectileManager;
 	m_broadPhaseBox = nullptr;
 	m_player = nullptr;
 	m_walker = nullptr;
@@ -64,7 +65,8 @@ void GameObjectManager::update(float dt)
 		float xAngle = cosf(glm::radians(m_player->getAngle()));
 		float zAngle = sinf(glm::radians(m_player->getAngle()));
 		float offset = 0.5f;
-		m_effects->addParticles("GunFlareEmitter", m_player->getPosition() + glm::vec3(xAngle, 0.f, zAngle) * offset, 5.f, 0.2f);
+		glm::vec3 posToSpawnParticle = m_player->getPosition() + glm::vec3(xAngle, 2.0f, zAngle) + (offset * m_player->getLookDirection());
+		m_effects->addParticles("GunFlareEmitter", posToSpawnParticle, glm::vec3(2.5f, 0.0f, 2.5f) * m_player->getLookDirection(), 0.2f);
 	}
 
 	//------ Update all the game objects and check for collision 'n stuff ------
@@ -142,11 +144,14 @@ void GameObjectManager::update(float dt)
 
 			if (hitEnemy){
 				AudioEngine::play("gun_impact_enemy", 0.6f);
-				m_effects->addParticles("BloodEmitter", gunshotCollisionPoint, 5.f, 0.2f, 5.f);
+				for (int i = 0; i < 10; i++) {
+					m_effects->addParticles("BloodEmitter", objectHit->getPosition() + glm::vec3(0.0f, 1.0f, 0.0f),
+						glm::vec3(Randomizer::single(-100.0f, 100.0f) / 25.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 25.0f), 0.25f);
+				}
 			}
 			else{
 				//AudioEngine::play("gun_impact_wall", 0.5f);
-				m_effects->addParticles("WallSmokeEmitter", gunshotCollisionPoint, 5.f, 0.2f, 5.f);
+				m_effects->addParticles("WallSmokeEmitter", gunshotCollisionPoint, glm::vec3(0.0f, 5.0f, 0.0f), 0.2f, 5.f);
 			}
 		}
 	}
@@ -436,11 +441,21 @@ void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
 	Mesh* enemyMesh = MeshMap::getMesh("Enemy");
 	for (int i = 0; i < numberOfEnemies; i++)
 	{
-	m_walker = new Walker(enemyMesh, WALKER, currentRoom, glm::vec3(
-		Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),
-		0.f,
-		Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)));
-	this->addGameObject(m_walker);
+		m_walker = new Walker(enemyMesh, WALKER, currentRoom, glm::vec3(
+			Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),
+			0.f,
+			Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)), m_effects);
+		this->addGameObject(m_walker);
+	}
+
+	for (int i = 0; i < numberOfEnemies; i++)
+	{
+		GameObject* enemy = new Shooter(enemyMesh, SHOOTER, currentRoom, glm::vec3(
+			Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),
+			0.f,
+			Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)), m_projectileManager, m_effects);
+
+		this->addGameObject(enemy);
 	}
 
 }

@@ -158,6 +158,8 @@
     <ClCompile Include="AI\GridSystem.cpp" />
     <ClCompile Include="Audio\AudioEngine.cpp" />
     <ClCompile Include="Collision\AABB.cpp" />
+    <ClCompile Include="EnemyProjectile\Projectile.cpp" />
+    <ClCompile Include="EnemyProjectile\ProjectileManager.cpp" />
     <ClCompile Include="GameObjects\Box.cpp" />
     <ClCompile Include="GameObjects\Enemies\Boss.cpp" />
     <ClCompile Include="GameObjects\Enemies\Shooter.cpp" />
@@ -169,6 +171,7 @@
     <ClCompile Include="GameObjects\LightSphere.cpp" />
     <ClCompile Include="GameObjects\Powerups.cpp" />
     <ClCompile Include="GameObjects\Room.cpp" />
+    <ClCompile Include="Globals\Settings.cpp" />
     <ClCompile Include="Graphics\Effects.cpp" />
     <ClCompile Include="Graphics\Emitter.cpp" />
     <ClCompile Include="Graphics\Framebuffer.cpp" />
@@ -177,7 +180,9 @@
     <ClCompile Include="Graphics\Mesh.cpp" />
     <ClCompile Include="Graphics\MeshMap.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
+    <ClCompile Include="Gui\PlayerHealthBar.cpp" />
     <ClCompile Include="States\GameOverState.cpp" />
+    <ClCompile Include="States\WinState.cpp" />
     <ClCompile Include="UserInterface\Button.cpp" />
     <ClCompile Include="Parser\ParserData.cpp" />
     <ClCompile Include="Graphics\Shader.cpp" />
@@ -211,6 +216,8 @@
     <ClInclude Include="Audio\AudioEngine.h" />
     <ClInclude Include="Collision\AABB.h" />
     <ClInclude Include="Collision\HitData.h" />
+    <ClInclude Include="EnemyProjectile\Projectile.h" />
+    <ClInclude Include="EnemyProjectile\ProjectileManager.h" />
     <ClInclude Include="GameObjects\Box.h" />
     <ClInclude Include="GameObjects\Enemies\Boss.h" />
     <ClInclude Include="GameObjects\Enemies\Shooter.h" />
@@ -234,6 +241,8 @@
     <ClInclude Include="Graphics\Mesh.h" />
     <ClInclude Include="Graphics\MeshMap.h" />
     <ClInclude Include="Graphics\Renderer.h" />
+    <ClInclude Include="Gui\PlayerHealthBar.h" />
+    <ClInclude Include="States\WinState.h" />
     <ClInclude Include="System\Timer.h" />
     <ClInclude Include="States\GameOverState.h" />
     <ClInclude Include="UserInterface\Button.h" />

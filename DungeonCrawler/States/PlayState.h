@@ -9,6 +9,8 @@
 #include "Graphics/LightManager.h"
 #include <list>
 #include "Graphics/Effects.h"
+#include <GUI/PlayerHealthBar.h>
+#include <EnemyProjectile/ProjectileManager.h>
 
 class PlayState : public State {
 public:
@@ -34,10 +36,9 @@ private:
 	GameObject* m_walker;
 	GameObject* m_shooter;
 	GameObject* m_powerUp;
+	ProjectileManager* m_projectileManager;
 	GameObject* m_boss;
-	GameObject* m_healthPlane;
-
-
+	PlayerHealthBar* m_playerHealthBar;
 	Effects* m_effects;
 
 };

@@ -2,19 +2,19 @@
 #define _RENDERER_H
 #include "Utility/Camera.h"
 #include "GameObjects/GameObject.h"
-#include "../Globals/Settings.h"
 #include "LightManager.h"
 #include "Framebuffer.h"
 #include <vector>
 #include <map>
 #include "Shader.h"
 #include "Effects.h"
-
+#include <EnemyProjectile/ProjectileManager.h>
+#include <GUI/PlayerHealthBar.h>
 
 class Renderer
 {
 public:
-	Renderer(Camera* camera, LightManager* lightManager, Effects* effects);
+	Renderer(Camera* camera, LightManager* lightManager, Effects* effects, ProjectileManager* projectileManager, PlayerHealthBar* playerHealthBar);
 	~Renderer();
 
 	void prepareGameObjects(const std::vector<GameObject*>& gameObjects);
@@ -29,10 +29,11 @@ private:
 	void bindMesh(Mesh* mesh, Shader* shader);
 	void unbindMesh(Mesh * mesh);
 	
-	void forwardPass();
 	void shadowPass(); //Get depth buffer
 	void geometryPass();
 	void renderEffects();
+	void renderProjectiles();
+	void renderHealthBar();
 	void lightPass();
 
 	bool initRenderQuad();	
@@ -46,13 +47,14 @@ private:
 	Spotlight* m_playerSpotLight;
 	Light* m_playerLight;
 
-
 	std::map<Mesh*, std::vector<GameObject*>> m_meshes;
 	std::map<Mesh*, std::vector<GameObject*>>::iterator m_meshIterator;
 	
 	LightManager* m_lightManager;
 	Camera* m_camera;
 	Effects* m_effects;
+	ProjectileManager* m_projectileManager;
+	PlayerHealthBar* m_playerHealthBar;
 
 	unsigned int m_rQuadVAO;
 	unsigned int m_rQuadVBO;
