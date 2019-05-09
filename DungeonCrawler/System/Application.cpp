@@ -113,7 +113,6 @@ void Application::run()
 		{
 			glfwSetWindowShouldClose(m_window, true);
 		}
-
 		currentTime = static_cast<float>(glfwGetTime());
 		float dt = currentTime - lastTime;
 		lastTime = currentTime;
@@ -132,10 +131,8 @@ void Application::run()
 		m_stateManager->renderImGUI();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		
 		glfwSwapBuffers(m_window);
 	}
-
 }
 
 

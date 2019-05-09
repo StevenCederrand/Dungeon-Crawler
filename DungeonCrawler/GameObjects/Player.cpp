@@ -10,6 +10,8 @@
 #include "../Utility/Randomizer.h"
 #include "Enemies/Boss.h"
 #include "Powerups.h"
+#include "../Vendor/Lodepng/lodepng.h"
+#include "../Globals/Paths.h"
 
 Player::Player(Mesh* mesh, Type type) :
 	GameObject(mesh, type)
@@ -53,11 +55,28 @@ Player::Player(Mesh* mesh, Type type) :
 	this->m_poweredUp = false;
 
 	this->setupSoundVector();
+
+
+
+	for (size_t i = 0; i < 9; i++)
+	{
+		unsigned error = lodepng::decode(m_image[i], m_width, m_height, TexturePath + "AmmoBar" + std::to_string(i) +".png");
+		if (error)
+			LOG_WARNING(error);
+	}
+	m_data = new GLFWimage();
+
+	m_data->width = 64;
+	m_data->height = 64;
+	m_data->pixels = m_image[8].data();
+	m_cursor = glfwCreateCursor(m_data, 32, 32);
+	glfwSetCursor(glfwGetCurrentContext(), m_cursor);
 }
 
 Player::~Player() {
 	delete this->m_spotlight;
 	delete this->m_flash;
+	delete this->m_data;
 }
 
 void Player::update(float dt)
@@ -275,10 +294,15 @@ void Player::shootAutomatic(float dt)
 				m_shake = 0.05f;
 				m_spraying = true;
 				m_pistolBullets--;
+				m_data->pixels = m_image[m_pistolBullets].data();
+				m_cursor = glfwCreateCursor(m_data, 32, 32);
+				glfwSetCursor(glfwGetCurrentContext(), m_cursor);
 			}
 			if (m_pistolBullets <= 0)
 			{
-				//le click sounds
+				m_data->pixels = m_image[0].data();
+				m_cursor = glfwCreateCursor(m_data, 32, 32);
+				glfwSetCursor(glfwGetCurrentContext(), m_cursor);
 				AudioEngine::playOnce("gun_click", 0.5f);
 			}
 		}
@@ -368,6 +392,9 @@ void Player::reloadCd(float dt)
 	{
 		m_reloading = false;
 		m_pistolBullets = 8;
+		m_data->pixels = m_image[8].data();
+		m_cursor = glfwCreateCursor(m_data, 32, 32);
+		glfwSetCursor(glfwGetCurrentContext(), m_cursor);
 	}
 	if (m_reloadTime > 0)
 	{
@@ -488,6 +515,11 @@ float Player::getHealth() const
 float Player::getDamage() const
 {
 	return this->m_damage;
+}
+
+int Player::getBulletCount() const
+{
+	return this->m_pistolBullets;
 }
 
 bool Player::isShooting() const

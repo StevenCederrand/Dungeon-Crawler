@@ -14,7 +14,6 @@
 #include "GameObjects/Enemies/Shooter.h"
 #include "GameObjects/HealthPlane.h"
 #include "GameOverState.h"
-
 #include "Utility/Randomizer.h"
 #include <chrono>
 #include <thread>
@@ -65,6 +64,7 @@ PlayState::PlayState() {
 
 	//we want to setUp the world
 	constructWorld();
+	
 }
 
 PlayState::~PlayState() {
@@ -94,6 +94,8 @@ void PlayState::update(float dt) {
 		GameOverState* gameOver = new GameOverState();
 		m_stateManager->pushTemporaryState(gameOver);
 	}
+	
+
 }
 
 void PlayState::renderImGUI()

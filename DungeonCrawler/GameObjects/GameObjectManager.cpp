@@ -39,7 +39,6 @@ void GameObjectManager::update(float dt)
 	if (m_broadPhaseBox)
 		m_broadPhaseBox->setParentPosition(m_player->getPosition());
 
-
 	
 	//------ Player collision with map ------
 	bool hasCollided = false;

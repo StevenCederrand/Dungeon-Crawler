@@ -2,7 +2,10 @@
 #define PLAYER_h
 #include "GameObject.h"
 #include <string>
+#include <vector>
 
+class GLFWcursor;
+class GLFWimage;
 
 class Player : public GameObject {
 public:
@@ -40,8 +43,8 @@ public:
 	float getSpeed()const;
 	float getHealth()const;
 	float getDamage()const;
+	int getBulletCount()const;
 	bool isShooting() const;
-	
 
 	const glm::vec3& getLookDirection() const;
 	const float& getAngle() const;
@@ -89,7 +92,14 @@ private:
 	bool m_chargeStance;
 	float m_shakeIntensity;
 	float m_chargeTimer;
-	
+
+	std::vector<unsigned char> m_image[9];
+	unsigned int m_width;
+	unsigned int m_height;
+	GLFWcursor* m_cursor;
+	GLFWimage* m_data;
+
+
 	std::vector<std::string> m_walkSounds;
 	float m_shake;
 	glm::vec3 m_shakeDir;
@@ -103,6 +113,4 @@ private:
 	//Debugging Tools
 	bool m_debug;
 };
-
-
 #endif

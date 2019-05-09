@@ -200,6 +200,7 @@
     <ClCompile Include="Vendor\ImGui\imgui_impl_glfw.cpp" />
     <ClCompile Include="Vendor\ImGui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Vendor\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Vendor\Lodepng\lodepng.cpp" />
     <ClCompile Include="Vendor\stb\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -262,6 +263,7 @@
     <ClInclude Include="Vendor\ImGui\imstb_rectpack.h" />
     <ClInclude Include="Vendor\ImGui\imstb_textedit.h" />
     <ClInclude Include="Vendor\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Vendor\Lodepng\lodepng.h" />
     <ClInclude Include="Vendor\stb\stb_image.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

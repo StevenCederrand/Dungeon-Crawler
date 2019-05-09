@@ -37,7 +37,9 @@ private:
 	GameObject* m_boss;
 	GameObject* m_healthPlane;
 
+
 	Effects* m_effects;
+
 };
 
 #endif
