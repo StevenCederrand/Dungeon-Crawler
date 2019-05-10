@@ -110,7 +110,6 @@ void Renderer::shadowPass() {
 
 			if (dynamic_cast<Player*>(object)) continue;
 		
-		
 			shadowShader->setMat4("modelMatrix", object->getModelMatrix());
 			glDrawElements(GL_TRIANGLES, mesh.first->getNrOfIndices(), GL_UNSIGNED_INT, NULL);
 		}
@@ -227,7 +226,6 @@ void Renderer::renderMap()
 		//set the view and projection matrix in the shader
 		mapShader->setMat4("viewMatrix", m_camera->getViewMatrix());
 		mapShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
-		glDisable(GL_CULL_FACE);
 		for (size_t i = 0; i < maxMinValues.size(); i++)
 		{
 			roomHasPlayer = 0;
@@ -252,7 +250,6 @@ void Renderer::renderMap()
 			glDrawArrays(GL_TRIANGLES, 0, 12);
 
 		}
-		glEnable(GL_CULL_FACE);
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 

@@ -88,7 +88,7 @@ int Map::roomWithPlayer()
 			playerPosition.z < m_rooms.at(i).y &&
 			playerPosition.z > m_rooms.at(i).w) {
 			m_playerRoom = i;
-			//return i;
+			
 		}
 	}
 	return m_playerRoom;
