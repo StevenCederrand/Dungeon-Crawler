@@ -7,8 +7,13 @@ WinState::WinState() {
 	this->m_glInit = new GLinit();
 	this->m_uiCamera = new UICamera();
 	this->m_uiManager = new UIManager(this->m_uiCamera);
-	
+	this->m_winner = new Image(
+		glm::vec2((float)Settings::getScreenWidth() * 0.5f, (float)Settings::getScreenHeight() * 0.8f),
+		glm::vec2(300.f, 150.f),
+		m_glInit,
+		"winner.png");
 
+	this->m_uiManager->registerUIElement(m_winner);
 	this->registerUIButtons();
 }
 
@@ -41,6 +46,7 @@ void WinState::renderImGUI() {
 }
 
 void WinState::registerUIButtons() {
+
 	this->m_return = new Button(glm::vec2(Settings::getScreenWidth() * 0.3, Settings::getScreenHeight() * 0.2f),
 		glm::vec2(400.f, 150.f), this->m_glInit,
 		"MainMenu-Sel.png",
