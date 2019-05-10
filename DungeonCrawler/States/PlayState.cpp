@@ -178,20 +178,20 @@ void PlayState::constructWorld()
 	m_gameObjectManager->addGameObject(m_powerUp);
 
 	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(0.8f, 0.8f, 0.8f));
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 2; i++)
 	{
 	m_lightManager->addLight(
 		// Position
 		glm::vec3(
 			Randomizer::single(-20.f, 20.f),
-			15.f,
-			Randomizer::single(-20.f, 20.f)),
+			40.f,
+			Randomizer::single(-60.f, 20.f)),
 		// Color
 		glm::vec3(
 			Randomizer::single(0.f, 255.f) / 255.f,
 			Randomizer::single(0.f, 255.f) / 255.f,
 			Randomizer::single(0.f, 255.f) / 255.f),
-		25.f, m_gameObjectManager);
+		60.f, m_gameObjectManager);
 
 	}
 
