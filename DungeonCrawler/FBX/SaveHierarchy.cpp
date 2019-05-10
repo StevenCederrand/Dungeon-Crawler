@@ -31,10 +31,16 @@ void SaveHierarchy::SaveEntireHierarchy(FbxScene* lScene)
 		m_file.WriteMainHeader(m_nrOfStaticMesh, m_nrOfBoundingBox, m_nrOfMaterial); //MainHeader
 		//printf("FINAL Number of Nodes: %i\n", m_nrOfNodes);
 
-		//Write Meshes
+		//Write Static Meshes
 		for (int i = 0; i < lRootNode->GetChildCount(); i++)
 		{
 			m_SaveStaticMeshNode(lRootNode->GetChild(i));
+		}
+
+		//Write Dynamic Meshes
+		for (int i = 0; i < lRootNode->GetChildCount(); i++)
+		{
+			m_SaveDynamicMeshNode(lRootNode->GetChild(i));
 		}
 
 		//Write Material
@@ -153,6 +159,71 @@ void SaveHierarchy::m_SaveStaticMeshNode(FbxNode* pNode)
 	{
 		printf("\n");
 		m_SaveStaticMeshNode(pNode->GetChild(j));	//Deeper in the tree
+	}
+}
+
+void SaveHierarchy::m_SaveDynamicMeshNode(FbxNode* pNode)
+{
+	FbxNodeAttribute::EType nodeType = pNode->GetNodeAttributeByIndex(0)->GetAttributeType();
+	bool collisionBool = false;
+	bool staticMeshBool = false;
+
+	FbxProperty collision = pNode->FindProperty("Collision", true);
+	if (collision.IsValid())
+	{
+		FbxBool collisionBoolFbx = collision.Get<bool>();
+		collisionBool = collisionBoolFbx;
+	}
+	else
+	{
+		printf("Collision Bool not found");
+	}
+
+	FbxProperty staticMesh = pNode->FindProperty("StaticMesh", true);
+	if (staticMesh.IsValid())
+	{
+		FbxBool staticMeshBoolFbx = staticMesh.Get<bool>();
+		staticMeshBool = staticMeshBoolFbx;
+	}
+	else
+	{
+		printf("Static Mesh Bool not found");
+	}
+
+	switch (nodeType)
+	{
+	default:
+		break;
+	case FbxNodeAttribute::eMesh:	//if its a mesh
+		if (collisionBool)
+		{
+
+		}
+		else
+		{
+			if (staticMeshBool)   //if its static
+			{
+				/*
+				m_SaveStaticMesh(pNode, collisionBool, staticMeshBool);	//saves relevant info in m_mesh
+				m_file.WriteStaticMesh(m_staticMesh);	//sends m_mesh to file writer for static mesh
+				m_staticMesh.PrepareForNewMesh();
+				*/
+			}
+			else  //dynamic
+			{
+				m_SaveDynamicMesh(pNode, collisionBool, staticMeshBool);
+				m_file.WriteDynamicMesh();
+				FIX THE FBX FILE TO HAVE COLLISION STATIC MESH TO NON
+			}
+		}
+		break;
+	}
+
+	// Recursively print the children.
+	for (int j = 0; j < pNode->GetChildCount(); j++)
+	{
+		printf("\n");
+		m_SaveDynamicMeshNode(pNode->GetChild(j));	//Deeper in the tree
 	}
 }
 
@@ -480,6 +551,11 @@ void SaveHierarchy::m_SaveStaticMesh(FbxNode* pNode, bool collision, bool static
 		printf("WARNING, MESH NOT TRIANGULATED\n");
 	}
 	m_staticMesh.MakeAllTheVertices(lNrOfVertices); //ASSEMPLES ALL THE VERTICES
+}
+
+void SaveHierarchy::m_SaveDynamicMesh(FbxNode* pNode, bool collision, bool staticMesh)
+{
+
 }
 
 void SaveHierarchy::m_SaveHitboxMesh(FbxNode* pNode, bool collision, bool staticMesh)

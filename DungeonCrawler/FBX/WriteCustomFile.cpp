@@ -279,6 +279,11 @@ void WriteCustomFile::WriteMaterial(Material currentMaterial)
 	outfileReadable.close();
 }
 
+void WriteCustomFile::WriteDynamicMesh()
+{
+	printf("Dynamic mesh");
+}
+
 void WriteCustomFile::SmallFile()
 {
 	SmallInfoHeader lsmallInfoHeader{ 1 };
@@ -296,7 +301,3 @@ void WriteCustomFile::SmallFile()
 	outfileBinary.close();
 }
 
-
-//STUFF I FIX:
-//FIX FILE FOR DYNAMIC MESHES
-//ADD MATERIALS

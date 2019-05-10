@@ -22,6 +22,7 @@ public:
 	void WriteStaticMesh(StaticMesh currentMesh);
 	void WriteBoundingBoxMesh(BoundingBoxMesh currentMesh);
 	void WriteMaterial(Material currentMaterial);
+	void WriteDynamicMesh();
 
 	void SmallFile(); //writes small file
 };
