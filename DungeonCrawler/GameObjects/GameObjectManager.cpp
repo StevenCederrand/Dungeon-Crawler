@@ -14,10 +14,6 @@ GameObjectManager::GameObjectManager(Effects* effects, ProjectileManager* projec
 	m_projectileManager = projectileManager;
 	m_broadPhaseBox = nullptr;
 	m_player = nullptr;
-	m_walker = nullptr;
-	m_shooter = nullptr;
-	m_boss = nullptr;
-	m_healthPlane = nullptr;
 	m_bossDeadStatus = false;
 }
 
@@ -267,20 +263,20 @@ void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject
 
 					if (dynamic_cast<Walker*>(object))
 					{
-						m_walker = dynamic_cast<Walker*>(object);
-						desc.walker = m_walker;
+						Walker* walker = dynamic_cast<Walker*>(object);
+						desc.walker = walker;
 						m_player->hit(desc);
 					}
 					if (dynamic_cast<Shooter*>(object))
 					{
-						m_shooter = dynamic_cast<Shooter*>(object);
-						desc.shooter = m_shooter;
+						Shooter* shooter = dynamic_cast<Shooter*>(object);
+						desc.shooter = shooter;
 						m_player->hit(desc);
 					}
 					if (dynamic_cast<Boss*>(object))
 					{
-						m_boss = dynamic_cast<Boss*>(object);
-						desc.boss = m_boss;
+						Boss* boss = dynamic_cast<Boss*>(object);
+						desc.boss = boss;
 						m_player->hit(desc);
 					}
 				}
@@ -376,20 +372,20 @@ void GameObjectManager::handleEnemyAttacks(GameObject* object, float dt)
 		HitDescription desc;
 		if (dynamic_cast<Walker*>(object))
 		{
-			m_walker = dynamic_cast<Walker*>(object);
-			desc.walker = m_walker;
+			Walker* walker = dynamic_cast<Walker*>(object);
+			desc.walker = walker;
 			m_player->hit(desc);
 		}
 		if (dynamic_cast<Shooter*>(object))
 		{
-			m_shooter = dynamic_cast<Shooter*>(object);
-			desc.shooter = m_shooter;
+			Shooter* shooter = dynamic_cast<Shooter*>(object);
+			desc.shooter = shooter;
 			m_player->hit(desc);
 		}
 		if (dynamic_cast<Boss*>(object))
 		{
-			m_boss = dynamic_cast<Boss*>(object);
-			desc.boss = m_boss;
+			Boss* boss = dynamic_cast<Boss*>(object);
+			desc.boss = boss;
 			m_player->hit(desc);
 		}
 	}
@@ -448,29 +444,29 @@ void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
 	Mesh* enemyMesh = MeshMap::getMesh("Enemy");
 	if (currentRoom->getType() == ROOM_BOSS)
 	{
-		m_boss = new Boss(enemyMesh, BOSS, currentRoom, glm::vec3(
+		GameObject* enemy = new Boss(enemyMesh, BOSS, currentRoom, glm::vec3(
 			Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),
 			0.f,
 			Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)), m_effects);
-		this->addGameObject(m_boss);
+		this->addGameObject(enemy);
 	}
 	for (int i = 0; i < numberOfEnemies; i++)
 	{
-		m_walker = new Walker(enemyMesh, WALKER, currentRoom, glm::vec3(
+		GameObject* enemy = new Walker(enemyMesh, WALKER, currentRoom, glm::vec3(
 			Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),
 			0.f,
 			Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)), m_effects);
-		this->addGameObject(m_walker);
+		this->addGameObject(enemy);
 	}
 
 	for (int i = 0; i < numberOfEnemies; i++)
 	{
-		m_shooter = new Shooter(enemyMesh, SHOOTER, currentRoom, glm::vec3(
+		GameObject* enemy = new Shooter(enemyMesh, SHOOTER, currentRoom, glm::vec3(
 			Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),
 			0.f,
 			Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)), m_projectileManager, m_effects);
 
-		this->addGameObject(m_shooter);
+		this->addGameObject(enemy);
 	}
 
 }

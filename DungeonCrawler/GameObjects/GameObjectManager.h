@@ -11,7 +11,6 @@
 #include "Graphics/Effects.h"
 #include "Parser/Parser.h"
 #include "Room.h"
-#include "HealthPlane.h"
 #include <EnemyProjectile/ProjectileManager.h>
 
 class GameObjectManager {
@@ -48,11 +47,8 @@ private:
 	
 	std::vector<GameObject*> m_gameObjects;
 	Player* m_player;
-	Walker* m_walker;
-	Shooter* m_shooter;
 	PowerUps* m_powerup;
-	Boss* m_boss;
-	HealthPlane* m_healthPlane;
+
 	AABB* m_broadPhaseBox;
 	glm::vec4 m_maxMinValues; 
 	Effects* m_effects; 
