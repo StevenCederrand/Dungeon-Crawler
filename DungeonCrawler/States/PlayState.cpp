@@ -95,6 +95,8 @@ void PlayState::update(float dt) {
 	{
 		resetPlayer();
 		GameOverState* gameOver = new GameOverState();
+		GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
+		glfwSetCursor(glfwGetCurrentContext(), cursor);
 		m_stateManager->pushTemporaryState(gameOver);
 	}
 
