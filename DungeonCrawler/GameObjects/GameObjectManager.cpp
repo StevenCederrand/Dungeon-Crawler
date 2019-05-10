@@ -17,7 +17,7 @@ GameObjectManager::GameObjectManager(Effects* effects, ProjectileManager* projec
 	m_walker = nullptr;
 	m_shooter = nullptr;
 	m_boss = nullptr;
-	m_healthPlane = nullptr;
+	
 }
 
 GameObjectManager::~GameObjectManager()
