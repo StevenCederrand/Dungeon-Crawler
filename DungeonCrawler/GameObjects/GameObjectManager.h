@@ -46,10 +46,8 @@ private:
 	
 	std::vector<GameObject*> m_gameObjects;
 	Player* m_player;
-	Walker* m_walker;
-	Shooter* m_shooter;
 	PowerUps* m_powerup;
-	Boss* m_boss;
+
 	AABB* m_broadPhaseBox;
 	glm::vec4 m_maxMinValues; 
 	Effects* m_effects; 
