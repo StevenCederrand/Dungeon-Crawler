@@ -24,7 +24,8 @@ private:
 	UICamera* m_uiCamera;
 	UIManager* m_uiManager;
 	GLinit* m_glInit;	
-
+	
+	Image* m_winner;
 
 	Button* m_return; //Return button that is used to go back to the main menu
 };
