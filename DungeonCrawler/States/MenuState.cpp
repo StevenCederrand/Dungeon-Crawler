@@ -26,7 +26,8 @@ MenuState::MenuState() {
 	m_glInit = new GLinit();
 	createUIElements();
 	AudioEngine::loadSSO("Menu.sso");
-
+	GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
+	glfwSetCursor(glfwGetCurrentContext(), cursor);
 }
 
 MenuState::~MenuState()

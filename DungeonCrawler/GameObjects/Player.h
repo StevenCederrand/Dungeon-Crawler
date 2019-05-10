@@ -93,7 +93,7 @@ private:
 	float m_shakeIntensity;
 	float m_chargeTimer;
 
-	std::vector<unsigned char> m_image[9];
+	std::vector<unsigned char> m_image[7];
 	unsigned int m_width;
 	unsigned int m_height;
 	GLFWcursor* m_cursor;

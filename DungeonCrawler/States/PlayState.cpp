@@ -100,6 +100,8 @@ void PlayState::update(float dt) {
 
 	if (m_gameObjectManager->bossDead()) {
 		WinState* winState = new WinState();
+		GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
+		glfwSetCursor(glfwGetCurrentContext(), cursor);
 		m_stateManager->pushTemporaryState(winState);
 	}
 }
