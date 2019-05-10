@@ -47,7 +47,7 @@ Player::Player(Mesh* mesh, Type type) :
 	this->m_spraying = false;
 	this->m_type = type;
 	this->m_iframes = 0.f;
-	this->m_pistolBullets = 8;
+	this->m_pistolBullets = 6;
 	this->m_reloadTime = 0.f;
 	this->m_reloading = false;
 
@@ -59,7 +59,7 @@ Player::Player(Mesh* mesh, Type type) :
 
 
 
-	for (size_t i = 0; i < 9; i++)
+	for (size_t i = 0; i < 7; i++)
 	{
 		unsigned error = lodepng::decode(m_image[i], m_width, m_height, TexturePath + "AmmoBar" + std::to_string(i) +".png");
 		if (error)
@@ -69,7 +69,7 @@ Player::Player(Mesh* mesh, Type type) :
 
 	m_data->width = 64;
 	m_data->height = 64;
-	m_data->pixels = m_image[8].data();
+	m_data->pixels = m_image[6].data();
 	m_cursor = glfwCreateCursor(m_data, 32, 32);
 	glfwSetCursor(glfwGetCurrentContext(), m_cursor);
 }
@@ -380,7 +380,7 @@ void Player::powerUpCd(float dt)
 
 void Player::manualReload(float dt)
 {
-	if ((Input::isKeyPressed(GLFW_KEY_R)) && (m_reloading == false) && (m_pistolBullets < 8))
+	if ((Input::isKeyPressed(GLFW_KEY_R)) && (m_reloading == false) && (m_pistolBullets < 6))
 	{
 		m_reloading = true;
 		m_reloadTime = 2.f;
@@ -392,8 +392,8 @@ void Player::reloadCd(float dt)
 	if ((m_reloadTime <= 0) && (m_reloading == true))
 	{
 		m_reloading = false;
-		m_pistolBullets = 8;
-		m_data->pixels = m_image[8].data();
+		m_pistolBullets = 6;
+		m_data->pixels = m_image[6].data();
 		m_cursor = glfwCreateCursor(m_data, 32, 32);
 		glfwSetCursor(glfwGetCurrentContext(), m_cursor);
 	}
