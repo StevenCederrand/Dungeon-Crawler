@@ -48,7 +48,6 @@ private:
 	Spotlight* m_playerSpotLight;
 	Light* m_playerLight;
 
-
 	std::map<Mesh*, std::vector<GameObject*>> m_meshes;
 	std::map<Mesh*, std::vector<GameObject*>>::iterator m_meshIterator;
 	

@@ -66,7 +66,6 @@ void Renderer::prepareGameObjects(const std::vector<GameObject*>& gameObjects)
 void Renderer::preparePlayerLights(Player* player) {
 	m_playerSpotLight = player->getSpotlight();
 	m_playerLight = player->getFlash();
-
 }
 
 void Renderer::render() {
@@ -86,6 +85,7 @@ void Renderer::render() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	
 	this->renderEffects();
+
 	this->renderMap();
 }
 
@@ -109,7 +109,8 @@ void Renderer::shadowPass() {
 		for (auto object : mesh.second) {
 
 			if (dynamic_cast<Player*>(object)) continue;
-
+		
+		
 			shadowShader->setMat4("modelMatrix", object->getModelMatrix());
 			glDrawElements(GL_TRIANGLES, mesh.first->getNrOfIndices(), GL_UNSIGNED_INT, NULL);
 		}
@@ -211,43 +212,60 @@ void Renderer::lightPass() {
 
 void Renderer::renderMap()
 {
-	Shader* mapShader = ShaderMap::getShader("MapShader");
-	mapShader->use();
-	
-	std::vector<glm::vec4> maxMinValues = m_map->getRoomCoordinates();
-	float tempValue = float(1) / float(45);
+	if (m_map->getShouldRender()) {
 
-	mapShader->setMat4("viewMatrix", m_camera->getViewMatrix());
-	mapShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+		Shader* mapShader = ShaderMap::getShader("MapShader");
+		mapShader->use();
 
-	for (size_t i = 0; i < maxMinValues.size(); i++)
-	{
-		glm::mat4 modelmatrix = glm::mat4(1.0f);
-		modelmatrix = glm::translate(modelmatrix, glm::vec3(0.0f, 10.0f, 0.0f));
+		std::vector<glm::vec4> maxMinValues = m_map->getRoomCoordinates();
+		//tempvalue is a value that decides how far each room will be apart in the map
+		float tempValue = float(1) / float(45);
+
+		int roomWithPlayer = m_map->roomWithPlayer();
+		int roomHasPlayer = 0;
+
+		//set the view and projection matrix in the shader
+		mapShader->setMat4("viewMatrix", m_camera->getViewMatrix());
+		mapShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+		glDisable(GL_CULL_FACE);
+		for (size_t i = 0; i < maxMinValues.size(); i++)
+		{
+			roomHasPlayer = 0;
+
+			if (roomWithPlayer == i)
+				roomHasPlayer = 1;
+			
+			//get the modelMatrix from the room
+			glm::mat4 modelmatrix = m_map->getModelMatrix();
 		
-		modelmatrix = glm::translate(modelmatrix, glm::vec3(
-			maxMinValues[i].x * tempValue,
-			-maxMinValues[i].y * tempValue,
-			0.0f));
+			//move the room the the right place
+			modelmatrix = glm::translate(modelmatrix, glm::vec3(
+				maxMinValues[i].x * tempValue,
+				-maxMinValues[i].y * tempValue,
+				0.0f));
+		
+			//Set the modelmatrix in the shader
+			mapShader->setInt("roomHasPlayer", roomHasPlayer);
+			mapShader->setMat4("modelMatrix", modelmatrix);
+			glBindVertexArray(m_map->getVao());
+			glEnableVertexAttribArray(0);
+			glDrawArrays(GL_TRIANGLES, 0, 12);
 
-		modelmatrix = glm::scale(modelmatrix, glm::vec3(1.0f, 1.0f, 0.f));
+		}
+		glEnable(GL_CULL_FACE);
+		glDisableVertexAttribArray(0);
+		glBindVertexArray(0);
 
-		mapShader->setMat4("modelMatrix", modelmatrix);
-		glBindVertexArray(m_map->getVao());
-		glEnableVertexAttribArray(0);
-		glDrawArrays(GL_TRIANGLES, 0, 12);
 
+
+
+
+
+
+
+
+		mapShader->unuse();
 	}
-
-	glDisableVertexAttribArray(0);
-	glBindVertexArray(0);
-
-
-
-
-
-
-	mapShader->unuse();
 }
 
 void Renderer::bindMesh(Mesh * mesh, Shader* shader)

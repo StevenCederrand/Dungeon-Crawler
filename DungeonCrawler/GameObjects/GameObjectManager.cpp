@@ -209,6 +209,12 @@ std::vector<GameObject*>* GameObjectManager::getVectorPointer()
 	return &m_gameObjects;
 }
 
+std::vector<Room*>& GameObjectManager::getClearedRooms()
+{
+	return m_roomsCleared;
+	// TODO: insert return statement here
+}
+
 void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject * object, glm::vec3& newVel, bool& hasCollided)
 {
 	// If the object is collidable then handle collision
@@ -396,6 +402,7 @@ void GameObjectManager::roomManager(GameObject* object) {
 
 				//Spawn enemies
 				this->spawner(m_rooms.at(i));
+				m_roomsCleared.emplace_back(m_rooms.at(i));
 			}
 		}
 	}
@@ -404,7 +411,7 @@ void GameObjectManager::roomManager(GameObject* object) {
 void GameObjectManager::spawner(Room* currentRoom) {
 
 	Mesh* enemyMesh = MeshMap::getMesh("Enemy");
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 1; i++)
 	{
 	m_walker = new Walker(enemyMesh, WALKER, currentRoom, glm::vec3(
 		Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),

@@ -27,7 +27,7 @@ public:
 	const std::vector<GameObject*>& getGameObjects() const;
 	std::vector<GameObject*>* getVectorPointer();
 
-	
+	std::vector<Room*>& getClearedRooms();
 
 private:
 	void handlePlayerCollisionAgainstObjects(float dt, GameObject* object, glm::vec3& newVel, bool& hasCollided);
@@ -54,6 +54,7 @@ private:
 
 	bool m_isLocked;
 	std::vector<Room*> m_rooms;
+	std::vector<Room*> m_roomsCleared; //these rooms are shown in the map
 	int m_doorIndex;
 	int m_currentRoom;
 

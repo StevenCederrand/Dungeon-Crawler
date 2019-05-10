@@ -1,8 +1,12 @@
 #include "Map.h"
+#include "System/Input.h"
+#include <GLM/gtx/transform.hpp>
+//#include <GLM/gtc/matrix_transform.hpp>
 
-Map::Map()
+Map::Map(GameObjectManager* gameManager)
 {
-	m_render = false;
+	m_gameObjectManager = gameManager;
+	m_shouldRender = false;
 	m_vao = 0;
 	m_vbo = 0;
 	GLfloat data[36] = {
@@ -21,30 +25,78 @@ Map::Map()
 
 Map::~Map()
 {
+
 }
 
-void Map::update(float dt, std::vector<GameObject*> gameObject)
+void Map::update(float dt)
 {
+	std::vector<Room*> clearedRooms = m_gameObjectManager->getClearedRooms();
+	int clearedRoomSize = clearedRooms.size();
+	
+	int mapRoomSize = m_rooms.size();
+	for (size_t i = mapRoomSize; i < clearedRoomSize; i++)
+	{
+		m_rooms.emplace_back(clearedRooms.at(i)->getMaxMinValues());
 
-	for (size_t i = 0; i < gameObject.size(); i++) {
-		GameObject* object = gameObject[i];
-		if (object->getType() == ROOM_EMPTY) {
-			m_rooms.emplace_back(object->getMaxMinValues());
-		}
 	}
 
+	if (Input::isKeyReleased(GLFW_KEY_M))
+	{
+		LOG_INFO("hello");
+		m_shouldRender = !m_shouldRender;
+	}
 
+	Player* player = m_gameObjectManager->getPlayer();
+	m_modelMatrix = glm::mat4(1.0f);
+	m_modelMatrix = glm::translate(m_modelMatrix, player->getPlayerPosition());
+	m_modelMatrix = glm::translate(m_modelMatrix, glm::vec3(0.0f, 8.0f, 2.0f));
+	//m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(0.7f, 0.7f, 0.f));
+	//idk 90 försviner ?
+
+	m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(-30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
 }
+
 
 const std::vector<glm::vec4>& Map::getRoomCoordinates() const
 {
 	return m_rooms;
 }
 
+bool Map::getShouldRender() const
+{
+	return m_shouldRender;
+}
+
 const GLuint& Map::getVao() const
 {
 	return m_vao;
+}
+
+void Map::setShouldRender(bool shouldRender)
+{
+	m_shouldRender = shouldRender;
+}
+
+int Map::roomWithPlayer()
+{
+	glm::vec3 playerPosition = m_gameObjectManager->getPlayer()->getPlayerPosition();
+	for (size_t i = 0; i < m_rooms.size(); i++)
+	{
+		if (playerPosition.x < m_rooms.at(i).x &&
+			playerPosition.x > m_rooms.at(i).z &&
+			playerPosition.z < m_rooms.at(i).y &&
+			playerPosition.z > m_rooms.at(i).w) {
+			m_playerRoom = i;
+			//return i;
+		}
+	}
+	return m_playerRoom;
+}
+
+glm::mat4 Map::getModelMatrix() const
+{
+	return m_modelMatrix;
 }
 
 
