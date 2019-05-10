@@ -48,10 +48,9 @@ void Map::update(float dt)
 
 	Player* player = m_gameObjectManager->getPlayer();
 	m_modelMatrix = glm::mat4(1.0f);
+	//move the matrix to players position and then move it upp and closer to the camera
 	m_modelMatrix = glm::translate(m_modelMatrix, player->getPlayerPosition());
 	m_modelMatrix = glm::translate(m_modelMatrix, glm::vec3(0.0f, 8.0f, 2.0f));
-	//m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(0.7f, 0.7f, 0.f));
-	//idk 90 försviner ?
 
 	m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(-30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 

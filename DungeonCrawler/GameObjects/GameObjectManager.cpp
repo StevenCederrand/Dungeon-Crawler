@@ -173,7 +173,7 @@ void GameObjectManager::addGameObject(GameObject * gameObject)
 
 			Room* room = dynamic_cast<Room*>(gameObject);
 			this->m_rooms.push_back(room);
-			m_roomsCleared.emplace_back(room); // show rooms
+			//m_roomsCleared.emplace_back(room); // show rooms
 		}
 		else if (objectType == DOOR) {
 			m_doorIndex = m_gameObjects.size();
@@ -403,7 +403,7 @@ void GameObjectManager::roomManager(GameObject* object) {
 
 				//Spawn enemies
 				this->spawner(m_rooms.at(i));
-				//m_roomsCleared.emplace_back(m_rooms.at(i)); // hide rooms
+				m_roomsCleared.emplace_back(m_rooms.at(i)); // hide rooms
 			}
 		}
 	}
