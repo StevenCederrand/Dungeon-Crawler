@@ -18,6 +18,7 @@ GameObjectManager::GameObjectManager(Effects* effects, ProjectileManager* projec
 	m_shooter = nullptr;
 	m_boss = nullptr;
 	m_healthPlane = nullptr;
+	m_bossDeadStatus = false;
 }
 
 GameObjectManager::~GameObjectManager()
@@ -210,6 +211,11 @@ Player * GameObjectManager::getPlayer() const {
 	return m_player;
 }
 
+bool GameObjectManager::bossDead() const
+{
+	return m_bossDeadStatus;
+}
+
 const std::vector<GameObject*>& GameObjectManager::getGameObjects() const
 {
 	return m_gameObjects;
@@ -347,6 +353,7 @@ void GameObjectManager::handleDeadEnemies(float dt)
 				this->m_numberOfEnemies--;
 				delete m_gameObjects[i];
 				m_gameObjects.erase(m_gameObjects.begin() + i);
+				m_bossDeadStatus = true;
 				continue;
 			}
 		}
@@ -439,6 +446,14 @@ void GameObjectManager::roomManager(GameObject* object) {
 void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
 
 	Mesh* enemyMesh = MeshMap::getMesh("Enemy");
+	if (currentRoom->getType() == ROOM_BOSS)
+	{
+		m_boss = new Boss(enemyMesh, BOSS, currentRoom, glm::vec3(
+			Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),
+			0.f,
+			Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)), m_effects);
+		this->addGameObject(m_boss);
+	}
 	for (int i = 0; i < numberOfEnemies; i++)
 	{
 		m_walker = new Walker(enemyMesh, WALKER, currentRoom, glm::vec3(
@@ -450,12 +465,12 @@ void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
 
 	for (int i = 0; i < numberOfEnemies; i++)
 	{
-		GameObject* enemy = new Shooter(enemyMesh, SHOOTER, currentRoom, glm::vec3(
+		m_shooter = new Shooter(enemyMesh, SHOOTER, currentRoom, glm::vec3(
 			Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),
 			0.f,
 			Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)), m_projectileManager, m_effects);
 
-		this->addGameObject(enemy);
+		this->addGameObject(m_shooter);
 	}
 
 }

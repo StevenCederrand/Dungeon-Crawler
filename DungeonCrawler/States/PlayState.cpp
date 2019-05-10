@@ -98,7 +98,7 @@ void PlayState::update(float dt) {
 		m_stateManager->pushTemporaryState(gameOver);
 	}
 
-	if (Input::isKeyReleased(GLFW_KEY_P)) {
+	if (m_gameObjectManager->bossDead()) {
 		WinState* winState = new WinState();
 		m_stateManager->pushTemporaryState(winState);
 	}
@@ -161,7 +161,7 @@ void PlayState::constructWorld()
 	Mesh* door = MeshMap::getMesh("Door");
 
 	Room* r_roomStart = new Room(roomStart, ROOM, m_player);
-	Room* r_roomEnd = new Room(roomEnd, ROOM, m_player);
+	Room* r_roomEnd = new Room(roomEnd, ROOM_BOSS, m_player);
 
 	m_gameObjectManager->addGameObject(r_roomStart);
 	m_gameObjectManager->addGameObject(r_roomEnd);

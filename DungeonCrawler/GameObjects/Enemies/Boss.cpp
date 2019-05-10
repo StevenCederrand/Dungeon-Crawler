@@ -1,8 +1,10 @@
 #include "Boss.h"
+#include "../../Utility/Randomizer.h"
 
-Boss::Boss(Mesh* mesh, Type type, Room* room, const glm::vec3& position):
+Boss::Boss(Mesh* mesh, Type type, Room* room, const glm::vec3& position, Effects* effects):
 	GameObject(mesh, type)
 {
+	m_effects = effects;
 	this->setScale(glm::vec3(2.f, 2.f, 2.f));
 	this->m_health = 10.f;
 	this->m_speed = 6.f;
@@ -27,6 +29,13 @@ void Boss::update(float dt)
 {
 	float lengthToPlayer = getDistanceToPlayer();
 	int playerCellIndex = m_room->getGrid()->getCellIndex(getPlayerPosition().x, getPlayerPosition().z);
+
+
+	m_hoverEffectTimer += dt;
+	if (m_hoverEffectTimer >= 0.05f) {
+		m_hoverEffectTimer = 0.0f;
+		m_effects->addParticles("EnemyHoverEmitter", getPosition(), glm::vec3(Randomizer::single(-100.0f, 100.0f) / 100.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 100.0f), 1.0f, 1);
+	}
 
 	if (lengthToPlayer > 2.5f) {
 		calculatePath(dt);
