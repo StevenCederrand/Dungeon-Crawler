@@ -6,6 +6,7 @@
 #include <iostream>
 #include <chrono>
 #include <Utility/Randomizer.h>
+#include <Audio/AudioEngine.h>
 
 Walker::Walker(Mesh * mesh, Type type, Room* room, const glm::vec3& position, Effects* effects):
 	GameObject(mesh, type)
@@ -54,6 +55,7 @@ bool Walker::meleeRange()
 {
 	if ((getDistanceToPlayer() <= 2.5f) && (m_attackCooldown <= 0.f))
 	{
+		AudioEngine::play("Enemy_melee", 1.0f);
 		m_attackCooldown = 2.f;
 		return true;
 	}

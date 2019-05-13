@@ -4,6 +4,7 @@
 #include <list>
 #include <System/Log.h>
 #include <Utility/Randomizer.h>
+#include <Audio/AudioEngine.h>
 
 Shooter::Shooter(Mesh* mesh, Type type, Room* room, const glm::vec3& position, ProjectileManager* projectileManager, Effects* effects) :
 	GameObject(mesh, type)

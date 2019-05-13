@@ -18,3 +18,9 @@ gun_impact_enemy gun_impact_enemy.wav
 
 #bullet impact with wall
 gun_impact_wall BulletImpact.wav
+
+#Enemy hitting the Player
+Enemy_melee Enemy_melee.wav
+
+#Enemy shooting, actually shooting
+Enemy_Shot Enemy_Shot.wav
