@@ -34,7 +34,7 @@ void Walker::update(float dt)
 {
 
 	float lengthToPlayer = getDistanceToPlayer();
-	int playerCellIndex = m_room->getGrid()->getCellIndex(getPlayerPosition().x, getPlayerPosition().z);
+	//int playerCellIndex = m_room->getGrid()->getCellIndex(getPlayerPosition().x, getPlayerPosition().z);
 
 	m_hoverEffectTimer += dt;
 	if (m_hoverEffectTimer >= 0.05f) {

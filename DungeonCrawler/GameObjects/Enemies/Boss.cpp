@@ -1,9 +1,10 @@
 #include "Boss.h"
 #include "../../Utility/Randomizer.h"
 
-Boss::Boss(Mesh* mesh, Type type, Room* room, const glm::vec3& position, Effects* effects):
+Boss::Boss(Mesh* mesh, Type type, Room* room, const glm::vec3& position,ProjectileManager* projectileManager, Effects* effects):
 	GameObject(mesh, type)
 {
+	m_projectileManager = projectileManager;
 	m_effects = effects;
 	this->setScale(glm::vec3(2.f, 2.f, 2.f));
 	this->m_health = 10.f;
@@ -27,29 +28,19 @@ Boss::~Boss()
 
 void Boss::update(float dt)
 {
-	float lengthToPlayer = getDistanceToPlayer();
-	int playerCellIndex = m_room->getGrid()->getCellIndex(getPlayerPosition().x, getPlayerPosition().z);
+	lookAt(getPlayerPosition());
+	updateHoverEffect(dt);
+	updateBehaviour(dt);
 
-
-	m_hoverEffectTimer += dt;
-	if (m_hoverEffectTimer >= 0.05f) {
-		m_hoverEffectTimer = 0.0f;
-		m_effects->addParticles("EnemyHoverEmitter", getPosition(), glm::vec3(Randomizer::single(-100.0f, 100.0f) / 100.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 100.0f), 1.0f, 1);
-	}
-
-	if (lengthToPlayer > 2.5f) {
-		calculatePath(dt);
-		moveToTarget(dt);
-	}
 	amIDead();
-	attackCooldown(dt);
+	updateCooldowns(dt);
 }
 
 bool Boss::meleeRange()
 {
-	if ((getDistanceToPlayer() <= 2.5f) && (m_attackCooldown <= 0.f))
+	if ((getDistanceToPlayer() <= 3.0f) && (m_attackCooldown <= 0.f))
 	{
-		m_attackCooldown = 3.f;
+		m_attackCooldown = 1.f;
 		return true;
 	}
 	return false;
@@ -94,12 +85,32 @@ bool Boss::getAliveStatus() const
 	return m_amIAlive;
 }
 
-void Boss::attackCooldown(float dt)
+void Boss::updateCooldowns(float dt)
 {
 	if (m_attackCooldown > 0.f)
 	{
 		m_attackCooldown -= dt;
 	}
+}
+
+void Boss::updateHoverEffect(float dt)
+{
+	m_hoverEffectTimer += dt;
+	if (m_hoverEffectTimer >= 0.05f) {
+		m_hoverEffectTimer = 0.0f;
+		m_effects->addParticles("EnemyHoverEmitter", getPosition(), glm::vec3(Randomizer::single(-100.0f, 100.0f) / 100.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 100.0f), 1.0f, 1);
+	}
+
+}
+
+void Boss::updateBehaviour(float dt)
+{
+	float lengthToPlayer = getDistanceToPlayer();
+	if (lengthToPlayer > 2.5f) {
+		calculatePath(dt);
+		moveToTarget(dt);
+	}
+
 }
 
 void Boss::calculatePath(float dt)
