@@ -15,6 +15,7 @@ enum Type {
 	PLAYER = 0,
 	WALKER = 1,
 	SHOOTER = 2,
+	BOSS = 3,
 	BOX = 10,
 	LIGHTSPHERE = 12,
 	DOOR = 13, 
@@ -22,7 +23,8 @@ enum Type {
 	ROOM_EMPTY = 15, 
 	ROOM_BOSS = 16, 
 	GAMEOBJECT = 20,
-	POWERUPS = 21
+	POWERUPS = 21,
+	HEALTHPLANE = 22
 };
 
 class GameObject {
@@ -44,6 +46,8 @@ public:
 	void setPlayerPosition(const glm::vec3& position);
 	void setMaxMinValues(const glm::vec4& maxMinValues);
 	void setHit();
+	// Rotates the game object to the desired position
+	void lookAt(const glm::vec3& position);
 
 	virtual void hit(const HitDescription & desc);
 	virtual bool meleeRange();

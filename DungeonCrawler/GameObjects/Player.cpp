@@ -8,7 +8,10 @@
 #include "Enemies/Shooter.h"
 #include "../Audio/AudioEngine.h"
 #include "../Utility/Randomizer.h"
+#include "Enemies/Boss.h"
 #include "Powerups.h"
+#include "../Vendor/Lodepng/lodepng.h"
+#include "../Globals/Paths.h"
 
 Player::Player(Mesh* mesh, Type type) :
 	GameObject(mesh, type)
@@ -17,7 +20,7 @@ Player::Player(Mesh* mesh, Type type) :
 	this->setScale(glm::vec3(0.65f, 0.65f, 0.65f));
 	this->m_defaultSpeed = 7.f;
 	this->m_speed = 7.0f;
-	this->m_health = 4.f;
+	this->m_health = 10.f;
 	this->m_damage = 1.f;
 	this->m_automaticDamage = 1.f;
 	this->m_chargeDamage = 10.f;
@@ -30,10 +33,11 @@ Player::Player(Mesh* mesh, Type type) :
 	this->m_shakeDir = glm::vec3(0.f, 0.f, 0.f);
 
 	this->m_spotlight = new Spotlight();
-	this->m_spotlight->position = this->getPlayerPosition();
-	this->m_spotlight->radius = glm::radians(55.0f);
+	this->m_spotlight->position = this->getPlayerPosition() + glm::vec3(0.0f, 1.0f, 0.0f);
+	this->m_spotlight->radius = glm::cos(glm::radians(12.5f));
+	this->m_spotlight->outerRadius = glm::cos(glm::radians(17.5f));
 	this->m_flash = new Light();
-	this->m_flash->color = glm::vec4(1, 1, 1, 0);
+	this->m_flash->color = glm::vec4(0.25, 0.25, 0.25, 0);
 	this->m_flash->position = glm::vec4(getPlayerPosition(), 1.0f);
 
 	this->m_chargeStance = false;
@@ -43,7 +47,7 @@ Player::Player(Mesh* mesh, Type type) :
 	this->m_spraying = false;
 	this->m_type = type;
 	this->m_iframes = 0.f;
-	this->m_pistolBullets = 8;
+	this->m_pistolBullets = 6;
 	this->m_reloadTime = 0.f;
 	this->m_reloading = false;
 
@@ -52,11 +56,28 @@ Player::Player(Mesh* mesh, Type type) :
 	this->m_poweredUp = false;
 
 	this->setupSoundVector();
+
+
+
+	for (size_t i = 0; i < 7; i++)
+	{
+		unsigned error = lodepng::decode(m_image[i], m_width, m_height, TexturePath + "AmmoBar" + std::to_string(i) +".png");
+		if (error)
+			LOG_WARNING(error);
+	}
+	m_data = new GLFWimage();
+
+	m_data->width = 64;
+	m_data->height = 64;
+	m_data->pixels = m_image[6].data();
+	m_cursor = glfwCreateCursor(m_data, 32, 32);
+	glfwSetCursor(glfwGetCurrentContext(), m_cursor);
 }
 
 Player::~Player() {
 	delete this->m_spotlight;
 	delete this->m_flash;
+	delete this->m_data;
 }
 
 void Player::update(float dt)
@@ -73,11 +94,12 @@ void Player::update(float dt)
 	{
 		m_debug = !m_debug;
 	}
+	
 	if (!m_debug)
 	{
-		weaponSwap();
-		if (m_weaponSlot == 1)
-		{
+		//weaponSwap();
+		//if (m_weaponSlot == 1)
+		//{
 			shootAutomatic(dt);
 			if ((m_pistolBullets <= 0) && (m_reloading == false) && (m_spraying == false))
 			{
@@ -85,11 +107,11 @@ void Player::update(float dt)
 				m_reloadTime = 2.f;
 			}
 			manualReload(dt);
-		}
-		if (m_weaponSlot == 2)
-		{
-			shootChargeShot(dt);
-		}
+		//}
+		//if (m_weaponSlot == 2)
+		//{
+			//shootChargeShot(dt);
+		//}
 		powerUpCd(dt);
 		move(dt);
 		dashCd(dt);
@@ -113,6 +135,11 @@ void Player::hit(const HitDescription & desc)
 		{
 			Shooter* shooter = dynamic_cast<Shooter*>(desc.owner);
 			m_health -= shooter->getDamage();
+		}
+		if (type == Type::BOSS)
+		{
+			Boss* boss = dynamic_cast<Boss*>(desc.owner);
+			m_health -= boss->getDamage();
 		}
 		m_iframes = 2.f;
 	}
@@ -191,7 +218,6 @@ void Player::rotatePlayer()
 		0,
 		pos.z - this->getPosition().z);
 	m_angle = glm::degrees(atan2f(m_lookDirection.z, m_lookDirection.x));
-
 	setRotation(glm::vec3(0.f, -m_angle, 0.f));
 }
 
@@ -224,7 +250,7 @@ Light* Player::getFlash() {
 void Player::spotlightHandler() {
 	this->m_spotlight->direction = this->getLookDirection();
 	this->m_spotlight->position = this->getPosition();
-	this->m_flash->position = glm::vec4(this->getPosition(), 1);
+	this->m_flash->position = glm::vec4(this->getPosition() + glm::vec3(0.0f, 2.f, 0.0f), 1.0);
 }
 
 void Player::setupSoundVector() {
@@ -269,10 +295,15 @@ void Player::shootAutomatic(float dt)
 				m_shake = 0.05f;
 				m_spraying = true;
 				m_pistolBullets--;
+				m_data->pixels = m_image[m_pistolBullets].data();
+				m_cursor = glfwCreateCursor(m_data, 32, 32);
+				glfwSetCursor(glfwGetCurrentContext(), m_cursor);
 			}
 			if (m_pistolBullets <= 0)
 			{
-				//le click sounds
+				m_data->pixels = m_image[0].data();
+				m_cursor = glfwCreateCursor(m_data, 32, 32);
+				glfwSetCursor(glfwGetCurrentContext(), m_cursor);
 				AudioEngine::playOnce("gun_click", 0.5f);
 			}
 		}
@@ -349,7 +380,7 @@ void Player::powerUpCd(float dt)
 
 void Player::manualReload(float dt)
 {
-	if ((Input::isKeyPressed(GLFW_KEY_R)) && (m_reloading == false) && (m_pistolBullets < 8))
+	if ((Input::isKeyPressed(GLFW_KEY_R)) && (m_reloading == false) && (m_pistolBullets < 6))
 	{
 		m_reloading = true;
 		m_reloadTime = 2.f;
@@ -361,7 +392,10 @@ void Player::reloadCd(float dt)
 	if ((m_reloadTime <= 0) && (m_reloading == true))
 	{
 		m_reloading = false;
-		m_pistolBullets = 8;
+		m_pistolBullets = 6;
+		m_data->pixels = m_image[6].data();
+		m_cursor = glfwCreateCursor(m_data, 32, 32);
+		glfwSetCursor(glfwGetCurrentContext(), m_cursor);
 	}
 	if (m_reloadTime > 0)
 	{
@@ -372,7 +406,7 @@ void Player::reloadCd(float dt)
 void Player::shootProjectile(float dt)
 {
 	m_shootingCooldown = 0.25f;
-	this->m_flash->color.a = 5;
+	this->m_flash->color.a = 2.5f;
 	m_canShoot = false;
 	m_shooting = true;
 	AudioEngine::play("pl_gun_shot", 0.8f);
@@ -482,6 +516,11 @@ float Player::getHealth() const
 float Player::getDamage() const
 {
 	return this->m_damage;
+}
+
+int Player::getBulletCount() const
+{
+	return this->m_pistolBullets;
 }
 
 bool Player::isShooting() const

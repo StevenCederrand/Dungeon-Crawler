@@ -158,7 +158,10 @@
     <ClCompile Include="AI\GridSystem.cpp" />
     <ClCompile Include="Audio\AudioEngine.cpp" />
     <ClCompile Include="Collision\AABB.cpp" />
+    <ClCompile Include="EnemyProjectile\Projectile.cpp" />
+    <ClCompile Include="EnemyProjectile\ProjectileManager.cpp" />
     <ClCompile Include="GameObjects\Box.cpp" />
+    <ClCompile Include="GameObjects\Enemies\Boss.cpp" />
     <ClCompile Include="GameObjects\Enemies\Shooter.cpp" />
     <ClCompile Include="GameObjects\Enemies\Walker.cpp" />
     <ClCompile Include="GameObjects\GameObject.cpp" />
@@ -167,6 +170,7 @@
     <ClCompile Include="GameObjects\LightSphere.cpp" />
     <ClCompile Include="GameObjects\Powerups.cpp" />
     <ClCompile Include="GameObjects\Room.cpp" />
+    <ClCompile Include="Globals\Settings.cpp" />
     <ClCompile Include="Graphics\Effects.cpp" />
     <ClCompile Include="Graphics\Emitter.cpp" />
     <ClCompile Include="Graphics\Framebuffer.cpp" />
@@ -176,7 +180,9 @@
     <ClCompile Include="Graphics\Mesh.cpp" />
     <ClCompile Include="Graphics\MeshMap.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
+    <ClCompile Include="Gui\PlayerHealthBar.cpp" />
     <ClCompile Include="States\GameOverState.cpp" />
+    <ClCompile Include="States\WinState.cpp" />
     <ClCompile Include="UserInterface\Button.cpp" />
     <ClCompile Include="Parser\ParserData.cpp" />
     <ClCompile Include="Graphics\Shader.cpp" />
@@ -199,6 +205,7 @@
     <ClCompile Include="Vendor\ImGui\imgui_impl_glfw.cpp" />
     <ClCompile Include="Vendor\ImGui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Vendor\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Vendor\Lodepng\lodepng.cpp" />
     <ClCompile Include="Vendor\stb\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -209,7 +216,10 @@
     <ClInclude Include="Audio\AudioEngine.h" />
     <ClInclude Include="Collision\AABB.h" />
     <ClInclude Include="Collision\HitData.h" />
+    <ClInclude Include="EnemyProjectile\Projectile.h" />
+    <ClInclude Include="EnemyProjectile\ProjectileManager.h" />
     <ClInclude Include="GameObjects\Box.h" />
+    <ClInclude Include="GameObjects\Enemies\Boss.h" />
     <ClInclude Include="GameObjects\Enemies\Shooter.h" />
     <ClInclude Include="GameObjects\Enemies\Walker.h" />
     <ClInclude Include="GameObjects\GameObject.h" />
@@ -231,6 +241,8 @@
     <ClInclude Include="Graphics\Mesh.h" />
     <ClInclude Include="Graphics\MeshMap.h" />
     <ClInclude Include="Graphics\Renderer.h" />
+    <ClInclude Include="Gui\PlayerHealthBar.h" />
+    <ClInclude Include="States\WinState.h" />
     <ClInclude Include="System\Timer.h" />
     <ClInclude Include="States\GameOverState.h" />
     <ClInclude Include="UserInterface\Button.h" />
@@ -260,6 +272,7 @@
     <ClInclude Include="Vendor\ImGui\imstb_rectpack.h" />
     <ClInclude Include="Vendor\ImGui\imstb_textedit.h" />
     <ClInclude Include="Vendor\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Vendor\Lodepng\lodepng.h" />
     <ClInclude Include="Vendor\stb\stb_image.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

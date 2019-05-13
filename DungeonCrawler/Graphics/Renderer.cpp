@@ -3,10 +3,12 @@
 #include "Renderer.h"
 #include "ShaderMap.h"
 #include "../System/Log.h"
-#include "Globals/Settings.h"
+#include <Globals/Settings.h>
 #define MESH_VECTOR_RESERVE_SIZE 150
 
-Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects, Map* map)
+
+Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects, ProjectileManager* projectileManager, PlayerHealthBar* playerHealthBar, Map* map)
+
 {
 	m_camera = camera;
 	m_lightManager = lightManager;
@@ -29,10 +31,12 @@ Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects,
 
 	//Create a new light projection matrix -- This doens't need to be created every frame
 	glm::mat4 projectionMatrix = glm::perspective(glm::radians(LIGHTFOV),
-		(float)ScreenResolutionX / (float)ScreenResolutionY, NEAR_CLIP, FAR_CLIP);
+		(float)Settings::getScreenWidth() / (float)Settings::getScreenHeight(), NEAR_CLIP, FAR_CLIP);
 	m_framebuffer->setProjectionMatrix(projectionMatrix);
 
-	m_effects = effects; // Point to effect class
+	m_effects = effects;
+	m_projectileManager = projectileManager;
+	m_playerHealthBar = playerHealthBar;
 }
 
 Renderer::~Renderer() {
@@ -80,13 +84,15 @@ void Renderer::render() {
 	m_framebuffer->bindFrameBuffer();
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); //write to default framebuffer
 	glBlitFramebuffer(
-		0, 0, ScreenResolutionX, ScreenResolutionY, 0, 0, ScreenResolutionX, ScreenResolutionY, GL_DEPTH_BUFFER_BIT, GL_NEAREST
+		0, 0, Settings::getScreenWidth(), Settings::getScreenHeight(), 0, 0, Settings::getScreenWidth(), Settings::getScreenHeight(), GL_DEPTH_BUFFER_BIT, GL_NEAREST
 	);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	
+	this->renderHealthBar();
 	this->renderEffects();
 
 	this->renderMap();
+	this->renderProjectiles();
 }
 
 void Renderer::shadowPass() {
@@ -186,6 +192,60 @@ void Renderer::renderEffects()
 	glDisable(GL_BLEND);
 }
 
+void Renderer::renderProjectiles()
+{
+	glEnable(GL_BLEND);
+	Shader* effectsShader = ShaderMap::getShader("EffectsShader");
+	effectsShader->use();
+	effectsShader->setMat4("viewMatrix", m_camera->getViewMatrix());
+	effectsShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+
+	glBindVertexArray(m_projectileManager->getVAO());
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_projectileManager->getTextureID());
+	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, m_projectileManager->getNumberOfEnemyProjectiles());
+	glBindTexture(GL_TEXTURE_2D, NULL);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
+	
+	glBindVertexArray(0);
+
+	effectsShader->unuse();
+	glDisable(GL_BLEND);
+}
+
+void Renderer::renderHealthBar()
+{
+	glEnable(GL_BLEND);
+	Shader* uiShader = ShaderMap::getShader("UIShader");
+	uiShader->use();
+	uiShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+	uiShader->setMat4("viewMatrix", m_camera->getViewMatrix());
+	uiShader->setMat4("modelMatrix", m_playerHealthBar->getModelMatrix());
+
+	glBindVertexArray(m_playerHealthBar->getVAO());
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_playerHealthBar->getTextureID());
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glBindTexture(GL_TEXTURE_2D, NULL);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glBindVertexArray(0);
+
+	uiShader->unuse();
+	glDisable(GL_BLEND);
+}
+
 void Renderer::lightPass() {
 
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -197,7 +257,8 @@ void Renderer::lightPass() {
 		lightShader->setVec3("spotlight.position", m_playerSpotLight->position);
 		lightShader->setVec3("spotlight.direction", m_playerSpotLight->direction);
 		lightShader->setFloat("spotlight.radius", m_playerSpotLight->radius);
-		
+		lightShader->setFloat("spotlight.outerRadius", m_playerSpotLight->outerRadius);
+
 		lightShader->setVec4("flashPosition", m_playerLight->position);
 		lightShader->setVec4("flashColor", m_playerLight->color);
 	}
@@ -252,10 +313,6 @@ void Renderer::renderMap()
 		}
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
-
-
-
-
 
 
 
@@ -336,7 +393,7 @@ void Renderer::drawQuad() {
 }
 
 void Renderer::configureShadowMapperVM() {
-	glm::vec3 pos = m_playerSpotLight->position + glm::vec3(0, 1.f, 0);
+	glm::vec3 pos = m_playerSpotLight->position;
 	glm::mat4 viewMatrix = glm::lookAt(pos, pos + m_playerSpotLight->direction, glm::vec3(0, 1, 0));
 	m_framebuffer->setViewMatrix(viewMatrix);
 }
