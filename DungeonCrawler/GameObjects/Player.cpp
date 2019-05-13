@@ -20,7 +20,8 @@ Player::Player(Mesh* mesh, Type type) :
 	this->setScale(glm::vec3(0.65f, 0.65f, 0.65f));
 	this->m_defaultSpeed = 7.f;
 	this->m_speed = 7.0f;
-	this->m_health = 10.f;
+	this->m_health = 100000.f;
+	this->m_maxHealth = 10.f;
 	this->m_damage = 1.f;
 	this->m_automaticDamage = 1.f;
 	this->m_chargeDamage = 10.f;
@@ -158,7 +159,10 @@ void Player::hit(const HitDescription & desc)
 		}
 		else
 		{
-			m_health += boosts.x;
+			if (boosts.x != 0)
+			{
+				setMaxHealth();
+			}
 			m_automaticDamage += boosts.y;
 			m_defaultSpeed += boosts.z;
 		}
@@ -474,6 +478,11 @@ void Player::setSpeed(float speed)
 void Player::setHealth(float health)
 {
 	this->m_health = health;
+}
+
+void Player::setMaxHealth()
+{
+	this->m_health = this->m_maxHealth;
 }
 
 void Player::setDamage(float damage)

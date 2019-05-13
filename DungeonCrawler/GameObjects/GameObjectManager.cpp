@@ -367,7 +367,7 @@ void GameObjectManager::handleDeadEnemies(float dt)
 
 void GameObjectManager::handleEnemyAttacks(GameObject* object, float dt)
 {
-	if (object->meleeRange())
+	if (object->meleeRange(dt))
 	{
 		HitDescription desc;
 		if (dynamic_cast<Walker*>(object))

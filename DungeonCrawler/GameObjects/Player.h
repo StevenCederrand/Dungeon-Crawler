@@ -34,6 +34,7 @@ public:
 
 	void setSpeed(float speed);
 	void setHealth(float health);
+	void setMaxHealth();
 	void setDamage(float damage);
 	void iframeCountdown(float dt);
 	void setPlayerState(const EntityState& playerState);
@@ -66,6 +67,7 @@ private:
 	float m_defaultSpeed;
 	float m_speed;
 	float m_health;
+	float m_maxHealth;
 	float m_iframes;
 
 	int m_pistolBullets;
