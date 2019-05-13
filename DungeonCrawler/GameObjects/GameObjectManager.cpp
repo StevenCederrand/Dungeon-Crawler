@@ -181,6 +181,7 @@ void GameObjectManager::addGameObject(GameObject * gameObject)
 
 			Room* room = dynamic_cast<Room*>(gameObject);
 			this->m_rooms.push_back(room);
+			m_roomsCleared.emplace_back(room); // show rooms
 		}
 		else if (objectType == DOOR) {
 			m_doorIndex = m_gameObjects.size();
@@ -220,6 +221,12 @@ const std::vector<GameObject*>& GameObjectManager::getGameObjects() const
 std::vector<GameObject*>* GameObjectManager::getVectorPointer()
 {
 	return &m_gameObjects;
+}
+
+std::vector<Room*>& GameObjectManager::getClearedRooms()
+{
+	return m_roomsCleared;
+	// TODO: insert return statement here
 }
 
 void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject * object, glm::vec3& newVel, bool& hasCollided)
@@ -426,14 +433,20 @@ void GameObjectManager::roomManager(GameObject* object) {
 				this->m_currentRoom = i;				
 				//Lock the doors
 				this->m_isLocked = !m_isLocked;
+
 				//Spawn the door
 				//m_gameObjects.at(m_doorIndex)->setCollidable(true);
+
 				glm::vec3 objectPosition = m_gameObjects.at(m_doorIndex)->getPosition();
 				m_gameObjects.at(m_doorIndex)->setPosition(glm::vec3(objectPosition.x, 0, objectPosition.z));				
 				//Swap the play state to fighting
 				m_player->setPlayerState(FIGHTING);
 				//Spawn enemies
+
+				//m_roomsCleared.emplace_back(m_rooms.at(i)); // hide rooms
+
 				this->spawner(m_rooms.at(i), Randomizer::single(1, 3));
+
 			}
 		}
 	}
@@ -451,6 +464,7 @@ void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
 		this->addGameObject(enemy);
 	}
 	for (int i = 0; i < numberOfEnemies; i++)
+
 	{
 		GameObject* enemy = new Walker(enemyMesh, WALKER, currentRoom, glm::vec3(
 			Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),

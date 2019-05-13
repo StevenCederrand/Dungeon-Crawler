@@ -28,7 +28,9 @@ public:
 	bool bossDead() const;
 	const std::vector<GameObject*>& getGameObjects() const;
 	std::vector<GameObject*>* getVectorPointer();
-	
+
+	std::vector<Room*>& getClearedRooms();
+
 	
 
 private:
@@ -57,6 +59,7 @@ private:
 	bool m_bossDeadStatus;
 	bool m_isLocked;
 	std::vector<Room*> m_rooms;
+	std::vector<Room*> m_roomsCleared; //these rooms are shown in the map
 	int m_doorIndex;
 	int m_currentRoom;
 

@@ -75,19 +75,20 @@ PlayState::~PlayState() {
 	delete m_renderer;
 	delete m_lightManager;
 	delete m_effects;
+	delete m_map;
 	delete m_projectileManager;
 	delete m_playerHealthBar;
 }
 
 void PlayState::update(float dt) {
 
+	m_map->update(dt);
 	m_playerHealthBar->update(dt);
 	m_gameObjectManager->update(dt);
 	m_projectileManager->update(dt);
 	m_effects->update(dt);
 	m_camera->update(dt);
 	m_lightManager->update(dt);
-	
 	m_renderer->prepareGameObjects(m_gameObjectManager->getGameObjects());
 
 	Player* player = m_gameObjectManager->getPlayer();
@@ -140,6 +141,7 @@ void PlayState::resetPlayer()
 	delete m_lightManager;
 	delete m_playerHealthBar;
 	delete m_projectileManager;
+	delete m_map;
 	
 	//we want to setUp the world
 	constructWorld();
@@ -155,8 +157,10 @@ void PlayState::constructWorld()
 	Camera::active = m_camera;
 	m_lightManager = new LightManager();
 	m_projectileManager = new ProjectileManager(m_GLinit, m_effects);
-	m_renderer = new Renderer(m_camera, m_lightManager, m_effects, m_projectileManager, m_playerHealthBar);
 	m_gameObjectManager = new GameObjectManager(m_effects, m_projectileManager);
+	m_map = new Map(m_gameObjectManager);
+	m_renderer = new Renderer(m_camera, m_lightManager, m_effects, m_projectileManager, m_playerHealthBar, m_map);
+
 
 	Mesh* boxMesh = MeshMap::getMesh("Box");
 	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");

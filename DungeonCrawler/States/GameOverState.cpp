@@ -12,7 +12,7 @@ GameOverState::GameOverState()
 
 	m_logo = new Image(
 		glm::vec2((float)Settings::getScreenWidth() * 0.5f, (float)Settings::getScreenHeight() * 0.8f),
-		glm::vec2(300.f, 200.f),
+		glm::vec2(300.f, 150.f),
 		m_glInit,
 		"logo.png");
 
