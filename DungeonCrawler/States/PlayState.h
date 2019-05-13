@@ -9,6 +9,9 @@
 #include "Graphics/LightManager.h"
 #include <list>
 #include "Graphics/Effects.h"
+#include "../Graphics/Map.h"
+#include <GUI/PlayerHealthBar.h>
+#include <EnemyProjectile/ProjectileManager.h>
 
 class PlayState : public State {
 public:
@@ -20,9 +23,6 @@ public:
 	void render();
 private:
 
-	void createRoom(std::string filename, std::string key);
-	void spawnEnemies(int minX, int maxX, int minZ, int maxZ);
-	
 	void resetPlayer();
 	void constructWorld();
 
@@ -37,8 +37,13 @@ private:
 	GameObject* m_walker;
 	GameObject* m_shooter;
 	GameObject* m_powerUp;
-
+	ProjectileManager* m_projectileManager;
+	GameObject* m_boss;
+	PlayerHealthBar* m_playerHealthBar;
 	Effects* m_effects;
+	Map* m_map;
+
+
 };
 
 #endif

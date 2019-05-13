@@ -4,7 +4,7 @@
 #include <GLM/gtx/transform.hpp>
 #include <GLM/gtc/matrix_transform.hpp>
 
-#include <System/Application.h>
+#include <Globals/Settings.h>
 
 Button::Button(const glm::vec2& position, const glm::vec2& size, GLinit* glInit, const std::string& activeTexture, const std::string& inactiveTexture)
 {
@@ -50,7 +50,7 @@ void Button::update(float dt)
 {
 	glm::vec2 mousePos = Input::getMousePosition();
 	// flip the y coordinate
-	mousePos.y = (float)Application::windowHeight - mousePos.y;
+	mousePos.y = (float)Settings::getScreenHeight() - mousePos.y;
 	
 	m_pressed = false;
 

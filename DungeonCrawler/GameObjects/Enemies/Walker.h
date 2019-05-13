@@ -1,22 +1,23 @@
-#pragma once
 #ifndef _WALKER_H
 #define _WALKER_H
 #include <GameObjects/Room.h>
 #include <AI/AStar.h>
+#include <Graphics/Effects.h>
 
 class Walker : public GameObject {
 public:
-	Walker(Mesh* mesh, Type type, Room* room, const glm::vec3& position);
+	Walker(Mesh* mesh, Type type, Room* room, const glm::vec3& position, Effects* effects);
 	~Walker();
 	void update(float dt);
 
-	void hitPlayer();
+	bool meleeRange();
 	void hit(const HitDescription& desc);
 	Type getType();
 	float getDamage()const;
 	float getDistanceToPlayer() const;
 	void amIDead();
 	bool getAliveStatus()const;
+	void attackCooldown(float dt);
 
 private:
 	void calculatePath(float dt);
@@ -28,10 +29,13 @@ private:
 	bool m_isPlayerClose;
 	Type m_type;
 	bool m_amIAlive;
+	float m_attackCooldown;
 
 	float m_AStarTimer;
 	Room* m_room;
 	AStar* m_Astar;
+	Effects* m_effects;
+	float m_hoverEffectTimer;
 	std::vector<Node> m_path;
 };
 

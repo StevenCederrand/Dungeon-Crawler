@@ -34,11 +34,11 @@ void Effects::update(float dt)
 	}
 }
 
-void Effects::addParticles(const std::string& emitterName, const glm::vec3& pos, float speed, float lifetime, int numberOfParticles)
+void Effects::addParticles(const std::string& emitterName, const glm::vec3& pos, const glm::vec3& velocity, float lifetime, int numberOfParticles)
 {
 	if (m_emitters.find(emitterName) != m_emitters.end())
 	{
-		m_emitters[emitterName]->addParticle(pos, speed, lifetime, numberOfParticles);
+		m_emitters[emitterName]->addParticle(pos, velocity, lifetime, numberOfParticles);
 	}
 	else
 	{

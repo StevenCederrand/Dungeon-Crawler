@@ -13,6 +13,10 @@ namespace Randomizer {
 		}
 
 		T magicNumber = (rand()) % (int)(high - low + 1) + low;
+
+		if (magicNumber < low || magicNumber > high)
+			magicNumber = low;
+
 		return magicNumber;
 	}
 

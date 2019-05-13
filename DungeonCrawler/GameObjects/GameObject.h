@@ -15,12 +15,16 @@ enum Type {
 	PLAYER = 0,
 	WALKER = 1,
 	SHOOTER = 2,
+	BOSS = 3,
 	BOX = 10,
-	ROOM = 11,
 	LIGHTSPHERE = 12,
 	DOOR = 13, 
+	ROOM = 14,
+	ROOM_EMPTY = 15, 
+	ROOM_BOSS = 16, 
 	GAMEOBJECT = 20,
-	POWERUPS = 21
+	POWERUPS = 21,
+	HEALTHPLANE = 22
 };
 
 class GameObject {
@@ -42,8 +46,11 @@ public:
 	void setPlayerPosition(const glm::vec3& position);
 	void setMaxMinValues(const glm::vec4& maxMinValues);
 	void setHit();
+	// Rotates the game object to the desired position
+	void lookAt(const glm::vec3& position);
 
 	virtual void hit(const HitDescription & desc);
+	virtual bool meleeRange();
 	virtual Type getType();
 
 	std::vector<AABB*> getBoundingBoxes() const;
@@ -53,7 +60,7 @@ public:
 	const glm::vec3& getVelocity() const;
 	const glm::vec3& getPlayerPosition() const;
 	const glm::vec3& getColorTint() const;
-	const glm::mat4& getModelMatrix() const;
+	const glm::mat4& getModelMatrix()const;
 	const bool isCollidable() const;
 	const glm::vec4& getMaxMinValues() const;
 

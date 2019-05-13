@@ -12,11 +12,16 @@ public:
 	void update(float dt);
 	bool intersection(glm::vec3 position);
 
-	void setupMaxMinValues();
 	GridSystem* getGrid() const;
-private:
+
+	const glm::vec2& getCentrePosition() const;
 
 private:
+	void resetMaxMinValues();
+	void setupMaxMinValues();
+	void calculateCentrePosition();
+private:
+	glm::vec2 centrePosition;
 	GridSystem* m_gridsystem;
 	Type m_type;
 	GameObject* m_playerObject;

@@ -18,7 +18,7 @@ public:
 	~Camera();
 
 	void update(float dt);
-
+	
 	void setToOrbit(bool shouldOrbit);
 	const glm::mat4 getViewMatrix() const;
 	const glm::mat4 getProjectionMatrix() const;
