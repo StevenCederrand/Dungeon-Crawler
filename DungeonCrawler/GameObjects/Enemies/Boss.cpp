@@ -31,7 +31,6 @@ void Boss::update(float dt)
 	lookAt(getPlayerPosition());
 	updateHoverEffect(dt);
 	updateBehaviour(dt);
-
 	amIDead();
 	updateCooldowns(dt);
 }
@@ -100,12 +99,12 @@ void Boss::updateHoverEffect(float dt)
 		m_hoverEffectTimer = 0.0f;
 		m_effects->addParticles("EnemyHoverEmitter", getPosition(), glm::vec3(Randomizer::single(-100.0f, 100.0f) / 100.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 100.0f), 1.0f, 1);
 	}
-
 }
 
 void Boss::updateBehaviour(float dt)
 {
 	float lengthToPlayer = getDistanceToPlayer();
+
 	if (lengthToPlayer > 2.5f) {
 		calculatePath(dt);
 		moveToTarget(dt);
