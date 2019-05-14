@@ -13,7 +13,7 @@ public:
 	void update(float dt);
 
 
-	bool meleeRange();
+	bool meleeRange(float dt);
 	void hit(const HitDescription& desc);
 	Type getType();
 	float getDamage()const;

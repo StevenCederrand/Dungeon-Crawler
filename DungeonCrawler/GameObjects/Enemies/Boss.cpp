@@ -45,7 +45,7 @@ void Boss::update(float dt)
 	updateCooldowns(dt);
 }
 
-bool Boss::meleeRange()
+bool Boss::meleeRange(float dt)
 {
 	if ((getDistanceToPlayer() <= 3.0f) && (m_attackCooldown <= 0.f))
 	{

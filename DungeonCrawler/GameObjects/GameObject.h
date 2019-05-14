@@ -50,7 +50,7 @@ public:
 	void lookAt(const glm::vec3& position);
 
 	virtual void hit(const HitDescription & desc);
-	virtual bool meleeRange();
+	virtual bool meleeRange(float dt);
 	virtual Type getType();
 
 	std::vector<AABB*> getBoundingBoxes() const;
