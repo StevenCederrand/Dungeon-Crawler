@@ -32,6 +32,9 @@ private:
 	bool m_amIAlive;
 	float m_attackCooldown;
 	bool m_floatDirection;
+	float m_floatMax;
+	float m_floatMin;
+	float m_percentage;
 
 	float m_AStarTimer;
 	Room* m_room;

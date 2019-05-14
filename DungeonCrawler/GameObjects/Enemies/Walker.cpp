@@ -20,6 +20,9 @@ Walker::Walker(Mesh * mesh, Type type, Room* room, const glm::vec3& position, Ef
 	this->m_type = type;
 	this->m_amIAlive = true;
 	this->m_floatDirection = true;
+	this->m_floatMax = 0.5f;
+	this->m_floatMin = -0.5f;
+	this->m_percentage = 0.1f;
 	setPosition(position);
 	m_Astar = new AStar();
 	m_attackCooldown = 0.f;
@@ -33,9 +36,8 @@ Walker::~Walker()
 
 void Walker::update(float dt)
 {
-
 	float lengthToPlayer = getDistanceToPlayer();
-
+	
 	m_hoverEffectTimer += dt;
 	if (m_hoverEffectTimer >= 0.05f) {
 		m_hoverEffectTimer = 0.0f;
@@ -113,22 +115,41 @@ void Walker::attackCooldown(float dt)
 
 void Walker::floatingAttack(float dt)
 {
-	if ((getPosition().y > 1) && (m_floatDirection == true))
+	if ((getPosition().y >= m_floatMax - 0.01) && (m_floatDirection == true))
 	{
 		m_floatDirection = false;
 	}
-	if ((getPosition().y < -1) && (m_floatDirection == false))
+	if ((getPosition().y <= m_floatMin + 0.01) && (m_floatDirection == false))
 	{
 		m_floatDirection = true;
 	}
 	if (m_floatDirection)
 	{
-		setPosition(glm::vec3(getPosition().x, getPosition().y + dt, getPosition().z));
+		setPosition(glm::vec3(getPosition().x, lerp(getPosition().y, m_floatMax, m_percentage), getPosition().z));
 	}
 	else
 	{
-		setPosition(glm::vec3(getPosition().x, getPosition().y - dt, getPosition().z));
+		setPosition(glm::vec3(getPosition().x, lerp(getPosition().y, m_floatMin, m_percentage), getPosition().z));
 	}
+
+	
+	/*if ((getPosition().y >= 1.0f) && (m_floatDirection == true))
+	{
+		setPosition(glm::vec3(getPosition().x, lerp(getPosition().y, m_floatMax, m_percentage), getPosition().z));
+	}
+	if ((getPosition().y < 1.0f) && (m_floatDirection == true))
+	{
+		setPosition(glm::vec3(getPosition().x, lerp(getPosition().y, m_floatMax, m_percentage), getPosition().z));
+	}
+	if ((getPosition().y >= 1.0f) && (m_floatDirection == false))
+	{
+		setPosition(glm::vec3(getPosition().x, lerp(getPosition().y, m_floatMax, m_percentage), getPosition().z));
+	}
+	if ((getPosition().y < 1.0f) && (m_floatDirection == false))
+	{
+		setPosition(glm::vec3(getPosition().x, lerp(getPosition().y, m_floatMax, m_percentage), getPosition().z));
+	}
+*/
 }
 
 void Walker::calculatePath(float dt)
@@ -141,7 +162,7 @@ void Walker::calculatePath(float dt)
 	if (m_room->getGrid()->failedGettingGridCell())
 		canRunAStar = false;
 
-	m_AStarTimer += dt; 
+	m_AStarTimer += dt;
 
 	// Runs every half second
 	if (m_AStarTimer >= 1.f) {

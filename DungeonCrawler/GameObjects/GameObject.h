@@ -49,6 +49,8 @@ public:
 	// Rotates the game object to the desired position
 	void lookAt(const glm::vec3& position);
 
+	float lerp(float start, float end, float percent);
+
 	virtual void hit(const HitDescription & desc);
 	virtual bool meleeRange(float dt);
 	virtual Type getType();
