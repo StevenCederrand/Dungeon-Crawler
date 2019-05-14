@@ -93,6 +93,7 @@ void Renderer::render() {
 
 	this->renderMap();
 	this->renderProjectiles();
+	this->renderBlood();
 }
 
 void Renderer::shadowPass() {
@@ -287,10 +288,11 @@ void Renderer::renderMap()
 		//set the view and projection matrix in the shader
 		mapShader->setMat4("viewMatrix", m_camera->getViewMatrix());
 		mapShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+
+		//do it for all the rooms in the maxMin Vector
 		for (size_t i = 0; i < maxMinValues.size(); i++)
 		{
 			roomHasPlayer = 0;
-
 			if (roomWithPlayer == i)
 				roomHasPlayer = 1;
 			
@@ -320,6 +322,22 @@ void Renderer::renderMap()
 
 		mapShader->unuse();
 	}
+}
+
+void Renderer::renderBlood()
+{
+	glEnable(GL_BLEND);
+	Shader* uiShader = ShaderMap::getShader("UIShader");
+	uiShader->use();
+	uiShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+	uiShader->setMat4("viewMatrix", m_camera->getViewMatrix());
+	//change modelmatrix to it's own later
+	uiShader->setMat4("modelMatrix", m_map->getModelMatrix());
+
+
+
+	uiShader->unuse();
+	glDisable(GL_BLEND);
 }
 
 void Renderer::bindMesh(Mesh * mesh, Shader* shader)

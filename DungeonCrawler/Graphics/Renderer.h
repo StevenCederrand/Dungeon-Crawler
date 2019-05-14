@@ -39,6 +39,8 @@ private:
 	void renderHealthBar();
 	void lightPass();
 	void renderMap();
+	void renderBlood();
+
 
 	bool initRenderQuad();	
 	void drawQuad();

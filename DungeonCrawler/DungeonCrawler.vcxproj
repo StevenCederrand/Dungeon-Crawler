@@ -242,6 +242,7 @@
     <ClInclude Include="Graphics\MeshMap.h" />
     <ClInclude Include="Graphics\Renderer.h" />
     <ClInclude Include="Gui\PlayerHealthBar.h" />
+    <ClInclude Include="Gui\ScreenBlood.h" />
     <ClInclude Include="States\WinState.h" />
     <ClInclude Include="System\Timer.h" />
     <ClInclude Include="States\GameOverState.h" />

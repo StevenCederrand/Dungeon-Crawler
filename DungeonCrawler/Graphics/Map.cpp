@@ -25,7 +25,8 @@ Map::Map(GameObjectManager* gameManager)
 
 Map::~Map()
 {
-
+	glDeleteBuffers(1, &m_vbo);
+	glDeleteVertexArrays(1, &m_vao);
 }
 
 void Map::update(float dt)

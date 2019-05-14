@@ -172,5 +172,6 @@
     <ClInclude Include="Graphics\Map.h" />
     <ClInclude Include="Gui\PlayerHealthBar.h" />
     <ClInclude Include="Vendor\Lodepng\lodepng.h" />
+    <ClInclude Include="Gui\ScreenBlood.h" />
   </ItemGroup>
 </Project>
