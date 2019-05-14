@@ -60,7 +60,7 @@ public:
 	const glm::vec3& getVelocity() const;
 	const glm::vec3& getPlayerPosition() const;
 	const glm::vec3& getColorTint() const;
-	const glm::mat4& getModelMatrix() const;
+	const glm::mat4& getModelMatrix()const;
 	const bool isCollidable() const;
 	const glm::vec4& getMaxMinValues() const;
 

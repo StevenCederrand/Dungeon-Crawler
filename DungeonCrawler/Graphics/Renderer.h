@@ -8,13 +8,16 @@
 #include <map>
 #include "Shader.h"
 #include "Effects.h"
+#include "Map.h"
 #include <EnemyProjectile/ProjectileManager.h>
 #include <GUI/PlayerHealthBar.h>
 
 class Renderer
 {
 public:
-	Renderer(Camera* camera, LightManager* lightManager, Effects* effects, ProjectileManager* projectileManager, PlayerHealthBar* playerHealthBar);
+
+	Renderer(Camera* camera, LightManager* lightManager, Effects* effects, ProjectileManager* projectileManager, PlayerHealthBar* playerHealthBar, Map* map);
+
 	~Renderer();
 
 	void prepareGameObjects(const std::vector<GameObject*>& gameObjects);
@@ -35,6 +38,7 @@ private:
 	void renderProjectiles();
 	void renderHealthBar();
 	void lightPass();
+	void renderMap();
 
 	bool initRenderQuad();	
 	void drawQuad();
@@ -53,6 +57,8 @@ private:
 	LightManager* m_lightManager;
 	Camera* m_camera;
 	Effects* m_effects;
+
+	Map* m_map;
 	ProjectileManager* m_projectileManager;
 	PlayerHealthBar* m_playerHealthBar;
 

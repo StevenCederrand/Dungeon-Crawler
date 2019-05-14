@@ -21,7 +21,7 @@ void loadScreen(const bool& completed) {
 }
 
 MenuState::MenuState() {
-	this->m_camera = new UICamera();
+	m_camera = new UICamera();
 	m_uiManager = new UIManager(m_camera);
 	m_glInit = new GLinit();
 	createUIElements();
@@ -32,7 +32,7 @@ MenuState::MenuState() {
 
 MenuState::~MenuState()
 {
-	delete this->m_camera;
+	delete m_camera;
 	delete m_glInit;
 	delete m_uiManager;
 }

@@ -6,10 +6,13 @@
 #include <Globals/Settings.h>
 #define MESH_VECTOR_RESERVE_SIZE 150
 
-Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects, ProjectileManager* projectileManager, PlayerHealthBar* playerHealthBar)
+
+Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects, ProjectileManager* projectileManager, PlayerHealthBar* playerHealthBar, Map* map)
+
 {
 	m_camera = camera;
 	m_lightManager = lightManager;
+	m_map = map;
 	m_framebuffer = new Framebuffer();
 	glEnable(GL_DEPTH_TEST);
 	//Generate framebuffers & textures
@@ -67,7 +70,6 @@ void Renderer::prepareGameObjects(const std::vector<GameObject*>& gameObjects)
 void Renderer::preparePlayerLights(Player* player) {
 	m_playerSpotLight = player->getSpotlight();
 	m_playerLight = player->getFlash();
-
 }
 
 void Renderer::render() {
@@ -88,6 +90,8 @@ void Renderer::render() {
 	
 	this->renderHealthBar();
 	this->renderEffects();
+
+	this->renderMap();
 	this->renderProjectiles();
 }
 
@@ -111,7 +115,7 @@ void Renderer::shadowPass() {
 		for (auto object : mesh.second) {
 
 			if (dynamic_cast<Player*>(object)) continue;
-
+		
 			shadowShader->setMat4("modelMatrix", object->getModelMatrix());
 			glDrawElements(GL_TRIANGLES, mesh.first->getNrOfIndices(), GL_UNSIGNED_INT, NULL);
 		}
@@ -264,6 +268,58 @@ void Renderer::lightPass() {
 	lightShader->setVec3("cameraPosition", m_camera->getPosition());
 	drawQuad();
 	lightShader->unuse();
+}
+
+void Renderer::renderMap()
+{
+	if (m_map->getShouldRender()) {
+
+		Shader* mapShader = ShaderMap::getShader("MapShader");
+		mapShader->use();
+
+		std::vector<glm::vec4> maxMinValues = m_map->getRoomCoordinates();
+		//tempvalue is a value that decides how far each room will be apart in the map
+		float tempValue = float(1) / float(45);
+
+		int roomWithPlayer = m_map->roomWithPlayer();
+		int roomHasPlayer = 0;
+
+		//set the view and projection matrix in the shader
+		mapShader->setMat4("viewMatrix", m_camera->getViewMatrix());
+		mapShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+		for (size_t i = 0; i < maxMinValues.size(); i++)
+		{
+			roomHasPlayer = 0;
+
+			if (roomWithPlayer == i)
+				roomHasPlayer = 1;
+			
+			//get the modelMatrix from the room
+			glm::mat4 modelmatrix = m_map->getModelMatrix();
+		
+			//move the room the the right place
+			modelmatrix = glm::translate(modelmatrix, glm::vec3(
+				maxMinValues[i].x * tempValue,
+				-maxMinValues[i].y * tempValue,
+				0.0f));
+		
+			//Set the modelmatrix in the shader
+			mapShader->setInt("roomHasPlayer", roomHasPlayer);
+			mapShader->setMat4("modelMatrix", modelmatrix);
+			glBindVertexArray(m_map->getVao());
+			glEnableVertexAttribArray(0);
+			glDrawArrays(GL_TRIANGLES, 0, 12);
+
+		}
+		glDisableVertexAttribArray(0);
+		glBindVertexArray(0);
+
+
+
+
+
+		mapShader->unuse();
+	}
 }
 
 void Renderer::bindMesh(Mesh * mesh, Shader* shader)
