@@ -1,6 +1,9 @@
 //With the .lib file included the fbxbinreader should interpret the binary data and set the data to the structs and return the data
 #include "FBXBinReader.h"
 
+
+//HAS MAIN, SHOULDNT BE THIS WAY!!, where to call?
+
 int main()
 {
 	FBXBinReader binaryData;

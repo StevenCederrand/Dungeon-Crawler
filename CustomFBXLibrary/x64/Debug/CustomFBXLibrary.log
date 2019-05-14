@@ -1,0 +1,6 @@
+﻿  FBXImporter.cpp
+C:\3D\Dungeon-Crawler\CustomFBXLibrary\src\FBXImporter.cpp(242): warning C4018: '<': signed/unsigned mismatch
+C:\3D\Dungeon-Crawler\CustomFBXLibrary\src\FBXImporter.cpp(276): warning C4018: '<': signed/unsigned mismatch
+  FBXParserData.cpp
+  Generating Code...
+  CustomFBXLibrary.vcxproj -> C:\3D\Dungeon-Crawler\x64\Debug\CustomFBXLibrary.lib

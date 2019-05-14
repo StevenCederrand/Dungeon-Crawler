@@ -1,5 +1,7 @@
 #include "FBXParser.h"
 
+//NOT USED ATM
+
 //Takes in the mesh info and makes it renderable
 FBXParser::FBXParser()
 {
