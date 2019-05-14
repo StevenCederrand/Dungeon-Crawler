@@ -433,7 +433,7 @@ void GameObjectManager::roomManager(GameObject* object) {
 				//Swap the play state to fighting
 				m_player->setPlayerState(FIGHTING);
 				//Spawn enemies
-				this->spawner(m_rooms.at(i), Randomizer::single(1, 3));
+				this->spawner(m_rooms.at(i), Randomizer::single(3, 6));
 			}
 		}
 	}

@@ -20,15 +20,20 @@ private:
 	GLuint m_vbo;
 	GLuint m_currentTexID;
 
+	// Eww
 	GLuint m_hpbar_1;
 	GLuint m_hpbar_2;
 	GLuint m_hpbar_3;
 	GLuint m_hpbar_4;
 	GLuint m_hpbar_5;
+	GLuint m_hpbar_6;
+	GLuint m_hpbar_7;
+	GLuint m_hpbar_8;
+	GLuint m_hpbar_9;
+	GLuint m_hpbar_10;
 
 	glm::vec3 m_position;
 	float m_size;
-	float m_healthStageValue;
 	float m_playerMaxHealth;
 
 	glm::mat4 m_modelMatrix;

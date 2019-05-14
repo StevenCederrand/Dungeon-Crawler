@@ -23,7 +23,7 @@ public:
 	
 
 private:
-	void calculatePath(float dt);
+	void calculatePath(float dt, bool ignoreTimer, bool occupy);
 	void moveToTarget(float dt);
 	void updateCooldowns(float dt);
 	void updateHoverEffect(float dt);
@@ -48,6 +48,15 @@ private:
 	float m_hoverEffectTimer;
 
 	std::vector<Node> m_path;
+
+	bool m_shooting;
+	float m_shootingRechargeCooldown;
+	float m_currentShootingRechargeCooldown;
+	int m_shootingRounds;
+	float m_shootingSpeed;
+	float m_shootingTimer;
+	float m_projectileSpeed;
+	float m_projectileDamage;
 };
 
 #endif

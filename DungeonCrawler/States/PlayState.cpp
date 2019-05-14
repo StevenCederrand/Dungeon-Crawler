@@ -174,11 +174,11 @@ void PlayState::constructWorld()
 	
 	m_projectileManager->setPlayer(m_player);
 
-	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 10, 0, 0, false, glm::vec3(4.f, 0.5f, -2.f));
+	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 5, 0, 0, false, glm::vec3(4.f, 0.5f, -2.f));
 	m_gameObjectManager->addGameObject(m_powerUp);
-	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 10, 0, false, glm::vec3(2.f, 0.5f, -10.f));
-	m_gameObjectManager->addGameObject(m_powerUp);
-	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 0, 10, true, glm::vec3(-5.f, 0.5f, -7.f));
+	//m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 10, 0, false, glm::vec3(2.f, 0.5f, -10.f));
+	//m_gameObjectManager->addGameObject(m_powerUp);
+	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 0, 5, true, glm::vec3(-5.f, 0.5f, -7.f));
 	m_gameObjectManager->addGameObject(m_powerUp);
 
 	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(0.8f, 0.8f, 0.8f));
@@ -198,9 +198,6 @@ void PlayState::constructWorld()
 		60.f, m_gameObjectManager);
 
 	}
-
-	//m_boss = new Boss(enemyMesh, BOSS, r_roomStart, glm::vec3(2.f, 0.f, 12.f));
-	//m_gameObjectManager->addGameObject(m_boss);
 
 	//Used for the player flashlight & shadow mapping from the 
 	//flashlights view

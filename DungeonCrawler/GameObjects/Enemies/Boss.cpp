@@ -1,5 +1,6 @@
 #include "Boss.h"
 #include "../../Utility/Randomizer.h"
+#include <System/Log.h>
 
 Boss::Boss(Mesh* mesh, Type type, Room* room, const glm::vec3& position,ProjectileManager* projectileManager, Effects* effects):
 	GameObject(mesh, type)
@@ -7,15 +8,24 @@ Boss::Boss(Mesh* mesh, Type type, Room* room, const glm::vec3& position,Projecti
 	m_projectileManager = projectileManager;
 	m_effects = effects;
 	this->setScale(glm::vec3(2.f, 2.f, 2.f));
-	this->m_health = 10.f;
-	this->m_speed = 6.f;
-	this->m_damage = 2.f;
+	this->m_health = 30.f;
+	this->m_speed = 12.f;
+	this->m_damage = 1.f;
 	this->m_isPlayerClose = false;
 	this->m_type = type;
 	this->m_amIAlive = true;
 	this->m_room = room;
 	m_attackCooldown = 0.f;
 	
+	m_shooting = false;
+	m_shootingRechargeCooldown = 5.0f;
+	m_currentShootingRechargeCooldown = m_shootingRechargeCooldown;
+	m_shootingRounds = 0;
+	m_shootingSpeed = 0.15f;
+	m_shootingTimer = 0.0f;
+	m_projectileSpeed = 25.0f;
+	m_projectileDamage = 1.5f;
+
 	setCollidable(true);
 	setPosition(position);
 	m_Astar = new AStar();
@@ -105,26 +115,69 @@ void Boss::updateBehaviour(float dt)
 {
 	float lengthToPlayer = getDistanceToPlayer();
 
-	if (lengthToPlayer > 2.5f) {
-		calculatePath(dt);
-		moveToTarget(dt);
+	if (m_currentShootingRechargeCooldown > 0.0f && !m_shooting) {
+		m_currentShootingRechargeCooldown -= dt;
+		if (lengthToPlayer > 2.5f) {
+			calculatePath(dt, false, true);
+			moveToTarget(dt);
+		}
+
 	}
+	else
+	{
+		if (!m_shooting) {
+			m_shooting = true;
+			m_currentShootingRechargeCooldown = m_shootingRechargeCooldown;
+			m_shootingRounds = Randomizer::single(15, 25);
+		}
+	}
+
+
+	if (m_shooting)
+	{
+		m_shootingTimer += dt;
+
+		if (m_shootingTimer >= m_shootingSpeed)
+		{
+			m_shootingTimer = 0.0f;
+
+			m_path.clear();
+			calculatePath(dt, true, false);
+
+			if (m_path.size() > 0) {
+				m_projectileManager->spawnProjectile(new Projectile(getPosition() + glm::vec3(0.0f, 2.0f, 0.0f), m_path, m_damage, m_projectileSpeed, m_room->getGrid()->getCellSize()));
+				m_shootingRounds--;
+				LOG_INFO("Rounds: " + std::to_string(m_shootingRounds));
+			}
+
+		}
+	}
+
+	if (m_shootingRounds <= 0 && m_shooting)
+	{
+		m_shooting = false;
+		m_shootingRounds = 0;
+		m_shootingTimer = 0.0f;
+		m_path.clear();
+
+	}
+
 
 }
 
-void Boss::calculatePath(float dt)
+void Boss::calculatePath(float dt, bool ignoreTimer, bool occupy)
 {
 	bool canRunAStar = true;
 
 	// Get the cell and occupy it
-	const GridCell& myCell = m_room->getGrid()->getCell(getPosition().x, getPosition().z, true, this);
+	const GridCell& myCell = m_room->getGrid()->getCell(getPosition().x, getPosition().z, occupy, this);
 	if (m_room->getGrid()->failedGettingGridCell())
 		canRunAStar = false;
 
 	m_AStarTimer += dt;
 
-	// Runs every half second
-	if (m_AStarTimer >= 1.f) {
+	// Runs every 1/4 of a second
+	if (m_AStarTimer >= 0.25f || ignoreTimer) {
 		m_AStarTimer = 0.0f;
 
 		// Get the cells that the player and the walker is standing on
