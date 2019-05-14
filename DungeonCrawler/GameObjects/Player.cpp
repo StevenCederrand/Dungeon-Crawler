@@ -47,7 +47,7 @@ Player::Player(Mesh* mesh, Type type) :
 	this->m_weaponSlot = 1;
 	this->m_spraying = false;
 	this->m_type = type;
-	this->m_iframes = 0.f;
+	//this->m_iframes = 0.f;
 	this->m_pistolBullets = 6;
 	this->m_reloadTime = 0.f;
 	this->m_reloading = false;
@@ -89,7 +89,7 @@ void Player::update(float dt)
 	{
 		m_spraying = false;
 	}
-	iframeCountdown(dt);
+	//iframeCountdown(dt);
 
 	if (Input::isKeyReleased(GLFW_KEY_Q))
 	{
@@ -125,25 +125,25 @@ void Player::update(float dt)
 void Player::hit(const HitDescription & desc)
 {
 	Type type = desc.owner->getType();
-	if (m_iframes <= 0)
+	/*if (m_iframes <= 0)
+	{*/
+	if (type == Type::WALKER)
 	{
-		if (type == Type::WALKER)
-		{
-			Walker* walker = dynamic_cast<Walker*>(desc.owner);
-			takeDamage(walker->getDamage());
-		}
-		if (type == Type::SHOOTER)
-		{
-			Shooter* shooter = dynamic_cast<Shooter*>(desc.owner);
-			takeDamage(shooter->getDamage());
-		}
-		if (type == Type::BOSS)
-		{
-			Boss* boss = dynamic_cast<Boss*>(desc.owner);
-			takeDamage(boss->getDamage());
-		}
-		m_iframes = 2.f;
+		Walker* walker = dynamic_cast<Walker*>(desc.owner);
+		takeDamage(walker->getDamage());
 	}
+	if (type == Type::SHOOTER)
+	{
+		Shooter* shooter = dynamic_cast<Shooter*>(desc.owner);
+		takeDamage(shooter->getDamage());
+	}
+	if (type == Type::BOSS)
+	{
+		Boss* boss = dynamic_cast<Boss*>(desc.owner);
+		takeDamage(boss->getDamage());
+	}
+	/*	m_iframes = 2.f;
+	}*/
 	if (type == Type::POWERUPS)
 	{
 		PowerUps* powerUp = dynamic_cast<PowerUps*>(desc.owner);
@@ -490,13 +490,13 @@ void Player::setDamage(float damage)
 	this->m_damage = damage;
 }
 
-void Player::iframeCountdown(float dt)
-{
-	if (m_iframes > 0.f)
-	{
-		m_iframes -= dt;
-	}
-}
+//void Player::iframeCountdown(float dt)
+//{
+//	if (m_iframes > 0.f)
+//	{
+//		m_iframes -= dt;
+//	}
+//}
 
 void Player::setPlayerState(const EntityState& playerState) {
 	this->playerState = playerState;
