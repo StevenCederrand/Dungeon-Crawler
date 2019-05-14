@@ -383,6 +383,7 @@ void Player::manualReload(float dt)
 	if ((Input::isKeyPressed(GLFW_KEY_R)) && (m_reloading == false) && (m_pistolBullets < 6))
 	{
 		m_reloading = true;
+		AudioEngine::play("gun_reload", 0.7f);
 		m_reloadTime = 2.f;
 	}
 }
@@ -393,6 +394,7 @@ void Player::reloadCd(float dt)
 	{
 		m_reloading = false;
 		m_pistolBullets = 6;
+		
 		m_data->pixels = m_image[6].data();
 		m_cursor = glfwCreateCursor(m_data, 32, 32);
 		glfwSetCursor(glfwGetCurrentContext(), m_cursor);

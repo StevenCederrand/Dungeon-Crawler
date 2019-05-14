@@ -28,7 +28,9 @@ public:
 	static FMOD::Channel* play(std::string key, float volume);
 	//play the entire sound without being able to replay it
 	static void playOnce(std::string key, float volume);
-
+	
+	//Stop playing the specific sound
+	static void stop(std::string key);
 private:
 	static FMOD_RESULT init();
 	//Check to see if a key in the hashmap is in use

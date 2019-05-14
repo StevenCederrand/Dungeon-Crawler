@@ -29,10 +29,10 @@ public:
 	const std::vector<GameObject*>& getGameObjects() const;
 	std::vector<GameObject*>* getVectorPointer();
 
+	bool gameFinished();
+
 	std::vector<Room*>& getClearedRooms();
-
 	
-
 private:
 	void handlePlayerCollisionAgainstObjects(float dt, GameObject* object, glm::vec3& newVel, bool& hasCollided);
 	void handlePlayerShooting(float dt, GameObject* object, const glm::vec3& rayDir, float& rayLengthUntilCollision, GameObject* &hitGameObject);
@@ -46,7 +46,7 @@ private:
 
 private:
 	int m_numberOfEnemies; //This is per room
-	
+	bool m_gameFinished;
 	std::vector<GameObject*> m_gameObjects;
 	Player* m_player;
 	PowerUps* m_powerup;
@@ -57,6 +57,7 @@ private:
 	ProjectileManager* m_projectileManager;
 
 	bool m_bossDeadStatus;
+
 	bool m_isLocked;
 	std::vector<Room*> m_rooms;
 	std::vector<Room*> m_roomsCleared; //these rooms are shown in the map

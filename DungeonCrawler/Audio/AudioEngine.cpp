@@ -21,6 +21,8 @@ AudioEngine::~AudioEngine() {
 	m_soundSystem->release();
 }
 
+
+
 FMOD_RESULT AudioEngine::init() {
 	FMOD_RESULT res;
 	unsigned int version;
@@ -214,6 +216,20 @@ FMOD::Channel* AudioEngine::play(std::string key, float volume) {
 		return channel;
 	}
 	return NULL;
+}
+
+void AudioEngine::stop(std::string key)
+{
+	//If the key is in use 
+	if (keyInUse(key)) {
+		for (size_t i = 0; i < m_channels.size(); i++)
+		{
+			FMOD::Sound* sound;
+			if (m_channels.at(i)->getCurrentSound(&sound)) {
+
+			}
+		}
+	}
 }
 
 bool AudioEngine::keyInUse(std::string key) { 

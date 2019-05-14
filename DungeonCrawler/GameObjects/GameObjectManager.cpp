@@ -210,7 +210,7 @@ Player * GameObjectManager::getPlayer() const {
 
 bool GameObjectManager::bossDead() const
 {
-	return m_bossDeadStatus;
+	return false;
 }
 
 const std::vector<GameObject*>& GameObjectManager::getGameObjects() const
@@ -223,10 +223,17 @@ std::vector<GameObject*>* GameObjectManager::getVectorPointer()
 	return &m_gameObjects;
 }
 
+bool GameObjectManager::gameFinished()
+{
+	if (this->m_gameFinished) {
+		return true;
+	}
+	return false;
+}
+
 std::vector<Room*>& GameObjectManager::getClearedRooms()
 {
 	return m_roomsCleared;
-	// TODO: insert return statement here
 }
 
 void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject * object, glm::vec3& newVel, bool& hasCollided)
@@ -401,6 +408,11 @@ void GameObjectManager::handleEnemyAttacks(GameObject* object, float dt)
 void GameObjectManager::roomManager(GameObject* object) {
 	
 	if (m_numberOfEnemies == 0 && m_isLocked) {
+		if (m_rooms.at(m_currentRoom)->getType() == ROOM_BOSS) {
+			if (m_numberOfEnemies <= 0) {
+				this->m_gameFinished = true;
+			}
+		}
 		//Remove the room from the vector of uncleared rooms
 		m_rooms.erase(m_rooms.begin() + m_currentRoom);
 		//Reset the player
@@ -415,6 +427,7 @@ void GameObjectManager::roomManager(GameObject* object) {
 				m_gameObjects.at(m_doorIndex)->setCollidable(false);
 			}
 		}
+		this->m_currentRoom = -1;
 		//Unlock the room
 		m_isLocked = false;
 	}
@@ -435,7 +448,7 @@ void GameObjectManager::roomManager(GameObject* object) {
 				this->m_isLocked = !m_isLocked;
 
 				//Spawn the door
-				//m_gameObjects.at(m_doorIndex)->setCollidable(true);
+				m_gameObjects.at(m_doorIndex)->setCollidable(true);
 
 				glm::vec3 objectPosition = m_gameObjects.at(m_doorIndex)->getPosition();
 				m_gameObjects.at(m_doorIndex)->setPosition(glm::vec3(objectPosition.x, 0, objectPosition.z));				
