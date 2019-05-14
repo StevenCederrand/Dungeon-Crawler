@@ -130,17 +130,17 @@ void Player::hit(const HitDescription & desc)
 		if (type == Type::WALKER)
 		{
 			Walker* walker = dynamic_cast<Walker*>(desc.owner);
-			m_health -= walker->getDamage();
+			takeDamage(walker->getDamage());
 		}
 		if (type == Type::SHOOTER)
 		{
 			Shooter* shooter = dynamic_cast<Shooter*>(desc.owner);
-			m_health -= shooter->getDamage();
+			takeDamage(shooter->getDamage());
 		}
 		if (type == Type::BOSS)
 		{
 			Boss* boss = dynamic_cast<Boss*>(desc.owner);
-			m_health -= boss->getDamage();
+			takeDamage(boss->getDamage());
 		}
 		m_iframes = 2.f;
 	}

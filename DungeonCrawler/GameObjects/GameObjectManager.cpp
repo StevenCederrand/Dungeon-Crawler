@@ -117,8 +117,6 @@ void GameObjectManager::update(float dt)
 			bool hitEnemy = false;
 			
 			if (dynamic_cast<Box*>(objectHit)) {
-				hitEnemy = true;
-				objectHit->setHit();
 			}
 			if (dynamic_cast<Walker*>(objectHit)) {
 				hitEnemy = true;
