@@ -46,8 +46,10 @@
     <ClCompile Include="Utility\UICamera.cpp" />
     <ClCompile Include="UserInterface\UIManager.cpp" />
     <ClCompile Include="UserInterface\Image.cpp" />
-    <ClCompile Include="FbxImporter\FBXBinReader.cpp" />
-    <ClCompile Include="FbxImporter\FBXParser.cpp" />
+    <ClCompile Include="FBX\FBXBinReader.cpp" />
+    <ClCompile Include="FBX\FBXImporter.cpp" />
+    <ClCompile Include="FBX\FBXParser.cpp" />
+    <ClCompile Include="FBX\FBXParserData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -110,7 +112,10 @@
     <ClInclude Include="UserInterface\UI.h" />
     <ClInclude Include="UserInterface\UIManager.h" />
     <ClInclude Include="UserInterface\Image.h" />
-    <ClInclude Include="FbxImporter\FBXBinReader.h" />
-    <ClInclude Include="FbxImporter\FBXParser.h" />
+    <ClInclude Include="FBX\FBXBinReader.h" />
+    <ClInclude Include="FBX\FBXImporter.h" />
+    <ClInclude Include="FBX\FBXParser.h" />
+    <ClInclude Include="FBX\FBXParserData.h" />
+    <ClInclude Include="FBX\Headerstruct.h" />
   </ItemGroup>
 </Project>

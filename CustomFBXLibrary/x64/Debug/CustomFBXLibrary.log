@@ -1,4 +1,5 @@
 ﻿  FBXImporter.cpp
-C:\3D\Dungeon-Crawler\CustomFBXLibrary\src\FBXImporter.cpp(242): warning C4018: '<': signed/unsigned mismatch
-C:\3D\Dungeon-Crawler\CustomFBXLibrary\src\FBXImporter.cpp(276): warning C4018: '<': signed/unsigned mismatch
-  CustomFBXLibrary.vcxproj -> C:\3D\Dungeon-Crawler\x64\Debug\CustomFBXLibrary.lib
+C:\3D\Dungeon-Crawler\CustomFBXLibrary\src\FBXParserData.h(2): fatal error C1083: Cannot open include file: 'Headerstruct.h': No such file or directory
+  FBXParserData.cpp
+C:\3D\Dungeon-Crawler\CustomFBXLibrary\src\FBXParserData.h(2): fatal error C1083: Cannot open include file: 'Headerstruct.h': No such file or directory
+  Generating Code...

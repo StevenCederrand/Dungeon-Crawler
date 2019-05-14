@@ -9,14 +9,14 @@ struct MainHeader
 	unsigned int dynamicMeshCount; //morph	//custom attribute
 	unsigned int staticMeshCount;  //regular
 	unsigned int boundingBoxCount;
-	//unsigned int materialCount;
+	unsigned int materialCount;
 };
 
 struct MeshHeader
 {
 	char nameOfMesh[100];
 	unsigned int vertexCount;
-	//unsigned int materialID; //our different morph characters will use the same material
+	int materialID;  //which material it uses, needs to be able to be -1
 	bool collision; //custom maya attribute
 	bool staticMesh;	//custom maya attribute
 	bool padding1; //Bool reserves 4 bytes, although it is only 1 byte, so might aswell padd them up
@@ -56,18 +56,14 @@ struct BoundingBoxVertex
 	float position[3];
 };
 
+//Write all materials header after vertices, maybe liek this?
 struct Material
 {
+	char nameOfAlbedo[100];
+	char nameOfNormal[100];
+	unsigned int materialID;
+	unsigned int nrOfTextures; //Will be 2 right now, albedo and normalmap
+	unsigned int whatShader;
 	//texture buffer pointer
 	//shader int pointer
-};
-
-struct Texture
-{
-	//texture buffer
-};
-
-struct ShaderOption
-{
-	//what shader it should use
 };
