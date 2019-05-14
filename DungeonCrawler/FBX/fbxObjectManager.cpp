@@ -55,7 +55,7 @@ FbxImporter *& fbxObjectManager::CreateFbxImporter(FbxManager * lSdkManager)
 const char * fbxObjectManager::LoadFbxFile()
 {
 	//Loading in my file
-	const char* lFilename = "\\Assets\\FBX\\FbxCubeBlendshaped.fbx";
+	const char* lFilename = "\\Assets\\FBX\\BoxWithHitbox.fbx";
 	return lFilename;
 }
 

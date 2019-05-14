@@ -213,7 +213,7 @@ void SaveHierarchy::m_SaveDynamicMeshNode(FbxNode* pNode)
 			{
 				m_SaveDynamicMesh(pNode, collisionBool, staticMeshBool);
 				m_file.WriteDynamicMesh();
-				FIX THE FBX FILE TO HAVE COLLISION STATIC MESH TO NON
+				//FIX THE FBX FILE TO HAVE COLLISION STATIC MESH TO NON
 			}
 		}
 		break;
