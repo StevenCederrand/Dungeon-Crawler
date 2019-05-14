@@ -11,7 +11,7 @@ pl_dash Dash.wav
 pl_gun_shot Gunshot.wav
 
 #Firing an empty round
-gun_click gun_click_1.wav
+gun_click gun_c§ick_1.wav
 
 #bullet impact with enemy
 gun_impact_enemy gun_impact_enemy.wav
@@ -23,4 +23,4 @@ gun_impact_wall BulletImpact.wav
 Enemy_melee Enemy_melee.wav
 
 #Enemy shooting, actually shooting
-Enemy_Shot Enemy_Shot.wav
+Enemy_shot Enemy_Shot2.wav

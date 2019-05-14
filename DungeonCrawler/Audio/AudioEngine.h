@@ -25,7 +25,7 @@ public:
 	static bool unloadSSO(std::string ssoName);
 	static void update();
 	//Play a sound
-	static void play(std::string key, float volume);
+	static FMOD::Channel* play(std::string key, float volume);
 	//play the entire sound without being able to replay it
 	static void playOnce(std::string key, float volume);
 

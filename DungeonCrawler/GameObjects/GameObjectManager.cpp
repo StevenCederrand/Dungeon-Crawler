@@ -463,7 +463,8 @@ void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
 			Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)), m_effects);
 		this->addGameObject(enemy);
 	}
-	for (int i = 0; i < numberOfEnemies; i++)
+	//Spawn Melee Enemies
+	for (int i = 0; i < 1; i++)
 
 	{
 		GameObject* enemy = new Walker(enemyMesh, WALKER, currentRoom, glm::vec3(
@@ -472,8 +473,8 @@ void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
 			Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)), m_effects);
 		this->addGameObject(enemy);
 	}
-
-	for (int i = 0; i < numberOfEnemies; i++)
+	//Spawn Ranged Enemies
+	for (int i = 0; i < 3; i++)
 	{
 		GameObject* enemy = new Shooter(enemyMesh, SHOOTER, currentRoom, glm::vec3(
 			Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),

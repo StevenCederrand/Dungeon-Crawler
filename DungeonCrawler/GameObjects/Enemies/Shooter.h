@@ -36,7 +36,6 @@ private:
 	float m_hoverEffectTimer;
 	bool m_castingSpell;
 	float m_maxShootingRange;
-
 	float m_AStarTimer;
 	Room* m_room;
 	AStar* m_Astar;

@@ -177,7 +177,7 @@ void AudioEngine::playOnce(std::string key, float volume) {
 	}
 }
 
-void AudioEngine::play(std::string key, float volume) {
+FMOD::Channel* AudioEngine::play(std::string key, float volume) {
 	if (volume > 1.0f) {
 		//LOG_WARNING("CANNOT HANDLE VOLUMES ABOVE 1.0f");
 		//LOG_WARNING("SETTING VOLUME TO 1.0f");
@@ -187,7 +187,7 @@ void AudioEngine::play(std::string key, float volume) {
 		FMOD_RESULT res;
 		FMOD::Channel* channel = getChannel(key.c_str());
 		if (m_sounds.at(key) == nullptr) {
-			return;
+			return NULL;
 		}
 
 		//Check to see if a channel is already playing the specific sound
@@ -199,18 +199,21 @@ void AudioEngine::play(std::string key, float volume) {
 			if (res != FMOD_OK) {
 				LOG_ERROR("ERROR PLAYING SOUND");
 			}
-			return;
+			return NULL;
 		}
 		res = m_soundSystem->playSound(m_sounds.at(key), 0, false, &channel);
 
 		if (res != FMOD_OK) {
 			LOG_ERROR("ERROR PLAYING SOUND");
-			return;
+			return NULL;
 		}
 
 		channel->setVolume(volume);
 		m_channels.push_back(channel);
+		
+		return channel;
 	}
+	return NULL;
 }
 
 bool AudioEngine::keyInUse(std::string key) { 
