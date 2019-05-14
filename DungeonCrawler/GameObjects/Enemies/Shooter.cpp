@@ -12,12 +12,12 @@ Shooter::Shooter(Mesh* mesh, Type type, Room* room, const glm::vec3& position, P
 	this->m_room = room;
 	this->m_projectileManager = projectileManager;
 	this->m_effects = effects;
-	this->m_health = 10.0f;
+	this->m_health = 5.0f;
 	this->m_speed = 8.0f;
-	this->m_damage = 0.5f;
+	this->m_damage = 1.0f;
 	this->m_currentCastTime = 0.0f;
 	this->m_maxShootingRange = 15.f;
-	this->m_castTime = 1.5f;
+	this->m_castTime = 1.25f;
 	this->m_isPlayerClose = false;
 	this->m_type = type;
 	this->m_amIAlive = true;

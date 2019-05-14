@@ -20,6 +20,7 @@ Walker::Walker(Mesh * mesh, Type type, Room* room, const glm::vec3& position, Ef
 	this->m_isPlayerClose = false;
 	this->m_type = type;
 	this->m_amIAlive = true;
+	this->m_floatDirection = true;
 	setPosition(position);
 	m_Astar = new AStar();
 	m_attackCooldown = 0.f;
@@ -35,7 +36,6 @@ void Walker::update(float dt)
 {
 
 	float lengthToPlayer = getDistanceToPlayer();
-	int playerCellIndex = m_room->getGrid()->getCellIndex(getPlayerPosition().x, getPlayerPosition().z);
 
 	m_hoverEffectTimer += dt;
 	if (m_hoverEffectTimer >= 0.05f) {
@@ -51,8 +51,12 @@ void Walker::update(float dt)
 	attackCooldown(dt);
 }
 
-bool Walker::meleeRange()
+bool Walker::meleeRange(float dt)
 {
+	if (getDistanceToPlayer() <= 2.5f)
+	{
+		floatingAttack(dt);
+	}
 	if ((getDistanceToPlayer() <= 2.5f) && (m_attackCooldown <= 0.f))
 	{
 		AudioEngine::play("Enemy_melee", 1.0f);
@@ -106,6 +110,26 @@ void Walker::attackCooldown(float dt)
 	if (m_attackCooldown > 0.f)
 	{
 		m_attackCooldown -= dt;
+	}
+}
+
+void Walker::floatingAttack(float dt)
+{
+	if ((getPosition().y > 1) && (m_floatDirection == true))
+	{
+		m_floatDirection = false;
+	}
+	if ((getPosition().y < -1) && (m_floatDirection == false))
+	{
+		m_floatDirection = true;
+	}
+	if (m_floatDirection)
+	{
+		setPosition(glm::vec3(getPosition().x, getPosition().y + dt, getPosition().z));
+	}
+	else
+	{
+		setPosition(glm::vec3(getPosition().x, getPosition().y - dt, getPosition().z));
 	}
 }
 

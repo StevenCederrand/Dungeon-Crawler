@@ -10,7 +10,7 @@ public:
 	~Walker();
 	void update(float dt);
 
-	bool meleeRange();
+	bool meleeRange(float dt);
 	void hit(const HitDescription& desc);
 	Type getType();
 	float getDamage()const;
@@ -18,6 +18,7 @@ public:
 	void amIDead();
 	bool getAliveStatus()const;
 	void attackCooldown(float dt);
+	void floatingAttack(float dt);
 
 private:
 	void calculatePath(float dt);
@@ -30,6 +31,7 @@ private:
 	Type m_type;
 	bool m_amIAlive;
 	float m_attackCooldown;
+	bool m_floatDirection;
 
 	float m_AStarTimer;
 	Room* m_room;

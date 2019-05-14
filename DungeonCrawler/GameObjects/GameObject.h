@@ -50,7 +50,7 @@ public:
 	void lookAt(const glm::vec3& position);
 
 	virtual void hit(const HitDescription & desc);
-	virtual bool meleeRange();
+	virtual bool meleeRange(float dt);
 	virtual Type getType();
 
 	std::vector<AABB*> getBoundingBoxes() const;
@@ -60,7 +60,7 @@ public:
 	const glm::vec3& getVelocity() const;
 	const glm::vec3& getPlayerPosition() const;
 	const glm::vec3& getColorTint() const;
-	const glm::mat4& getModelMatrix()const;
+	const glm::mat4& getModelMatrix() const;
 	const bool isCollidable() const;
 	const glm::vec4& getMaxMinValues() const;
 
