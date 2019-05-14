@@ -25,7 +25,6 @@ public:
 	void constructPlayerBroadPhaseBox();
 
 	Player* getPlayer() const;
-	bool bossDead() const;
 	const std::vector<GameObject*>& getGameObjects() const;
 	std::vector<GameObject*>* getVectorPointer();
 
@@ -55,8 +54,6 @@ private:
 	glm::vec4 m_maxMinValues; 
 	Effects* m_effects; 
 	ProjectileManager* m_projectileManager;
-
-	bool m_bossDeadStatus;
 
 	bool m_isLocked;
 	std::vector<Room*> m_rooms;

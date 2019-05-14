@@ -208,10 +208,6 @@ Player * GameObjectManager::getPlayer() const {
 	return m_player;
 }
 
-bool GameObjectManager::bossDead() const
-{
-	return false;
-}
 
 const std::vector<GameObject*>& GameObjectManager::getGameObjects() const
 {
@@ -363,7 +359,6 @@ void GameObjectManager::handleDeadEnemies(float dt)
 				this->m_numberOfEnemies--;
 				delete m_gameObjects[i];
 				m_gameObjects.erase(m_gameObjects.begin() + i);
-				m_bossDeadStatus = true;
 				continue;
 			}
 		}
