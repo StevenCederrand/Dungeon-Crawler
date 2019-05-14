@@ -14,7 +14,6 @@ GameObjectManager::GameObjectManager(Effects* effects, ProjectileManager* projec
 	m_projectileManager = projectileManager;
 	m_broadPhaseBox = nullptr;
 	m_player = nullptr;
-	m_bossDeadStatus = false;
 }
 
 GameObjectManager::~GameObjectManager()
