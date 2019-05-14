@@ -34,10 +34,10 @@ namespace FBXImporter {
 		else if (infileBinary.is_open())
 		{
 			std::cout << "--------------------FBX Importer lib file-------------------------------" << std::endl;
-			FBXImporter::displayMeshName();
-			FBXImporter::displayVertices();
-			std::cout << std::endl;
-			std::cout << "GeometryCount: " << infileBinary.gcount() << std::endl;
+			//FBXImporter::displayMeshName();
+			//FBXImporter::displayVertices();
+			//std::cout << std::endl;
+			//std::cout << "GeometryCount: " << infileBinary.gcount() << std::endl;
 
 			displayMainHeader(infileBinary, fileData);
 			displayMeshHeader(infileBinary, fileData);

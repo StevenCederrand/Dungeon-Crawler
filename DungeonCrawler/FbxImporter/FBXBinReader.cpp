@@ -27,6 +27,8 @@ void FBXBinReader::binaryMeshReading()
 	FBXParserData* fileData = new FBXParserData;
 
 	//Go into the lib files namespace FBXImporter and send in the string to read and the FBXParserData to retrieve
+
+	//loads the file with info to be read out here
 	FBXImporter::readAndWriteBinaryData(pathtoMesh, fileData);
 
 	std::cout << "-----------------------------FBX Bin Reader-----------------------------" << std::endl;
