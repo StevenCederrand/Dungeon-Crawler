@@ -173,6 +173,7 @@ void Application::initShaders() {
 	shader = ShaderMap::createShader("EffectsShader", "EffectsShader.vs", "EffectsShader.fs");
 	shader = ShaderMap::createShader("UIShader", "UI.vs", "UI.fs");
 	shader = ShaderMap::createShader("MapShader", "Map.vs", "Map.fs");
+	shader = ShaderMap::createShader("ScreenBloodShader", "ScreenBlood.vs", "ScreenBlood.fs");
 }
 
 

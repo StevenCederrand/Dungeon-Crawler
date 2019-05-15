@@ -7,12 +7,17 @@
 #define MESH_VECTOR_RESERVE_SIZE 150
 
 
-Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects, ProjectileManager* projectileManager, PlayerHealthBar* playerHealthBar, Map* map)
-
+Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects, 
+	ProjectileManager* projectileManager, PlayerHealthBar* playerHealthBar, 
+	Map* map, ScreenBlood* screenBlood)
 {
+	m_rQuadVAO = 0;
+	m_rQuadVBO = 0;
+
 	m_camera = camera;
 	m_lightManager = lightManager;
 	m_map = map;
+	m_screenBlood = screenBlood;
 	m_framebuffer = new Framebuffer();
 	glEnable(GL_DEPTH_TEST);
 	//Generate framebuffers & textures
@@ -93,6 +98,7 @@ void Renderer::render() {
 
 	this->renderMap();
 	this->renderProjectiles();
+	this->renderBlood();
 }
 
 void Renderer::shadowPass() {
@@ -222,6 +228,8 @@ void Renderer::renderProjectiles()
 
 void Renderer::renderHealthBar()
 {
+	
+		
 	glEnable(GL_BLEND);
 	Shader* uiShader = ShaderMap::getShader("UIShader");
 	uiShader->use();
@@ -287,10 +295,11 @@ void Renderer::renderMap()
 		//set the view and projection matrix in the shader
 		mapShader->setMat4("viewMatrix", m_camera->getViewMatrix());
 		mapShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+
+		//do it for all the rooms in the maxMin Vector
 		for (size_t i = 0; i < maxMinValues.size(); i++)
 		{
 			roomHasPlayer = 0;
-
 			if (roomWithPlayer == i)
 				roomHasPlayer = 1;
 			
@@ -315,11 +324,32 @@ void Renderer::renderMap()
 		glBindVertexArray(0);
 
 
-
-
-
 		mapShader->unuse();
 	}
+}
+
+void Renderer::renderBlood()
+{
+	glEnable(GL_BLEND);
+	Shader* ScreenBloodShader = ShaderMap::getShader("ScreenBloodShader");
+	ScreenBloodShader->use();
+	
+	ScreenBloodShader->setFloat("alpha", m_screenBlood->getAlpha());
+	glBindVertexArray(m_screenBlood->getVAO());
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_screenBlood->getTextureID());
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glBindTexture(GL_TEXTURE_2D, NULL);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glBindVertexArray(0);
+
+	ScreenBloodShader->unuse();
+	glDisable(GL_BLEND);
 }
 
 void Renderer::bindMesh(Mesh * mesh, Shader* shader)
