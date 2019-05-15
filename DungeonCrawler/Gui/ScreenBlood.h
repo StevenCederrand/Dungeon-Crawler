@@ -27,9 +27,9 @@ private:
 	glm::mat4 m_modelMatrix;
 
 	Player* m_player;
-	float m_oldHealth;
+	float m_savedHealth;
 	bool m_takenDamage;
-	float m_alpha;
+	float m_alphaValue;
 };
 
 

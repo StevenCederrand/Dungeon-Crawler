@@ -6,11 +6,11 @@ ScreenBlood::ScreenBlood(GLinit* glInit, Player* player)
 	m_vao = 0;
 	m_vbo = 0;
 
-	m_alpha = 0;
+	m_alphaValue = 0;
 	m_player = player;
 	m_modelMatrix = glm::mat4(1.0f);
 	m_texturID = glInit->createTexture("HPBar_5.png", true, true);
-	m_oldHealth = m_player->getHealth();
+	m_savedHealth = m_player->getHealth();
 	m_takenDamage = false;
 	GLfloat data[20] =
 	{
@@ -20,7 +20,6 @@ ScreenBlood::ScreenBlood(GLinit* glInit, Player* player)
 		 -1.0,  1.0, 0.0f, 0.0f, 0.0f,
 		  1.0,  1.0, 0.0f, 1.0f, 0.0f
 	};
-
 	setupBuffers(data);
 }
 
@@ -35,17 +34,17 @@ void ScreenBlood::update(float dt)
 {
 	m_takenDamage = false;
 	float newHealth = m_player->getHealth();
-	if (newHealth < m_oldHealth)
+	if (newHealth < m_savedHealth)
 	{
 		m_takenDamage = true;
-		m_alpha = 1;
+		m_alphaValue = 1;
 	}
-	if (m_alpha >= 0)
+	if (m_alphaValue >= 0)
 	{
-		m_alpha -= 2.5 * dt;
+		m_alphaValue -= 2.5 * dt;
 	}
 	
-	m_oldHealth = newHealth;
+	m_savedHealth = newHealth;
 	m_modelMatrix = glm::mat4(1.0f);
 }
 
@@ -71,7 +70,7 @@ const bool& ScreenBlood::shouldRender() const
 
 const float& ScreenBlood::getAlpha() const
 {
-	return m_alpha;
+	return m_alphaValue;
 }
 
 void ScreenBlood::setupBuffers(GLfloat data[])
