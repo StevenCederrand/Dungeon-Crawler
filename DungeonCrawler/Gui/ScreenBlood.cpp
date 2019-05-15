@@ -47,7 +47,6 @@ void ScreenBlood::update(float dt)
 	
 	m_oldHealth = newHealth;
 	m_modelMatrix = glm::mat4(1.0f);
-	
 }
 
 const glm::mat4& ScreenBlood::getModelMatrix() const

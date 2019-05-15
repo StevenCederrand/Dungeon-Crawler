@@ -6,6 +6,7 @@ Shader::Shader(std::string vertex, std::string fragment)
 {
 	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+
 	GLint compileResult;
 	char buffer[1024];
 	shaderSetup(vertex, vertexShader);

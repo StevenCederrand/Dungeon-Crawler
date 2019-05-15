@@ -11,6 +11,9 @@ Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects,
 	ProjectileManager* projectileManager, PlayerHealthBar* playerHealthBar, 
 	Map* map, ScreenBlood* screenBlood)
 {
+	m_rQuadVAO = 0;
+	m_rQuadVBO = 0;
+
 	m_camera = camera;
 	m_lightManager = lightManager;
 	m_map = map;
