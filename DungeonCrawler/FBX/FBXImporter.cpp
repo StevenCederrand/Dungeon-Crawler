@@ -303,31 +303,40 @@ namespace FBXImporter {
 
 	void displayMaterialHeader(std::ifstream& infileBinary, FBXParserData* fileData)
 	{
-		std::vector<char> lnameOfAlbedoMap;
-		std::vector<char> lnameOfNormalMap;
+		std::string lnameOfAlbedoMapSTRING;
+		std::vector<char> lnameOfAlbedoMapCHARS;
+		std::string lnameOfNormalMapSTRING;
+		std::vector<char> lnameOfNormalMapCHARS;
 		for (int i = 0; i < 100; i++)
 		{
-			lnameOfAlbedoMap.push_back(binaryToChar(infileBinary)); //Reads file
+			char currentChar = binaryToChar(infileBinary);
+			lnameOfAlbedoMapCHARS.push_back(currentChar); //Reads file
+			lnameOfAlbedoMapSTRING += currentChar;
 		}
 		std::cout << "Name of Albedo: ";
-		for (int i = 0; i < 100; i++)
-		{
-			std::cout << lnameOfAlbedoMap[i];
-		}
-		std::cout << "\n";
-		setNameOfAlbedo(fileData, lnameOfAlbedoMap);
+		fileData->addAlbedoMapName(lnameOfAlbedoMapSTRING);
 
 		for (int i = 0; i < 100; i++)
 		{
-			lnameOfNormalMap.push_back(binaryToChar(infileBinary)); //Reads file
+			std::cout << lnameOfAlbedoMapCHARS[i];
+		}
+		std::cout << "\n";
+		setNameOfAlbedo(fileData, lnameOfAlbedoMapCHARS);
+
+
+		for (int i = 0; i < 100; i++)
+		{
+			char currentChar = binaryToChar(infileBinary);
+			lnameOfNormalMapCHARS.push_back(currentChar); //Reads file
+			lnameOfNormalMapSTRING += currentChar;
 		}
 		std::cout << "Name of Normal: ";
 		for (int i = 0; i < 100; i++)
 		{
-			std::cout << lnameOfNormalMap[i];
+			std::cout << lnameOfNormalMapCHARS[i];
 		}
 		std::cout << "\n";
-		setNameOfNormal(fileData, lnameOfNormalMap);
+		setNameOfNormal(fileData, lnameOfNormalMapCHARS);
 
 
 		int materialID = (int)binaryToInt(infileBinary);

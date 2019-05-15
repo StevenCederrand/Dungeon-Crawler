@@ -1,6 +1,7 @@
 #pragma once
 #include "Headerstruct.h"
 #include <vector>
+#include <string>
 #include <GL/glew.h> //maybe not needed?
 #include <GLM/glm.hpp>
 
@@ -10,6 +11,7 @@ private:
 	//headers, maybe needed? maybe remove
 	MainHeader m_mainHeader;
 	MeshHeader m_meshHeader;
+	Material m_materialHeader;
 	BoundingBoxHeader m_boundingBoxHeader;
 	Vertex m_vertexHeader;
 	BoundingBoxVertex m_boundingBoxVertexHeader;
@@ -18,6 +20,10 @@ private:
 	std::vector<glm::vec3> m_verticePos;
 	std::vector<glm::vec2> m_uvs;
 	std::vector<glm::vec3> m_normals;
+
+	//textures
+	std::vector<std::string> m_albedoMapName;
+	std::vector<std::string> m_normalMapName;
 
 public:
 	FBXParserData(int vectorStartValue);
@@ -72,12 +78,23 @@ public:
 	//BoundingBoxVertex
 	void setBBVHeaderPositionOfBoundingBox(float position[]);
 
-	//add vertice data
+
+
+	//ADD FUNCTIONS
 	void addVertexPos(glm::vec3 vertexPos);
 	void addUV(glm::vec2 uv);
 	void addNormal(glm::vec3 normal);
-	//get vertice data
+
+	void addAlbedoMapName(std::string albedoMapName);
+	void addNormalMapName(std::string normalMapName);
+
+	//GET FUNCTIONS
 	std::vector<glm::vec3> getVertexPos()const;
 	std::vector<glm::vec2> getUVs()const;
 	std::vector<glm::vec3> getNormals()const;
+
+	std::vector<std::string> getAlbedoMapName()const;
+	std::vector<std::string> getNormalMapName()const;
 };
+
+//SUPPORT AI NODES?

@@ -124,7 +124,7 @@ void FBXParserData::setMaterialHeaderNameOfAlbedo(std::vector<char> nameOfAlbedo
 {
 	for (int i = 0; i < 100; i++)
 	{
-		m_meshHeader.nameOfMesh[i] = nameOfAlbedo[i];
+		m_materialHeader.nameOfAlbedo[i] = nameOfAlbedo[i];
 	}
 }
 
@@ -132,7 +132,7 @@ void FBXParserData::setMaterialHeaderNameOfNormal(std::vector<char> nameOfNormal
 {
 	for (int i = 0; i < 100; i++)
 	{
-		m_meshHeader.nameOfMesh[i] = nameOfNormal[i];
+		m_materialHeader.nameOfNormal[i] = nameOfNormal[i];
 	}
 }
 
@@ -173,7 +173,7 @@ BoundingBoxVertex FBXParserData::getBoundingBoxVertexHeader() const
 	return BoundingBoxVertex();
 }
 
-//add vertice data
+//ADD FUNCTIONS
 void FBXParserData::addVertexPos(glm::vec3 vertexPos)
 {
 	m_verticePos.emplace_back(vertexPos);
@@ -189,7 +189,17 @@ void FBXParserData::addNormal(glm::vec3 normal)
 	m_normals.emplace_back(normal);
 }
 
-//get vertice data
+void FBXParserData::addAlbedoMapName(std::string albedoMapName)
+{
+	m_albedoMapName.emplace_back(albedoMapName);
+}
+
+void FBXParserData::addNormalMapName(std::string normalMapName)
+{
+	m_normalMapName.emplace_back(normalMapName);
+}
+
+//GET FUNCTIONS
 std::vector<glm::vec3> FBXParserData::getVertexPos()const
 {
 	return m_verticePos;
@@ -203,4 +213,14 @@ std::vector<glm::vec2> FBXParserData::getUVs()const
 std::vector<glm::vec3> FBXParserData::getNormals()const
 {
 	return m_normals;
+}
+
+std::vector<std::string> FBXParserData::getAlbedoMapName()const
+{
+	return m_albedoMapName;
+}
+
+std::vector<std::string> FBXParserData::getNormalMapName()const
+{
+	return m_normalMapName;
 }
