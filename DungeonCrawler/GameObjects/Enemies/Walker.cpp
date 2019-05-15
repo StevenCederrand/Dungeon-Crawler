@@ -7,6 +7,8 @@
 #include <chrono>
 #include <Utility/Randomizer.h>
 
+
+
 Walker::Walker(Mesh * mesh, Type type, Room* room, const glm::vec3& position, Effects* effects):
 	GameObject(mesh, type)
 {
@@ -19,11 +21,8 @@ Walker::Walker(Mesh * mesh, Type type, Room* room, const glm::vec3& position, Ef
 	this->m_isPlayerClose = false;
 	this->m_type = type;
 	this->m_amIAlive = true;
-	this->m_floatDirection = true;
-	this->m_floatMax = 6.f;
-	this->m_floatMin = 2.f;
-	this->m_time = 100.f;
-	this->m_percentage = 0.1f;
+	this->m_sinTime = Randomizer::single(0.f, 360.f);
+	this->m_sinAddTime = 150.f;
 	setPosition(position);
 	m_Astar = new AStar();
 	m_attackCooldown = 0.f;
@@ -51,14 +50,11 @@ void Walker::update(float dt)
 	}
 	amIDead();
 	attackCooldown(dt);
+	floatingAnim(dt);
 }
 
 bool Walker::meleeRange(float dt)
 {
-	//if (getDistanceToPlayer() <= 2.5f)
-	//{
-	//	//floatingAttack(dt);
-	//}
 	if ((getDistanceToPlayer() <= 2.5f) && (m_attackCooldown <= 0.f))
 	{
 		m_attackCooldown = 2.f;
@@ -114,32 +110,29 @@ void Walker::attackCooldown(float dt)
 	}
 }
 
-void Walker::floatingAttack(float dt)
-{
-	// = tweeny::from().to().during();
+void Walker::floatingAnim(float dt)
+{	
+	float sinCurve = sin(m_sinTime *M_PI / 180);
+	m_sinTime += (m_sinAddTime * dt);
 
-
-
-
-
-	/*if ((getPosition().y >= m_floatMax - 0.01) && (m_floatDirection == true))
-	{
-		m_floatDirection = false;
-	}
-	if ((getPosition().y <= m_floatMin + 0.01) && (m_floatDirection == false))
-	{
-		m_floatDirection = true;
-	}
-	if (m_floatDirection)
-	{
-		setPosition(glm::vec3(getPosition().x, lerp(getPosition().y, m_floatMax, m_percentage), getPosition().z));
-	}
-	else
-	{
-		setPosition(glm::vec3(getPosition().x, lerp(getPosition().y, m_floatMin, m_percentage), getPosition().z));
-	}
-*/
-
+	setPosition(glm::vec3(getPosition().x, sinCurve, getPosition().z));
+	
+	//if ((getPosition().y >= m_floatMax - 0.01) && (m_floatDirection == true))
+	//{
+	//	m_floatDirection = false;
+	//}
+	//if ((getPosition().y <= m_floatMin + 0.01) && (m_floatDirection == false))
+	//{
+	//	m_floatDirection = true;
+	//}
+	//if (m_floatDirection)
+	//{
+	//	setPosition(glm::vec3(getPosition().x, lerp(getPosition().y, m_floatMax, m_percentage), getPosition().z));
+	//}
+	//else
+	//{
+	//	setPosition(glm::vec3(getPosition().x, lerp(getPosition().y, m_floatMin, m_percentage), getPosition().z));
+	//}
 }
 
 void Walker::calculatePath(float dt)
