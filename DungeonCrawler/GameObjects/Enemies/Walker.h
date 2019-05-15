@@ -3,6 +3,8 @@
 #include <GameObjects/Room.h>
 #include <AI/AStar.h>
 #include <Graphics/Effects.h>
+#include "../../Vendor/tweeny/tweeny.h"
+
 
 class Walker : public GameObject {
 public:
@@ -34,6 +36,9 @@ private:
 	bool m_floatDirection;
 	float m_floatMax;
 	float m_floatMin;
+
+	float m_time;
+
 	float m_percentage;
 
 	float m_AStarTimer;

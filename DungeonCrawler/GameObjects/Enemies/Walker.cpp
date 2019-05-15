@@ -20,8 +20,9 @@ Walker::Walker(Mesh * mesh, Type type, Room* room, const glm::vec3& position, Ef
 	this->m_type = type;
 	this->m_amIAlive = true;
 	this->m_floatDirection = true;
-	this->m_floatMax = 0.5f;
-	this->m_floatMin = -0.5f;
+	this->m_floatMax = 6.f;
+	this->m_floatMin = 2.f;
+	this->m_time = 100.f;
 	this->m_percentage = 0.1f;
 	setPosition(position);
 	m_Astar = new AStar();
@@ -54,10 +55,10 @@ void Walker::update(float dt)
 
 bool Walker::meleeRange(float dt)
 {
-	if (getDistanceToPlayer() <= 2.5f)
-	{
-		floatingAttack(dt);
-	}
+	//if (getDistanceToPlayer() <= 2.5f)
+	//{
+	//	//floatingAttack(dt);
+	//}
 	if ((getDistanceToPlayer() <= 2.5f) && (m_attackCooldown <= 0.f))
 	{
 		m_attackCooldown = 2.f;
@@ -115,7 +116,13 @@ void Walker::attackCooldown(float dt)
 
 void Walker::floatingAttack(float dt)
 {
-	if ((getPosition().y >= m_floatMax - 0.01) && (m_floatDirection == true))
+	// = tweeny::from().to().during();
+
+
+
+
+
+	/*if ((getPosition().y >= m_floatMax - 0.01) && (m_floatDirection == true))
 	{
 		m_floatDirection = false;
 	}
@@ -131,25 +138,8 @@ void Walker::floatingAttack(float dt)
 	{
 		setPosition(glm::vec3(getPosition().x, lerp(getPosition().y, m_floatMin, m_percentage), getPosition().z));
 	}
-
-	
-	/*if ((getPosition().y >= 1.0f) && (m_floatDirection == true))
-	{
-		setPosition(glm::vec3(getPosition().x, lerp(getPosition().y, m_floatMax, m_percentage), getPosition().z));
-	}
-	if ((getPosition().y < 1.0f) && (m_floatDirection == true))
-	{
-		setPosition(glm::vec3(getPosition().x, lerp(getPosition().y, m_floatMax, m_percentage), getPosition().z));
-	}
-	if ((getPosition().y >= 1.0f) && (m_floatDirection == false))
-	{
-		setPosition(glm::vec3(getPosition().x, lerp(getPosition().y, m_floatMax, m_percentage), getPosition().z));
-	}
-	if ((getPosition().y < 1.0f) && (m_floatDirection == false))
-	{
-		setPosition(glm::vec3(getPosition().x, lerp(getPosition().y, m_floatMax, m_percentage), getPosition().z));
-	}
 */
+
 }
 
 void Walker::calculatePath(float dt)
