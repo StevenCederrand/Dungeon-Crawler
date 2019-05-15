@@ -9,9 +9,8 @@ ScreenBlood::ScreenBlood(GLinit* glInit, Player* player)
 	m_alphaValue = 0;
 	m_player = player;
 	m_modelMatrix = glm::mat4(1.0f);
-	m_texturID = glInit->createTexture("HPBar_5.png", true, true);
+	m_texturID = glInit->createTexture("DamageOverlay.png", true, true);
 	m_savedHealth = m_player->getHealth();
-	m_takenDamage = false;
 	GLfloat data[20] =
 	{
 		// Pos				// Uv
@@ -32,16 +31,14 @@ ScreenBlood::~ScreenBlood()
 
 void ScreenBlood::update(float dt)
 {
-	m_takenDamage = false;
 	float newHealth = m_player->getHealth();
 	if (newHealth < m_savedHealth)
 	{
-		m_takenDamage = true;
 		m_alphaValue = 1;
 	}
-	if (m_alphaValue >= 0)
+	if (m_alphaValue >= 0 && newHealth> 2)
 	{
-		m_alphaValue -= 2.5 * dt;
+		m_alphaValue -= 2.2 * dt;
 	}
 	
 	m_savedHealth = newHealth;
@@ -61,11 +58,6 @@ const GLuint& ScreenBlood::getVAO() const
 const GLuint& ScreenBlood::getTextureID() const
 {
 	return m_texturID;
-}
-
-const bool& ScreenBlood::shouldRender() const
-{
-	return m_takenDamage;
 }
 
 const float& ScreenBlood::getAlpha() const
