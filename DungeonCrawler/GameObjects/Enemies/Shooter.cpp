@@ -4,6 +4,7 @@
 #include <list>
 #include <System/Log.h>
 #include <Utility/Randomizer.h>
+#define M_PI 3.14159265358979323846
 
 Shooter::Shooter(Mesh* mesh, Type type, Room* room, const glm::vec3& position, ProjectileManager* projectileManager, Effects* effects) :
 	GameObject(mesh, type)

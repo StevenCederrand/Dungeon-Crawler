@@ -6,8 +6,7 @@
 #include <iostream>
 #include <chrono>
 #include <Utility/Randomizer.h>
-
-
+#define M_PI 3.14159265358979323846
 
 Walker::Walker(Mesh * mesh, Type type, Room* room, const glm::vec3& position, Effects* effects):
 	GameObject(mesh, type)
@@ -112,7 +111,7 @@ void Walker::attackCooldown(float dt)
 
 void Walker::floatingAnim(float dt)
 {	
-	float sinCurve = sin(m_sinTime *M_PI / 180);
+	float sinCurve = sin(m_sinTime * M_PI/ 180);
 	m_sinTime += (m_sinAddTime * dt);
 
 	setPosition(glm::vec3(getPosition().x, sinCurve, getPosition().z));

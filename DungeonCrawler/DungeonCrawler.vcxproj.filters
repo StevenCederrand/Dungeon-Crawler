@@ -172,19 +172,5 @@
     <ClInclude Include="Graphics\Map.h" />
     <ClInclude Include="Gui\PlayerHealthBar.h" />
     <ClInclude Include="Vendor\Lodepng\lodepng.h" />
-    <ClInclude Include="Vendor\tweeny\dispatcher.h" />
-    <ClInclude Include="Vendor\tweeny\easing.h" />
-    <ClInclude Include="Vendor\tweeny\easingresolve.h" />
-    <ClInclude Include="Vendor\tweeny\int2type.h" />
-    <ClInclude Include="Vendor\tweeny\tween.h" />
-    <ClInclude Include="Vendor\tweeny\tweenpoint.h" />
-    <ClInclude Include="Vendor\tweeny\tweentraits.h" />
-    <ClInclude Include="Vendor\tweeny\tweeny.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Vendor\tweeny\tweenpoint.tcc" />
-    <None Include="Vendor\tweeny\tweenone.tcc" />
-    <None Include="Vendor\tweeny\tween.tcc" />
-    <None Include="Vendor\tweeny\tweeny.tcc" />
   </ItemGroup>
 </Project>

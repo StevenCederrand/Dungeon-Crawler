@@ -3,8 +3,6 @@
 #include <GameObjects/Room.h>
 #include <AI/AStar.h>
 #include <Graphics/Effects.h>
-#include "../../Vendor/tweeny/tweeny.h"
-
 
 class Walker : public GameObject {
 public:
