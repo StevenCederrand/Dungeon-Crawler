@@ -3,6 +3,9 @@
 
 ScreenBlood::ScreenBlood(GLinit* glInit, Player* player)
 {
+	m_vao = 0;
+	m_vbo = 0;
+
 	m_alpha = 0;
 	m_player = player;
 	m_modelMatrix = glm::mat4(1.0f);
@@ -19,7 +22,6 @@ ScreenBlood::ScreenBlood(GLinit* glInit, Player* player)
 	};
 
 	setupBuffers(data);
-
 }
 
 ScreenBlood::~ScreenBlood()
@@ -44,12 +46,8 @@ void ScreenBlood::update(float dt)
 	}
 	
 	m_oldHealth = newHealth;
-
-
 	m_modelMatrix = glm::mat4(1.0f);
 	
-
-
 }
 
 const glm::mat4& ScreenBlood::getModelMatrix() const
