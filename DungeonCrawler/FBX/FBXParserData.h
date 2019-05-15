@@ -1,5 +1,6 @@
 #pragma once
 #include "Headerstruct.h"
+#include <vector>
 
 class FBXParserData {
 public:
@@ -32,6 +33,7 @@ public:
 	//MeshHeader
 	void setMeshHeaderNameOfMesh(std::vector<char> nameOfMeshVector);
 	void setMeshHeaderVertexCountOfMesh(unsigned int vertexCount);
+	void setMeshHeaderMaterialID(int materialID);
 	void setMeshHeaderCollisionOfMesh(bool collision);
 	void setMeshHeaderStaticMesh(bool staticMesh);
 

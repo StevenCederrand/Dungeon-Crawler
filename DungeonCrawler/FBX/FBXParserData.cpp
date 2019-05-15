@@ -44,12 +44,22 @@ void FBXParserData::setMainHeaderMaterialCount(unsigned int nrOfMaterials)
 
 void FBXParserData::setMeshHeaderNameOfMesh(std::vector<char> nameOfMeshVector)
 {
-	//this->m_meshHeader.nameOfMesh = nameOfMesh;
+	for (int i = 0; i < 100; i++)
+	{
+		m_meshHeader.nameOfMesh[i] = nameOfMeshVector[i];
+	}
+	
+	//nameOfMeshVector
 }
 
 void FBXParserData::setMeshHeaderVertexCountOfMesh(unsigned int vertexCount)
 {
 	this->m_meshHeader.vertexCount = vertexCount;
+}
+
+void FBXParserData::setMeshHeaderMaterialID(int materialID)
+{
+	m_meshHeader.materialID = materialID;
 }
 
 void FBXParserData::setMeshHeaderCollisionOfMesh(bool collision)

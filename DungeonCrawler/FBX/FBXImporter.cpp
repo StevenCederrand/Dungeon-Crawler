@@ -41,8 +41,8 @@ namespace FBXImporter {
 
 			displayMainHeader(infileBinary, fileData);
 			displayMeshHeader(infileBinary, fileData);
-			displayBoundingBoxHeader(infileBinary, fileData);
-			displayVertexHeader(infileBinary, fileData);
+			//displayBoundingBoxHeader(infileBinary, fileData);
+			displayVertexHeader(infileBinary, fileData); CONTINUE HERE bitchos
 			displayBoundingBoxVertexHeader(infileBinary, fileData);
 
 			//for (int i = 0; i < m_staticMeshCount; i++)
@@ -185,11 +185,22 @@ namespace FBXImporter {
 		{
 			lnameOfMesh.push_back(binaryToChar(infileBinary));
 		}
-		setNameOfMesh()
+
+		std::cout << "Name of mesh: ";
+		for (int i = 0; i < 100; i++)
+		{
+			std::cout << lnameOfMesh[i];
+		}
+		std::cout << "\n";
+		setNameOfMesh(fileData, lnameOfMesh);
 
 		unsigned int vertexCount = (unsigned int)binaryToInt(infileBinary);
 		std::cout << "VertexCount: " << vertexCount << " " << std::endl;
 		setVertexCountOfMesh(fileData, vertexCount);
+
+		int materialID = (int)binaryToInt(infileBinary);
+		std::cout << "Material ID: " << materialID << " " << std::endl;
+		setMaterialID(fileData, materialID);
 
 		bool collision = binaryToBool(infileBinary);
 		std::cout << "Collision: "<< collision << " " << std::endl;
@@ -366,6 +377,11 @@ namespace FBXImporter {
 	void setVertexCountOfMesh(FBXParserData* fileData, unsigned int vertexCount)
 	{
 		fileData->setMeshHeaderVertexCountOfMesh(vertexCount);
+	}
+
+	void setMaterialID(FBXParserData* fileData, int materialID)
+	{
+		fileData->setMeshHeaderMaterialID(materialID);
 	}
 
 	void setCollisionOfMesh(FBXParserData* fileData, bool collision)

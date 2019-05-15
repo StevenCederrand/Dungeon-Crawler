@@ -39,6 +39,7 @@ namespace FBXImporter {
 	//MeshHeader
 	void setNameOfMesh(FBXParserData* fileData, std::vector<char> nameOfMeshVector);
 	void setVertexCountOfMesh(FBXParserData* fileData, unsigned int vertexCount);
+	void setMaterialID(FBXParserData* fileData, int materialID);
 	void setCollisionOfMesh(FBXParserData* fileData, bool collision);
 	void setStaticMesh(FBXParserData* fileData, bool staticMesh);
 
