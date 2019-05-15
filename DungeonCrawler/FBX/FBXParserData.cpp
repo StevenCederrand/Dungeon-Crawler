@@ -1,5 +1,17 @@
 #include "FBXParserData.h"
 
+FBXParserData::FBXParserData(int vectorStartValue)
+{
+	m_verticePos.reserve(vectorStartValue);
+	m_uvs.reserve(vectorStartValue);
+	m_normals.reserve(vectorStartValue);
+}
+
+FBXParserData::~FBXParserData()
+{
+
+}
+
 void FBXParserData::setMainHeader(MainHeader mainHeader)
 {
 	this->m_mainHeader = mainHeader;
@@ -159,4 +171,36 @@ Vertex FBXParserData::getVertexHeader() const
 BoundingBoxVertex FBXParserData::getBoundingBoxVertexHeader() const
 {
 	return BoundingBoxVertex();
+}
+
+//add vertice data
+void FBXParserData::addVertexPos(glm::vec3 vertexPos)
+{
+	m_verticePos.emplace_back(vertexPos);
+}
+
+void FBXParserData::addUV(glm::vec2 uv)
+{
+	m_uvs.emplace_back(uv);
+}
+
+void FBXParserData::addNormal(glm::vec3 normal)
+{
+	m_normals.emplace_back(normal);
+}
+
+//get vertice data
+std::vector<glm::vec3> FBXParserData::getVertexPos()const
+{
+	return m_verticePos;
+}
+
+std::vector<glm::vec2> FBXParserData::getUVs()const
+{
+	return m_uvs;
+}
+
+std::vector<glm::vec3> FBXParserData::getNormals()const
+{
+	return m_normals;
 }

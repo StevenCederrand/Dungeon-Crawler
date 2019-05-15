@@ -1,6 +1,8 @@
 #pragma once
 #include "Headerstruct.h"
 #include <vector>
+#include <GL/glew.h> //maybe not needed?
+#include <GLM/glm.hpp>
 
 class FBXParserData 
 {
@@ -12,12 +14,14 @@ private:
 	Vertex m_vertexHeader;
 	BoundingBoxVertex m_boundingBoxVertexHeader;
 
-	//data
-	//std::vector<glm::vec3> m_vertices;
-	//std::vector<glm::vec2> m_uvs;
-	//std::vector<glm::vec3> m_normals;
+	//vertice data
+	std::vector<glm::vec3> m_verticePos;
+	std::vector<glm::vec2> m_uvs;
+	std::vector<glm::vec3> m_normals;
 
 public:
+	FBXParserData(int vectorStartValue);
+	~FBXParserData();
 	void setMainHeader(MainHeader mainHeader);
 	void setMeshHeader(MeshHeader meshHeader);
 	void setVertexHeader(Vertex vertexHeader);
@@ -67,5 +71,13 @@ public:
 
 	//BoundingBoxVertex
 	void setBBVHeaderPositionOfBoundingBox(float position[]);
-	//--------------------------------------------------------------------
+
+	//add vertice data
+	void addVertexPos(glm::vec3 vertexPos);
+	void addUV(glm::vec2 uv);
+	void addNormal(glm::vec3 normal);
+	//get vertice data
+	std::vector<glm::vec3> getVertexPos()const;
+	std::vector<glm::vec2> getUVs()const;
+	std::vector<glm::vec3> getNormals()const;
 };

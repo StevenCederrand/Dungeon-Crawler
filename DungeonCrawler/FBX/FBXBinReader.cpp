@@ -2,7 +2,8 @@
 #include "FBXBinReader.h"
 
 
-//HAS MAIN, SHOULDNT BE THIS WAY!!, where to call?
+//HAS MAIN, SHOULDNT BE THIS WAY!!
+//Has Parser data, here I add vertices?
 
 int main()
 {
@@ -24,12 +25,26 @@ void FBXBinReader::binaryMeshReading()
 	std::string pathtoMesh = "ourFileBinary.bin";
 	
 	//Allocate memory for the FBXParserData class and assign it to a pointer type
-	FBXParserData* fileData = new FBXParserData;
+	FBXParserData* fileData = new FBXParserData(100);
 
 	//Go into the lib files namespace FBXImporter and send in the string to read and the FBXParserData to retrieve
 
 	//loads the file with info to be read out here
 	FBXImporter::readAndWriteBinaryData(pathtoMesh, fileData);
+
+	//all vertice data from regular mesh
+	std::vector<glm::vec3> pos = fileData->getVertexPos();
+	std::vector<glm::vec2> UV = fileData->getUVs();
+	std::vector<glm::vec3> normal = fileData->getNormals();
+	std::cout << "Vertice Pos saved in FBXParserData: \n";
+	for (int i = 0; i < fileData->getMeshHeader().vertexCount; i++)
+	{
+		std::cout << "Position: " << pos[i].x << " " << pos[i].y << " " << pos[i].z << "\n";
+		std::cout << "UV : " << UV[i].x << " " << UV[i].y << "\n";
+		std::cout << "Normals: " << normal[i].x << " " << normal[i].y << " " << normal[i].z << "\n";
+		std::cout << "\n";
+	}
+
 
 	std::cout << "-----------------------------FBX Bin Reader-----------------------------" << std::endl;
 	std::cout << "Version: " << fileData->getMainHeader().version << std::endl;
@@ -51,7 +66,6 @@ void FBXBinReader::binaryMeshReading()
 
 	std::cout << "Bounding box position: " << fileData->getBoundingBoxVertexHeader().position << std::endl;
 
-	std::cin.get();
 	//std::cout << binaryFileData << std::endl;
 	
 }

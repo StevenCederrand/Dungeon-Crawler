@@ -84,7 +84,7 @@ namespace FBXImporter {
 
 			//----------------------------------------------
 
-			std::cin.get(); //for pausing?
+			//std::cin.get(); //for pausing?
 
 
 			//-----------------------------------------------
@@ -140,7 +140,7 @@ namespace FBXImporter {
 
 
 			infileBinary.close();
-			std::cin.get();
+			//std::cin.get();
 		}
 
 	}
@@ -267,11 +267,22 @@ namespace FBXImporter {
 			float positionZ = binaryToFloat(infileBinary);
 			std::cout << positionZ << "\n";
 
+			glm::vec3 vertexPos;
+			vertexPos.x = positionX;
+			vertexPos.y = positionY;
+			vertexPos.z = positionZ;
+			fileData->addVertexPos(vertexPos);
+
 			float positionU = binaryToFloat(infileBinary);
 			std::cout << "UV: " << positionU << " ";
 
 			float positionV = binaryToFloat(infileBinary);
 			std::cout << positionV << "\n";
+
+			glm::vec2 vertexUV;
+			vertexUV.x = positionU;
+			vertexUV.y = positionV;
+			fileData->addUV(vertexUV);
 
 			float positionNX = binaryToFloat(infileBinary);
 			std::cout << "normal: " << positionNX << " ";
@@ -281,6 +292,12 @@ namespace FBXImporter {
 
 			float positionNZ = binaryToFloat(infileBinary);
 			std::cout << positionNZ << "\n";
+
+			glm::vec3 vertexNormal;
+			vertexNormal.x = positionNX;
+			vertexNormal.y = positionNY;
+			vertexNormal.z = positionNZ;
+			fileData->addNormal(vertexNormal);
 		}
 	}
 
