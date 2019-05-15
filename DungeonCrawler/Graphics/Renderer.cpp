@@ -7,12 +7,14 @@
 #define MESH_VECTOR_RESERVE_SIZE 150
 
 
-Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects, ProjectileManager* projectileManager, PlayerHealthBar* playerHealthBar, Map* map)
-
+Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects, 
+	ProjectileManager* projectileManager, PlayerHealthBar* playerHealthBar, 
+	Map* map, ScreenBlood* screenBlood)
 {
 	m_camera = camera;
 	m_lightManager = lightManager;
 	m_map = map;
+	m_screenBlood = screenBlood;
 	m_framebuffer = new Framebuffer();
 	glEnable(GL_DEPTH_TEST);
 	//Generate framebuffers & textures
@@ -223,6 +225,8 @@ void Renderer::renderProjectiles()
 
 void Renderer::renderHealthBar()
 {
+	
+		
 	glEnable(GL_BLEND);
 	Shader* uiShader = ShaderMap::getShader("UIShader");
 	uiShader->use();
@@ -326,18 +330,32 @@ void Renderer::renderMap()
 
 void Renderer::renderBlood()
 {
+	//if (m_screenBlood->shouldRender())
+	//{
 	glEnable(GL_BLEND);
-	Shader* uiShader = ShaderMap::getShader("UIShader");
-	uiShader->use();
-	uiShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
-	uiShader->setMat4("viewMatrix", m_camera->getViewMatrix());
+	Shader* ScreenBloodShader = ShaderMap::getShader("ScreenBloodShader");
+	ScreenBloodShader->use();
+	//uiShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+	//uiShader->setMat4("viewMatrix", m_camera->getViewMatrix());
 	//change modelmatrix to it's own later
-	uiShader->setMat4("modelMatrix", m_map->getModelMatrix());
+	//uiShader->setMat4("modelMatrix", m_screenBlood->getModelMatrix());
+	ScreenBloodShader->setFloat("alpha", m_screenBlood->getAlpha());
+	glBindVertexArray(m_screenBlood->getVAO());
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
 
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_screenBlood->getTextureID());
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glBindTexture(GL_TEXTURE_2D, NULL);
 
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glBindVertexArray(0);
 
-	uiShader->unuse();
+	ScreenBloodShader->unuse();
 	glDisable(GL_BLEND);
+	//}
 }
 
 void Renderer::bindMesh(Mesh * mesh, Shader* shader)

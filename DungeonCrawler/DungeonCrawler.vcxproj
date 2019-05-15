@@ -181,6 +181,7 @@
     <ClCompile Include="Graphics\MeshMap.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
     <ClCompile Include="Gui\PlayerHealthBar.cpp" />
+    <ClCompile Include="Gui\ScreenBlood.cpp" />
     <ClCompile Include="States\GameOverState.cpp" />
     <ClCompile Include="States\WinState.cpp" />
     <ClCompile Include="UserInterface\Button.cpp" />

@@ -10,11 +10,13 @@ public:
 	ScreenBlood(GLinit* glInit, Player* player);
 	~ScreenBlood();
 
-	void update();
+	void update(float dt);
 
 	const glm::mat4& getModelMatrix() const;
 	const GLuint& getVAO() const;
 	const GLuint& getTextureID() const;
+	const bool& shouldRender() const;
+	const float& getAlpha() const;
 private:
 	void setupBuffers(GLfloat data[]);
 private:
@@ -25,7 +27,9 @@ private:
 	glm::mat4 m_modelMatrix;
 
 	Player* m_player;
-
+	float m_oldHealth;
+	bool m_takenDamage;
+	float m_alpha;
 };
 
 

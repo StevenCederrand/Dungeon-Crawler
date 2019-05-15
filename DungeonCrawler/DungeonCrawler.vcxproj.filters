@@ -73,6 +73,7 @@
     <ClCompile Include="Graphics\Map.cpp" />
     <ClCompile Include="Gui\PlayerHealthBar.cpp" />
     <ClCompile Include="Vendor\Lodepng\lodepng.cpp" />
+    <ClCompile Include="Gui\ScreenBlood.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI\AStar.h" />

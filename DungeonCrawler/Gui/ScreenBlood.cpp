@@ -1,10 +1,14 @@
 #include "ScreenBlood.h"
+#include <GLM/gtx/transform.hpp>
 
 ScreenBlood::ScreenBlood(GLinit* glInit, Player* player)
 {
+	m_alpha = 0;
 	m_player = player;
-	m_texturID = glInit->createTexture("dead", true, true);
-
+	m_modelMatrix = glm::mat4(1.0f);
+	m_texturID = glInit->createTexture("HPBar_5.png", true, true);
+	m_oldHealth = m_player->getHealth();
+	m_takenDamage = false;
 	GLfloat data[20] =
 	{
 		// Pos				// Uv
@@ -14,7 +18,7 @@ ScreenBlood::ScreenBlood(GLinit* glInit, Player* player)
 		  1.0,  1.0, 0.0f, 1.0f, 0.0f
 	};
 
-	setupBuffers();
+	setupBuffers(data);
 
 }
 
@@ -25,8 +29,32 @@ ScreenBlood::~ScreenBlood()
 	glDeleteVertexArrays(1, &m_vao);
 }
 
-void ScreenBlood::update()
+void ScreenBlood::update(float dt)
 {
+	m_takenDamage = false;
+	float newHealth = m_player->getHealth();
+	if (newHealth < m_oldHealth)
+	{
+		m_takenDamage = true;
+		m_alpha = 1;
+	}
+	if (m_alpha >= 0)
+	{
+		m_alpha -= 2.5 * dt;
+	}
+	
+	m_oldHealth = newHealth;
+
+
+	m_modelMatrix = glm::mat4(1.0f);
+	//move the matrix to players position and then move it upp and closer to the camera
+	//m_modelMatrix = glm::translate(m_modelMatrix, m_player->getPlayerPosition());
+	//m_modelMatrix = glm::translate(m_modelMatrix, glm::vec3(0.0f, 8.0f, 2.0f));
+	//m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(3.f, 3.f, 3.f));
+	//m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(-30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+
+
 }
 
 const glm::mat4& ScreenBlood::getModelMatrix() const
@@ -42,6 +70,16 @@ const GLuint& ScreenBlood::getVAO() const
 const GLuint& ScreenBlood::getTextureID() const
 {
 	return m_texturID;
+}
+
+const bool& ScreenBlood::shouldRender() const
+{
+	return m_takenDamage;
+}
+
+const float& ScreenBlood::getAlpha() const
+{
+	return m_alpha;
 }
 
 void ScreenBlood::setupBuffers(GLfloat data[])
