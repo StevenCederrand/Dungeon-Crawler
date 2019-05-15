@@ -169,22 +169,23 @@ namespace FBXImporter {
 		setStaticMeshCount(fileData, staticMeshCount);
 
 		unsigned int boundingBoxCount = (unsigned int)binaryToInt(infileBinary);
-		std::cout << "BoundingBoxCount: " << boundingBoxCount << " " << std::endl << std::endl;
+		std::cout << "BoundingBoxCount: " << boundingBoxCount << " " << std::endl;
 		setBoundBoxCount(fileData, boundingBoxCount);
+
+		unsigned int materialCount = (unsigned int)binaryToInt(infileBinary);
+		std::cout << "MaterialCount: " << materialCount << " " << std::endl << std::endl;
+		setMaterialCount(fileData, materialCount);
 	}
 
 	//Second
 	void displayMeshHeader(std::ifstream& infileBinary, FBXParserData* fileData)
 	{
-		char version;
-
+		std::vector<char> lnameOfMesh;
 		for (int i = 0; i < 100; i++)
 		{
-			version = binaryToChar(infileBinary);
-			std::cout << version;
+			lnameOfMesh.push_back(binaryToChar(infileBinary));
 		}
-
-		std::cout << std::endl;
+		setNameOfMesh()
 
 		unsigned int vertexCount = (unsigned int)binaryToInt(infileBinary);
 		std::cout << "VertexCount: " << vertexCount << " " << std::endl;
@@ -347,13 +348,19 @@ namespace FBXImporter {
 	{
 		fileData->setMainHeaderBoundBoxCount(nrOfBoundingBoxMeshes);
 	}
+
+	void setMaterialCount(FBXParserData* fileData, unsigned int nrOfMaterials)
+	{
+		fileData->setMainHeaderMaterialCount(nrOfMaterials);
+	}
+
 	//---------------------------------------------------------------------------
 
 	//---------------------------------------------------------------------------
 	//------------------------------Mesh Header----------------------------------
-	void setNameOfMesh(FBXParserData* fileData, char nameOfMesh[])
+	void setNameOfMesh(FBXParserData* fileData, std::vector<char> nameOfMeshVector)
 	{
-		//fileData->setMeshHeaderNameOfMesh(nameOfMesh);
+		fileData->setMeshHeaderNameOfMesh(nameOfMeshVector);
 	}
 
 	void setVertexCountOfMesh(FBXParserData* fileData, unsigned int vertexCount)

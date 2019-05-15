@@ -33,9 +33,11 @@ namespace FBXImporter {
 	void setDynamicMeshCount(FBXParserData* fileData, unsigned int dynamicMeshCount);
 	void setStaticMeshCount(FBXParserData* fileData, unsigned int nrOfMeshes);
 	void setBoundBoxCount(FBXParserData* fileData, unsigned int nrOfBoundingBoxMeshes);
+	void setMaterialCount(FBXParserData* fileData, unsigned int nrOfBoundingBoxMeshes);
+
 
 	//MeshHeader
-	void setNameOfMesh(FBXParserData* fileData, char nameOfMesh[]);
+	void setNameOfMesh(FBXParserData* fileData, std::vector<char> nameOfMeshVector);
 	void setVertexCountOfMesh(FBXParserData* fileData, unsigned int vertexCount);
 	void setCollisionOfMesh(FBXParserData* fileData, bool collision);
 	void setStaticMesh(FBXParserData* fileData, bool staticMesh);

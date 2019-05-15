@@ -37,7 +37,12 @@ void FBXParserData::setMainHeaderBoundBoxCount(unsigned int nrOfBoundingBoxMeshe
 	this->m_mainHeader.boundingBoxCount = nrOfBoundingBoxMeshes;
 }
 
-void FBXParserData::setMeshHeaderNameOfMesh(char nameOfMesh[])
+void FBXParserData::setMainHeaderMaterialCount(unsigned int nrOfMaterials)
+{
+	m_mainHeader.materialCount = nrOfMaterials;
+}
+
+void FBXParserData::setMeshHeaderNameOfMesh(std::vector<char> nameOfMeshVector)
 {
 	//this->m_meshHeader.nameOfMesh = nameOfMesh;
 }

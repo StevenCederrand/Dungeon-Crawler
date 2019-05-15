@@ -1,5 +1,6 @@
 #pragma once
 #include "Headerstruct.h"
+
 class FBXParserData {
 public:
 
@@ -25,9 +26,11 @@ public:
 	void setMainHeaderDynamicMeshCount(unsigned int dynamicMeshCount);
 	void setMainHeaderStaticMeshCount(unsigned int nrOfMeshes);
 	void setMainHeaderBoundBoxCount(unsigned int nrOfBoundingBoxMeshes);
+	void setMainHeaderMaterialCount(unsigned int nrOfBoundingBoxMeshes);
+
 
 	//MeshHeader
-	void setMeshHeaderNameOfMesh(char nameOfMesh[]);
+	void setMeshHeaderNameOfMesh(std::vector<char> nameOfMeshVector);
 	void setMeshHeaderVertexCountOfMesh(unsigned int vertexCount);
 	void setMeshHeaderCollisionOfMesh(bool collision);
 	void setMeshHeaderStaticMesh(bool staticMesh);
