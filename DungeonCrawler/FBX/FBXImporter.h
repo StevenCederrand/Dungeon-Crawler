@@ -19,6 +19,7 @@ namespace FBXImporter {
 	void displayBoundingBoxHeader(std::ifstream& binaryFile, FBXParserData* fileData);
 
 	void displayVertexHeader(std::ifstream& binaryFile, FBXParserData* fileData);
+	void displayMaterialHeader(std::ifstream& binaryFile, FBXParserData* fileData);
 	void displayBoundingBoxVertexHeader(std::ifstream& binaryFile, FBXParserData* fileData);
 
 	int binaryToInt(std::ifstream& binaryFile);
@@ -39,7 +40,7 @@ namespace FBXImporter {
 	//MeshHeader
 	void setNameOfMesh(FBXParserData* fileData, std::vector<char> nameOfMeshVector);
 	void setVertexCountOfMesh(FBXParserData* fileData, unsigned int vertexCount);
-	void setMaterialID(FBXParserData* fileData, int materialID);
+	void setMaterialIDForMesh(FBXParserData* fileData, int materialID);
 	void setCollisionOfMesh(FBXParserData* fileData, bool collision);
 	void setStaticMesh(FBXParserData* fileData, bool staticMesh);
 
@@ -53,6 +54,10 @@ namespace FBXImporter {
 	void setPositionVertexOfMesh(FBXParserData* fileData, float positionVertex[]);
 	void setUVOfMesh(FBXParserData* fileData, float UV[]);
 	void setNormalOfMesh(FBXParserData* fileData, float normal[]);
+
+	//MaterialHeader
+	void setNameOfAlbedo(FBXParserData* fileData, std::vector<char> nameOfAlbedo);
+	void setNameOfNormal(FBXParserData* fileData, std::vector<char> nameOfNormal);
 
 	//BoundingBoxVertex
 	void setPositionOfBoundingBox(FBXParserData* fileData, float normal[]);

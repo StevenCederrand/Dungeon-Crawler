@@ -2,9 +2,22 @@
 #include "Headerstruct.h"
 #include <vector>
 
-class FBXParserData {
-public:
+class FBXParserData 
+{
+private:
+	//headers, maybe needed? maybe remove
+	MainHeader m_mainHeader;
+	MeshHeader m_meshHeader;
+	BoundingBoxHeader m_boundingBoxHeader;
+	Vertex m_vertexHeader;
+	BoundingBoxVertex m_boundingBoxVertexHeader;
 
+	//data
+	std::vector<glm::vec3> m_vertices;
+	std::vector<glm::vec2> m_uvs;
+	std::vector<glm::vec3> m_normals;
+
+public:
 	void setMainHeader(MainHeader mainHeader);
 	void setMeshHeader(MeshHeader meshHeader);
 	void setVertexHeader(Vertex vertexHeader);
@@ -47,19 +60,12 @@ public:
 	void setMVHeaderPositionVertexOfMesh(float positionVertex[]);
 	void setMVHeaderUVOfMesh(float UV[]);
 	void setMVHeaderNormalOfMesh(float normal[]);
+	
+	//MaterialHeader
+	void setMaterialHeaderNameOfAlbedo(std::vector<char> nameOfAlbedo);
+	void setMaterialHeaderNameOfNormal(std::vector<char> nameOfNormal);
 
 	//BoundingBoxVertex
 	void setBBVHeaderPositionOfBoundingBox(float position[]);
 	//--------------------------------------------------------------------
-
-
-
-
-private:
-	MainHeader m_mainHeader;
-	MeshHeader m_meshHeader;
-	BoundingBoxHeader m_boundingBoxMeshHeader;
-	Vertex m_vertexHeader;
-	BoundingBoxVertex m_boundingBoxVertexHeader;
-
 };

@@ -79,17 +79,17 @@ void FBXParserData::setBBHeaderNameOfBoundingBoxMesh(char nameOfBoundingBox[])
 
 void FBXParserData::setBBHeaderVertexCountOfBoundingBoxMesh(unsigned int vertexCount)
 {
-	this->m_boundingBoxMeshHeader.vertexCount = vertexCount;
+	this->m_boundingBoxHeader.vertexCount = vertexCount;
 }
 
 void FBXParserData::setBBHeaderCollisionOfBoundingBoxMesh(bool collision)
 {
-	this->m_boundingBoxMeshHeader.collision = collision;
+	this->m_boundingBoxHeader.collision = collision;
 }
 
 void FBXParserData::setBBHeaderStaticBoundingBoxMesh(bool staticBoundingBoxMesh)
 {
-	this->m_boundingBoxMeshHeader.staticMesh = staticBoundingBoxMesh;
+	this->m_boundingBoxHeader.staticMesh = staticBoundingBoxMesh;
 }
 
 void FBXParserData::setMVHeaderPositionVertexOfMesh(float positionVertex[])
@@ -107,6 +107,24 @@ void FBXParserData::setMVHeaderNormalOfMesh(float normal[])
 	//this->m_vertexHeader.normal = normal;
 }
 
+//Material
+void FBXParserData::setMaterialHeaderNameOfAlbedo(std::vector<char> nameOfAlbedo)
+{
+	for (int i = 0; i < 100; i++)
+	{
+		m_meshHeader.nameOfMesh[i] = nameOfAlbedo[i];
+	}
+}
+
+void FBXParserData::setMaterialHeaderNameOfNormal(std::vector<char> nameOfNormal)
+{
+	for (int i = 0; i < 100; i++)
+	{
+		m_meshHeader.nameOfMesh[i] = nameOfNormal[i];
+	}
+}
+
+//bouding box
 void FBXParserData::setBBVHeaderPositionOfBoundingBox(float position[])
 {
 	//this->m_boundingBoxVertexHeader.position = position;
@@ -130,7 +148,7 @@ MeshHeader FBXParserData::getMeshHeader() const
 
 BoundingBoxHeader FBXParserData::getBoundingBoxHeader() const
 {
-	return BoundingBoxHeader();
+	return m_boundingBoxHeader;
 }
 
 Vertex FBXParserData::getVertexHeader() const
