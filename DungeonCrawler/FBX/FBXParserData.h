@@ -13,9 +13,9 @@ private:
 	BoundingBoxVertex m_boundingBoxVertexHeader;
 
 	//data
-	std::vector<glm::vec3> m_vertices;
-	std::vector<glm::vec2> m_uvs;
-	std::vector<glm::vec3> m_normals;
+	//std::vector<glm::vec3> m_vertices;
+	//std::vector<glm::vec2> m_uvs;
+	//std::vector<glm::vec3> m_normals;
 
 public:
 	void setMainHeader(MainHeader mainHeader);
