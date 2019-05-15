@@ -13,6 +13,9 @@ pl_gun_shot Gunshot.wav
 #player damage taken
 pl_damage_taken DamageTaken.wav
 
+#player damage taken
+pl_ranged_damage_taken DamageTaken2.wav
+
 #Firing an empty round
 gun_click gun_click_1.wav
 

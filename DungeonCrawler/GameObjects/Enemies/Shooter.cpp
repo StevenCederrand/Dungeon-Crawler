@@ -5,6 +5,7 @@
 #include <System/Log.h>
 #include <Utility/Randomizer.h>
 #include <Audio/AudioEngine.h>
+#define M_PI 3.14159265358979323846
 
 Shooter::Shooter(Mesh* mesh, Type type, Room* room, const glm::vec3& position, ProjectileManager* projectileManager, Effects* effects) :
 	GameObject(mesh, type)
@@ -21,6 +22,8 @@ Shooter::Shooter(Mesh* mesh, Type type, Room* room, const glm::vec3& position, P
 	this->m_isPlayerClose = false;
 	this->m_type = type;
 	this->m_amIAlive = true;
+	this->m_sinTime = Randomizer::single(0.f, 360.f);
+	this->m_sinAddTime = 100.f;
 	setPosition(position);
 	m_Astar = new AStar();
 }
@@ -84,6 +87,7 @@ void Shooter::update(float dt)
 
 	
 	amIDead();
+	floatingAnim(dt);
 }
 
 void Shooter::hit(const HitDescription & desc)
@@ -185,5 +189,13 @@ float Shooter::getDistanceToPlayer() const
 	float length = sqrtf(xDir * xDir + zDir * zDir);
 
 	return length;
+}
+
+void Shooter::floatingAnim(float dt)
+{
+	float sinCurve = sin(m_sinTime * M_PI / 180);
+	m_sinTime += (m_sinAddTime * dt);
+
+	setPosition(glm::vec3(getPosition().x, sinCurve, getPosition().z));
 }
 

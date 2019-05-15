@@ -387,7 +387,7 @@ void Player::manualReload(float dt)
 	if ((Input::isKeyPressed(GLFW_KEY_R)) && (m_reloading == false) && (m_pistolBullets < 6))
 	{
 		m_reloading = true;
-		AudioEngine::play("gun_reload", 0.7f);
+		AudioEngine::play("gun_reload", 1.0f);
 		m_reloadTime = 2.f;
 	}
 }
@@ -506,6 +506,7 @@ void Player::setPlayerState(const EntityState& playerState) {
 
 void Player::takeDamage(float damageRecieved)
 {
+
 	m_health = m_health - damageRecieved;
 }
 

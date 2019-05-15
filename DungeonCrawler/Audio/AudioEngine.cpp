@@ -185,6 +185,13 @@ FMOD::Channel* AudioEngine::play(std::string key, float volume) {
 		//LOG_WARNING("SETTING VOLUME TO 1.0f");
 		volume = 1.0f;
 	}
+	//if the player has just been hit by a ranged attack
+	if (key == "pl_ranged_damage_taken" && keyInUse("pl_damage_taken")) {
+		//Cannot play 2 damage taken sounds at the same time
+		return NULL;
+	}
+	//If the player has just been hit by a melee attack
+
 	if (keyInUse(key)) {
 		FMOD_RESULT res;
 		FMOD::Channel* channel = getChannel(key.c_str());

@@ -1,10 +1,10 @@
 #include "Map.h"
 #include "System/Input.h"
 #include <GLM/gtx/transform.hpp>
-//#include <GLM/gtc/matrix_transform.hpp>
 
 Map::Map(GameObjectManager* gameManager)
 {
+	m_playerRoom = 0;
 	m_gameObjectManager = gameManager;
 	m_shouldRender = false;
 	m_vao = 0;
@@ -19,13 +19,13 @@ Map::Map(GameObjectManager* gameManager)
 		0.5, -0.5, 0.0,
 
 	};
-
 	setupBuffers(data);
 }
 
 Map::~Map()
 {
-
+	glDeleteBuffers(1, &m_vbo);
+	glDeleteVertexArrays(1, &m_vao);
 }
 
 void Map::update(float dt)
@@ -48,6 +48,7 @@ void Map::update(float dt)
 
 	Player* player = m_gameObjectManager->getPlayer();
 	m_modelMatrix = glm::mat4(1.0f);
+
 	//move the matrix to players position and then move it upp and closer to the camera
 	m_modelMatrix = glm::translate(m_modelMatrix, player->getPlayerPosition());
 	m_modelMatrix = glm::translate(m_modelMatrix, glm::vec3(0.0f, 8.0f, 2.0f));
@@ -111,7 +112,6 @@ void Map::setupBuffers(GLfloat data[])
 	glBufferData(GL_ARRAY_BUFFER, 36 * sizeof(float), data, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-
 	glBindBuffer(GL_ARRAY_BUFFER, NULL);
 
 	glBindVertexArray(NULL);

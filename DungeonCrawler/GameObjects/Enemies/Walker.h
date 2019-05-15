@@ -18,7 +18,7 @@ public:
 	void amIDead();
 	bool getAliveStatus()const;
 	void attackCooldown(float dt);
-	void floatingAttack(float dt);
+	void floatingAnim(float dt);
 
 private:
 	void calculatePath(float dt);
@@ -31,7 +31,9 @@ private:
 	Type m_type;
 	bool m_amIAlive;
 	float m_attackCooldown;
-	bool m_floatDirection;
+	float m_sinTime;
+	float m_sinAddTime;
+	
 
 	float m_AStarTimer;
 	Room* m_room;
