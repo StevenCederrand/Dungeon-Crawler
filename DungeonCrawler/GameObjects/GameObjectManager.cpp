@@ -117,8 +117,6 @@ void GameObjectManager::update(float dt)
 			bool hitEnemy = false;
 			
 			if (dynamic_cast<Box*>(objectHit)) {
-				hitEnemy = true;
-				objectHit->setHit();
 			}
 			if (dynamic_cast<Walker*>(objectHit)) {
 				hitEnemy = true;
@@ -374,7 +372,7 @@ void GameObjectManager::handleDeadEnemies(float dt)
 
 void GameObjectManager::handleEnemyAttacks(GameObject* object, float dt)
 {
-	if (object->meleeRange())
+	if (object->meleeRange(dt))
 	{
 		HitDescription desc;
 		if (dynamic_cast<Walker*>(object))
@@ -442,10 +440,7 @@ void GameObjectManager::roomManager(GameObject* object) {
 				//Swap the play state to fighting
 				m_player->setPlayerState(FIGHTING);
 				//Spawn enemies
-
-				//m_roomsCleared.emplace_back(m_rooms.at(i)); // hide rooms
-
-				this->spawner(m_rooms.at(i), Randomizer::single(1, 3));
+				this->spawner(m_rooms.at(i), Randomizer::single(3, 6));
 
 			}
 		}
@@ -460,7 +455,7 @@ void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
 		GameObject* enemy = new Boss(enemyMesh, BOSS, currentRoom, glm::vec3(
 			Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),
 			0.f,
-			Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)), m_effects);
+			Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)), m_projectileManager, m_effects);
 		this->addGameObject(enemy);
 	}
 	for (int i = 0; i < numberOfEnemies; i++)

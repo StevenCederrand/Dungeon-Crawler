@@ -4,6 +4,12 @@
 
 PlayerHealthBar::PlayerHealthBar(GLinit* glInit, Player* player)
 {
+	// Eww
+	m_hpbar_10 = glInit->createTexture("HPBar_10.png", true, true);
+	m_hpbar_9 = glInit->createTexture("HPBar_9.png", true, true);
+	m_hpbar_8 = glInit->createTexture("HPBar_8.png", true, true);
+	m_hpbar_7 = glInit->createTexture("HPBar_7.png", true, true);
+	m_hpbar_6 = glInit->createTexture("HPBar_6.png", true, true);
 	m_hpbar_5 = glInit->createTexture("HPBar_5.png", true, true);
 	m_hpbar_4 = glInit->createTexture("HPBar_4.png", true, true);
 	m_hpbar_3 = glInit->createTexture("HPBar_3.png", true, true);
@@ -39,7 +45,6 @@ PlayerHealthBar::PlayerHealthBar(GLinit* glInit, Player* player)
 	glBindVertexArray(NULL);
 
 	m_playerMaxHealth = m_player->getHealth();
-	m_healthStageValue = m_player->getHealth() / 5.0f;
 }
 
 PlayerHealthBar::~PlayerHealthBar()
@@ -51,9 +56,19 @@ PlayerHealthBar::~PlayerHealthBar()
 
 void PlayerHealthBar::update(float dt)
 {
-	float stage = std::ceilf(m_player->getHealth() / m_healthStageValue);
+	float stage = std::ceilf(m_player->getHealth());
 
-	if (stage > 4)
+	if (stage > 9)
+		m_currentTexID = m_hpbar_10;
+	else if (stage > 8 && stage <= 9)
+		m_currentTexID = m_hpbar_9;
+	else if (stage > 7 && stage <= 8)
+		m_currentTexID = m_hpbar_8;
+	else if (stage > 6 && stage <= 7)
+		m_currentTexID = m_hpbar_7;
+	else if (stage > 5 && stage <= 6)
+		m_currentTexID = m_hpbar_6;
+	else if (stage > 4 && stage <= 5)
 		m_currentTexID = m_hpbar_5;
 	else if (stage > 3 && stage <= 4)
 		m_currentTexID = m_hpbar_4;

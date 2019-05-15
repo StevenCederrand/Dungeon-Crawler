@@ -137,7 +137,7 @@ void GameObject::hit(const HitDescription & desc)
 
 }
 
-bool GameObject::meleeRange()
+bool GameObject::meleeRange(float dt)
 {
 	return false;
 }
