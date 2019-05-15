@@ -321,24 +321,16 @@ void Renderer::renderMap()
 		glBindVertexArray(0);
 
 
-
-
-
 		mapShader->unuse();
 	}
 }
 
 void Renderer::renderBlood()
 {
-	//if (m_screenBlood->shouldRender())
-	//{
 	glEnable(GL_BLEND);
 	Shader* ScreenBloodShader = ShaderMap::getShader("ScreenBloodShader");
 	ScreenBloodShader->use();
-	//uiShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
-	//uiShader->setMat4("viewMatrix", m_camera->getViewMatrix());
-	//change modelmatrix to it's own later
-	//uiShader->setMat4("modelMatrix", m_screenBlood->getModelMatrix());
+	
 	ScreenBloodShader->setFloat("alpha", m_screenBlood->getAlpha());
 	glBindVertexArray(m_screenBlood->getVAO());
 	glEnableVertexAttribArray(0);
@@ -355,7 +347,6 @@ void Renderer::renderBlood()
 
 	ScreenBloodShader->unuse();
 	glDisable(GL_BLEND);
-	//}
 }
 
 void Renderer::bindMesh(Mesh * mesh, Shader* shader)
