@@ -25,6 +25,10 @@ private:
 	std::vector<std::string> m_albedoMapName;
 	std::vector<std::string> m_normalMapName;
 
+	//hitbox
+	glm::vec4 m_maxMinValues;
+
+
 public:
 	FBXParserData(int vectorStartValue);
 	~FBXParserData();
@@ -88,6 +92,9 @@ public:
 	void addAlbedoMapName(std::string albedoMapName);
 	void addNormalMapName(std::string normalMapName);
 
+	//SET FUNCTIONS
+	void setMaxMinValues(glm::vec4);
+
 	//GET FUNCTIONS
 	std::vector<glm::vec3> getVertexPos()const;
 	std::vector<glm::vec2> getUVs()const;
@@ -95,6 +102,6 @@ public:
 
 	std::vector<std::string> getAlbedoMapName()const;
 	std::vector<std::string> getNormalMapName()const;
-};
 
-//SUPPORT AI NODES?
+	glm::vec4 getMaxMinValues()const;
+};

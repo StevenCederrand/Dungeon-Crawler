@@ -61,4 +61,7 @@ namespace FBXImporter {
 
 	//BoundingBoxVertex
 	void setPositionOfBoundingBox(FBXParserData* fileData, float normal[]);
+
+	//calculatemaxminvalue
+	void calculateMinMaxValue(std::ifstream& binaryFile, FBXParserData* fileData);
 }

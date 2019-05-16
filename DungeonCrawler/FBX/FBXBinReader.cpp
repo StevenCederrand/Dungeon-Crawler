@@ -39,7 +39,7 @@ FBXParserData* FBXBinReader::binaryMeshReading(std::string nameOfFile)
 	FBXImporter::readAndWriteBinaryData(pathtoMesh, fileData);
 
 	
-
+	/*
 
 	std::cout << "-----------------------------FBX Bin Reader-----------------------------" << std::endl;
 	std::cout << "MainHeader\n\n";
@@ -96,6 +96,6 @@ FBXParserData* FBXBinReader::binaryMeshReading(std::string nameOfFile)
 	std::cout << "Bounding box position: " << fileData->getBoundingBoxVertexHeader().position << std::endl;
 
 	//std::cout << binaryFileData << std::endl;
-	
+	*/
 	return fileData;
 }

@@ -6,14 +6,14 @@ namespace FBXImporter {
 	//Debug function to test the .lib file and write the mesh name
 	void displayMeshName()
 	{
-		std::cout << "Lib file working!" << std::endl;
-		std::cout << "Mesh name: " << "" << std::endl;
+		//std::cout << "Lib file working!" << std::endl;
+		//std::cout << "Mesh name: " << "" << std::endl;
 	}
 
 	//Debug function to test the .lib file and write the mesh vertice amount
 	void displayVertices()
 	{
-		std::cout << "Amount of vertices:" << "" << std::endl;
+		//std::cout << "Amount of vertices:" << "" << std::endl;
 
 	}
 
@@ -28,12 +28,12 @@ namespace FBXImporter {
 
 		if (infileBinary.is_open() == false)
 		{
-			std::cout << "Could not open the custom binary file" << std::endl;
+			//std::cout << "Could not open the custom binary file" << std::endl;
 		}
 
 		else if (infileBinary.is_open())
 		{
-			std::cout << "--------------------FBX Importer lib file-------------------------------" << std::endl;
+			//std::cout << "--------------------FBX Importer lib file-------------------------------" << std::endl;
 			//FBXImporter::displayMeshName();
 			//FBXImporter::displayVertices();
 			//std::cout << std::endl;
@@ -45,6 +45,8 @@ namespace FBXImporter {
 			displayMaterialHeader(infileBinary, fileData);
 			displayBoundingBoxHeader(infileBinary, fileData);
 			displayBoundingBoxVertexHeader(infileBinary, fileData);
+
+			calculateMinMaxValue(infileBinary, fileData);
 
 			//for (int i = 0; i < m_staticMeshCount; i++)
 			//{
@@ -149,32 +151,32 @@ namespace FBXImporter {
 	void displayMainHeader(std::ifstream& infileBinary, FBXParserData* fileData)
 	{
 		char version = binaryToChar(infileBinary);
-		std::cout << "Version: " << version << " " << std::endl;
+		//std::cout << "Version: " << version << " " << std::endl;
 		setVersion(fileData, version);
 
 		char paddingOne = binaryToChar(infileBinary);
-		std::cout << "paddingOne \n";
+		//std::cout << "paddingOne \n";
 
 		char paddingTwo = binaryToChar(infileBinary);
-		std::cout << "paddingTwo \n";
+		//std::cout << "paddingTwo \n";
 
 		char paddingThree = binaryToChar(infileBinary);
-		std::cout << "paddingThree \n";
+		//std::cout << "paddingThree \n";
 
 		unsigned int dynamicMeshCount = (unsigned int)binaryToInt(infileBinary);
-		std::cout << "DynamicMeshCount: " << dynamicMeshCount << " " << std::endl;
+		//std::cout << "DynamicMeshCount: " << dynamicMeshCount << " " << std::endl;
 		setDynamicMeshCount(fileData, dynamicMeshCount);
 
 		unsigned int staticMeshCount = (unsigned int)binaryToInt(infileBinary);
-		std::cout << "StaticMeshCount: " << staticMeshCount << " " << std::endl;
+		//std::cout << "StaticMeshCount: " << staticMeshCount << " " << std::endl;
 		setStaticMeshCount(fileData, staticMeshCount);
 
 		unsigned int boundingBoxCount = (unsigned int)binaryToInt(infileBinary);
-		std::cout << "BoundingBoxCount: " << boundingBoxCount << " " << std::endl;
+		//std::cout << "BoundingBoxCount: " << boundingBoxCount << " " << std::endl;
 		setBoundBoxCount(fileData, boundingBoxCount);
 
 		unsigned int materialCount = (unsigned int)binaryToInt(infileBinary);
-		std::cout << "MaterialCount: " << materialCount << " " << std::endl << std::endl;
+		//std::cout << "MaterialCount: " << materialCount << " " << std::endl << std::endl;
 		setMaterialCount(fileData, materialCount);
 	}
 
@@ -187,35 +189,35 @@ namespace FBXImporter {
 			lnameOfMesh.push_back(binaryToChar(infileBinary));
 		}
 
-		std::cout << "Name of mesh: ";
+		//std::cout << "Name of mesh: ";
 		for (int i = 0; i < 100; i++)
 		{
-			std::cout << lnameOfMesh[i];
+			//std::cout << lnameOfMesh[i];
 		}
-		std::cout << "\n";
+		//std::cout << "\n";
 		setNameOfMesh(fileData, lnameOfMesh);
 
 		unsigned int vertexCount = (unsigned int)binaryToInt(infileBinary);
-		std::cout << "VertexCount: " << vertexCount << " " << std::endl;
+		//std::cout << "VertexCount: " << vertexCount << " " << std::endl;
 		setVertexCountOfMesh(fileData, vertexCount);
 
 		int materialID = (int)binaryToInt(infileBinary);
-		std::cout << "Material ID: " << materialID << " " << std::endl;
+		//std::cout << "Material ID: " << materialID << " " << std::endl;
 		setMaterialIDForMesh(fileData, materialID);
 
 		bool collision = binaryToBool(infileBinary);
-		std::cout << "Collision: "<< collision << " " << std::endl;
+		//std::cout << "Collision: "<< collision << " " << std::endl;
 		setCollisionOfMesh(fileData, collision);
 
 		bool staticMesh = binaryToBool(infileBinary);
-		std::cout << "StaticMesh: " << staticMesh << " " << std::endl;
+		//std::cout << "StaticMesh: " << staticMesh << " " << std::endl;
 		setStaticMesh(fileData, staticMesh);
 
 		bool paddingOne = binaryToBool(infileBinary);
-		std::cout << "PaddingOne: " << paddingOne << " " << std::endl;
+		//std::cout << "PaddingOne: " << paddingOne << " " << std::endl;
 
 		bool paddingTwo = binaryToBool(infileBinary);
-		std::cout << "PaddingTwo: " << paddingTwo << std::endl;
+		//std::cout << "PaddingTwo: " << paddingTwo << std::endl;
 	}
 
 	//third
@@ -226,30 +228,30 @@ namespace FBXImporter {
 		{
 			lnameOfBoundingBox.push_back(binaryToChar(infileBinary)); //Reads file
 		}
-		std::cout << "Name of Hitbox: ";
+		//std::cout << "Name of Hitbox: ";
 		for (int i = 0; i < 100; i++)
 		{
-			std::cout << lnameOfBoundingBox[i];
+			//std::cout << lnameOfBoundingBox[i];
 		}
-		std::cout << "\n";
+		//std::cout << "\n";
 
 		unsigned int vertexCount = (unsigned int)binaryToInt(infileBinary);
-		std::cout << "Vertex count: " << vertexCount << "\n";
+		//std::cout << "Vertex count: " << vertexCount << "\n";
 		setVertexCountOfBoundingBoxMesh(fileData, vertexCount);
 
 		bool collision = binaryToBool(infileBinary);
-		std::cout << "Collision: " << collision << "\n";
+		//std::cout << "Collision: " << collision << "\n";
 		setCollisionOfBoundingBoxMesh(fileData, collision);
 
 		bool staticMesh = binaryToBool(infileBinary);
-		std::cout << "Static mesh: " << staticMesh << "\n";
+		//std::cout << "Static mesh: " << staticMesh << "\n";
 		setStaticBoundingBoxMesh(fileData, staticMesh);
 
 		bool paddingOne = binaryToBool(infileBinary);
-		std::cout << "PaddingOne: "<< "\n";
+		//std::cout << "PaddingOne: "<< "\n";
 
 		bool paddingTwo = binaryToBool(infileBinary);
-		std::cout << "PaddingTwo: " << "\n";
+		//std::cout << "PaddingTwo: " << "\n";
 	}
 
 	//fourth
@@ -259,13 +261,13 @@ namespace FBXImporter {
 		for (int i = 0; i < fileData->getMeshHeader().vertexCount; i++)
 		{
 			float positionX = binaryToFloat(infileBinary);
-			std::cout << "Position: " << positionX << " ";
+			//std::cout << "Position: " << positionX << " ";
 
 			float positionY = binaryToFloat(infileBinary);
-			std::cout << positionY << " ";
+			//std::cout << positionY << " ";
 
 			float positionZ = binaryToFloat(infileBinary);
-			std::cout << positionZ << "\n";
+			//std::cout << positionZ << "\n";
 
 			glm::vec3 vertexPos;
 			vertexPos.x = positionX;
@@ -274,10 +276,10 @@ namespace FBXImporter {
 			fileData->addVertexPos(vertexPos);
 
 			float positionU = binaryToFloat(infileBinary);
-			std::cout << "UV: " << positionU << " ";
+			//std::cout << "UV: " << positionU << " ";
 
 			float positionV = binaryToFloat(infileBinary);
-			std::cout << positionV << "\n";
+			//std::cout << positionV << "\n";
 
 			glm::vec2 vertexUV;
 			vertexUV.x = positionU;
@@ -285,13 +287,13 @@ namespace FBXImporter {
 			fileData->addUV(vertexUV);
 
 			float positionNX = binaryToFloat(infileBinary);
-			std::cout << "normal: " << positionNX << " ";
+			//std::cout << "normal: " << positionNX << " ";
 
 			float positionNY = binaryToFloat(infileBinary);
-			std::cout << positionNY << " ";
+			//std::cout << positionNY << " ";
 
 			float positionNZ = binaryToFloat(infileBinary);
-			std::cout << positionNZ << "\n";
+			//std::cout << positionNZ << "\n";
 
 			glm::vec3 vertexNormal;
 			vertexNormal.x = positionNX;
@@ -313,14 +315,14 @@ namespace FBXImporter {
 			lnameOfAlbedoMapCHARS.push_back(currentChar); //Reads file
 			lnameOfAlbedoMapSTRING += currentChar;
 		}
-		std::cout << "Name of Albedo: ";
+		//std::cout << "Name of Albedo: ";
 		fileData->addAlbedoMapName(lnameOfAlbedoMapSTRING);
 
 		for (int i = 0; i < 100; i++)
 		{
-			std::cout << lnameOfAlbedoMapCHARS[i];
+			//std::cout << lnameOfAlbedoMapCHARS[i];
 		}
-		std::cout << "\n";
+		//std::cout << "\n";
 		setNameOfAlbedo(fileData, lnameOfAlbedoMapCHARS);
 
 
@@ -330,23 +332,23 @@ namespace FBXImporter {
 			lnameOfNormalMapCHARS.push_back(currentChar); //Reads file
 			lnameOfNormalMapSTRING += currentChar;
 		}
-		std::cout << "Name of Normal: ";
+		//std::cout << "Name of Normal: ";
 		for (int i = 0; i < 100; i++)
 		{
-			std::cout << lnameOfNormalMapCHARS[i];
+			//std::cout << lnameOfNormalMapCHARS[i];
 		}
-		std::cout << "\n";
+		//std::cout << "\n";
 		setNameOfNormal(fileData, lnameOfNormalMapCHARS);
 
 
 		int materialID = (int)binaryToInt(infileBinary);
-		std::cout << "Material ID: " << materialID << "\n";
+		//std::cout << "Material ID: " << materialID << "\n";
 
 		unsigned int nrOfTextures = (int)binaryToInt(infileBinary);
-		std::cout << "nrOfTextures: " << nrOfTextures << "\n";
+		//std::cout << "nrOfTextures: " << nrOfTextures << "\n";
 
 		unsigned int whatShader = (int)binaryToInt(infileBinary);
-		std::cout << "whatShader: " << whatShader << "\n";
+		//std::cout << "whatShader: " << whatShader << "\n";
 	}
 	
 
@@ -357,13 +359,19 @@ namespace FBXImporter {
 		for (int i = 0; i < fileData->getBoundingBoxHeader().vertexCount; i++)
 		{
 			float positionX = binaryToFloat(infileBinary);
-			std::cout << "Position: " << positionX << " ";
+			//std::cout << "Position: " << positionX << " ";
 
 			float positionY = binaryToFloat(infileBinary);
-			std::cout << positionY << " ";
+			//std::cout << positionY << " ";
 
 			float positionZ = binaryToFloat(infileBinary);
-			std::cout << positionZ << "\n";
+			//std::cout << positionZ << "\n";
+
+			glm::vec3 vertexPos;
+			vertexPos.x = positionX;
+			vertexPos.y = positionY;
+			vertexPos.z = positionZ;
+			fileData->addVertexPos(vertexPos);
 		}
 	}
 
@@ -527,4 +535,40 @@ namespace FBXImporter {
 	}
 
 	//------------------------------------------------------------------------------
+
+	void calculateMinMaxValue(std::ifstream& binaryFile, FBXParserData* fileData)
+	{
+		//is onyl 36 now, should be 72
+		std::vector<glm::vec3> allHitboxVertices = fileData->getVertexPos();
+		float xMin = 0.f; 
+		float xMax = 0.f;
+		float yMin = 0.f;
+		float yMax = 0.f;
+
+		for (int i = fileData->getMeshHeader().vertexCount; i < (fileData->getMeshHeader().vertexCount + fileData->getBoundingBoxHeader().vertexCount); i++)
+		{
+			glm::vec3 hitboxVertice = allHitboxVertices[i];
+
+			if (hitboxVertice.x >= xMax)
+				xMax = hitboxVertice.x;
+			if (hitboxVertice.y >= yMax)
+				yMax = hitboxVertice.y;
+
+			if (hitboxVertice.x <= xMin)
+				xMin = hitboxVertice.x;
+			if (hitboxVertice.y <= yMin)
+				yMin = hitboxVertice.y;
+		}
+
+		glm::vec4 lmaxMinValues;//MAXMAXMINMIN
+		lmaxMinValues.x = xMax;
+		lmaxMinValues.y = yMax;
+		lmaxMinValues.z = xMin;
+		lmaxMinValues.w = yMin;
+
+		fileData->setMaxMinValues(lmaxMinValues);
+	}
+
+	HITBOX DOESNT WORK
+
 }

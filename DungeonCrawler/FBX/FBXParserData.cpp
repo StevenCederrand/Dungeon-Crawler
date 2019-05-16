@@ -63,6 +63,12 @@ FBXParserData::FBXParserData(int vectorStartValue)
 	m_verticePos.reserve(vectorStartValue);
 	m_uvs.reserve(vectorStartValue);
 	m_normals.reserve(vectorStartValue);
+
+	//hitbox
+	m_maxMinValues.x = 0;
+	m_maxMinValues.y = 0;
+	m_maxMinValues.z = 0;
+	m_maxMinValues.w = 0;
 }
 
 FBXParserData::~FBXParserData()
@@ -257,6 +263,12 @@ void FBXParserData::addNormalMapName(std::string normalMapName)
 	m_normalMapName.emplace_back(normalMapName);
 }
 
+//SET FUNCTIONS
+void FBXParserData::setMaxMinValues(glm::vec4 maxMinValues)
+{
+	m_maxMinValues = maxMinValues;
+}
+
 //GET FUNCTIONS
 std::vector<glm::vec3> FBXParserData::getVertexPos()const
 {
@@ -281,4 +293,9 @@ std::vector<std::string> FBXParserData::getAlbedoMapName()const
 std::vector<std::string> FBXParserData::getNormalMapName()const
 {
 	return m_normalMapName;
+}
+
+glm::vec4 FBXParserData::getMaxMinValues()const
+{
+	return m_maxMinValues;
 }

@@ -43,9 +43,8 @@ PlayState::PlayState() {
 	
 	//change to FBX, one Parserdata for multiple objects
 	//CONTINUE HERE
-	//FBXParserData* enemyData = m_FBXParser->binaryMeshReading("ourFileBinary.bin");
-	//m_GLinit->createMeshFBX("Enemy", enemyData);
-	//int stop = 1;
+	FBXParserData* enemyData = m_FBXParser->binaryMeshReading("ourFileBinary.bin");
+	m_GLinit->createMeshFBX("Enemy", enemyData);
 	//delete enemyData;
 
 	#pragma region Create_Objects
@@ -57,7 +56,7 @@ PlayState::PlayState() {
 
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
 	ParserData* powerUpData = m_parser->loadFromObj("LifePowerUp.obj");
-	ParserData* enemyData = m_parser->loadFromObj("FlyGuyConverted.obj");
+	//ParserData* enemyData = m_parser->loadFromObj("FlyGuyConverted.obj");
 
 	m_GLinit->createMesh("Door", doorData);
 	m_GLinit->createMesh("RoomStart", roomStart);
@@ -67,7 +66,7 @@ PlayState::PlayState() {
 	m_GLinit->createMesh("PlayerModel", playerData);
 	m_GLinit->createMesh("Sphere", sphereData);
 	m_GLinit->createMesh("PowerUp", powerUpData);
-	m_GLinit->createMesh("Enemy", enemyData);
+	//m_GLinit->createMesh("Enemy", enemyData);
 	#pragma endregion
 
 	//we want to setUp the world

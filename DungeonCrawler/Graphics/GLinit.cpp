@@ -73,8 +73,13 @@ Mesh* GLinit::createMeshFBX(std::string name, FBXParserData* data)
 		return MeshMap::getMesh(name);
 
 	
-	//GLuint vao = createAndBindVAO();
-	//bindIndices(data->getIndices());
+	GLuint vao = createAndBindVAO();
+
+	std::vector<GLuint> indices;
+	for (int i = 0; i < data->getMeshHeader().vertexCount; i++)
+		indices.emplace_back(i);
+	bindIndices(indices);
+	
 	storeDataInAttributeList(0, 3, data->getVertexPos());
 	storeDataInAttributeList(1, 2, data->getUVs());
 	storeDataInAttributeList(2, 3, data->getNormals());
@@ -82,10 +87,12 @@ Mesh* GLinit::createMeshFBX(std::string name, FBXParserData* data)
 
 	std::vector<std::string> TextureFiles = data->getAlbedoMapName();
 
-	GLuint textureID = createTexture(TextureFiles[0]);
+	GLuint textureID = createTexture(TexturePath + "RTS_Crate.png"); //should be texture files name
 
 	Mesh* mesh = new Mesh();
 
+	mesh->setVao(vao);
+	mesh->setNrOfIndices(data->getMeshHeader().vertexCount);
 	/*
 
 	mesh->setHasNormalMap(data->hasNormalMap());
@@ -106,11 +113,12 @@ Mesh* GLinit::createMeshFBX(std::string name, FBXParserData* data)
 	mesh->setDiffuseColor(data->getDiffuseColor());
 	mesh->setShininess(data->getShininess());
 	mesh->setBoundingBoxMinMax(data->getMaxMinVector());
-	mesh->setMaxMinValues(data->getMaxMinValues());
-
-	MeshMap::addMesh(name, mesh);
 	*/
-	return mesh;
+
+	mesh->setMaxMinValues(data->getMaxMinValues());
+	
+	MeshMap::addMesh(name, mesh); //adds the mesh to the meshmap, this is where the mesh is saved
+	return mesh; //not used right now
 }
 
 GLuint GLinit::createAndBindVAO()
