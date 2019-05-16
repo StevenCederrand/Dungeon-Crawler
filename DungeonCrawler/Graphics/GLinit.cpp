@@ -65,6 +65,54 @@ Mesh* GLinit::createMesh(std::string name, ParserData* data)
 	return mesh;
 }
 
+Mesh* GLinit::createMeshFBX(std::string name, FBXParserData* data)
+{
+	//Make a check if FBX is binary
+	//Use the FBXParser class that takes in the binary custom files and generates the meshes
+	if (MeshMap::MeshExistWithName(name))
+		return MeshMap::getMesh(name);
+
+	
+	//GLuint vao = createAndBindVAO();
+	//bindIndices(data->getIndices());
+	storeDataInAttributeList(0, 3, data->getVertexPos());
+	storeDataInAttributeList(1, 2, data->getUVs());
+	storeDataInAttributeList(2, 3, data->getNormals());
+	glBindVertexArray(NULL);
+
+	std::vector<std::string> TextureFiles = data->getAlbedoMapName();
+
+	GLuint textureID = createTexture(TextureFiles[0]);
+
+	Mesh* mesh = new Mesh();
+
+	/*
+
+	mesh->setHasNormalMap(data->hasNormalMap());
+
+	if (data->hasNormalMap()) {
+		GLuint normalID = createTexture(data->getNormalMapName());
+		mesh->setNormalID(normalID);
+	}
+	if (data->hasAmbientMap()) {
+		GLuint ambientID = createTexture(data->getAmbientMapName());
+		mesh->setAmbientID(ambientID);
+	}
+	mesh->setVao(vao);
+	mesh->setTextureID(textureID);
+	mesh->setNrOfIndices(int(data->getIndices().size()));
+	mesh->setAmbientColor(data->getAmbientColor());
+	mesh->setSpecularColor(data->getSpecularColor());
+	mesh->setDiffuseColor(data->getDiffuseColor());
+	mesh->setShininess(data->getShininess());
+	mesh->setBoundingBoxMinMax(data->getMaxMinVector());
+	mesh->setMaxMinValues(data->getMaxMinValues());
+
+	MeshMap::addMesh(name, mesh);
+	*/
+	return mesh;
+}
+
 GLuint GLinit::createAndBindVAO()
 {
 	GLuint vao;

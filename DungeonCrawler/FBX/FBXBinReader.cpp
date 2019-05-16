@@ -5,7 +5,7 @@
 //HAS MAIN, SHOULDNT BE THIS WAY!!
 //Has Parser data, here I add vertices?
 
-
+/*
 int main()
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -13,6 +13,7 @@ int main()
 	FBXBinReader binaryData;
 	binaryData.binaryMeshReading();
 }
+*/
 
 
 FBXBinReader::FBXBinReader()
@@ -21,12 +22,13 @@ FBXBinReader::FBXBinReader()
 
 FBXBinReader::~FBXBinReader()
 {
+	//Remember to delete fileData!!
 }
 
-void FBXBinReader::binaryMeshReading()
+FBXParserData* FBXBinReader::binaryMeshReading(std::string nameOfFile)
 {
 	//Decide what file to open with a string
-	std::string pathtoMesh = "ourFileBinary.bin";
+	std::string pathtoMesh = nameOfFile;
 	
 	//Allocate memory for the FBXParserData class and assign it to a pointer type
 	FBXParserData* fileData = new FBXParserData(100);
@@ -95,5 +97,5 @@ void FBXBinReader::binaryMeshReading()
 
 	//std::cout << binaryFileData << std::endl;
 	
-	delete fileData;
+	return fileData;
 }

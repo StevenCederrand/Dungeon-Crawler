@@ -40,7 +40,14 @@ PlayState::PlayState() {
 
 	AudioEngine::loadSSO("Game.sso");
 	#pragma endregion
-		
+	
+	//change to FBX, one Parserdata for multiple objects
+	//CONTINUE HERE
+	//FBXParserData* enemyData = m_FBXParser->binaryMeshReading("ourFileBinary.bin");
+	//m_GLinit->createMeshFBX("Enemy", enemyData);
+	//int stop = 1;
+	//delete enemyData;
+
 	#pragma region Create_Objects
 	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
 	ParserData* playerData = m_parser->loadFromObj("MainCharacterPosed.obj");

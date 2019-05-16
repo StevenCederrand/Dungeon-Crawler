@@ -8,7 +8,7 @@ public:
 	FBXBinReader();
 	~FBXBinReader();
 
-	void binaryMeshReading();
+	FBXParserData* binaryMeshReading(std::string nameOfFile);
 
 
 private:

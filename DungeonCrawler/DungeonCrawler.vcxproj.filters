@@ -77,6 +77,7 @@
     <ClCompile Include="Gui\PlayerHealthBar.cpp" />
     <ClCompile Include="Vendor\Lodepng\lodepng.cpp" />
     <ClCompile Include="Gui\ScreenBlood.cpp" />
+    <ClCompile Include="System\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI\AStar.h" />

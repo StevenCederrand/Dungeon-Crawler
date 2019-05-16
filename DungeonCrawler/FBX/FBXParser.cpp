@@ -15,5 +15,5 @@ FBXParser::~FBXParser()
 void FBXParser::createMesh(Mesh& mesh)
 {
 	FBXBinReader meshreader;
-	meshreader.binaryMeshReading();
+	//meshreader.binaryMeshReading();
 }

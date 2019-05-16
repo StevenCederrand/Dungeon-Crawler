@@ -2,6 +2,7 @@
 #define _PLAYSTATE_H
 #include "State.h"
 #include "Parser/Parser.h"
+#include "FBX/FBXBinReader.h"
 #include "Graphics/GLinit.h"
 #include "Graphics/Renderer.h"
 #include "Utility/Camera.h"
@@ -29,6 +30,7 @@ private:
 
 private:
 	Parser* m_parser;
+	FBXBinReader* m_FBXParser;
 	GLinit* m_GLinit;
 	Camera* m_camera;
 	Renderer* m_renderer;
