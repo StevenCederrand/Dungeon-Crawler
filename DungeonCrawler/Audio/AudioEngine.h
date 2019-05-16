@@ -48,6 +48,7 @@ private:
 	static FMOD::System *m_soundSystem;
 	static std::map<std::string, FMOD::Sound*> m_sounds;	
 	static std::vector<FMOD::Channel*> m_channels;
+
 	static void* m_extraDriverData;
 	static std::vector<std::string> keysInUse;
 };
