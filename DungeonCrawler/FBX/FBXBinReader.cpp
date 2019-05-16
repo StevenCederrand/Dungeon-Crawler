@@ -5,6 +5,7 @@
 //HAS MAIN, SHOULDNT BE THIS WAY!!
 //Has Parser data, here I add vertices?
 
+/*
 int main()
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -12,6 +13,7 @@ int main()
 	FBXBinReader binaryData;
 	binaryData.binaryMeshReading();
 }
+*/
 
 FBXBinReader::FBXBinReader()
 {

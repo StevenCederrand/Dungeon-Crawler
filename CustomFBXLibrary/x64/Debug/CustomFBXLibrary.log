@@ -1,5 +1,1 @@
-﻿  FBXImporter.cpp
-C:\3D\Dungeon-Crawler\CustomFBXLibrary\src\FBXParserData.h(2): fatal error C1083: Cannot open include file: 'Headerstruct.h': No such file or directory
-  FBXParserData.cpp
-C:\3D\Dungeon-Crawler\CustomFBXLibrary\src\FBXParserData.h(2): fatal error C1083: Cannot open include file: 'Headerstruct.h': No such file or directory
-  Generating Code...
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.Cpp.Platform.targets(67,5): error MSB8020: The build tools for v142 (Platform Toolset = 'v142') cannot be found. To build using the v142 build tools, please install v142 build tools.  Alternatively, you may upgrade to the current Visual Studio tools by selecting the Project menu or right-click the solution, and then selecting "Retarget solution".
