@@ -69,7 +69,6 @@
     <ClCompile Include="FBX\FBXImporter.cpp" />
     <ClCompile Include="FBX\FBXParser.cpp" />
     <ClCompile Include="FBX\FBXParserData.cpp" />
-    <ClCompile Include="System\Main.cpp" />
     <ClCompile Include="States\GameOverState.cpp" />
     <ClCompile Include="AI\GridSystem.cpp" />
     <ClCompile Include="AI\AStar.cpp" />

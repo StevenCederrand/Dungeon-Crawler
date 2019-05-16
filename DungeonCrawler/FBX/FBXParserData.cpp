@@ -2,6 +2,64 @@
 
 FBXParserData::FBXParserData(int vectorStartValue)
 {
+	//initialize 
+	//mainheader
+	m_mainHeader.version = ' ';
+	m_mainHeader.padding1 = ' ';
+	m_mainHeader.padding2 = ' ';
+	m_mainHeader.padding3 = ' ';
+	m_mainHeader.dynamicMeshCount = 0;
+	m_mainHeader.staticMeshCount = 0;
+	m_mainHeader.boundingBoxCount = 0;
+	m_mainHeader.materialCount = 0;
+
+	//meshheader
+	for (int i = 0; i < 100; i++)
+		m_meshHeader.nameOfMesh[i] = ' ';
+	m_meshHeader.vertexCount = 0;
+	m_meshHeader.materialID = 0;
+	m_meshHeader.collision = false;
+	m_meshHeader.staticMesh = false;
+	m_meshHeader.padding1 = false;
+	m_meshHeader.padding2 = false;
+
+	//m_materialheader
+	for (int i = 0; i < 100; i++)
+	{
+		m_meshHeader.nameOfMesh[i] = ' ';
+
+		m_materialHeader.nameOfAlbedo[i] = ' ';
+		m_materialHeader.nameOfNormal[i] = ' ';
+
+		m_boundingBoxHeader.nameOfHitbox[i] = ' ';
+	}
+	m_materialHeader.materialID = 0;
+	m_materialHeader.nrOfTextures = 0;
+	m_materialHeader.whatShader = 0;
+
+	//boundingboxheader
+	m_boundingBoxHeader.vertexCount = 0;
+	m_boundingBoxHeader.collision = false;
+	m_boundingBoxHeader.staticMesh = false;
+	m_boundingBoxHeader.padding1 = false;
+	m_boundingBoxHeader.padding2 = false;
+
+	//Vertex
+	m_vertexHeader.position[0] = 0.f;
+	m_vertexHeader.position[1] = 0.f;
+	m_vertexHeader.position[2] = 0.f;
+	m_vertexHeader.UV[0] = 0.f;
+	m_vertexHeader.UV[1] = 0.f;
+	m_vertexHeader.normal[0] = 0.f;
+	m_vertexHeader.normal[1] = 0.f;
+	m_vertexHeader.normal[2] = 0.f;
+
+	//boundingboxvertexheader
+	m_boundingBoxVertexHeader.position[0] = 0.f;
+	m_boundingBoxVertexHeader.position[1] = 0.f;
+	m_boundingBoxVertexHeader.position[2] = 0.f;
+
+	//vectors
 	m_verticePos.reserve(vectorStartValue);
 	m_uvs.reserve(vectorStartValue);
 	m_normals.reserve(vectorStartValue);
