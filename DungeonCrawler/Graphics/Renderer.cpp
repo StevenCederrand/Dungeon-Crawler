@@ -281,7 +281,7 @@ void Renderer::lightPass() {
 void Renderer::renderMap()
 {
 	if (m_map->getShouldRender()) {
-
+		glEnable(GL_BLEND);
 		Shader* mapShader = ShaderMap::getShader("MapShader");
 		mapShader->use();
 
@@ -325,6 +325,7 @@ void Renderer::renderMap()
 
 
 		mapShader->unuse();
+		glDisable(GL_BLEND);
 	}
 }
 
