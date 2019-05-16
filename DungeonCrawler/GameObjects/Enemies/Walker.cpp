@@ -114,7 +114,7 @@ void Walker::attackCooldown(float dt)
 
 void Walker::floatingAnim(float dt)
 {	
-	float sinCurve = sin(m_sinTime * M_PI/ 180);
+	float sinCurve = sin(m_sinTime * M_PI/ 180.f);
 	m_sinTime += (m_sinAddTime * dt);
 
 	setPosition(glm::vec3(getPosition().x, sinCurve, getPosition().z));
