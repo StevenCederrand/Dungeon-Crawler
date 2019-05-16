@@ -197,6 +197,11 @@ FMOD::Channel* AudioEngine::play(std::string key, float volume) {
 		//Avoid playing two hitsounds at the sametime
 		return NULL;
 	}
+	//If we want to play several sounds above eachother
+	if (playingSound(key)) {
+		LOG_WARNING("Playing an already playing sound");
+		volume -= 0.6f;
+	}
 	if (keyInUse(key)) {
 		FMOD_RESULT res;
 		FMOD::Channel* channel = getChannel(key.c_str());
