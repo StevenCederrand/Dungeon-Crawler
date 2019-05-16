@@ -50,6 +50,7 @@
     <ClCompile Include="FBX\FBXImporter.cpp" />
     <ClCompile Include="FBX\FBXParser.cpp" />
     <ClCompile Include="FBX\FBXParserData.cpp" />
+    <ClCompile Include="System\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
