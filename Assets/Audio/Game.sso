@@ -2,11 +2,19 @@
 #Player walking sounds
 pl_walk step1F.wav
 pl_walk-2 step2F.wav
-pl_walk-3 step3F.wav
+#pl_walk-3 step3F.wav
 
 #player dash
 pl_dash Dash.wav
+
 #player shot
 pl_gun_shot Gunshot.wav
+
+#Firing an empty round
+gun_click gun_click_1.wav
+
 #bullet impact with enemy
 gun_impact_enemy gun_impact_enemy.wav
+
+#bullet impact with wall
+gun_impact_wall BulletImpact.wav

@@ -10,8 +10,7 @@
 #include "Graphics/MeshMap.h"
 #include "Graphics/ShaderMap.h"
 
-int Application::windowWidth = 1280;
-int Application::windowHeight = 720;
+
 
 
 Application::Application()
@@ -47,7 +46,10 @@ bool Application::initialize()
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-	m_window = glfwCreateWindow(Application::windowWidth, Application::windowHeight, "Dungeon Crawler", NULL, NULL);
+	Settings::setResolution(1280, 720);
+	Settings::setMaxLights(25);
+
+	m_window = glfwCreateWindow(Settings::getScreenWidth(), Settings::getScreenHeight(), "Dungeon Crawler", NULL, NULL);
 
 	if (m_window == nullptr) {
 		glfwTerminate();
@@ -113,13 +115,19 @@ void Application::run()
 		{
 			glfwSetWindowShouldClose(m_window, true);
 		}
-
 		currentTime = static_cast<float>(glfwGetTime());
 		float dt = currentTime - lastTime;
 		lastTime = currentTime;
 
 		m_stateManager->update(dt);
 		m_stateManager->render();
+
+		if (m_stateManager->wasStateChanged())
+		{
+			lastTime = static_cast<float>(glfwGetTime());
+			m_stateManager->resetWasStateChanged();
+		}
+
 
 		// SOUND STUFF
 		this->m_audioEngine->update();
@@ -132,10 +140,8 @@ void Application::run()
 		m_stateManager->renderImGUI();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		
 		glfwSwapBuffers(m_window);
 	}
-
 }
 
 
@@ -166,6 +172,8 @@ void Application::initShaders() {
 	shader = ShaderMap::createShader("ShadowPass", "ShadowPass/ShadowPass.vs", "ShadowPass/ShadowPass.fs");
 	shader = ShaderMap::createShader("EffectsShader", "EffectsShader.vs", "EffectsShader.fs");
 	shader = ShaderMap::createShader("UIShader", "UI.vs", "UI.fs");
+	shader = ShaderMap::createShader("MapShader", "Map.vs", "Map.fs");
+	shader = ShaderMap::createShader("ScreenBloodShader", "ScreenBlood.vs", "ScreenBlood.fs");
 }
 
 

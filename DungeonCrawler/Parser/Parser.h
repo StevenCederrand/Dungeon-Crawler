@@ -15,7 +15,6 @@ public:
 	//Parse SSO files
 	void parseSSO(const std::string filename);
 	void cleanMemoryAllocated();
-	void writeToBinary();
 
 private:
 	std::vector<std::string> split(const std::string& line, const char splitter);
@@ -31,11 +30,13 @@ private:
 	int getFaceIndexIfExist(GLuint vertexIndex, GLuint uvIndex, GLuint normalIndex, GLuint indexCounter);
 			
 	
+	void writeToBinary(ParserData* data, const std::string& filename);
 	void writeBinaryVecInt(std::ofstream& binaryFile, std::vector<GLuint> vector);
 	void writeBinaryVecVec3(std::ofstream& binaryFile, std::vector<glm::vec3> vector);
 	void writeBinaryVecVec2(std::ofstream& binaryFile, std::vector<glm::vec2> vector);
 	void writeBinaryString(std::ofstream& binaryFile, std::string string);
 	void writeBinaryVec3(std::ofstream& binaryFile, glm::vec3 vector);
+	void writeBinaryVec4(std::ofstream& binaryFile, glm::vec4 vector);
 	void writeBinaryFloat(std::ofstream& binaryFile, GLfloat floatValue);
 	
 	void loadFromBinary(ParserData* data, const std::string& filename);
@@ -44,6 +45,7 @@ private:
 	void readBinaryVecVec2(std::ifstream& binaryFile, ParserData* parserData);
 	void readBinaryString(std::ifstream& binaryFile, ParserData* parserData, int choice);
 	void readBinaryVec3(std::ifstream& binaryFile, ParserData* parserData, int choice);
+	void readBinaryVec4(std::ifstream& binaryFile, ParserData* parserData);
 	void readBinaryFloat(std::ifstream& binaryFile, ParserData* parserData, int choice);
 		
 private:

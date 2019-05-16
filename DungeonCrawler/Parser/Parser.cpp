@@ -51,15 +51,11 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 	GLuint indexCount = 0;
 	bool isParsingCollider = false;
 
-	//varibles used by nodes
-	bool isParsingNodes = false;
-	std::vector<glm::vec3> nodeVector;
-	//int nodeCounter = 0;
-
 	// Used to save data for the collision boxes in the obj
 	std::vector<glm::vec3> maxMinVector;
 	bool newCollider = false;
 	unsigned int currentBox = -2;
+	glm::vec4 maxMin = glm::vec4(-1000, -1000, 1000, 1000); 
 
 	while (std::getline(objFile, line))
 	{
@@ -82,12 +78,6 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 				isParsingCollider = true;
 				newCollider = true;
 			}
-			else if (attribs[1] == "object" && attribs[2] == "nodes")
-			{
-				//setting nodes to true and collider to false
-				isParsingNodes = true;
-				isParsingCollider = false;
-			}
 			continue;
 		}
 
@@ -97,9 +87,28 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 		}
 		else if (attribs[0] == "v")
 		{
-			if (!isParsingCollider && !isParsingNodes) {
+			if (!isParsingCollider) {
 				glm::vec3 vert = glm::vec3(std::stof(attribs[1]), std::stof(attribs[2]), std::stof(attribs[3]));
 				tempVertexBuffer.emplace_back(vert);
+
+				//Used for marking the max and min coordinates of the room
+				if (vert.x > maxMin.x)
+				{
+					maxMin.x = vert.x;
+					
+				}
+				if (vert.z > maxMin.y) {
+					maxMin.y = vert.z;
+				}
+				if (vert.x < maxMin.z)
+				{
+					maxMin.z = vert.x;
+					
+				}
+				if (vert.z < maxMin.w) {
+					maxMin.w = vert.z;
+				}
+
 			}
 			else if (isParsingCollider)
 			{
@@ -125,27 +134,20 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 				if (maxMinVector[currentBox + 1].z < z) maxMinVector[currentBox + 1].z = z;
 
 			}
-			else if (isParsingNodes)
-			{ //Nodes, get the xyz and send it to the vector
-				float x = std::stof(attribs[1]);
-				float y = std::stof(attribs[2]);
-				float z = std::stof(attribs[3]);
-				nodeVector.emplace_back(glm::vec3(x, y, z));
-			}
-
 		}
-		else if (attribs[0] == "vt" && !isParsingCollider && !isParsingNodes)
+		else if (attribs[0] == "vt" && !isParsingCollider)
 		{
 			glm::vec2 vert = glm::vec2(std::stof(attribs[1]), std::stof(attribs[2]));
 			tempUVBuffer.emplace_back(vert);
 		}
-		else if (attribs[0] == "vn" && !isParsingCollider && !isParsingNodes)
+		else if (attribs[0] == "vn" && !isParsingCollider)
 		{
 			glm::vec3 vert = glm::vec3(std::stof(attribs[1]), std::stof(attribs[2]), std::stof(attribs[3]));
 			tempNormalBuffer.emplace_back(vert);
 		}
-		else if (attribs[0] == "f" && !isParsingCollider && !isParsingNodes)
+		else if (attribs[0] == "f" && !isParsingCollider)
 		{
+
 			std::vector<std::string> attributes = split(line, ' ');
 			for (size_t i = 1; i < attributes.size(); i++)
 			{
@@ -157,7 +159,7 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 			}
 		}
 	}
-
+	data->setMaxMinValues(maxMin);
 	
 	objFile.close();
 	tempVertexBuffer.clear();
@@ -170,11 +172,9 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 
 	data->setBoundingBox(maxMinVector);
 
-	data->setNodesVector(nodeVector);
-
 	data->setFilename(filenameString[0]);
 
-	//writeToBinary(data, filenameString[0]);
+	writeToBinary(data, filenameString[0]);
 	
 	m_memoryTracker.emplace_back(data);
 
@@ -256,74 +256,72 @@ int Parser::getFaceIndexIfExist(GLuint vertexIndex, GLuint uvIndex, GLuint norma
 	return -1;
 }
 //obj files to binary files in binary map
-void Parser::writeToBinary()
+void Parser::writeToBinary(ParserData* data, const std::string& filename)
 {
-	for (size_t i = 0; i < m_memoryTracker.size(); i++)
-	{
-		ParserData* data = m_memoryTracker[i];
-		std::string filename = data->getFilename();
-		std::ifstream  binaryExist(Binaries + filename);
-		//if the file exist dont write to it
-		if (binaryExist.good())
-		{
-			binaryExist.close();
-			continue;
-		}
 
-		binaryExist.close();
-		std::ofstream binaryFile(Binaries + filename, std::ios::binary);
+	//ParserData* data = m_memoryTracker[i];
+	//std::string filename = data->getFilename();
+	//std::ifstream  binaryExist(Binaries + filename);
+	//if the file exist dont write to it
+	//if (binaryExist.good())
+	//{
+	//	binaryExist.close();
+	//	continue;
+	//}
+	//binaryExist.close();
 
-		std::vector<GLuint> indices = data->getIndices();
-		writeBinaryVecInt(binaryFile, indices);
+	std::ofstream binaryFile(Binaries + filename, std::ios::binary);
 
-
-		std::vector<glm::vec3> vertices = data->getVertices();
-		writeBinaryVecVec3(binaryFile, vertices);
-
-		std::vector<glm::vec2> uvs = data->getUvs();
-		writeBinaryVecVec2(binaryFile, uvs);
-
-		std::vector<glm::vec3> normals = data->getNormals();
-		writeBinaryVecVec3(binaryFile, normals);
-
-		//Diffuse map
-		std::string textureFilename = data->getTextureFilename();
-		writeBinaryString(binaryFile, textureFilename);
-		//Normal Map
-		textureFilename = data->getNormalMapName();
-		writeBinaryString(binaryFile, textureFilename);
-		//Filename
-		textureFilename = data->getFilename();
-		writeBinaryString(binaryFile, textureFilename);
-		//Ambient Map
-		textureFilename = data->getAmbientMapName();
-		writeBinaryString(binaryFile, textureFilename);
+	std::vector<GLuint> indices = data->getIndices();
+	writeBinaryVecInt(binaryFile, indices);
 
 
-		glm::vec3 diffuseColor = data->getDiffuseColor();
-		writeBinaryVec3(binaryFile, diffuseColor);
+	std::vector<glm::vec3> vertices = data->getVertices();
+	writeBinaryVecVec3(binaryFile, vertices);
 
-		glm::vec3 specularColor = data->getSpecularColor();
-		writeBinaryVec3(binaryFile, specularColor);
+	std::vector<glm::vec2> uvs = data->getUvs();
+	writeBinaryVecVec2(binaryFile, uvs);
 
-		glm::vec3 ambientColor = data->getAmbientColor();
-		writeBinaryVec3(binaryFile, ambientColor);
+	std::vector<glm::vec3> normals = data->getNormals();
+	writeBinaryVecVec3(binaryFile, normals);
 
-		GLfloat shininess = data->getShininess();
-		writeBinaryFloat(binaryFile, shininess);
+	//Diffuse map
+	std::string textureFilename = data->getTextureFilename();
+	writeBinaryString(binaryFile, textureFilename);
+	//Normal Map
+	textureFilename = data->getNormalMapName();
+	writeBinaryString(binaryFile, textureFilename);
+	//Filename
+	textureFilename = data->getFilename();
+	writeBinaryString(binaryFile, textureFilename);
+	//Ambient Map
+	textureFilename = data->getAmbientMapName();
+	writeBinaryString(binaryFile, textureFilename);
 
-		GLfloat normalMapStrength = data->getNormalMapStrength();
-		writeBinaryFloat(binaryFile, normalMapStrength);
 
-		std::vector<glm::vec3> maxMinVector = data->getMaxMinVector();
-		writeBinaryVecVec3(binaryFile, maxMinVector);
+	glm::vec3 diffuseColor = data->getDiffuseColor();
+	writeBinaryVec3(binaryFile, diffuseColor);
 
-		//writing vector of nodes to binary
-		std::vector<glm::vec3> nodeVector = data->getNodesVector();
-		writeBinaryVecVec3(binaryFile, nodeVector);
+	glm::vec3 specularColor = data->getSpecularColor();
+	writeBinaryVec3(binaryFile, specularColor);
 
-		binaryFile.close();
-	}
+	glm::vec3 ambientColor = data->getAmbientColor();
+	writeBinaryVec3(binaryFile, ambientColor);
+
+	glm::vec4 maxMinValues = data->getMaxMinValues();
+	writeBinaryVec4(binaryFile, maxMinValues);
+	
+	GLfloat shininess = data->getShininess();
+	writeBinaryFloat(binaryFile, shininess);
+
+	GLfloat normalMapStrength = data->getNormalMapStrength();
+	writeBinaryFloat(binaryFile, normalMapStrength);
+
+	std::vector<glm::vec3> maxMinVector = data->getMaxMinVector();
+	writeBinaryVecVec3(binaryFile, maxMinVector);
+
+	binaryFile.close();
+
 }
 
 void Parser::processFace(GLuint vertexIndex, GLuint uvIndex, GLuint normalIndex, GLuint & indexCounter, 
@@ -408,7 +406,9 @@ void Parser::parseMaterialFile(const std::string& filename, ParserData* parserDa
 				LOG_INFO(parserData->getNormalMapName());
 			}
 			else {
-				LOG_ERROR(exporterProgram + " .MTL FILES NOT SUPPORTED");
+				LOG_INFO("NORMAL MAP EXISTS");
+				parserData->setNormalMapName(TexturePath + attribs[attribs.size() - 1]);
+				
 			}
 		}
 	}
@@ -595,6 +595,45 @@ void Parser::writeBinaryVec3(std::ofstream& binaryFile, glm::vec3 vector)
 	//binaryFile.close();
 }
 
+void Parser::writeBinaryVec4(std::ofstream& binaryFile, glm::vec4 vector) {
+
+	//std::ofstream binaryFile(Binaries + filename, std::ios::binary);
+	if (!binaryFile.is_open())
+	{
+		//LOG_ERROR("Binary file not found " + filename);
+		return;
+	}
+	//create string to have the data in
+	std::string stringvector;
+
+
+	//the string with the data
+	stringvector.append(std::to_string(vector.x));
+	stringvector.append(" ");
+	stringvector.append(std::to_string(vector.y));
+	stringvector.append(" ");
+	stringvector.append(std::to_string(vector.z));
+	stringvector.append(" ");
+	stringvector.append(std::to_string(vector.w));
+	stringvector.append(" ");
+
+
+	//size of the string
+	int indicesStringSize = stringvector.size();
+
+	//make a string of the size ( to write it to the file)
+	std::string indicesStringInt = std::to_string(indicesStringSize);
+	for (size_t i = indicesStringInt.size(); i < 10; i++)
+	{
+		indicesStringInt.append(" ");
+	}
+
+	//write to the file
+	binaryFile.write(indicesStringInt.c_str(), indicesStringInt.size());
+	binaryFile.write(stringvector.c_str(), indicesStringSize);
+
+}
+
 void Parser::writeBinaryFloat(std::ofstream& binaryFile, GLfloat floatValue)
 {
 
@@ -650,11 +689,13 @@ void Parser::loadFromBinary(ParserData* data, const std::string & filename)
 	readBinaryVec3(binaryFile, data, 1);
 	readBinaryVec3(binaryFile, data, 2);
 
+	readBinaryVec4(binaryFile, data); //This is the maxMinValue
+
 	readBinaryFloat(binaryFile, data,0);
 	readBinaryFloat(binaryFile, data, 1);
 
 	readBinaryVecVec3(binaryFile, data, 2);
-	readBinaryVecVec3(binaryFile, data, 3);
+
 
 
 	binaryFile.close();
@@ -691,7 +732,7 @@ void Parser::readBinaryVecInt(std::ifstream & binaryFile, ParserData* parserData
 	}
 	vecString.clear();
 }
-//vertex==0, normal==1, maxMin==2, nodes==3
+//vertex==0, normal==1, maxMin==2
 void Parser::readBinaryVecVec3(std::ifstream & binaryFile, ParserData * parserData, int choice)
 {
 	//read the value first (how big the other read should be)
@@ -743,10 +784,6 @@ void Parser::readBinaryVecVec3(std::ifstream & binaryFile, ParserData * parserDa
 	if (choice == 2)
 	{
 		parserData->setBoundingBox(maxMinVec);
-	}
-	else if (choice == 3)
-	{
-		parserData->setNodesVector(maxMinVec);
 	}
 	vecString.clear();
 }
@@ -867,6 +904,42 @@ void Parser::readBinaryVec3(std::ifstream & binaryFile, ParserData * parserData,
 	{
 		parserData->setAmbientColor(tempGL.x, tempGL.y, tempGL.z);
 	}
+	vecString.clear();
+}
+
+void Parser::readBinaryVec4(std::ifstream& binaryFile, ParserData* parserData)
+{
+
+	//read the value first (how big the other read should be)
+	char* textInt = new char[10];
+	binaryFile.read(textInt, 10);
+
+	//convert it  from char* to int
+	char* tempa;
+	int readSize = strtol(textInt, &tempa, 10);
+	delete[] textInt;
+
+	//make a char pointer to read to, readsize is the size
+	char* text = new char[readSize + 1];
+	binaryFile.read(text, readSize);
+
+	//make a vector string and fill it with the split function
+	text[readSize] = '\0';
+	std::string stringText = text;
+	delete[] text;
+	std::vector<std::string> vecString = split(stringText, ' ');
+
+	//fill the parserData with the Information
+
+	glm::vec4 tempGL;
+	tempGL.x = std::stof(vecString[0], NULL);
+	tempGL.y = std::stof(vecString[1], NULL);
+	tempGL.z = std::stof(vecString[2], NULL);
+	tempGL.w = std::stof(vecString[3], NULL);
+
+
+	parserData->setMaxMinValues(tempGL);
+
 	vecString.clear();
 }
 //shininess==0, normalMapStrength==1

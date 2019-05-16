@@ -12,6 +12,7 @@ uniform struct Spotlight {
 	vec3 position;
 	vec3 direction;
 	float radius;
+	float outerRadius;
 } spotlight;
 
 uniform vec4 flashColor;
@@ -131,15 +132,13 @@ vec3 flashEffect(vec3 worldPosition) {
 //Calculate the spotlight
 vec3 getSumOfSpotlights(vec3 worldPosition) {
 	vec3 lightDirection = normalize(spotlight.position - worldPosition);
-	float radialVal = dot(lightDirection, normalize(-spotlight.direction));
+	vec3 col = vec3(0.5f);
+	float theta = dot(lightDirection, normalize(-spotlight.direction));
+	float epsilon = spotlight.radius - spotlight.outerRadius;
+	float intensity = clamp((theta - spotlight.outerRadius) / epsilon, 0.0f, 1.0f);
 
-	if(radialVal > spotlight.radius) {
-		//Do Something
-		return vec3(0.2f);
-	}
-	else {
-		return vec3(0);
-	}
+	return col * intensity;
+
 }
 //Calculate all of the pointlight stuff
 vec3 getSumOfAllColorFromPointLights(float specularStrength, vec3 worldPosition) {

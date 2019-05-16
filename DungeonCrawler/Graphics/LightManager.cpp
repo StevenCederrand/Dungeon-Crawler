@@ -20,7 +20,7 @@ LightManager::LightManager()
 	
 	glGenBuffers(1, &m_ubo);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ubo);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, int(MaxLights * m_lightByteSize), NULL, GL_DYNAMIC_DRAW);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, int(Settings::getMaxLights() * m_lightByteSize), NULL, GL_DYNAMIC_DRAW);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_ubo);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }

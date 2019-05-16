@@ -3,7 +3,7 @@
 #include <GLM/glm.hpp>
 #include <vector>
 #include "Ray.h"
-#include "../GameObjects/GameObject.h";
+#include "../GameObjects/GameObject.h"
 
 class Camera {
 
@@ -18,7 +18,7 @@ public:
 	~Camera();
 
 	void update(float dt);
-
+	
 	void setToOrbit(bool shouldOrbit);
 	const glm::mat4 getViewMatrix() const;
 	const glm::mat4 getProjectionMatrix() const;

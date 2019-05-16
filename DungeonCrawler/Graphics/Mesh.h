@@ -21,6 +21,7 @@ public:
 	void setShininess(const float& shininess);
 	void setBoundingBoxMinMax(std::vector<glm::vec3> maxMinVector);
 	void setHasNormalMap(bool hasNormalMap);
+	void setMaxMinValues(const glm::vec4& maxMinValues);
 
 	/* Getters */
 	const unsigned int& getVao() const;
@@ -33,8 +34,10 @@ public:
 	const glm::vec3& getdiffuseColor() const;
 	const std::vector<glm::vec3>& getMaxMinVector() const;
 	const float& getShininess() const;
+	const glm::vec4& getMaxMinValues() const;
 	const bool& hasNormalMap() const;
 	const bool& hasAmbientMap() const;
+
 
 private:
 	unsigned int m_vao;
@@ -47,7 +50,7 @@ private:
 	glm::vec3 m_diffuseColor;
 	std::vector<glm::vec3> m_maxMinVector;
 	float m_shininess;
-
+	glm::vec4 m_maxMinValues;
 	bool m_hasNormalMap;
 	bool m_hasAmbientMap;
 	

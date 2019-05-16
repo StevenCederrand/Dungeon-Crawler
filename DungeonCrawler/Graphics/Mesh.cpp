@@ -63,6 +63,10 @@ void Mesh::setHasNormalMap(bool hasNormalMap)
 
 }
 
+void Mesh::setMaxMinValues(const glm::vec4& maxMinValues) {
+	this->m_maxMinValues = maxMinValues;
+}
+
 const unsigned int & Mesh::getVao() const
 {
 	return m_vao;
@@ -110,6 +114,10 @@ const std::vector<glm::vec3>& Mesh::getMaxMinVector() const
 const float & Mesh::getShininess() const
 {
 	return m_shininess;
+}
+
+const glm::vec4& Mesh::getMaxMinValues() const {
+	return this->m_maxMinValues;
 }
 
 const bool & Mesh::hasNormalMap() const

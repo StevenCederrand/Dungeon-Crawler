@@ -3,13 +3,21 @@
 #include "Renderer.h"
 #include "ShaderMap.h"
 #include "../System/Log.h"
-#include "Globals/Settings.h"
+#include <Globals/Settings.h>
 #define MESH_VECTOR_RESERVE_SIZE 150
 
-Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects)
+
+Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects, 
+	ProjectileManager* projectileManager, PlayerHealthBar* playerHealthBar, 
+	Map* map, ScreenBlood* screenBlood)
 {
+	m_rQuadVAO = 0;
+	m_rQuadVBO = 0;
+
 	m_camera = camera;
 	m_lightManager = lightManager;
+	m_map = map;
+	m_screenBlood = screenBlood;
 	m_framebuffer = new Framebuffer();
 	glEnable(GL_DEPTH_TEST);
 	//Generate framebuffers & textures
@@ -28,10 +36,12 @@ Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects)
 
 	//Create a new light projection matrix -- This doens't need to be created every frame
 	glm::mat4 projectionMatrix = glm::perspective(glm::radians(LIGHTFOV),
-		(float)ScreenResolutionX / (float)ScreenResolutionY, NEAR_CLIP, FAR_CLIP);
+		(float)Settings::getScreenWidth() / (float)Settings::getScreenHeight(), NEAR_CLIP, FAR_CLIP);
 	m_framebuffer->setProjectionMatrix(projectionMatrix);
 
-	m_effects = effects; // Point to effect class
+	m_effects = effects;
+	m_projectileManager = projectileManager;
+	m_playerHealthBar = playerHealthBar;
 }
 
 Renderer::~Renderer() {
@@ -65,16 +75,10 @@ void Renderer::prepareGameObjects(const std::vector<GameObject*>& gameObjects)
 void Renderer::preparePlayerLights(Player* player) {
 	m_playerSpotLight = player->getSpotlight();
 	m_playerLight = player->getFlash();
-
 }
 
 void Renderer::render() {
 
-	//if (m_playerLight != nullptr) {
-	//	std::string vec = std::to_string(m_playerLight->position.x) + " " +
-	//		std::to_string(m_playerLight->position.y) + " " + std::to_string(m_playerLight->position.z);
-	//	LOG_INFO(vec);
-	//}
 
 	this->shadowPass();
 	this->geometryPass();
@@ -85,11 +89,16 @@ void Renderer::render() {
 	m_framebuffer->bindFrameBuffer();
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); //write to default framebuffer
 	glBlitFramebuffer(
-		0, 0, ScreenResolutionX, ScreenResolutionY, 0, 0, ScreenResolutionX, ScreenResolutionY, GL_DEPTH_BUFFER_BIT, GL_NEAREST
+		0, 0, Settings::getScreenWidth(), Settings::getScreenHeight(), 0, 0, Settings::getScreenWidth(), Settings::getScreenHeight(), GL_DEPTH_BUFFER_BIT, GL_NEAREST
 	);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	
+	this->renderHealthBar();
 	this->renderEffects();
+
+	this->renderMap();
+	this->renderProjectiles();
+	this->renderBlood();
 }
 
 void Renderer::shadowPass() {
@@ -110,6 +119,9 @@ void Renderer::shadowPass() {
 		glBindVertexArray(mesh.first->getVao());
 		glEnableVertexAttribArray(0);
 		for (auto object : mesh.second) {
+
+			if (dynamic_cast<Player*>(object)) continue;
+		
 			shadowShader->setMat4("modelMatrix", object->getModelMatrix());
 			glDrawElements(GL_TRIANGLES, mesh.first->getNrOfIndices(), GL_UNSIGNED_INT, NULL);
 		}
@@ -186,6 +198,62 @@ void Renderer::renderEffects()
 	glDisable(GL_BLEND);
 }
 
+void Renderer::renderProjectiles()
+{
+	glEnable(GL_BLEND);
+	Shader* effectsShader = ShaderMap::getShader("EffectsShader");
+	effectsShader->use();
+	effectsShader->setMat4("viewMatrix", m_camera->getViewMatrix());
+	effectsShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+
+	glBindVertexArray(m_projectileManager->getVAO());
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_projectileManager->getTextureID());
+	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, m_projectileManager->getNumberOfEnemyProjectiles());
+	glBindTexture(GL_TEXTURE_2D, NULL);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
+	
+	glBindVertexArray(0);
+
+	effectsShader->unuse();
+	glDisable(GL_BLEND);
+}
+
+void Renderer::renderHealthBar()
+{
+	
+		
+	glEnable(GL_BLEND);
+	Shader* uiShader = ShaderMap::getShader("UIShader");
+	uiShader->use();
+	uiShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+	uiShader->setMat4("viewMatrix", m_camera->getViewMatrix());
+	uiShader->setMat4("modelMatrix", m_playerHealthBar->getModelMatrix());
+
+	glBindVertexArray(m_playerHealthBar->getVAO());
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_playerHealthBar->getTextureID());
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glBindTexture(GL_TEXTURE_2D, NULL);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glBindVertexArray(0);
+
+	uiShader->unuse();
+	glDisable(GL_BLEND);
+}
+
 void Renderer::lightPass() {
 
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -197,7 +265,8 @@ void Renderer::lightPass() {
 		lightShader->setVec3("spotlight.position", m_playerSpotLight->position);
 		lightShader->setVec3("spotlight.direction", m_playerSpotLight->direction);
 		lightShader->setFloat("spotlight.radius", m_playerSpotLight->radius);
-		
+		lightShader->setFloat("spotlight.outerRadius", m_playerSpotLight->outerRadius);
+
 		lightShader->setVec4("flashPosition", m_playerLight->position);
 		lightShader->setVec4("flashColor", m_playerLight->color);
 	}
@@ -207,6 +276,80 @@ void Renderer::lightPass() {
 	lightShader->setVec3("cameraPosition", m_camera->getPosition());
 	drawQuad();
 	lightShader->unuse();
+}
+
+void Renderer::renderMap()
+{
+	if (m_map->getShouldRender()) {
+
+		Shader* mapShader = ShaderMap::getShader("MapShader");
+		mapShader->use();
+
+		std::vector<glm::vec4> maxMinValues = m_map->getRoomCoordinates();
+		//tempvalue is a value that decides how far each room will be apart in the map
+		float tempValue = float(1) / float(45);
+
+		int roomWithPlayer = m_map->roomWithPlayer();
+		int roomHasPlayer = 0;
+
+		//set the view and projection matrix in the shader
+		mapShader->setMat4("viewMatrix", m_camera->getViewMatrix());
+		mapShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+
+		//do it for all the rooms in the maxMin Vector
+		for (size_t i = 0; i < maxMinValues.size(); i++)
+		{
+			roomHasPlayer = 0;
+			if (roomWithPlayer == i)
+				roomHasPlayer = 1;
+			
+			//get the modelMatrix from the room
+			glm::mat4 modelmatrix = m_map->getModelMatrix();
+		
+			//move the room the the right place
+			modelmatrix = glm::translate(modelmatrix, glm::vec3(
+				maxMinValues[i].x * tempValue,
+				-maxMinValues[i].y * tempValue,
+				0.0f));
+		
+			//Set the modelmatrix in the shader
+			mapShader->setInt("roomHasPlayer", roomHasPlayer);
+			mapShader->setMat4("modelMatrix", modelmatrix);
+			glBindVertexArray(m_map->getVao());
+			glEnableVertexAttribArray(0);
+			glDrawArrays(GL_TRIANGLES, 0, 12);
+
+		}
+		glDisableVertexAttribArray(0);
+		glBindVertexArray(0);
+
+
+		mapShader->unuse();
+	}
+}
+
+void Renderer::renderBlood()
+{
+	glEnable(GL_BLEND);
+	Shader* ScreenBloodShader = ShaderMap::getShader("ScreenBloodShader");
+	ScreenBloodShader->use();
+	
+	ScreenBloodShader->setFloat("alpha", m_screenBlood->getAlpha());
+	glBindVertexArray(m_screenBlood->getVAO());
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_screenBlood->getTextureID());
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glBindTexture(GL_TEXTURE_2D, NULL);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glBindVertexArray(0);
+
+	ScreenBloodShader->unuse();
+	glDisable(GL_BLEND);
 }
 
 void Renderer::bindMesh(Mesh * mesh, Shader* shader)
@@ -280,7 +423,7 @@ void Renderer::drawQuad() {
 }
 
 void Renderer::configureShadowMapperVM() {
-	glm::vec3 pos = m_playerSpotLight->position + glm::vec3(0, 0.5f, 0);
+	glm::vec3 pos = m_playerSpotLight->position;
 	glm::mat4 viewMatrix = glm::lookAt(pos, pos + m_playerSpotLight->direction, glm::vec3(0, 1, 0));
 	m_framebuffer->setViewMatrix(viewMatrix);
 }

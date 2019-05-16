@@ -6,52 +6,33 @@
 #include "../Audio/AudioEngine.h"
 
 #include <Graphics/ShaderMap.h>
-#include <System/Application.h>
+#include <Globals/Settings.h>
 
 #include <thread>
 #include "PlayState.h"
 
-
-
 using namespace std::chrono_literals;
 
-void temp(bool& completed) {
-	for (size_t i = 0; i < 1000; i++)
-	{
-		LOG_INFO(i);
-	}
-	completed = true;
-}
-
-void temp3(PlayState*& state, bool& completed) {
-	if (state == nullptr) {
-		state = new PlayState();
-	}
-	else {
-		LOG_WARNING("STATE ALREADY INTIALIZED");
-	}
-	completed = true;
-}
-
-void temp2(const bool& completed) {
+void loadScreen(const bool& completed) {
 	while (!completed) {
-		LOG_INFO("LOADING");
+		//LOG_INFO("LOADING");
 		std::this_thread::sleep_for(10ms);
 	}
 }
 
 MenuState::MenuState() {
-	this->m_camera = new UICamera();
+	m_camera = new UICamera();
 	m_uiManager = new UIManager(m_camera);
 	m_glInit = new GLinit();
 	createUIElements();
 	AudioEngine::loadSSO("Menu.sso");
-
+	GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
+	glfwSetCursor(glfwGetCurrentContext(), cursor);
 }
 
 MenuState::~MenuState()
 {
-	delete this->m_camera;
+	delete m_camera;
 	delete m_glInit;
 	delete m_uiManager;
 }
@@ -59,24 +40,24 @@ MenuState::~MenuState()
 void MenuState::createUIElements()
 {
 	m_logo = new Image(
-		glm::vec2((float)Application::windowWidth * 0.5f, (float)Application::windowHeight - 125.f),
-		glm::vec2(300.f, 200.f),
+		glm::vec2((float)Settings::getScreenWidth() * 0.5f, (float)Settings::getScreenHeight() * 0.8f),
+		glm::vec2(300.f, 150.f),
 		m_glInit,
 		"logo.png");
 
 	m_playButton = new Button(
-		glm::vec2((float)Application::windowWidth * 0.5f, (float)Application::windowHeight * 0.5),
+		glm::vec2((float)Settings::getScreenWidth() * 0.5f, (float)Settings::getScreenHeight() * 0.5),
 		glm::vec2(150.f, 100.f),
 		m_glInit,
-		"playbtn_active.png",
-		"playbtn_inactive.png");
+		"Play-Sel.png",
+		"Play-UnSel.png");
 
 	m_exitButton = new Button(
-		glm::vec2((float)Application::windowWidth * 0.5f, (float)Application::windowHeight * 0.30),
+		glm::vec2((float)Settings::getScreenWidth() * 0.5f, (float)Settings::getScreenHeight() * 0.30),
 		glm::vec2(150.f, 100.f),
 		m_glInit,
-		"exitbtn_active.png",
-		"exitbtn_inactive.png");
+		"Exit-Sel.png",
+		"Exit-UnSel.png");
 
 	m_uiManager->registerUIElement(m_logo);
 	m_uiManager->registerUIElement(m_playButton);
@@ -91,7 +72,7 @@ void MenuState::update(float dt) {
 		bool completed = false;
 
 		//Have a side thread output text while it's loading
-		std::thread b(temp2, std::ref(completed));
+		std::thread b(loadScreen, std::ref(completed));
 
 		//The main thread will then create the playstate
 		PlayState* state = new PlayState();
