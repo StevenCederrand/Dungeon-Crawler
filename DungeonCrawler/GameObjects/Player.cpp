@@ -105,7 +105,8 @@ void Player::update(float dt)
 			if ((m_pistolBullets <= 0) && (m_reloading == false) && (m_spraying == false))
 			{
 				m_reloading = true;
-				m_reloadTime = 2.f;
+				AudioEngine::play("gun_reload", 1.0f);
+				m_reloadTime = 4.f;
 			}
 			manualReload(dt);
 		//}
@@ -388,7 +389,7 @@ void Player::manualReload(float dt)
 	{
 		m_reloading = true;
 		AudioEngine::play("gun_reload", 1.0f);
-		m_reloadTime = 2.f;
+		m_reloadTime = 4.f;
 	}
 }
 
