@@ -7,7 +7,7 @@
 #include <string>
 #include "FBXParserData.h"
 
-namespace FBXImporter {
+namespace FBXParserLibrary {
 	void displayMeshName();
 	void displayVertices();
 

@@ -1,7 +1,7 @@
 #include "FBXParserLibrary.h"
 
 //Lib file that interprets binary values to base 10 values and returns them
-namespace FBXImporter {
+namespace FBXParserLibrary {
 
 	//Debug function to test the .lib file and write the mesh name
 	void displayMeshName()
