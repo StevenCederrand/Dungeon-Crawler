@@ -21,7 +21,7 @@ private:
 	std::vector<glm::vec2> m_uvs;
 	std::vector<glm::vec3> m_normals;
 
-	//textures
+	//textures, DONT USE; USE THE HEADER
 	std::vector<std::string> m_albedoMapName;
 	std::vector<std::string> m_normalMapName;
 
@@ -78,6 +78,9 @@ public:
 	//MaterialHeader
 	void setMaterialHeaderNameOfAlbedo(std::vector<char> nameOfAlbedo);
 	void setMaterialHeaderNameOfNormal(std::vector<char> nameOfNormal);
+	void setMaterialHeaderMaterialID(unsigned int materialID);
+	void setMaterialHeaderNrOfTextures(unsigned int nrOfTextures);
+	void setMaterialHeaderWhatShader(unsigned int whatShader);
 
 	//BoundingBoxVertex
 	void setBBVHeaderPositionOfBoundingBox(float position[]);

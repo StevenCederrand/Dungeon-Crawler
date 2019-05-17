@@ -305,50 +305,32 @@ namespace FBXParserLibrary {
 
 	void displayMaterialHeader(std::ifstream& infileBinary, FBXParserData* fileData)
 	{
-		std::string lnameOfAlbedoMapSTRING;
 		std::vector<char> lnameOfAlbedoMapCHARS;
-		std::string lnameOfNormalMapSTRING;
 		std::vector<char> lnameOfNormalMapCHARS;
+
 		for (int i = 0; i < 100; i++)
 		{
 			char currentChar = binaryToChar(infileBinary);
 			lnameOfAlbedoMapCHARS.push_back(currentChar); //Reads file
-			lnameOfAlbedoMapSTRING += currentChar;
+			//lnameOfAlbedoMapSTRING += currentChar;
 		}
-		//std::cout << "Name of Albedo: ";
-		fileData->addAlbedoMapName(lnameOfAlbedoMapSTRING);
-
-		for (int i = 0; i < 100; i++)
-		{
-			//std::cout << lnameOfAlbedoMapCHARS[i];
-		}
-		//std::cout << "\n";
-		setNameOfAlbedo(fileData, lnameOfAlbedoMapCHARS);
-
+		fileData->setMaterialHeaderNameOfAlbedo(lnameOfAlbedoMapCHARS); //sets the name directly in ParserData
 
 		for (int i = 0; i < 100; i++)
 		{
 			char currentChar = binaryToChar(infileBinary);
 			lnameOfNormalMapCHARS.push_back(currentChar); //Reads file
-			lnameOfNormalMapSTRING += currentChar;
 		}
-		//std::cout << "Name of Normal: ";
-		for (int i = 0; i < 100; i++)
-		{
-			//std::cout << lnameOfNormalMapCHARS[i];
-		}
-		//std::cout << "\n";
-		setNameOfNormal(fileData, lnameOfNormalMapCHARS);
-
+		fileData->setMaterialHeaderNameOfNormal(lnameOfNormalMapCHARS);
 
 		int materialID = (int)binaryToInt(infileBinary);
-		//std::cout << "Material ID: " << materialID << "\n";
+		fileData->setMaterialHeaderMaterialID(materialID);
 
 		unsigned int nrOfTextures = (int)binaryToInt(infileBinary);
-		//std::cout << "nrOfTextures: " << nrOfTextures << "\n";
+		fileData->setMaterialHeaderNrOfTextures(nrOfTextures);
 
 		unsigned int whatShader = (int)binaryToInt(infileBinary);
-		//std::cout << "whatShader: " << whatShader << "\n";
+		fileData->setMaterialHeaderWhatShader(whatShader);
 	}
 	
 
@@ -514,6 +496,7 @@ namespace FBXParserLibrary {
 
 
 	//material header
+
 	void setNameOfAlbedo(FBXParserData* fileData, std::vector<char> nameOfAlbedo)
 	{
 		fileData->setMaterialHeaderNameOfAlbedo(nameOfAlbedo);

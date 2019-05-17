@@ -200,6 +200,21 @@ void FBXParserData::setMaterialHeaderNameOfNormal(std::vector<char> nameOfNormal
 	}
 }
 
+void FBXParserData::setMaterialHeaderMaterialID(unsigned int materialID)
+{
+	m_materialHeader.materialID = materialID;
+}
+
+void FBXParserData::setMaterialHeaderNrOfTextures(unsigned int nrOfTextures)
+{
+	m_materialHeader.nrOfTextures = nrOfTextures;
+}
+
+void FBXParserData::setMaterialHeaderWhatShader(unsigned int whatShader)
+{
+	m_materialHeader.whatShader = whatShader;
+}
+
 //bouding box
 void FBXParserData::setBBVHeaderPositionOfBoundingBox(float position[])
 {
