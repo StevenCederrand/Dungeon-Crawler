@@ -1,4 +1,4 @@
-#include "FBXImporter.h"
+#include "FBXParserLibrary.h"
 
 //Lib file that interprets binary values to base 10 values and returns them
 namespace FBXImporter {
@@ -568,7 +568,4 @@ namespace FBXImporter {
 
 		fileData->setMaxMinValues(lmaxMinValues);
 	}
-
-	HITBOX DOESNT WORK
-
 }

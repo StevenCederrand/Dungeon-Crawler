@@ -27,6 +27,7 @@
 PlayState::PlayState() {
 
 	m_parser = new Parser();
+	m_FBXParser = new FBXParser();
 	m_GLinit = new GLinit();
 
 	#pragma region Init
@@ -43,7 +44,7 @@ PlayState::PlayState() {
 	
 	//change to FBX, one Parserdata for multiple objects
 	//CONTINUE HERE
-	FBXParserData* enemyData = m_FBXParser->binaryMeshReading("ourFileBinary.bin");
+	FBXParserData* enemyData = m_FBXParser->binaryMeshReading("ourFileBinary.bin"); //SHOULD MAKE BINARY
 	m_GLinit->createMeshFBX("Enemy", enemyData);
 	//delete enemyData;
 

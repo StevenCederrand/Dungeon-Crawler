@@ -1,16 +1,15 @@
 #pragma once
-#include "HeaderStruct.h"
-#include "FBXBinReader.h"
-#include "../Graphics/MeshMap.h"
+#include "FBXParserLibrary.h"
 
-class FBXParser{
 
+class FBXParser
+{
 public:
 	FBXParser();
 	~FBXParser();
 
+	FBXParserData* binaryMeshReading(std::string nameOfFile);
 
-	void createMesh(Mesh& mesh);
 
 private:
 

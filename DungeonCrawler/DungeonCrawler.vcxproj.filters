@@ -65,9 +65,6 @@
     <ClCompile Include="Utility\UICamera.cpp" />
     <ClCompile Include="UserInterface\UIManager.cpp" />
     <ClCompile Include="UserInterface\Image.cpp" />
-    <ClCompile Include="FBX\FBXBinReader.cpp" />
-    <ClCompile Include="FBX\FBXImporter.cpp" />
-    <ClCompile Include="FBX\FBXParser.cpp" />
     <ClCompile Include="FBX\FBXParserData.cpp" />
     <ClCompile Include="States\GameOverState.cpp" />
     <ClCompile Include="AI\GridSystem.cpp" />
@@ -78,6 +75,8 @@
     <ClCompile Include="Vendor\Lodepng\lodepng.cpp" />
     <ClCompile Include="Gui\ScreenBlood.cpp" />
     <ClCompile Include="System\Main.cpp" />
+    <ClCompile Include="FBX\FBXParser.cpp" />
+    <ClCompile Include="FBX\FBXParserLibrary.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI\AStar.h" />
@@ -178,10 +177,9 @@
     <ClInclude Include="Gui\PlayerHealthBar.h" />
     <ClInclude Include="Vendor\Lodepng\lodepng.h" />
     <ClInclude Include="Gui\ScreenBlood.h" />
-    <ClInclude Include="FBX\FBXBinReader.h" />
-    <ClInclude Include="FBX\FBXImporter.h" />
-    <ClInclude Include="FBX\FBXParser.h" />
     <ClInclude Include="FBX\FBXParserData.h" />
     <ClInclude Include="FBX\Headerstruct.h" />
+    <ClInclude Include="FBX\FBXParser.h" />
+    <ClInclude Include="FBX\FBXParserLibrary.h" />
   </ItemGroup>
 </Project>

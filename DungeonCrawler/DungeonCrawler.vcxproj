@@ -164,9 +164,8 @@
     <ClCompile Include="Collision\AABB.cpp" />
     <ClCompile Include="EnemyProjectile\Projectile.cpp" />
     <ClCompile Include="EnemyProjectile\ProjectileManager.cpp" />
-    <ClCompile Include="FBX\FBXBinReader.cpp" />
-    <ClCompile Include="FBX\FBXImporter.cpp" />
     <ClCompile Include="FBX\FBXParser.cpp" />
+    <ClCompile Include="FBX\FBXParserLibrary.cpp" />
     <ClCompile Include="FBX\FBXParserData.cpp" />
     <ClCompile Include="GameObjects\Box.cpp" />
     <ClCompile Include="GameObjects\Enemies\Boss.cpp" />
@@ -225,9 +224,8 @@
     <ClInclude Include="Audio\AudioEngine.h" />
     <ClInclude Include="Collision\AABB.h" />
     <ClInclude Include="Collision\HitData.h" />
-    <ClInclude Include="FBX\FBXBinReader.h" />
-    <ClInclude Include="FBX\FBXImporter.h" />
     <ClInclude Include="FBX\FBXParser.h" />
+    <ClInclude Include="FBX\FBXParserLibrary.h" />
     <ClInclude Include="FBX\FBXParserData.h" />
     <ClInclude Include="FBX\Headerstruct.h" />
     <ClInclude Include="EnemyProjectile\Projectile.h" />
