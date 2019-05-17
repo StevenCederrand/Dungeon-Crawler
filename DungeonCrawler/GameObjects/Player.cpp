@@ -35,7 +35,7 @@ Player::Player(Mesh* mesh, Type type) :
 	this->m_shake = 0.f;
 	this->m_shakeDir = glm::vec3(0.f, 0.f, 0.f);
 	this->m_sinTime = 0.f;
-	this->m_sinAddTime = 10.f;
+	this->m_sinAddTime = 10.f; // 0.30 sekunder walk ljud - inte synkat
 
 	this->m_spotlight = new Spotlight();
 	this->m_spotlight->position = this->getPlayerPosition() + glm::vec3(0.0f, 1.0f, 0.0f);
@@ -124,7 +124,7 @@ void Player::update(float dt)
 		reloadCd(dt);
 		screenShake(dt);
 		spotlightHandler();
-		wobbleAnim(dt);
+		
 	}
 }
 
@@ -212,7 +212,13 @@ void Player::move(float dt)
 	}
 
 	if (inMotion) {
+		wobbleAnim(dt);
 		AudioEngine::playOnce(m_walkSounds.at(1), 0.5f);
+	}
+	else
+	{
+		setRotation(glm::vec3(getRotation().x, getRotation().y, 0.f));
+		m_sinTime = 0.f;
 	}
 	setVelocity(m_movementDirection);
 	
@@ -480,10 +486,11 @@ void Player::screenShake(float dt)
 
 void Player::wobbleAnim(float dt)
 {
-	float sinCurve = (25 * sin(m_sinTime));
+	float sinCurve = (10 * sin(m_sinTime));
 	m_sinTime += (m_sinAddTime * dt);
 	
 	setRotation(glm::vec3(getRotation().x, getRotation().y, sinCurve));
+	//setRotation(glm::vec3(sinCurve, getRotation().y, getRotation().z));
 }
 
 void Player::setSpeed(float speed)
