@@ -44,7 +44,7 @@ PlayState::PlayState() {
 	
 	//change to FBX, one Parserdata for multiple objects
 	//CONTINUE HERE
-	FBXParserData* enemyData = m_FBXParser->binaryMeshReading("ourFileBinary.bin"); //SHOULD MAKE BINARY
+	FBXParserData* enemyData = m_FBXParser->binaryMeshReading(FBXPath + "ourFileBinary.bin"); //SHOULD MAKE BINARY
 	m_GLinit->createMeshFBX("Enemy", enemyData);
 	//delete enemyData;
 
