@@ -93,20 +93,51 @@ Mesh* GLinit::createMeshFBX(std::string name, FBXParserData* data)
 	storeDataInAttributeList(2, 3, data->getNormals());
 	glBindVertexArray(NULL);
 
-	std::vector<std::string> TextureFiles = data->getAlbedoMapName();
+	std::string lTextureFiles;
+	for (int i = 0; i < 100; i++)
+	{
+		if (data->getMaterialHeader().nameOfAlbedo[i] == ' ')
+			i = 100;
+		else
+			lTextureFiles += data->getMaterialHeader().nameOfAlbedo[i];
+	}
+	std::string lEntireFilePath = TexturePath + lTextureFiles;
 
-	GLuint textureID = createTexture(TexturePath + "RTS_Crate.png"); //should be texture files name
+	GLuint textureID = createTexture(lEntireFilePath); //should be texture files name
 
 	Mesh* mesh = new Mesh();
 
 	mesh->setVao(vao);
-	mesh->setTextureID(1);
+	mesh->setTextureID(textureID);
 	mesh->setNrOfIndices(onlyVisibleMeshes.size());
 	mesh->setAmbientColor(glm::vec3(255, 0, 0));
 	mesh->setSpecularColor(glm::vec3(255, 0, 0));
 	mesh->setDiffuseColor(glm::vec3(255, 0, 0));
 	mesh->setShininess(1);
 	mesh->setMaxMinValues(data->getMaxMinValues());
+
+
+	if (data->getMaterialHeader().nameOfNormal[0] != ' ')
+	{
+		mesh->setHasNormalMap(1);
+
+		std::string lNormalFiles;
+		for (int i = 0; i < 100; i++)
+		{
+			if (data->getMaterialHeader().nameOfNormal[i] == ' ')
+				i = 100;
+			else
+				lNormalFiles += data->getMaterialHeader().nameOfNormal[i];
+		}
+		std::string lEntireNormalFilePath = TexturePath + lNormalFiles;
+		GLuint normalID = createTexture(lEntireNormalFilePath);
+		mesh->setNormalID(normalID);
+	}
+	else
+		mesh->setHasNormalMap(0);
+
+	NORMALMAP DOESNT WORK YET
+
 	/*
 
 	mesh->setHasNormalMap(data->hasNormalMap());
@@ -119,14 +150,7 @@ Mesh* GLinit::createMeshFBX(std::string name, FBXParserData* data)
 		GLuint ambientID = createTexture(data->getAmbientMapName());
 		mesh->setAmbientID(ambientID);
 	}
-	mesh->setVao(vao);
-	mesh->setTextureID(textureID);
-	mesh->setNrOfIndices(int(data->getIndices().size()));
-	mesh->setAmbientColor(data->getAmbientColor());
-	mesh->setSpecularColor(data->getSpecularColor());
-	mesh->setDiffuseColor(data->getDiffuseColor());
-	mesh->setShininess(data->getShininess());
-	mesh->setBoundingBoxMinMax(data->getMaxMinVector());
+	
 	*/
 
 	

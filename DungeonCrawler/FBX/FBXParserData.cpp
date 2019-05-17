@@ -237,6 +237,11 @@ MeshHeader FBXParserData::getMeshHeader() const
 	return this->m_meshHeader;
 }
 
+Material FBXParserData::getMaterialHeader()const
+{
+	return m_materialHeader;
+}
+
 BoundingBoxHeader FBXParserData::getBoundingBoxHeader() const
 {
 	return m_boundingBoxHeader;

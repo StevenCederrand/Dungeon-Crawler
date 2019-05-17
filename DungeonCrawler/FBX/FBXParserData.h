@@ -40,6 +40,7 @@ public:
 	//Struct getters functions in order
 	MainHeader getMainHeader()const;
 	MeshHeader getMeshHeader()const;
+	Material getMaterialHeader()const;
 	BoundingBoxHeader getBoundingBoxHeader()const;
 	Vertex getVertexHeader()const;
 	BoundingBoxVertex getBoundingBoxVertexHeader()const;

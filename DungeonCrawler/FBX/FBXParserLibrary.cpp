@@ -312,7 +312,6 @@ namespace FBXParserLibrary {
 		{
 			char currentChar = binaryToChar(infileBinary);
 			lnameOfAlbedoMapCHARS.push_back(currentChar); //Reads file
-			//lnameOfAlbedoMapSTRING += currentChar;
 		}
 		fileData->setMaterialHeaderNameOfAlbedo(lnameOfAlbedoMapCHARS); //sets the name directly in ParserData
 
