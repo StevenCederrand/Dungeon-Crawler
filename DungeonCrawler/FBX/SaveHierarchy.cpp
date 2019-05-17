@@ -46,7 +46,7 @@ void SaveHierarchy::SaveEntireHierarchy(FbxScene* lScene)
 		//Write Material
 		for (int i = 0; i < lRootNode->GetChildCount(); i++)
 		{
-			m_SaveMaterial(lRootNode->GetChild(i));
+			m_SaveMaterialNode(lRootNode->GetChild(i));
 		}
 
 		//Write Hitboxes
@@ -288,7 +288,7 @@ void SaveHierarchy::m_SaveStaticHitboxNode(FbxNode* pNode)
 	}
 }
 
-void SaveHierarchy::m_SaveMaterial(FbxNode*pNode)
+void SaveHierarchy::m_SaveMaterialNode(FbxNode*pNode) //writes to file
 {
 	FbxNodeAttribute::EType nodeType = pNode->GetNodeAttributeByIndex(0)->GetAttributeType();
 	bool collisionBool = false;
@@ -331,7 +331,7 @@ void SaveHierarchy::m_SaveMaterial(FbxNode*pNode)
 			{
 				//write materialInfo
 				FbxMesh* lMesh = (FbxMesh*)pNode->GetNodeAttribute();
-				SaveMaterial(lMesh);
+				SaveMaterialFromMesh(lMesh); //loads the info to the material node
 
 				//do check if this material has already been written
 
@@ -373,7 +373,7 @@ void SaveHierarchy::m_SaveMaterial(FbxNode*pNode)
 	for (int j = 0; j < pNode->GetChildCount(); j++)
 	{
 		printf("\n");
-		m_SaveMaterial(pNode->GetChild(j));	//Deeper in the tree
+		m_SaveMaterialNode(pNode->GetChild(j));	//Deeper in the tree
 	}
 }
 
@@ -551,6 +551,49 @@ void SaveHierarchy::m_SaveStaticMesh(FbxNode* pNode, bool collision, bool static
 		printf("WARNING, MESH NOT TRIANGULATED\n");
 	}
 	m_staticMesh.MakeAllTheVertices(lNrOfVertices); //ASSEMPLES ALL THE VERTICES
+
+	//save material
+	//check whether the material maps with only one mesh
+	bool lIsAllSame = true;
+	for (int i = 0; i < lMesh->GetElementMaterialCount(); i++)
+	{
+
+		FbxGeometryElementMaterial* lMaterialElement = lMesh->GetElementMaterial(i);
+		if (lMaterialElement->GetMappingMode() == FbxGeometryElement::eByPolygon)
+		{
+			lIsAllSame = false;
+			break;
+		}
+	}
+	//For eAllSame mapping type, just out the material and texture mapping info once
+	if (lIsAllSame)
+	{
+		if (lMesh->GetElementMaterialCount() != 0)
+		{
+			for (int i = 0; i < lMesh->GetElementMaterialCount(); i++)
+			{
+
+				FbxGeometryElementMaterial* lMaterialElement = lMesh->GetElementMaterial(i);
+				if (lMaterialElement->GetMappingMode() == FbxGeometryElement::eAllSame)
+				{
+					FbxSurfaceMaterial* lMaterial = lMesh->GetNode()->GetMaterial(lMaterialElement->GetIndexArray().GetAt(0));
+					int lMatId = lMaterialElement->GetIndexArray().GetAt(0);
+					if (lMatId >= 0)
+					{
+						int nr = lMaterial->GetUniqueID(); //GETS UNIQUE ID
+						m_staticMesh.setMaterialID(nr);
+
+						DisplayInt("        All polygons share the same material in mesh ", i);
+					}
+				}
+			}
+		}
+		//no material
+		else if (lMesh->GetElementMaterialCount() == 0)		//no material
+		{
+			m_staticMesh.setMaterialID(-1);
+		}
+	}
 }
 
 void SaveHierarchy::m_SaveDynamicMesh(FbxNode* pNode, bool collision, bool staticMesh)
@@ -693,7 +736,7 @@ void SaveHierarchy::CheckUniqueMaterial(FbxNode* pNode) //checks if the meshes m
 	printf("nrOFmaterial %i \n", m_nrOfMaterial);
 }
 
-void SaveHierarchy::SaveMaterial(FbxMesh* pMesh)
+void SaveHierarchy::SaveMaterialFromMesh(FbxMesh* pMesh)
 {
 	SaveMaterialConnections(pMesh);
 }
@@ -735,7 +778,6 @@ void SaveHierarchy::SaveMaterialConnections(FbxMesh* pMesh)
 					if (lMatId >= 0)
 					{
 						int nr = lMaterial->GetUniqueID(); //GETS UNIQUE ID
-						m_staticMesh.setMaterialID(nr);
 						m_Material.materialID = nr;
 
 						DisplayInt("        All polygons share the same material in mesh ", l);
@@ -747,7 +789,6 @@ void SaveHierarchy::SaveMaterialConnections(FbxMesh* pMesh)
 		//no material
 		else if (pMesh->GetElementMaterialCount() == 0)		//no material
 		{
-			m_staticMesh.setMaterialID(-1);
 			m_Material.materialID = -1;
 		}
 	}
@@ -844,7 +885,6 @@ void SaveHierarchy::SaveTextureNames(FbxProperty &pProperty, int mapKind)
 						{
 							m_Material.nameOfAlbedo[k] = ' ';
 						}
-						m_Material.nrOfTextures++;
 					}
 					else if (mapKind == 2)
 					{
@@ -856,8 +896,8 @@ void SaveHierarchy::SaveTextureNames(FbxProperty &pProperty, int mapKind)
 						{
 							m_Material.nameOfNormal[k] = ' ';
 						}
-						m_Material.nrOfTextures++;
 					}
+					m_Material.nrOfTextures++;
 				}
 			}
 		}

@@ -28,7 +28,7 @@ private:
 	void m_SaveStaticMeshNode(FbxNode* pNode);
 	void m_SaveDynamicMeshNode(FbxNode* pNode);
 	void m_SaveStaticHitboxNode(FbxNode* pNode);
-	void m_SaveMaterial(FbxNode* pNode);
+	void m_SaveMaterialNode(FbxNode* pNode);
 	void m_ResetMaterial();
 
 	void m_SaveControlPoints(FbxMesh* pMesh, bool collision);
@@ -48,7 +48,7 @@ public:
 
 	//material
 	void CheckUniqueMaterial(FbxNode* pNode);
-	void SaveMaterial(FbxMesh* pMesh);
+	void SaveMaterialFromMesh(FbxMesh* pMesh);
 	void SaveMaterialConnections(FbxMesh* pMesh);
 	void SaveMaterialTextureConnections(FbxSurfaceMaterial* pMaterial, int pMatId, int l);
 	void SaveTextureNames(FbxProperty &pProperty, int mapKind);

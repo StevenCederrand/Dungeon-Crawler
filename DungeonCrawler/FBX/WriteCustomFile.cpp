@@ -148,8 +148,8 @@ void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think
 	outfileReadable.open("ourFileReadable.txt", std::ios::out | std::ios::app);
 	outfileReadable << "Name of mesh: " << nameOfMesh
 		<< "\nVertex count: " << lmeshHeader.vertexCount
-		<< "\nmaterial ID: " << lmeshHeader.materialID
-		<< "\n\nCollision: " << lmeshHeader.collision
+		<< "\nMaterial ID: " << lmeshHeader.materialID //FIXA SÅ DENNA E RÄTT
+		<< "\nCollision: " << lmeshHeader.collision
 		<< "\nStatic mesh: " << lmeshHeader.staticMesh << "\n\n\n";
 
 	std::string lvertexPosition;
