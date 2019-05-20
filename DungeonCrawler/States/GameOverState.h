@@ -21,12 +21,14 @@ public:
 private:
 	UICamera* m_camera;
 	UIManager* m_manager;
+
 	GLinit* m_glInit;
+
 	Button* m_playAgain;
 	Button* m_menu;
+
 	Image* m_logo;
 	Image* m_dead;
-
 };
 
 #endif // !_GAMEOVERSTATE_H

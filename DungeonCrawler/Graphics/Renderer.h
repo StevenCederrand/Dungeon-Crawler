@@ -11,12 +11,15 @@
 #include "Map.h"
 #include <EnemyProjectile/ProjectileManager.h>
 #include <GUI/PlayerHealthBar.h>
+#include <Gui/ScreenBlood.h>
 
 class Renderer
 {
 public:
 
-	Renderer(Camera* camera, LightManager* lightManager, Effects* effects, ProjectileManager* projectileManager, PlayerHealthBar* playerHealthBar, Map* map);
+	Renderer(Camera* camera, LightManager* lightManager, Effects* effects, 
+		ProjectileManager* projectileManager, PlayerHealthBar* playerHealthBar,
+		Map* map, ScreenBlood* screenBlood);
 
 	~Renderer();
 
@@ -39,6 +42,8 @@ private:
 	void renderHealthBar();
 	void lightPass();
 	void renderMap();
+	void renderBlood();
+
 
 	bool initRenderQuad();	
 	void drawQuad();
@@ -61,6 +66,7 @@ private:
 	Map* m_map;
 	ProjectileManager* m_projectileManager;
 	PlayerHealthBar* m_playerHealthBar;
+	ScreenBlood* m_screenBlood;
 
 	unsigned int m_rQuadVAO;
 	unsigned int m_rQuadVBO;

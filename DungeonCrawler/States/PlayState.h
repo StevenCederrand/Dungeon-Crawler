@@ -11,6 +11,7 @@
 #include "Graphics/Effects.h"
 #include "../Graphics/Map.h"
 #include <GUI/PlayerHealthBar.h>
+#include <Gui/ScreenBlood.h>
 #include <EnemyProjectile/ProjectileManager.h>
 
 class PlayState : public State {
@@ -42,6 +43,7 @@ private:
 	PlayerHealthBar* m_playerHealthBar;
 	Effects* m_effects;
 	Map* m_map;
+	ScreenBlood* m_screenBlood;
 
 
 };

@@ -3,7 +3,6 @@
 #include "../GameObjects/GameObject.h"
 #include "../GameObjects/GameObjectManager.h"
 
-
 class Map
 {
 public:
@@ -25,13 +24,14 @@ private:
 
 private:
 	int m_playerRoom;
+	bool m_shouldRender;
 
 	GLuint m_vao;
 	GLuint m_vbo;
 	
-	std::vector<glm::vec4> m_rooms;
-	bool m_shouldRender;
 	GameObjectManager* m_gameObjectManager;
+
+	std::vector<glm::vec4> m_rooms;
 	glm::mat4 m_modelMatrix;
 
 };

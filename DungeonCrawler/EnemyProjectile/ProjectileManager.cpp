@@ -1,6 +1,7 @@
 #include "ProjectileManager.h"
 #include <System/Log.h>
 #include <Utility/Randomizer.h>
+#include <Audio/AudioEngine.h>
 
 ProjectileManager::ProjectileManager(GLinit* glInit, Effects* effects)
 {
@@ -59,7 +60,7 @@ void ProjectileManager::update(float dt)
 
 			Projectile* proj = m_projectiles[i];
 			proj->update(dt);
-
+			//If the projectile collides with the player
 			if (proj->getAABB()->checkCollision(*m_player->getBoundingBoxes()[0]))
 			{
 				for (int i = 0; i < 10; i++) {
@@ -72,8 +73,9 @@ void ProjectileManager::update(float dt)
 						glm::vec3(Randomizer::single(-100.0f, 100.0f) / 10.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 10.0f),
 						0.50f,
 						1);
-
 				}
+				AudioEngine::play("pl_ranged_damage_taken", 1.0f),
+
 				m_player->setHealth(m_player->getHealth() - proj->getDamage());
 				delete proj;
 				m_projectiles.erase(m_projectiles.begin() + i);

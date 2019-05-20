@@ -132,6 +132,11 @@ void GameObject::lookAt(const glm::vec3& position)
 		
 }
 
+float GameObject::lerp(float start, float end, float percent)
+{
+	return ((start)+percent * (end - start));;
+}
+
 void GameObject::hit(const HitDescription & desc)
 {
 

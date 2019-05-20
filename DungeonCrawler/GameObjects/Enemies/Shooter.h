@@ -16,6 +16,7 @@ public:
 	void amIDead();
 	bool getAliveStatus()const;
 	float getDistanceToPlayer()const;
+	void floatingAnim(float dt);
 
 private:
 	void calculatePath(float dt, bool ignoreTimer, bool occupy);
@@ -30,6 +31,8 @@ private:
 	Type m_type;
 	bool m_amIAlive;
 	float m_attackCooldown;
+	float m_sinTime;
+	float m_sinAddTime;
 
 	float m_castTime;
 	float m_currentCastTime;
