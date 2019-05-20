@@ -52,7 +52,7 @@ Player::Player(Mesh* mesh, Type type) :
 	this->m_spraying = false;
 	this->m_type = type;
 	//this->m_iframes = 0.f;
-	this->m_pistolBullets = 6000;
+	this->m_pistolBullets = 6;
 	this->m_reloadTime = 0.f;
 	this->m_reloading = false;
 
