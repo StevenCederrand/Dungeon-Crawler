@@ -31,6 +31,7 @@ public:
 	void chargeProjectile(float dt);
 	void releaseChargedProjectile(float dt);
 	void screenShake(float dt);
+	void wobbleAnim(float dt);
 
 	void setSpeed(float speed);
 	void setHealth(float health);
@@ -69,6 +70,8 @@ private:
 	float m_health;
 	float m_maxHealth;
 	//float m_iframes;
+	float m_sinTime;
+	float m_sinAddTime;
 
 	int m_pistolBullets;
 	bool m_reloading;

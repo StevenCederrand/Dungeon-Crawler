@@ -45,7 +45,7 @@ PlayState::PlayState() {
 	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
 	ParserData* playerData = m_parser->loadFromObj("MainCharacterPosed.obj");
 	ParserData* doorData = m_parser->loadFromObj("doorEnd.obj");
-	ParserData* roomStart = m_parser->loadFromObj("lmaoxde321.obj");
+	ParserData* roomStart = m_parser->loadFromObj("roomStart.obj");
 	ParserData* roomEnd = m_parser->loadFromObj("roomEnd.obj");
 
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
@@ -174,10 +174,10 @@ void PlayState::constructWorld()
 	Mesh* door = MeshMap::getMesh("Door");
 
 	Room* r_roomStart = new Room(roomStart, ROOM_EMPTY , m_player);
-	//Room* r_roomEnd = new Room(roomEnd, ROOM_BOSS, m_player);
+	Room* r_roomEnd = new Room(roomEnd, ROOM_BOSS, m_player);
 
 	m_gameObjectManager->addGameObject(r_roomStart);
-	//m_gameObjectManager->addGameObject(r_roomEnd);
+	m_gameObjectManager->addGameObject(r_roomEnd);
 	m_gameObjectManager->addGameObject(new Box(door, DOOR));
 	m_gameObjectManager->addGameObject(m_player);
 	
