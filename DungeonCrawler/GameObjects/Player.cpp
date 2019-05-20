@@ -489,8 +489,8 @@ void Player::wobbleAnim(float dt)
 	float sinCurve = (10 * sin(m_sinTime));
 	m_sinTime += (m_sinAddTime * dt);
 	
-	setRotation(glm::vec3(getRotation().x, getRotation().y, sinCurve));
-	//setRotation(glm::vec3(sinCurve, getRotation().y, getRotation().z));
+	//setRotation(glm::vec3(getRotation().x, getRotation().y, sinCurve));
+	setRotation(glm::vec3(-sinCurve, getRotation().y, getRotation().z));
 }
 
 void Player::setSpeed(float speed)
@@ -527,7 +527,6 @@ void Player::setPlayerState(const EntityState& playerState) {
 
 void Player::takeDamage(float damageRecieved)
 {
-
 	m_health = m_health - damageRecieved;
 }
 
