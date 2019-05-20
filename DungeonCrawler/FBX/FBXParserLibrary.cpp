@@ -46,7 +46,8 @@ namespace FBXParserLibrary {
 			displayBoundingBoxHeader(infileBinary, fileData);
 			displayBoundingBoxVertexHeader(infileBinary, fileData);
 
-			calculateMinMaxValue(infileBinary, fileData);
+			calculateMinMaxValueMesh(infileBinary, fileData);
+			calculateMinMaxValueHitbox(infileBinary, fileData);
 
 			//for (int i = 0; i < m_staticMeshCount; i++)
 			//{
@@ -518,28 +519,28 @@ namespace FBXParserLibrary {
 
 	//------------------------------------------------------------------------------
 
-	void calculateMinMaxValue(std::ifstream& binaryFile, FBXParserData* fileData)
+	void calculateMinMaxValueMesh(std::ifstream& binaryFile, FBXParserData* fileData)
 	{
 		//is onyl 36 now, should be 72
-		std::vector<glm::vec3> allHitboxVertices = fileData->getVertexPos();
-		float xMin = 0.f; 
+		std::vector<glm::vec3> allVertices = fileData->getVertexPos();
+		float xMin = 0.f;
 		float xMax = 0.f;
 		float yMin = 0.f;
 		float yMax = 0.f;
 
-		for (int i = fileData->getMeshHeader().vertexCount; i < (fileData->getMeshHeader().vertexCount + fileData->getBoundingBoxHeader().vertexCount); i++)
+		for (int i = 0; i < fileData->getMeshHeader().vertexCount; i++)
 		{
-			glm::vec3 hitboxVertice = allHitboxVertices[i];
+			glm::vec3 meshVertice = allVertices[i];
 
-			if (hitboxVertice.x >= xMax)
-				xMax = hitboxVertice.x;
-			if (hitboxVertice.y >= yMax)
-				yMax = hitboxVertice.y;
+			if (meshVertice.x >= xMax)
+				xMax = meshVertice.x;
+			if (meshVertice.y >= yMax)
+				yMax = meshVertice.y;
 
-			if (hitboxVertice.x <= xMin)
-				xMin = hitboxVertice.x;
-			if (hitboxVertice.y <= yMin)
-				yMin = hitboxVertice.y;
+			if (meshVertice.x <= xMin)
+				xMin = meshVertice.x;
+			if (meshVertice.y <= yMin)
+				yMin = meshVertice.y;
 		}
 
 		glm::vec4 lmaxMinValues;//MAXMAXMINMIN
@@ -548,6 +549,54 @@ namespace FBXParserLibrary {
 		lmaxMinValues.z = xMin;
 		lmaxMinValues.w = yMin;
 
-		fileData->setMaxMinValues(lmaxMinValues);
+		fileData->setMaxMinValuesMesh(lmaxMinValues);
+
+		//OBJECT SPAWN ON THE SIDE
+	}
+
+	void calculateMinMaxValueHitbox(std::ifstream& binaryFile, FBXParserData* fileData)
+	{
+		//is onyl 36 now, should be 72
+		std::vector<glm::vec3> allVertices = fileData->getVertexPos();
+		float xMin = 0.f;
+		float xMax = 0.f;
+		float yMin = 0.f;
+		float yMax = 0.f;
+		float zMin = 0.f;
+		float zMax = 0.f;
+
+		for (int i = fileData->getMeshHeader().vertexCount; i < (fileData->getMeshHeader().vertexCount + fileData->getBoundingBoxHeader().vertexCount); i++)
+		{
+			//XYZ MAX XYZ MIN
+			glm::vec3 hitboxVertice = allVertices[i];
+
+			if (hitboxVertice.x >= xMax)
+				xMax = hitboxVertice.x;
+			if (hitboxVertice.y >= yMax)
+				yMax = hitboxVertice.y;
+			if (hitboxVertice.z >= zMax)
+				zMax = hitboxVertice.z;
+
+			if (hitboxVertice.x <= xMin)
+				xMin = hitboxVertice.x;
+			if (hitboxVertice.y <= yMin)
+				yMin = hitboxVertice.y;
+			if (hitboxVertice.z <= zMin)
+				zMin = hitboxVertice.z;
+		}
+
+		//z always 0?
+
+		glm::vec3 lmaxValues;	//XYZ MAX
+		lmaxValues.x = xMax;
+		lmaxValues.y = yMax;
+		lmaxValues.z = zMax;
+		fileData->addMaxMinValuesHitbox(lmaxValues);
+
+		glm::vec3 lminValues;	//XYZ MIN
+		lminValues.x = xMin;
+		lminValues.y = yMin;
+		lminValues.z = zMin;
+		fileData->addMaxMinValuesHitbox(lminValues);
 	}
 }

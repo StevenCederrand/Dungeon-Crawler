@@ -64,11 +64,14 @@ FBXParserData::FBXParserData(int vectorStartValue)
 	m_uvs.reserve(vectorStartValue);
 	m_normals.reserve(vectorStartValue);
 
+	//mesh
+	m_maxMinValuesMesh.x = 0;
+	m_maxMinValuesMesh.y = 0;
+	m_maxMinValuesMesh.z = 0;
+	m_maxMinValuesMesh.w = 0;
+
 	//hitbox
-	m_maxMinValues.x = 0;
-	m_maxMinValues.y = 0;
-	m_maxMinValues.z = 0;
-	m_maxMinValues.w = 0;
+	m_maxMinValuesHitbox.reserve(vectorStartValue);
 }
 
 FBXParserData::~FBXParserData()
@@ -283,10 +286,15 @@ void FBXParserData::addNormalMapName(std::string normalMapName)
 	m_normalMapName.emplace_back(normalMapName);
 }
 
-//SET FUNCTIONS
-void FBXParserData::setMaxMinValues(glm::vec4 maxMinValues)
+void FBXParserData::addMaxMinValuesHitbox(glm::vec3 maxMinValuesHitbox)
 {
-	m_maxMinValues = maxMinValues;
+	m_maxMinValuesHitbox.emplace_back(maxMinValuesHitbox);
+}
+
+//SET FUNCTIONS
+void FBXParserData::setMaxMinValuesMesh(glm::vec4 maxMinValues)
+{
+	m_maxMinValuesMesh = maxMinValues;
 }
 
 //GET FUNCTIONS
@@ -315,7 +323,12 @@ std::vector<std::string> FBXParserData::getNormalMapName()const
 	return m_normalMapName;
 }
 
-glm::vec4 FBXParserData::getMaxMinValues()const
+glm::vec4 FBXParserData::getMaxMinValuesMesh()const
 {
-	return m_maxMinValues;
+	return m_maxMinValuesMesh;
+}
+
+std::vector<glm::vec3> FBXParserData::getMaxMinValuesHitbox()const
+{
+	return m_maxMinValuesHitbox;
 }

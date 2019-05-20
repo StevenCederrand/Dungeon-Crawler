@@ -74,9 +74,9 @@ Mesh* GLinit::createMeshFBX(std::string name, FBXParserData* data)
 
 	
 	GLuint vao = createAndBindVAO();
-
 	std::vector<GLuint> indices;
-	for (int i = 0; i < data->getMeshHeader().vertexCount; i++)
+	int nrMeshAndBBVertices = data->getMeshHeader().vertexCount + data->getBoundingBoxHeader().vertexCount;
+	for (int i = 0; i < nrMeshAndBBVertices; i++)	//WITH BOUNDING BOX
 		indices.emplace_back(i);
 	bindIndices(indices);
 
@@ -87,8 +87,9 @@ Mesh* GLinit::createMeshFBX(std::string name, FBXParserData* data)
 	{
 		onlyVisibleMeshes.emplace_back(allVertices[i]);
 	}
+
 	
-	storeDataInAttributeList(0, 3, onlyVisibleMeshes);
+	storeDataInAttributeList(0, 3, allVertices); //WITH BOUNDING BOX
 	storeDataInAttributeList(1, 2, data->getUVs());
 	storeDataInAttributeList(2, 3, data->getNormals());
 	glBindVertexArray(NULL);
@@ -106,16 +107,6 @@ Mesh* GLinit::createMeshFBX(std::string name, FBXParserData* data)
 	GLuint textureID = createTexture(lEntireFilePath); //should be texture files name
 
 	Mesh* mesh = new Mesh();
-
-	mesh->setVao(vao);
-	mesh->setTextureID(textureID);
-	mesh->setNrOfIndices(onlyVisibleMeshes.size());
-	mesh->setAmbientColor(glm::vec3(255, 0, 0));
-	mesh->setSpecularColor(glm::vec3(255, 0, 0));
-	mesh->setDiffuseColor(glm::vec3(255, 0, 0));
-	mesh->setShininess(1);
-	mesh->setMaxMinValues(data->getMaxMinValues());
-
 
 	if (data->getMaterialHeader().nameOfNormal[0] != ' ')
 	{
@@ -136,24 +127,17 @@ Mesh* GLinit::createMeshFBX(std::string name, FBXParserData* data)
 	else
 		mesh->setHasNormalMap(0);
 
-	NORMALMAP DOESNT WORK YET
+	mesh->setVao(vao);
+	mesh->setTextureID(textureID);
+	mesh->setNrOfIndices(allVertices.size());	//WITH BOUNDING BOX
+	mesh->setAmbientColor(glm::vec3(255, 0, 0));
+	mesh->setSpecularColor(glm::vec3(255, 0, 0));
+	mesh->setDiffuseColor(glm::vec3(255, 0, 0));
+	mesh->setShininess(0.5f);
 
-	/*
+	mesh->setBoundingBoxMinMax(data->getMaxMinValuesHitbox()); //XYZ MAX XYZ MIN
+	mesh->setMaxMinValues(data->getMaxMinValuesMesh()); //THIS SHOULD BE THE MESH
 
-	mesh->setHasNormalMap(data->hasNormalMap());
-
-	if (data->hasNormalMap()) {
-		GLuint normalID = createTexture(data->getNormalMapName());
-		mesh->setNormalID(normalID);
-	}
-	if (data->hasAmbientMap()) {
-		GLuint ambientID = createTexture(data->getAmbientMapName());
-		mesh->setAmbientID(ambientID);
-	}
-	
-	*/
-
-	
 	MeshMap::addMesh(name, mesh); //adds the mesh to the meshmap, this is where the mesh is saved
 	return mesh; //not used right now
 }
