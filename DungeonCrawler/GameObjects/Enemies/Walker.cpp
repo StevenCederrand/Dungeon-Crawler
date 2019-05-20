@@ -6,6 +6,7 @@
 #include <iostream>
 #include <chrono>
 #include <Utility/Randomizer.h>
+#include <Audio/AudioEngine.h>
 #define M_PI 3.14159265358979323846
 
 Walker::Walker(Mesh * mesh, Type type, Room* room, const glm::vec3& position, Effects* effects):
@@ -56,6 +57,8 @@ bool Walker::meleeRange(float dt)
 {
 	if ((getDistanceToPlayer() <= 2.5f) && (m_attackCooldown <= 0.f))
 	{
+		AudioEngine::play("Enemy_melee", 1.0f);
+		AudioEngine::play("pl_damage_taken", 1.0f);
 		m_attackCooldown = 2.f;
 		return true;
 	}

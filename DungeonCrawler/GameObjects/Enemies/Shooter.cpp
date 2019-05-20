@@ -4,6 +4,7 @@
 #include <list>
 #include <System/Log.h>
 #include <Utility/Randomizer.h>
+#include <Audio/AudioEngine.h>
 #define M_PI 3.14159265358979323846
 
 Shooter::Shooter(Mesh* mesh, Type type, Room* room, const glm::vec3& position, ProjectileManager* projectileManager, Effects* effects) :
@@ -55,7 +56,7 @@ void Shooter::update(float dt)
 		// Clear path because he can just stand here and shoot
 
 		m_path.clear();
-
+		
 		if (!m_castingSpell){
 			m_castingSpell = true;
 		}
@@ -68,6 +69,11 @@ void Shooter::update(float dt)
 
 		if (m_currentCastTime >= m_castTime)
 		{
+			LOG_INFO("Casting Spell");
+			AudioEngine::play("Enemy_shot", 0.4f);
+			//Have the enemy fire when the Enemy_shot sound effect is done playing
+
+
 			// Find a path using A* and create some kind of projectile that travels that path
 			m_castingSpell = false;
 			m_currentCastTime = 0.0f;

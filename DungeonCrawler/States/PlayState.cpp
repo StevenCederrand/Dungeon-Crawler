@@ -102,12 +102,14 @@ void PlayState::update(float dt) {
 		m_stateManager->pushTemporaryState(gameOver);
 	}
 
-	if (m_gameObjectManager->bossDead()) {
+	if (m_gameObjectManager->gameFinished()) {
 		WinState* winState = new WinState();
 		GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
 		glfwSetCursor(glfwGetCurrentContext(), cursor);
 		m_stateManager->pushTemporaryState(winState);
 	}
+
+	m_gameObjectManager->gameFinished();
 }
 
 void PlayState::renderImGUI()

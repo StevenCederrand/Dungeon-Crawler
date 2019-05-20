@@ -105,7 +105,8 @@ void Player::update(float dt)
 			if ((m_pistolBullets <= 0) && (m_reloading == false) && (m_spraying == false))
 			{
 				m_reloading = true;
-				m_reloadTime = 2.f;
+				AudioEngine::play("gun_reload", 1.0f);
+				m_reloadTime = 4.f;
 			}
 			manualReload(dt);
 		//}
@@ -387,7 +388,8 @@ void Player::manualReload(float dt)
 	if ((Input::isKeyPressed(GLFW_KEY_R)) && (m_reloading == false) && (m_pistolBullets < 6))
 	{
 		m_reloading = true;
-		m_reloadTime = 2.f;
+		AudioEngine::play("gun_reload", 1.0f);
+		m_reloadTime = 4.f;
 	}
 }
 
@@ -397,6 +399,7 @@ void Player::reloadCd(float dt)
 	{
 		m_reloading = false;
 		m_pistolBullets = 6;
+		
 		m_data->pixels = m_image[6].data();
 		m_cursor = glfwCreateCursor(m_data, 32, 32);
 		glfwSetCursor(glfwGetCurrentContext(), m_cursor);
@@ -504,6 +507,7 @@ void Player::setPlayerState(const EntityState& playerState) {
 
 void Player::takeDamage(float damageRecieved)
 {
+
 	m_health = m_health - damageRecieved;
 }
 
