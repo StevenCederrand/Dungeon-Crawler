@@ -64,10 +64,28 @@ const int LightManager::getNumberOfLights() const
 	return int(m_lights.size());
 }
 
-void LightManager::setSun(Shader* shader, glm::vec3 position, glm::vec3 color) {
-	shader->use();
-	shader->setVec3("sunColor", color);
-	shader->setVec3("sunPosition", position);
-	shader->unuse();
+const glm::vec3& LightManager::getSunColor() const
+{
+	return m_sunColor;
+}
 
+const glm::vec3& LightManager::getSunPosition() const
+{
+	return m_sunPosition;
+}
+
+void LightManager::setSun(glm::vec3 position, glm::vec3 color) {
+	
+	m_sunPosition = position;
+	m_sunColor = color;
+}
+
+void LightManager::setSunPosition(const glm::vec3& position)
+{
+	m_sunPosition = position;
+}
+
+void LightManager::setSunColor(const glm::vec3& color)
+{
+	m_sunColor = color;
 }

@@ -17,12 +17,20 @@ public:
 	void addLight(const glm::vec3& position, const glm::vec3& color, const float& radius, GameObjectManager* gameObjectManager = nullptr);
 	const int getNumberOfLights() const;
 	
-	void setSun(Shader* shader, glm::vec3 position, glm::vec3 color);
+	void setSun(glm::vec3 position, glm::vec3 color);
+	void setSunPosition(const glm::vec3& position);
+	void setSunColor(const glm::vec3& color);
+
+	const glm::vec3& getSunColor() const;
+	const glm::vec3& getSunPosition() const;
 
 private:
 	
 	GLuint m_ubo;
 	float m_lightByteSize;
+
+	glm::vec3 m_sunPosition;
+	glm::vec3 m_sunColor;
 
 private:
 	Light* m_playerLight;

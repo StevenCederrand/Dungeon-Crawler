@@ -271,6 +271,8 @@ void Renderer::lightPass() {
 		lightShader->setVec4("flashColor", m_playerLight->color);
 	}
 
+	lightShader->setVec3("sunColor", m_lightManager->getSunColor());
+	lightShader->setVec3("sunPosition", m_lightManager->getSunPosition());
 	lightShader->setMat4("lightSpaceMatrix", m_framebuffer->getLightSpaceMatrix());
 	lightShader->setInt("numberOfLights", m_lightManager->getNumberOfLights());
 	lightShader->setVec3("cameraPosition", m_camera->getPosition());

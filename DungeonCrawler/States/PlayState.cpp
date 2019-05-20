@@ -92,6 +92,7 @@ void PlayState::update(float dt) {
 	m_effects->update(dt);
 	m_camera->update(dt);
 	m_lightManager->update(dt);
+	m_lightManager->setSunPosition(glm::vec3(m_player->getPosition().x, 20.0f, m_player->getPosition().z));
 	m_renderer->prepareGameObjects(m_gameObjectManager->getGameObjects());
 	m_screenBlood->update(dt);
 	Player* player = m_gameObjectManager->getPlayer();
@@ -201,7 +202,7 @@ void PlayState::constructWorld()
 	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 0, 5, true, glm::vec3(-5.f, 0.5f, -7.f));
 	m_gameObjectManager->addGameObject(m_powerUp);
 
-	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(0.8f, 0.8f, 0.8f));
+	m_lightManager->setSun(glm::vec3(m_player->getPosition().x, 20.0f, m_player->getPosition().z), glm::vec3(0.8f, 0.8f, 0.8f));
 	for (int i = 0; i < 1; i++)
 	{
 	m_lightManager->addLight(
