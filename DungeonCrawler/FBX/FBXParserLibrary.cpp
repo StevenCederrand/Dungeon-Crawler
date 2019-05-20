@@ -551,7 +551,7 @@ namespace FBXParserLibrary {
 
 		fileData->setMaxMinValuesMesh(lmaxMinValues);
 
-		//OBJECT SPAWN ON THE SIDE
+		//OBJECT SPAWN ON THE SIDE of the hitbox, the object mesh is offset by half?
 	}
 
 	void calculateMinMaxValueHitbox(std::ifstream& binaryFile, FBXParserData* fileData)
