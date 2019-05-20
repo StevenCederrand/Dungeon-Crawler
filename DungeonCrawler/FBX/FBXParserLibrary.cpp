@@ -225,32 +225,35 @@ namespace FBXParserLibrary {
 	void displayBoundingBoxHeader(std::ifstream& infileBinary, FBXParserData* fileData)
 	{
 		//Makes the header then gives it to parserdata
-
-		BoundingBoxHeader lboundingBoxHeader;
-
-		std::vector<char> lnameOfBoundingBox;
-		for (int i = 0; i < 100; i++)
+		for (int i = 0; i < fileData->getMainHeader().boundingBoxCount; i++)
 		{
-			lboundingBoxHeader.nameOfHitbox[i] = (binaryToChar(infileBinary)); //Reads file
+
+			BoundingBoxHeader lboundingBoxHeader;
+
+			std::vector<char> lnameOfBoundingBox;
+			for (int i = 0; i < 100; i++)
+			{
+				lboundingBoxHeader.nameOfHitbox[i] = (binaryToChar(infileBinary)); //Reads file
+			}
+
+
+			unsigned int vertexCount = (unsigned int)binaryToInt(infileBinary);
+			lboundingBoxHeader.vertexCount = vertexCount;
+
+			bool collision = binaryToBool(infileBinary);
+			lboundingBoxHeader.collision = collision;
+
+			bool staticMesh = binaryToBool(infileBinary);
+			lboundingBoxHeader.staticMesh = staticMesh;
+
+			bool paddingOne = binaryToBool(infileBinary);
+			lboundingBoxHeader.padding1 = paddingOne;
+
+			bool paddingTwo = binaryToBool(infileBinary);
+			lboundingBoxHeader.padding2 = paddingTwo;
+
+			fileData->addBoundingBoxHeader(lboundingBoxHeader);
 		}
-
-
-		unsigned int vertexCount = (unsigned int)binaryToInt(infileBinary);
-		lboundingBoxHeader.vertexCount = vertexCount;
-
-		bool collision = binaryToBool(infileBinary);
-		lboundingBoxHeader.collision = collision;
-
-		bool staticMesh = binaryToBool(infileBinary);
-		lboundingBoxHeader.staticMesh = staticMesh;
-
-		bool paddingOne = binaryToBool(infileBinary);
-		lboundingBoxHeader.padding1 = paddingOne;
-
-		bool paddingTwo = binaryToBool(infileBinary);
-		lboundingBoxHeader.padding2 = paddingTwo;
-
-		fileData->addBoundingBoxHeader(lboundingBoxHeader);
 	}
 
 	//fourth
@@ -339,7 +342,10 @@ namespace FBXParserLibrary {
 		int nrOfBoundinfBoxes = fileData->getMainHeader().boundingBoxCount; //this should be 5 right now
 		for (int i = 0; i < nrOfBoundinfBoxes; i++)
 		{
-			for (int j = 0; j < fileData->getBoundingBoxHeaders()[i].vertexCount; j++)
+			std::vector<BoundingBoxHeader> currentBoundingBoxHeader = fileData->getBoundingBoxHeaders();
+			int nrVerticesCurrentBB = 36;
+			int ffs = 0;
+			for (int j = 0; j < nrVerticesCurrentBB; j++)
 			{
 				float positionX = binaryToFloat(infileBinary);
 				//std::cout << "Position: " << positionX << " ";
