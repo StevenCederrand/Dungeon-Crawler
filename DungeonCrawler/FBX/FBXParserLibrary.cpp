@@ -224,35 +224,33 @@ namespace FBXParserLibrary {
 	//third
 	void displayBoundingBoxHeader(std::ifstream& infileBinary, FBXParserData* fileData)
 	{
+		//Makes the header then gives it to parserdata
+
+		BoundingBoxHeader lboundingBoxHeader;
+
 		std::vector<char> lnameOfBoundingBox;
 		for (int i = 0; i < 100; i++)
 		{
-			lnameOfBoundingBox.push_back(binaryToChar(infileBinary)); //Reads file
+			lboundingBoxHeader.nameOfHitbox[i] = (binaryToChar(infileBinary)); //Reads file
 		}
-		//std::cout << "Name of Hitbox: ";
-		for (int i = 0; i < 100; i++)
-		{
-			//std::cout << lnameOfBoundingBox[i];
-		}
-		//std::cout << "\n";
+
 
 		unsigned int vertexCount = (unsigned int)binaryToInt(infileBinary);
-		//std::cout << "Vertex count: " << vertexCount << "\n";
-		setVertexCountOfBoundingBoxMesh(fileData, vertexCount);
+		lboundingBoxHeader.vertexCount = vertexCount;
 
 		bool collision = binaryToBool(infileBinary);
-		//std::cout << "Collision: " << collision << "\n";
-		setCollisionOfBoundingBoxMesh(fileData, collision);
+		lboundingBoxHeader.collision = collision;
 
 		bool staticMesh = binaryToBool(infileBinary);
-		//std::cout << "Static mesh: " << staticMesh << "\n";
-		setStaticBoundingBoxMesh(fileData, staticMesh);
+		lboundingBoxHeader.staticMesh = staticMesh;
 
 		bool paddingOne = binaryToBool(infileBinary);
-		//std::cout << "PaddingOne: "<< "\n";
+		lboundingBoxHeader.padding1 = paddingOne;
 
 		bool paddingTwo = binaryToBool(infileBinary);
-		//std::cout << "PaddingTwo: " << "\n";
+		lboundingBoxHeader.padding2 = paddingTwo;
+
+		fileData->addBoundingBoxHeader(lboundingBoxHeader);
 	}
 
 	//fourth
@@ -338,22 +336,26 @@ namespace FBXParserLibrary {
 	void displayBoundingBoxVertexHeader(std::ifstream& infileBinary, FBXParserData* fileData)
 	{
 		//Need the bounding box mesh count from the mesh header
-		for (int i = 0; i < fileData->getBoundingBoxHeader().vertexCount; i++)
+		int nrOfBoundinfBoxes = fileData->getMainHeader().boundingBoxCount; //this should be 5 right now
+		for (int i = 0; i < nrOfBoundinfBoxes; i++)
 		{
-			float positionX = binaryToFloat(infileBinary);
-			//std::cout << "Position: " << positionX << " ";
+			for (int j = 0; j < fileData->getBoundingBoxHeaders()[i].vertexCount; j++)
+			{
+				float positionX = binaryToFloat(infileBinary);
+				//std::cout << "Position: " << positionX << " ";
 
-			float positionY = binaryToFloat(infileBinary);
-			//std::cout << positionY << " ";
+				float positionY = binaryToFloat(infileBinary);
+				//std::cout << positionY << " ";
 
-			float positionZ = binaryToFloat(infileBinary);
-			//std::cout << positionZ << "\n";
+				float positionZ = binaryToFloat(infileBinary);
+				//std::cout << positionZ << "\n";
 
-			glm::vec3 vertexPos;
-			vertexPos.x = positionX;
-			vertexPos.y = positionY;
-			vertexPos.z = positionZ;
-			fileData->addVertexPos(vertexPos);
+				glm::vec3 vertexPos;
+				vertexPos.x = positionX;
+				vertexPos.y = positionY;
+				vertexPos.z = positionZ;
+				fileData->addVertexPos(vertexPos);
+			}
 		}
 	}
 
@@ -461,6 +463,7 @@ namespace FBXParserLibrary {
 		//fileData->setBBHeaderNameOfBoundingBoxMesh(nameOfBoundingBox);
 	}
 
+	/*
 	void setVertexCountOfBoundingBoxMesh(FBXParserData* fileData, unsigned int vertexCount)
 	{
 		fileData->setBBHeaderVertexCountOfBoundingBoxMesh(vertexCount);
@@ -475,6 +478,7 @@ namespace FBXParserLibrary {
 	{
 		fileData->setBBHeaderStaticBoundingBoxMesh(staticBoundingBoxMesh);
 	}
+	*/
 	//-----------------------------------------------------------------------------
 
 	//-----------------------------------------------------------------------------
@@ -556,47 +560,52 @@ namespace FBXParserLibrary {
 
 	void calculateMinMaxValueHitbox(std::ifstream& binaryFile, FBXParserData* fileData)
 	{
-		//is onyl 36 now, should be 72
-		std::vector<glm::vec3> allVertices = fileData->getVertexPos();
-		float xMin = 0.f;
-		float xMax = 0.f;
-		float yMin = 0.f;
-		float yMax = 0.f;
-		float zMin = 0.f;
-		float zMax = 0.f;
-
-		for (int i = fileData->getMeshHeader().vertexCount; i < (fileData->getMeshHeader().vertexCount + fileData->getBoundingBoxHeader().vertexCount); i++)
+		int nrOfVertices = fileData->getMeshHeader().vertexCount;
+		for (int i = 0; i < fileData->getMainHeader().boundingBoxCount; i++)
 		{
-			//XYZ MAX XYZ MIN
-			glm::vec3 hitboxVertice = allVertices[i];
+			nrOfVertices += fileData->getBoundingBoxHeaders()[i].vertexCount;
 
-			if (hitboxVertice.x >= xMax)
-				xMax = hitboxVertice.x;
-			if (hitboxVertice.y >= yMax)
-				yMax = hitboxVertice.y;
-			if (hitboxVertice.z >= zMax)
-				zMax = hitboxVertice.z;
+			std::vector<glm::vec3> allVertices = fileData->getVertexPos();
+			float xMin = 0.f;
+			float xMax = 0.f;
+			float yMin = 0.f;
+			float yMax = 0.f;
+			float zMin = 0.f;
+			float zMax = 0.f;
 
-			if (hitboxVertice.x <= xMin)
-				xMin = hitboxVertice.x;
-			if (hitboxVertice.y <= yMin)
-				yMin = hitboxVertice.y;
-			if (hitboxVertice.z <= zMin)
-				zMin = hitboxVertice.z;
+			for (int j = fileData->getMeshHeader().vertexCount; j < nrOfVertices; j++)
+			{
+				//XYZ MAX XYZ MIN
+				glm::vec3 hitboxVertice = allVertices[j];
+
+				if (hitboxVertice.x >= xMax)
+					xMax = hitboxVertice.x;
+				if (hitboxVertice.y >= yMax)
+					yMax = hitboxVertice.y;
+				if (hitboxVertice.z >= zMax)
+					zMax = hitboxVertice.z;
+
+				if (hitboxVertice.x <= xMin)
+					xMin = hitboxVertice.x;
+				if (hitboxVertice.y <= yMin)
+					yMin = hitboxVertice.y;
+				if (hitboxVertice.z <= zMin)
+					zMin = hitboxVertice.z;
+			}
+
+			//z always 0?
+
+			glm::vec3 lmaxValues;	//XYZ MAX
+			lmaxValues.x = xMax;
+			lmaxValues.y = yMax;
+			lmaxValues.z = zMax;
+			fileData->addMaxMinValuesHitbox(lmaxValues);
+
+			glm::vec3 lminValues;	//XYZ MIN
+			lminValues.x = xMin;
+			lminValues.y = yMin;
+			lminValues.z = zMin;
+			fileData->addMaxMinValuesHitbox(lminValues);
 		}
-
-		//z always 0?
-
-		glm::vec3 lmaxValues;	//XYZ MAX
-		lmaxValues.x = xMax;
-		lmaxValues.y = yMax;
-		lmaxValues.z = zMax;
-		fileData->addMaxMinValuesHitbox(lmaxValues);
-
-		glm::vec3 lminValues;	//XYZ MIN
-		lminValues.x = xMin;
-		lminValues.y = yMin;
-		lminValues.z = zMin;
-		fileData->addMaxMinValuesHitbox(lminValues);
 	}
 }

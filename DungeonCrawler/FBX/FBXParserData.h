@@ -9,10 +9,11 @@ class FBXParserData
 {
 private:
 	//headers, maybe needed? maybe remove
+	//Maybe vector of vectors?
 	MainHeader m_mainHeader;
 	MeshHeader m_meshHeader;
 	Material m_materialHeader;
-	BoundingBoxHeader m_boundingBoxHeader;
+	std::vector<BoundingBoxHeader> m_boundingBoxHeaders;
 	Vertex m_vertexHeader;
 	BoundingBoxVertex m_boundingBoxVertexHeader;
 
@@ -44,7 +45,7 @@ public:
 	MainHeader getMainHeader()const;
 	MeshHeader getMeshHeader()const;
 	Material getMaterialHeader()const;
-	BoundingBoxHeader getBoundingBoxHeader()const;
+	std::vector<BoundingBoxHeader> getBoundingBoxHeaders()const;
 	Vertex getVertexHeader()const;
 	BoundingBoxVertex getBoundingBoxVertexHeader()const;
 
@@ -70,9 +71,11 @@ public:
 
 	//BoundingBoxHeader
 	void setBBHeaderNameOfBoundingBoxMesh(char nameOfBoundingBox[]);
+	/*
 	void setBBHeaderVertexCountOfBoundingBoxMesh(unsigned int vertexCount);
 	void setBBHeaderCollisionOfBoundingBoxMesh(bool collision);
 	void setBBHeaderStaticBoundingBoxMesh(bool staticBoundingBoxMesh);
+	*/
 
 	//Vertex
 	void setMVHeaderPositionVertexOfMesh(float positionVertex[]);
@@ -100,6 +103,8 @@ public:
 	void addNormalMapName(std::string normalMapName);
 
 	void addMaxMinValuesHitbox(glm::vec3 maxMinValuesHitbox);
+
+	void addBoundingBoxHeader(BoundingBoxHeader boundingBoxHeader);
 	//SET FUNCTIONS
 	void setMaxMinValuesMesh(glm::vec4);
 

@@ -30,19 +30,10 @@ FBXParserData::FBXParserData(int vectorStartValue)
 
 		m_materialHeader.nameOfAlbedo[i] = ' ';
 		m_materialHeader.nameOfNormal[i] = ' ';
-
-		m_boundingBoxHeader.nameOfHitbox[i] = ' ';
 	}
 	m_materialHeader.materialID = 0;
 	m_materialHeader.nrOfTextures = 0;
 	m_materialHeader.whatShader = 0;
-
-	//boundingboxheader
-	m_boundingBoxHeader.vertexCount = 0;
-	m_boundingBoxHeader.collision = false;
-	m_boundingBoxHeader.staticMesh = false;
-	m_boundingBoxHeader.padding1 = false;
-	m_boundingBoxHeader.padding2 = false;
 
 	//Vertex
 	m_vertexHeader.position[0] = 0.f;
@@ -156,6 +147,7 @@ void FBXParserData::setBBHeaderNameOfBoundingBoxMesh(char nameOfBoundingBox[])
 	//this->m_boundingBoxMeshHeader.nameOfHitbox = nameOfBoundingBox;
 }
 
+/*
 void FBXParserData::setBBHeaderVertexCountOfBoundingBoxMesh(unsigned int vertexCount)
 {
 	this->m_boundingBoxHeader.vertexCount = vertexCount;
@@ -170,6 +162,7 @@ void FBXParserData::setBBHeaderStaticBoundingBoxMesh(bool staticBoundingBoxMesh)
 {
 	this->m_boundingBoxHeader.staticMesh = staticBoundingBoxMesh;
 }
+*/
 
 void FBXParserData::setMVHeaderPositionVertexOfMesh(float positionVertex[])
 {
@@ -245,9 +238,9 @@ Material FBXParserData::getMaterialHeader()const
 	return m_materialHeader;
 }
 
-BoundingBoxHeader FBXParserData::getBoundingBoxHeader() const
+std::vector<BoundingBoxHeader> FBXParserData::getBoundingBoxHeaders() const
 {
-	return m_boundingBoxHeader;
+	return m_boundingBoxHeaders;
 }
 
 Vertex FBXParserData::getVertexHeader() const
@@ -289,6 +282,11 @@ void FBXParserData::addNormalMapName(std::string normalMapName)
 void FBXParserData::addMaxMinValuesHitbox(glm::vec3 maxMinValuesHitbox)
 {
 	m_maxMinValuesHitbox.emplace_back(maxMinValuesHitbox);
+}
+
+void FBXParserData::addBoundingBoxHeader(BoundingBoxHeader boundingBoxHeader)
+{
+	m_boundingBoxHeaders.emplace_back(boundingBoxHeader);
 }
 
 //SET FUNCTIONS

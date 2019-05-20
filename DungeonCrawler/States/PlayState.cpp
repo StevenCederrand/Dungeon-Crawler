@@ -46,13 +46,16 @@ PlayState::PlayState() {
 	//CONTINUE HERE
 	FBXParserData* enemyData = m_FBXParser->binaryMeshReading(FBXPath + "ourFileBinary.bin"); //SHOULD MAKE BINARY
 	m_GLinit->createMeshFBX("Enemy", enemyData);
+
+	FBXParserData* roomStart = m_FBXParser->binaryMeshReading(FBXPath + "testRoom.bin"); //SHOULD MAKE BINARY
+	m_GLinit->createMeshFBX("RoomStart", roomStart);
 	//delete enemyData;
 
 	#pragma region Create_Objects
 	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
 	ParserData* playerData = m_parser->loadFromObj("MainCharacterPosed.obj");
 	ParserData* doorData = m_parser->loadFromObj("doorEnd.obj");
-	ParserData* roomStart = m_parser->loadFromObj("roomStart.obj");
+	//ParserData* roomStart = m_parser->loadFromObj("roomStart.obj");
 	ParserData* roomEnd = m_parser->loadFromObj("roomEnd.obj");
 
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
@@ -60,7 +63,7 @@ PlayState::PlayState() {
 	//ParserData* enemyData = m_parser->loadFromObj("FlyGuyConverted.obj");
 
 	m_GLinit->createMesh("Door", doorData);
-	m_GLinit->createMesh("RoomStart", roomStart);
+	//m_GLinit->createMesh("RoomStart", roomStart);
 	m_GLinit->createMesh("RoomEnd", roomEnd);
 
 	m_GLinit->createMesh("Box", boxData);
