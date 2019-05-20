@@ -26,6 +26,7 @@ private:
 
 	void resetPlayer();
 	void constructWorld();
+	void addRoom();
 
 private:
 	Parser* m_parser;

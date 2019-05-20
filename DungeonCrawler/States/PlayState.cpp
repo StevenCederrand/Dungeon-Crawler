@@ -45,7 +45,7 @@ PlayState::PlayState() {
 	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
 	ParserData* playerData = m_parser->loadFromObj("MainCharacterPosed.obj");
 	ParserData* doorData = m_parser->loadFromObj("doorEnd.obj");
-	ParserData* roomStart = m_parser->loadFromObj("lmaoxde321.obj");
+	//ParserData* roomStart = m_parser->loadFromObj("lmaoxde321.obj");
 	ParserData* roomEnd = m_parser->loadFromObj("roomEnd.obj");
 
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
@@ -53,7 +53,7 @@ PlayState::PlayState() {
 	ParserData* enemyData = m_parser->loadFromObj("FlyGuyConverted.obj");
 
 	m_GLinit->createMesh("Door", doorData);
-	m_GLinit->createMesh("RoomStart", roomStart);
+	//m_GLinit->createMesh("RoomStart", roomStart);
 	m_GLinit->createMesh("RoomEnd", roomEnd);
 
 	m_GLinit->createMesh("Box", boxData);
@@ -169,15 +169,15 @@ void PlayState::constructWorld()
 
 	Mesh* boxMesh = MeshMap::getMesh("Box");
 	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
-	Mesh* roomStart = MeshMap::getMesh("RoomStart");
+	//Mesh* roomStart = MeshMap::getMesh("RoomStart");
 	Mesh* roomEnd = MeshMap::getMesh("RoomEnd");
 	Mesh* door = MeshMap::getMesh("Door");
 
-	Room* r_roomStart = new Room(roomStart, ROOM_EMPTY , m_player);
-	//Room* r_roomEnd = new Room(roomEnd, ROOM_BOSS, m_player);
+//	Room* r_roomStart = new Room(roomStart, ROOM_EMPTY , m_player);
+	Room* r_roomEnd = new Room(roomEnd, ROOM_BOSS, m_player);
 
-	m_gameObjectManager->addGameObject(r_roomStart);
-	//m_gameObjectManager->addGameObject(r_roomEnd);
+//	m_gameObjectManager->addGameObject(r_roomStart);
+	m_gameObjectManager->addGameObject(r_roomEnd);
 	m_gameObjectManager->addGameObject(new Box(door, DOOR));
 	m_gameObjectManager->addGameObject(m_player);
 	
@@ -211,4 +211,29 @@ void PlayState::constructWorld()
 	//Used for the player flashlight & shadow mapping from the 
 	//flashlights view
 	m_renderer->preparePlayerLights(m_gameObjectManager->getPlayer());
+}
+
+void PlayState::addRoom()
+{
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 9; j++)
+		{
+			if (i==3 && j == 2) // we only have 32 rooms, not 40 so return after 32
+			{
+				return;
+			}
+
+			ParserData* roomStart = m_parser->loadFromObj("Room" + i + j);
+			Mesh * roomMesh = m_GLinit->createMesh("Room" + i + j, roomStart);
+
+			//Mesh* roomStart = MeshMap::getMesh("Room");
+
+			Room * r_roomStart = new Room(roomMesh, ROOM_EMPTY, m_player);
+			m_gameObjectManager->addGameObject(r_roomStart);
+
+		}
+	}
+
+
 }
