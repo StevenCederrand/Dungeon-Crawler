@@ -46,6 +46,7 @@ private:
 	Map* m_map;
 	ScreenBlood* m_screenBlood;
 
+	Light* m_playerLight;
 
 };
 

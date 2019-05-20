@@ -44,19 +44,19 @@ PlayState::PlayState() {
 	#pragma region Create_Objects
 	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
 	ParserData* playerData = m_parser->loadFromObj("MainCharacterPosed.obj");
-	ParserData* doorData = m_parser->loadFromObj("doorEnd.obj");
+	
 
 	//ParserData* roomStart = m_parser->loadFromObj("roomStart.obj");
 
-	ParserData* roomEnd = m_parser->loadFromObj("roomEnd.obj");
+	//ParserData* roomEnd = m_parser->loadFromObj("roomEnd.obj");
 
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
 	ParserData* powerUpData = m_parser->loadFromObj("LifePowerUp.obj");
 	ParserData* enemyData = m_parser->loadFromObj("FlyGuyConverted.obj");
 
-	m_GLinit->createMesh("Door", doorData);
+
 	//m_GLinit->createMesh("RoomStart", roomStart);
-	m_GLinit->createMesh("RoomEnd", roomEnd);
+	//m_GLinit->createMesh("RoomEnd", roomEnd);
 
 	m_GLinit->createMesh("Box", boxData);
 	m_GLinit->createMesh("PlayerModel", playerData);
@@ -173,7 +173,7 @@ void PlayState::constructWorld()
 	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
 	//Mesh* roomStart = MeshMap::getMesh("RoomStart");
 	//Mesh* roomEnd = MeshMap::getMesh("RoomEnd");
-	Mesh* door = MeshMap::getMesh("Door");
+	
 
 
 //	Room* r_roomStart = new Room(roomStart, ROOM_EMPTY , m_player);
@@ -188,10 +188,11 @@ void PlayState::constructWorld()
 
 //	m_gameObjectManager->addGameObject(r_roomEnd);
 
-	m_gameObjectManager->addGameObject(new Box(door, DOOR));
+	
 	m_gameObjectManager->addGameObject(m_player);
 	
 	m_projectileManager->setPlayer(m_player);
+	addRoom();
 
 	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 5, 0, 0, false, glm::vec3(4.f, 0.5f, -2.f));
 	m_gameObjectManager->addGameObject(m_powerUp);
@@ -201,7 +202,7 @@ void PlayState::constructWorld()
 	m_gameObjectManager->addGameObject(m_powerUp);
 
 	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(0.8f, 0.8f, 0.8f));
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 1; i++)
 	{
 	m_lightManager->addLight(
 		// Position
@@ -225,25 +226,45 @@ void PlayState::constructWorld()
 
 void PlayState::addRoom()
 {
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i <= 31; i++)
 	{
-		for (int j = 0; j < 9; j++)
+		std::string file = "Room";
+		std::string id = "Room";
+		Type type = ROOM;
+		
+		if (i<10)
 		{
-			if (i==3 && j == 2) // we only have 32 rooms, not 40 so return after 32
-			{
-				return;
-			}
-
-			ParserData* roomStart = m_parser->loadFromObj("Room" + i + j);
-			Mesh * roomMesh = m_GLinit->createMesh("Room" + i + j, roomStart);
-
-			//Mesh* roomStart = MeshMap::getMesh("Room");
-
-			Room * r_roomStart = new Room(roomMesh, ROOM_EMPTY, m_player);
-			m_gameObjectManager->addGameObject(r_roomStart);
-
+			file += "0" + std::to_string(i);
+			id += "0" + std::to_string(i);
 		}
+		else {
+			file += std::to_string(i);
+			id += std::to_string(i);
+		}
+		if (i==31)
+		{
+			type = ROOM_BOSS;
+		}
+		else if (i == 0) {
+			type = ROOM_EMPTY;
+		}
+
+			
+		ParserData* roomStart = m_parser->loadFromObj(file + ".obj");
+		Mesh * roomMesh = m_GLinit->createMesh(id, roomStart);
+
+
+		Room * r_roomStart = new Room(roomMesh, type, m_player);
+		m_gameObjectManager->addGameObject(r_roomStart);
+
 	}
+
+
+	ParserData* doorData = m_parser->loadFromObj("Doors.obj");
+
+	Mesh* door = m_GLinit->createMesh("Door", doorData);
+
+	m_gameObjectManager->addGameObject(new Box(door, DOOR));
 
 
 }

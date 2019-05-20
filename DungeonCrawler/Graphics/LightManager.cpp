@@ -23,6 +23,7 @@ LightManager::LightManager()
 	glBufferData(GL_SHADER_STORAGE_BUFFER, int(Settings::getMaxLights() * m_lightByteSize), NULL, GL_DYNAMIC_DRAW);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_ubo);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+	
 }
 
 LightManager::~LightManager()
@@ -32,6 +33,7 @@ LightManager::~LightManager()
 
 void LightManager::update(float dt)
 {
+	
 }
 
 void LightManager::addLight(const glm::vec3 & position, const glm::vec3 & color, const float & radius, GameObjectManager* gameObjectManager)
