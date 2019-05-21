@@ -10,7 +10,7 @@
 class ProjectileManager {
 public:
 	ProjectileManager(GLinit* glInit, Effects* effects, const std::string& textureNameWithoutPath);
-	ProjectileManager(GLinit* glInit, Effects* effects, const std::string& SpriteSheetNameWithoutPath, int pixelWidth, int pixelHeight,int rows, int cols, float animSpeed);
+	ProjectileManager(GLinit* glInit, Effects* effects, const std::string& SpriteSheetNameWithoutPath, int pixelWidth, int pixelHeight, int frames, float animDelay);
 	~ProjectileManager();
 
 	void setPlayer(GameObject* player);
@@ -27,6 +27,7 @@ private:
 	GLuint m_uvVBO;
 	GLuint m_centerVBO;
 	GLuint m_textureID;
+	GLuint m_colorVBO;
 	GLfloat m_vertex_buffer_data[12];
 	
 	// Used if projectiles is not going to be animated
@@ -41,7 +42,7 @@ private:
 	void updateBuffers();
 
 
-	std::vector<GLfloat> m_uvBuffer;
+	std::vector<glm::vec2> m_uvBuffer;
 	void setupAnimatedGraphicBuffers();
 	void updateAnimatedBuffers();
 	void addUVsToVector(Projectile* proj);
@@ -49,16 +50,16 @@ private:
 private:
 	std::vector<Projectile*> m_projectiles;
 	std::vector<glm::vec3> m_centerPosBuffer;
+	glm::vec4 m_col;
 	Player* m_player;
 	Effects* m_effects;
 	float m_size;
 
 	// Animation props
-	float m_animSpeed;
+	float m_animDelay;
 	int m_pxWidth;
 	int m_pxHeight;
-	int m_cols;
-	int m_rows;
+	int m_frames;
 	bool m_isAnmiated;
 
 };

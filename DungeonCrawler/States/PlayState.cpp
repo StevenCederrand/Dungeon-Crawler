@@ -165,7 +165,7 @@ void PlayState::constructWorld()
 
 	Camera::active = m_camera;
 	m_lightManager = new LightManager();
-	m_projectileManager = new ProjectileManager(m_GLinit, m_effects);
+	m_projectileManager = new ProjectileManager(m_GLinit, m_effects, "testSheet.png", 640, 128, 5, 0.5f);
 	m_gameObjectManager = new GameObjectManager(m_effects, m_projectileManager);
 	m_map = new Map(m_gameObjectManager);
 	m_renderer = new Renderer(m_camera, m_lightManager, m_effects, m_projectileManager, m_playerHealthBar, m_map, m_screenBlood);

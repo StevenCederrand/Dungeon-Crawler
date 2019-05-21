@@ -81,7 +81,7 @@ void Shooter::update(float dt)
 			calculatePath(dt, true, false);
 			
 			if(m_path.size() > 0)
-				m_projectileManager->spawnProjectile(new Projectile(getPosition() + glm::vec3(0.0f, 2.0f, 0.0f), m_path, m_damage, 16.0f, m_room->getGrid()->getCellSize()));
+				m_projectileManager->spawnProjectile(new Projectile(getPosition() + glm::vec3(0.0f, 2.0f, 0.0f), m_path, m_damage, 2.0f, m_room->getGrid()->getCellSize()));
 		}
 	}
 
