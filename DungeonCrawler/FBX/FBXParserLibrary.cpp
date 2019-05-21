@@ -611,7 +611,7 @@ namespace FBXParserLibrary {
 			lminValues.z = zMin;
 			fileData->addMaxMinValuesHitbox(lminValues); 
 			
-			ALL MIN MAX VALUES ARE THE SAME, CHECK READABLE FILE
+			//ALL MIN MAX VALUES ARE THE SAME, CHECK READABLE FILE
 		}
 	}
 }

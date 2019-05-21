@@ -76,13 +76,17 @@ Mesh* GLinit::createMeshFBX(std::string name, FBXParserData* data)
 	GLuint vao = createAndBindVAO();
 	std::vector<GLuint> indices;
 
-	int nrMeshAndBBVertices = 0;
-	for (int i = 0; i < data->getMainHeader().boundingBoxCount; i++)
-			nrMeshAndBBVertices += data->getBoundingBoxHeaders()[i].vertexCount;
-	nrMeshAndBBVertices += data->getMeshHeader().vertexCount;
+	//int nrMeshAndBBVertices = 0;
+	//for (int i = 0; i < data->getMainHeader().boundingBoxCount; i++)
+			//nrMeshAndBBVertices += data->getBoundingBoxHeaders()[i].vertexCount;
+	//nrMeshAndBBVertices += data->getMeshHeader().vertexCount;
 
-	for (int i = 0; i < nrMeshAndBBVertices; i++)	//WITH BOUNDING BOX
+	//for (int i = 0; i < nrMeshAndBBVertices; i++)	//WITH BOUNDING BOX
+		//indices.emplace_back(i);
+
+	for (int i = 0; i < data->getMeshHeader().vertexCount; i++)	//Without bounding box
 		indices.emplace_back(i);
+
 	bindIndices(indices);
 
 	//sends only the meshes vertices to the vertex shader?
@@ -94,7 +98,7 @@ Mesh* GLinit::createMeshFBX(std::string name, FBXParserData* data)
 	}
 
 	
-	storeDataInAttributeList(0, 3, allVertices); //WITH BOUNDING BOX
+	storeDataInAttributeList(0, 3, onlyVisibleMeshes); //WITH BOUNDING BOX
 	storeDataInAttributeList(1, 2, data->getUVs());
 	storeDataInAttributeList(2, 3, data->getNormals());
 	glBindVertexArray(NULL);
