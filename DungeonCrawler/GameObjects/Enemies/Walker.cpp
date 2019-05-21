@@ -114,27 +114,10 @@ void Walker::attackCooldown(float dt)
 
 void Walker::floatingAnim(float dt)
 {	
-	float sinCurve = sin(m_sinTime * M_PI/ 180.f);
+	float sinCurve = sinf(m_sinTime * M_PI/ 180.f);
 	m_sinTime += (m_sinAddTime * dt);
 
 	setPosition(glm::vec3(getPosition().x, sinCurve, getPosition().z));
-	
-	//if ((getPosition().y >= m_floatMax - 0.01) && (m_floatDirection == true))
-	//{
-	//	m_floatDirection = false;
-	//}
-	//if ((getPosition().y <= m_floatMin + 0.01) && (m_floatDirection == false))
-	//{
-	//	m_floatDirection = true;
-	//}
-	//if (m_floatDirection)
-	//{
-	//	setPosition(glm::vec3(getPosition().x, lerp(getPosition().y, m_floatMax, m_percentage), getPosition().z));
-	//}
-	//else
-	//{
-	//	setPosition(glm::vec3(getPosition().x, lerp(getPosition().y, m_floatMin, m_percentage), getPosition().z));
-	//}
 }
 
 void Walker::calculatePath(float dt)

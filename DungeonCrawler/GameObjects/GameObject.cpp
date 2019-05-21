@@ -128,7 +128,7 @@ void GameObject::lookAt(const glm::vec3& position)
 		position.z - this->getPosition().z);
 	float angle = glm::degrees(atan2f(direction.z, direction.x));
 
-	setRotation(glm::vec3(0.0f, -angle, 0.0f));
+	setRotation(glm::vec3(0.f, -angle, 0.f));
 		
 }
 
