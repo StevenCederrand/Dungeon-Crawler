@@ -23,7 +23,7 @@ Player::Player(Mesh* mesh, Type type) :
 	this->setScale(glm::vec3(0.65f, 0.65f, 0.65f));
 	this->m_defaultSpeed = 7.f;
 	this->m_speed = 7.0f;
-	this->m_health = 1000000.f;
+	this->m_health = 10.f;
 	this->m_maxHealth = 10.f;
 	this->m_damage = 1.f;
 	this->m_automaticDamage = 1.f;
