@@ -37,7 +37,6 @@ void Map::update(float dt)
 	for (size_t i = mapRoomSize; i < clearedRoomSize; i++)
 	{
 		m_rooms.emplace_back(clearedRooms.at(i)->getMaxMinValues());
-
 	}
 
 	if (Input::isKeyReleased(GLFW_KEY_M))
@@ -51,10 +50,10 @@ void Map::update(float dt)
 
 	//move the matrix to players position and then move it upp and closer to the camera
 	m_modelMatrix = glm::translate(m_modelMatrix, player->getPlayerPosition());
-	m_modelMatrix = glm::translate(m_modelMatrix, glm::vec3(0.0f, 8.0f, 2.0f));
+	m_modelMatrix = glm::translate(m_modelMatrix, glm::vec3(0.0f, 10.0f, 5.0f));
 
-	m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(-30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-
+	m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(-70.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(0.3f));
 }
 
 
