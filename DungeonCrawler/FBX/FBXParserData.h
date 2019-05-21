@@ -11,8 +11,8 @@ private:
 	//headers, maybe needed? maybe remove
 	//Maybe vector of vectors?
 	MainHeader m_mainHeader;
-	MeshHeader m_meshHeader;
-	Material m_materialHeader;
+	MeshHeader m_meshHeader;	//should be vector
+	Material m_materialHeader;	//should be vector
 	std::vector<BoundingBoxHeader> m_boundingBoxHeaders;
 	Vertex m_vertexHeader;
 	BoundingBoxVertex m_boundingBoxVertexHeader;
@@ -36,8 +36,6 @@ private:
 public:
 	FBXParserData(int vectorStartValue);
 	~FBXParserData();
-	void setMainHeader(MainHeader mainHeader);
-	void setMeshHeader(MeshHeader meshHeader);
 	void setVertexHeader(Vertex vertexHeader);
 
 	//-----------------------------------------------------------------
@@ -48,50 +46,6 @@ public:
 	std::vector<BoundingBoxHeader> getBoundingBoxHeaders()const;
 	Vertex getVertexHeader()const;
 	BoundingBoxVertex getBoundingBoxVertexHeader()const;
-
-	//-----------------------------------------------------------------
-
-
-	//-----------------------------------------------------------------
-	//Struct setters functions in order
-	//MainHeader
-	void setMainHeaderVersion(char versionNr);
-	void setMainHeaderDynamicMeshCount(unsigned int dynamicMeshCount);
-	void setMainHeaderStaticMeshCount(unsigned int nrOfMeshes);
-	void setMainHeaderBoundBoxCount(unsigned int nrOfBoundingBoxMeshes);
-	void setMainHeaderMaterialCount(unsigned int nrOfBoundingBoxMeshes);
-
-
-	//MeshHeader
-	void setMeshHeaderNameOfMesh(std::vector<char> nameOfMeshVector);
-	void setMeshHeaderVertexCountOfMesh(unsigned int vertexCount);
-	void setMeshHeaderMaterialID(int materialID);
-	void setMeshHeaderCollisionOfMesh(bool collision);
-	void setMeshHeaderStaticMesh(bool staticMesh);
-
-	//BoundingBoxHeader
-	void setBBHeaderNameOfBoundingBoxMesh(char nameOfBoundingBox[]);
-	/*
-	void setBBHeaderVertexCountOfBoundingBoxMesh(unsigned int vertexCount);
-	void setBBHeaderCollisionOfBoundingBoxMesh(bool collision);
-	void setBBHeaderStaticBoundingBoxMesh(bool staticBoundingBoxMesh);
-	*/
-
-	//Vertex
-	void setMVHeaderPositionVertexOfMesh(float positionVertex[]);
-	void setMVHeaderUVOfMesh(float UV[]);
-	void setMVHeaderNormalOfMesh(float normal[]);
-	
-	//MaterialHeader
-	void setMaterialHeaderNameOfAlbedo(std::vector<char> nameOfAlbedo);
-	void setMaterialHeaderNameOfNormal(std::vector<char> nameOfNormal);
-	void setMaterialHeaderMaterialID(unsigned int materialID);
-	void setMaterialHeaderNrOfTextures(unsigned int nrOfTextures);
-	void setMaterialHeaderWhatShader(unsigned int whatShader);
-
-	//BoundingBoxVertex
-	void setBBVHeaderPositionOfBoundingBox(float position[]);
-
 
 
 	//ADD FUNCTIONS
@@ -105,8 +59,13 @@ public:
 	void addMinMaxValuesHitbox(glm::vec3 maxMinValuesHitbox);
 
 	void addBoundingBoxHeader(BoundingBoxHeader boundingBoxHeader);
+
 	//SET FUNCTIONS
 	void setMinMaxValuesMesh(glm::vec4);
+	//headers
+	void setMainHeader(MainHeader mainHeader);
+	void setMeshHeader(MeshHeader meshHeader);
+	void setMaterialHeader(Material material);
 
 	//GET FUNCTIONS
 	std::vector<glm::vec3> getVertexPos()const;

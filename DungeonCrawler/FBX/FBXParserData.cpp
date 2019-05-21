@@ -70,159 +70,12 @@ FBXParserData::~FBXParserData()
 
 }
 
-void FBXParserData::setMainHeader(MainHeader mainHeader)
-{
-	this->m_mainHeader = mainHeader;
-}
-
-void FBXParserData::setMeshHeader(MeshHeader meshHeader)
-{
-	this->m_meshHeader = meshHeader;
-}
-
 void FBXParserData::setVertexHeader(Vertex vertexHeader)
 {
 	this->m_vertexHeader = vertexHeader;
 }
 
-//--------------------------------------------------------------------------------------
-
-void FBXParserData::setMainHeaderVersion(char versionNr)
-{
-	this->m_mainHeader.version = versionNr;
-}
-
-void FBXParserData::setMainHeaderDynamicMeshCount(unsigned int dynamicMeshCount)
-{
-	this->m_mainHeader.dynamicMeshCount = dynamicMeshCount;
-}
-
-void FBXParserData::setMainHeaderStaticMeshCount(unsigned int staticMeshCount)
-{
-	this->m_mainHeader.staticMeshCount = staticMeshCount;
-}
-
-void FBXParserData::setMainHeaderBoundBoxCount(unsigned int nrOfBoundingBoxMeshes)
-{
-	this->m_mainHeader.boundingBoxCount = nrOfBoundingBoxMeshes;
-}
-
-void FBXParserData::setMainHeaderMaterialCount(unsigned int nrOfMaterials)
-{
-	m_mainHeader.materialCount = nrOfMaterials;
-}
-
-void FBXParserData::setMeshHeaderNameOfMesh(std::vector<char> nameOfMeshVector)
-{
-	for (int i = 0; i < 100; i++)
-	{
-		m_meshHeader.nameOfMesh[i] = nameOfMeshVector[i];
-	}
-	
-	//nameOfMeshVector
-}
-
-void FBXParserData::setMeshHeaderVertexCountOfMesh(unsigned int vertexCount)
-{
-	this->m_meshHeader.vertexCount = vertexCount;
-}
-
-void FBXParserData::setMeshHeaderMaterialID(int materialID)
-{
-	m_meshHeader.materialID = materialID;
-}
-
-void FBXParserData::setMeshHeaderCollisionOfMesh(bool collision)
-{
-	this->m_meshHeader.collision = collision;
-}
-
-void FBXParserData::setMeshHeaderStaticMesh(bool staticMesh)
-{
-	this->m_meshHeader.staticMesh = staticMesh;
-}
-
-void FBXParserData::setBBHeaderNameOfBoundingBoxMesh(char nameOfBoundingBox[])
-{
-	//this->m_boundingBoxMeshHeader.nameOfHitbox = nameOfBoundingBox;
-}
-
-/*
-void FBXParserData::setBBHeaderVertexCountOfBoundingBoxMesh(unsigned int vertexCount)
-{
-	this->m_boundingBoxHeader.vertexCount = vertexCount;
-}
-
-void FBXParserData::setBBHeaderCollisionOfBoundingBoxMesh(bool collision)
-{
-	this->m_boundingBoxHeader.collision = collision;
-}
-
-void FBXParserData::setBBHeaderStaticBoundingBoxMesh(bool staticBoundingBoxMesh)
-{
-	this->m_boundingBoxHeader.staticMesh = staticBoundingBoxMesh;
-}
-*/
-
-void FBXParserData::setMVHeaderPositionVertexOfMesh(float positionVertex[])
-{
-	//this->m_vertexHeader.position = positionVertex;
-}
-
-void FBXParserData::setMVHeaderUVOfMesh(float UV[])
-{
-	//this->m_vertexHeader.UV = UV;
-}
-
-void FBXParserData::setMVHeaderNormalOfMesh(float normal[])
-{
-	//this->m_vertexHeader.normal = normal;
-}
-
-//Material
-void FBXParserData::setMaterialHeaderNameOfAlbedo(std::vector<char> nameOfAlbedo)
-{
-	for (int i = 0; i < 100; i++)
-	{
-		m_materialHeader.nameOfAlbedo[i] = nameOfAlbedo[i];
-	}
-}
-
-void FBXParserData::setMaterialHeaderNameOfNormal(std::vector<char> nameOfNormal)
-{
-	for (int i = 0; i < 100; i++)
-	{
-		m_materialHeader.nameOfNormal[i] = nameOfNormal[i];
-	}
-}
-
-void FBXParserData::setMaterialHeaderMaterialID(unsigned int materialID)
-{
-	m_materialHeader.materialID = materialID;
-}
-
-void FBXParserData::setMaterialHeaderNrOfTextures(unsigned int nrOfTextures)
-{
-	m_materialHeader.nrOfTextures = nrOfTextures;
-}
-
-void FBXParserData::setMaterialHeaderWhatShader(unsigned int whatShader)
-{
-	m_materialHeader.whatShader = whatShader;
-}
-
-//bouding box
-void FBXParserData::setBBVHeaderPositionOfBoundingBox(float position[])
-{
-	//this->m_boundingBoxVertexHeader.position = position;
-}
-
-//--------------------------------------------------------------------------------------
-
-
-
-
-
+//GET FUNCTIONS
 MainHeader FBXParserData::getMainHeader() const
 {
 	return this->m_mainHeader;
@@ -293,6 +146,21 @@ void FBXParserData::addBoundingBoxHeader(BoundingBoxHeader boundingBoxHeader)
 void FBXParserData::setMinMaxValuesMesh(glm::vec4 minMaxValues) //ACTUALLY IS MINMAX
 {
 	m_minMaxValuesMesh = minMaxValues;
+}
+
+void FBXParserData::setMainHeader(MainHeader mainHeader)
+{
+	m_mainHeader = mainHeader;
+}
+
+void FBXParserData::setMeshHeader(MeshHeader meshHeader)
+{
+	m_meshHeader = meshHeader;
+}
+
+void FBXParserData::setMaterialHeader(Material materialHeader)
+{
+	m_materialHeader = materialHeader;
 }
 
 //GET FUNCTIONS
