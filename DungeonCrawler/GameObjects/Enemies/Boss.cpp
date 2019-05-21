@@ -16,7 +16,7 @@ Boss::Boss(Mesh* mesh, Type type, Room* room, const glm::vec3& position,Projecti
 	this->m_amIAlive = true;
 	this->m_room = room;
 	this->m_sinTime = 0.f;
-	this->m_sinAddTime = 20.f;
+	this->m_sinAddTime = 15.f;
 	m_attackCooldown = 0.f;
 	
 	m_shooting = false;
@@ -98,7 +98,7 @@ bool Boss::getAliveStatus() const
 
 void Boss::bossWalkAnim(float dt)
 {
-	float sinCurve = (10 * sinf(m_sinTime));
+	float sinCurve = ( 10*sinf(m_sinTime));
 	m_sinTime += (m_sinAddTime * dt);
 
 	setRotation(glm::vec3(getRotation().x, getRotation().y, sinCurve));

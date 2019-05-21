@@ -72,6 +72,7 @@ private:
 	//float m_iframes;
 	float m_sinTime;
 	float m_sinAddTime;
+	float m_sinDefaultAddTime;
 
 	int m_pistolBullets;
 	bool m_reloading;
