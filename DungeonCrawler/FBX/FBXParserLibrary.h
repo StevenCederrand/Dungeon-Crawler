@@ -20,7 +20,7 @@ namespace FBXParserLibrary {
 
 	void displayVertexHeader(std::ifstream& binaryFile, FBXParserData* fileData);
 	void displayMaterialHeader(std::ifstream& binaryFile, FBXParserData* fileData);
-	void displayBoundingBoxVertexHeader(std::ifstream& binaryFile, FBXParserData* fileData);
+	void displayBoundingBoxVertexHeader(std::ifstream& binaryFile, FBXParserData* fileData, int i);
 
 	int binaryToInt(std::ifstream& binaryFile);
 	float binaryToFloat(std::ifstream& binaryFile);
