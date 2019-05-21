@@ -14,10 +14,10 @@ namespace FBXParserLibrary
 	void saveMainHeader(std::ifstream& binaryFile, FBXParserData* filedata);
 	void saveMeshHeader(std::ifstream& binaryFile, FBXParserData* fileData);
 	void saveBoundingBoxHeader(std::ifstream& binaryFile, FBXParserData* fileData);
-
-	void saveVertexHeader(std::ifstream& binaryFile, FBXParserData* fileData);
 	void saveMaterialHeader(std::ifstream& binaryFile, FBXParserData* fileData);
-	void saveBoundingBoxVertexHeader(std::ifstream& binaryFile, FBXParserData* fileData, int i);
+
+	void saveVertexHeader(std::ifstream& binaryFile, FBXParserData* fileData, int vectorNr);
+	void saveBoundingBoxVertexHeader(std::ifstream& binaryFile, FBXParserData* fileData, int vectorNr);
 
 	//reading datatypes
 	int binaryToInt(std::ifstream& binaryFile);

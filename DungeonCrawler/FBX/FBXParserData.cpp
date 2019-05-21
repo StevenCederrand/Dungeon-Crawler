@@ -13,21 +13,9 @@ FBXParserData::FBXParserData(int vectorStartValue)
 	m_mainHeader.boundingBoxCount = 0;
 	m_mainHeader.materialCount = 0;
 
-	//meshheader
-	for (int i = 0; i < 100; i++)
-		m_meshHeader.nameOfMesh[i] = ' ';
-	m_meshHeader.vertexCount = 0;
-	m_meshHeader.materialID = 0;
-	m_meshHeader.collision = false;
-	m_meshHeader.staticMesh = false;
-	m_meshHeader.padding1 = false;
-	m_meshHeader.padding2 = false;
-
 	//m_materialheader
 	for (int i = 0; i < 100; i++)
 	{
-		m_meshHeader.nameOfMesh[i] = ' ';
-
 		m_materialHeader.nameOfAlbedo[i] = ' ';
 		m_materialHeader.nameOfNormal[i] = ' ';
 	}
@@ -50,10 +38,13 @@ FBXParserData::FBXParserData(int vectorStartValue)
 	m_boundingBoxVertexHeader.position[1] = 0.f;
 	m_boundingBoxVertexHeader.position[2] = 0.f;
 
-	//vectors
+	//vertice mesh data
 	m_verticePos.reserve(vectorStartValue);
 	m_uvs.reserve(vectorStartValue);
 	m_normals.reserve(vectorStartValue);
+
+	//vertice hitbox data
+	m_verticePosHitbox.reserve(vectorStartValue);
 
 	//mesh
 	m_minMaxValuesMesh.x = 0;
@@ -79,11 +70,6 @@ void FBXParserData::setVertexHeader(Vertex vertexHeader)
 MainHeader FBXParserData::getMainHeader() const
 {
 	return this->m_mainHeader;
-}
-
-MeshHeader FBXParserData::getMeshHeader() const
-{
-	return this->m_meshHeader;
 }
 
 Material FBXParserData::getMaterialHeader()const
@@ -122,6 +108,11 @@ void FBXParserData::addNormal(glm::vec3 normal)
 	m_normals.emplace_back(normal);
 }
 
+void FBXParserData::addVertexPosHitbox(glm::vec3 vertexPosHitbox)
+{
+	m_verticePosHitbox.emplace_back(vertexPosHitbox);
+}
+
 void FBXParserData::addAlbedoMapName(std::string albedoMapName)
 {
 	m_albedoMapName.emplace_back(albedoMapName);
@@ -142,6 +133,11 @@ void FBXParserData::addBoundingBoxHeader(BoundingBoxHeader boundingBoxHeader)
 	m_boundingBoxHeaders.emplace_back(boundingBoxHeader);
 }
 
+void FBXParserData::addMeshHeader(MeshHeader meshHeader)
+{
+	m_meshHeaders.emplace_back(meshHeader);
+}
+
 //SET FUNCTIONS
 void FBXParserData::setMinMaxValuesMesh(glm::vec4 minMaxValues) //ACTUALLY IS MINMAX
 {
@@ -151,11 +147,6 @@ void FBXParserData::setMinMaxValuesMesh(glm::vec4 minMaxValues) //ACTUALLY IS MI
 void FBXParserData::setMainHeader(MainHeader mainHeader)
 {
 	m_mainHeader = mainHeader;
-}
-
-void FBXParserData::setMeshHeader(MeshHeader meshHeader)
-{
-	m_meshHeader = meshHeader;
 }
 
 void FBXParserData::setMaterialHeader(Material materialHeader)
@@ -179,6 +170,11 @@ std::vector<glm::vec3> FBXParserData::getNormals()const
 	return m_normals;
 }
 
+std::vector<glm::vec3> FBXParserData::getVertexPosHitbox()const
+{
+	return m_verticePosHitbox;
+}
+
 std::vector<std::string> FBXParserData::getAlbedoMapName()const
 {
 	return m_albedoMapName;
@@ -197,4 +193,9 @@ glm::vec4 FBXParserData::getMinMaxValuesMesh()const
 std::vector<glm::vec3> FBXParserData::getMinMaxValuesHitbox()const
 {
 	return m_minMaxValuesHitbox;
+}
+
+std::vector<MeshHeader> FBXParserData::getMeshHeaders()const
+{
+	return m_meshHeaders;
 }

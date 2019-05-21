@@ -15,8 +15,13 @@ namespace FBXParserLibrary
 		else if (infileBinary.is_open())
 		{
 			saveMainHeader(infileBinary, fileData);
-			saveMeshHeader(infileBinary, fileData);
-			saveVertexHeader(infileBinary, fileData);
+
+			for (int i = 0; i < fileData->getMainHeader().staticMeshCount; i++)
+			{
+				saveMeshHeader(infileBinary, fileData);
+				saveVertexHeader(infileBinary, fileData, i);
+			}
+
 			saveMaterialHeader(infileBinary, fileData);
 
 			for (int i = 0; i < fileData->getMainHeader().boundingBoxCount; i++)
@@ -89,7 +94,7 @@ namespace FBXParserLibrary
 		bool paddingTwo = binaryToBool(infileBinary);
 		lmeshHeader.padding2 = paddingTwo;
 
-		fileData->setMeshHeader(lmeshHeader); //lmesh header should be vector of mesheaders so add function here
+		fileData->addMeshHeader(lmeshHeader); //lmesh header should be vector of mesheaders so add function here
 		int stop = 1;
 	}
 
@@ -120,10 +125,10 @@ namespace FBXParserLibrary
 		fileData->addBoundingBoxHeader(lboundingBoxHeader);
 	}
 
-	void saveVertexHeader(std::ifstream& infileBinary, FBXParserData* fileData)
+	void saveVertexHeader(std::ifstream& infileBinary, FBXParserData* fileData, int vectorNr)
 	{
 		//Need the static mesh count from the mesh header
-		for (int i = 0; i < fileData->getMeshHeader().vertexCount; i++)
+		for (int i = 0; i < fileData->getMeshHeaders()[vectorNr].vertexCount; i++) //change from 0
 		{
 			float positionX = binaryToFloat(infileBinary);
 			float positionY = binaryToFloat(infileBinary);
@@ -193,10 +198,10 @@ namespace FBXParserLibrary
 		fileData->setMaterialHeader(lmaterialHeader);
 	}
 	
-	void saveBoundingBoxVertexHeader(std::ifstream& infileBinary, FBXParserData* fileData, int i)
+	void saveBoundingBoxVertexHeader(std::ifstream& infileBinary, FBXParserData* fileData, int vectorNr)
 	{
 		//Need the bounding box mesh count from the mesh header
-		for (int j = 0; j < fileData->getBoundingBoxHeaders()[i].vertexCount; j++)
+		for (int j = 0; j < fileData->getBoundingBoxHeaders()[vectorNr].vertexCount; j++)
 		{
 			float positionX = binaryToFloat(infileBinary);
 			float positionY = binaryToFloat(infileBinary);
@@ -206,7 +211,7 @@ namespace FBXParserLibrary
 			vertexPos.x = positionX;
 			vertexPos.y = positionY;
 			vertexPos.z = positionZ;
-			fileData->addVertexPos(vertexPos);
+			fileData->addVertexPosHitbox(vertexPos);
 		}
 	}
 
@@ -252,7 +257,7 @@ namespace FBXParserLibrary
 		float yMin = 0.f;
 		float yMax = 0.f;
 
-		for (int i = 0; i < fileData->getMeshHeader().vertexCount; i++)
+		for (int i = 0; i < fileData->getMeshHeaders()[0].vertexCount; i++)	//change from 0
 		{
 			glm::vec3 meshVertice = allVertices[i];
 
@@ -286,7 +291,6 @@ namespace FBXParserLibrary
 
 	void calculateMinMaxValueHitbox(std::ifstream& binaryFile, FBXParserData* fileData)
 	{
-		int nrOfMeshVertices = fileData->getMeshHeader().vertexCount; //should be several meshes later
 		int nrOfHitboxVertices = 0;
 		int nrOfHitboxVerticesLastCykle = 0;
 
@@ -294,7 +298,7 @@ namespace FBXParserLibrary
 		{
 			nrOfHitboxVertices += fileData->getBoundingBoxHeaders()[i].vertexCount; //fix
 
-			std::vector<glm::vec3> allVertices = fileData->getVertexPos();
+			std::vector<glm::vec3> hitboxVertices = fileData->getVertexPosHitbox();
 			float xMin = 0.f;
 			float xMax = 0.f;
 			float yMin = 0.f;
@@ -303,12 +307,12 @@ namespace FBXParserLibrary
 			float zMax = 0.f;
 
 
-			for (int j = (nrOfMeshVertices + nrOfHitboxVerticesLastCykle); j < (nrOfMeshVertices + nrOfHitboxVertices); j++)
+			for (int j = nrOfHitboxVerticesLastCykle; j < nrOfHitboxVertices; j++)
 			{
 				//XYZ MAX XYZ MIN
-				glm::vec3 hitboxVertice = allVertices[j];
+				glm::vec3 hitboxVertice = hitboxVertices[j];
 
-				if (j == (nrOfMeshVertices + nrOfHitboxVerticesLastCykle)) //first pass to make eveything compare to the first vertice
+				if (j == nrOfHitboxVerticesLastCykle) //first pass to make eveything compare to the first vertice
 				{
 					xMin = hitboxVertice.x;
 					xMax = hitboxVertice.x;

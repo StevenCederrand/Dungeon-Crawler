@@ -76,29 +76,12 @@ Mesh* GLinit::createMeshFBX(std::string name, FBXParserData* data)
 	GLuint vao = createAndBindVAO();
 	std::vector<GLuint> indices;
 
-	//int nrMeshAndBBVertices = 0;
-	//for (int i = 0; i < data->getMainHeader().boundingBoxCount; i++)
-			//nrMeshAndBBVertices += data->getBoundingBoxHeaders()[i].vertexCount;
-	//nrMeshAndBBVertices += data->getMeshHeader().vertexCount;
-
-	//for (int i = 0; i < nrMeshAndBBVertices; i++)	//WITH BOUNDING BOX
-		//indices.emplace_back(i);
-
-	for (int i = 0; i < data->getMeshHeader().vertexCount; i++)	//Without bounding box
+	for (int i = 0; i < data->getMeshHeaders()[0].vertexCount; i++)	//Without bounding box, //change from 0
 		indices.emplace_back(i);
 
 	bindIndices(indices);
 
-	//sends only the meshes vertices to the vertex shader?
-	std::vector<glm::vec3> allVertices = data->getVertexPos();
-	std::vector<glm::vec3> onlyVisibleMeshes;
-	for (int i = 0; i < data->getMeshHeader().vertexCount; i++)
-	{
-		onlyVisibleMeshes.emplace_back(allVertices[i]);
-	}
-
-	
-	storeDataInAttributeList(0, 3, onlyVisibleMeshes); //WITHOUT BOUNDING BOX
+	storeDataInAttributeList(0, 3, data->getVertexPos()); //WITHOUT BOUNDING BOX
 	storeDataInAttributeList(1, 2, data->getUVs());
 	storeDataInAttributeList(2, 3, data->getNormals());
 	glBindVertexArray(NULL);
@@ -138,7 +121,7 @@ Mesh* GLinit::createMeshFBX(std::string name, FBXParserData* data)
 
 	mesh->setVao(vao);
 	mesh->setTextureID(textureID);
-	mesh->setNrOfIndices(allVertices.size());	//WITH BOUNDING BOX
+	mesh->setNrOfIndices(data->getVertexPos().size());	//WITH BOUNDING BOX
 	mesh->setAmbientColor(glm::vec3(255, 0, 0));
 	mesh->setSpecularColor(glm::vec3(255, 0, 0));
 	mesh->setDiffuseColor(glm::vec3(255, 0, 0));
