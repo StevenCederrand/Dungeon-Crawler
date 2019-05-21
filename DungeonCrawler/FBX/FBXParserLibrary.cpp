@@ -534,6 +534,14 @@ namespace FBXParserLibrary {
 		{
 			glm::vec3 meshVertice = allVertices[i];
 
+			if (i == 1) //first pass to make eveything compare to the first vertice
+			{
+				float xMin = meshVertice.x;
+				float xMax = meshVertice.x;
+				float yMin = meshVertice.y;
+				float yMax = meshVertice.y;
+			}
+
 			if (meshVertice.x >= xMax)
 				xMax = meshVertice.x;
 			if (meshVertice.y >= yMax)
@@ -579,6 +587,16 @@ namespace FBXParserLibrary {
 			{
 				//XYZ MAX XYZ MIN
 				glm::vec3 hitboxVertice = allVertices[j];
+
+				if (j == (nrOfMeshVertices + nrOfHitboxVerticesLastCykle)) //first pass to make eveything compare to the first vertice
+				{
+					xMin = hitboxVertice.x;
+					xMax = hitboxVertice.x;
+					yMin = hitboxVertice.y;
+					yMax = hitboxVertice.y;
+					zMin = hitboxVertice.z;
+					zMax = hitboxVertice.z;
+				}
 
 				if (hitboxVertice.x >= xMax)
 					xMax = hitboxVertice.x;
