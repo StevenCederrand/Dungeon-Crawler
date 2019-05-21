@@ -3,11 +3,11 @@
 #include <Utility/Randomizer.h>
 #include <Audio/AudioEngine.h>
 
-ProjectileManager::ProjectileManager(GLinit* glInit, Effects* effects)
+ProjectileManager::ProjectileManager(GLinit* glInit, Effects* effects, const std::string& textureNameWithoutPath)
 {
 	m_player = nullptr;
 	m_effects = effects;
-	m_textureID = glInit->createTexture("GunFlare.png", true, true);
+	m_textureID = glInit->createTexture(textureNameWithoutPath, true, true);
 	m_size = 0.5f;
 	m_vertex_buffer_data[0] = -m_size;
 	m_vertex_buffer_data[1] = -m_size;
@@ -26,6 +26,37 @@ ProjectileManager::ProjectileManager(GLinit* glInit, Effects* effects)
 	m_vertex_buffer_data[11] = 0.0f;
 
 	setupGraphicBuffers();
+
+	m_isAnmiated = false;
+
+}
+
+ProjectileManager::ProjectileManager(GLinit* glInit, Effects* effects, const std::string& SpriteSheetNameWithoutPath, int pixelWidth, int pixelHeight, int rows, int cols, float speed)
+{
+	m_player = nullptr;
+	m_effects = effects;
+	m_textureID = glInit->createTexture(SpriteSheetNameWithoutPath, true, true);
+	m_size = 0.5f;
+	m_vertex_buffer_data[0] = -m_size;
+	m_vertex_buffer_data[1] = -m_size;
+	m_vertex_buffer_data[2] = 0.0f;
+
+	m_vertex_buffer_data[3] = m_size;
+	m_vertex_buffer_data[4] = -m_size;
+	m_vertex_buffer_data[5] = 0.0f;
+
+	m_vertex_buffer_data[6] = -m_size;
+	m_vertex_buffer_data[7] = m_size;
+	m_vertex_buffer_data[8] = 0.0f;
+
+	m_vertex_buffer_data[9] = m_size;
+	m_vertex_buffer_data[10] = m_size;
+	m_vertex_buffer_data[11] = 0.0f;
+
+
+	m_isAnmiated = true;
+	setupAnimatedGraphicBuffers();
+
 }
 
 ProjectileManager::~ProjectileManager()
@@ -100,9 +131,19 @@ void ProjectileManager::update(float dt)
 
 			m_centerPosBuffer.emplace_back(proj->getPosition());
 
-		}
+			if (m_isAnmiated) {
 
-		updateBuffers();
+			}
+
+
+		}
+		if (m_isAnmiated) {
+			updateAnimatedBuffers();
+		}
+		else {
+			updateBuffers();
+
+		}
 	}
 }
 
@@ -165,4 +206,44 @@ void ProjectileManager::updateBuffers()
 	glBufferData(GL_ARRAY_BUFFER, MAX_PROJECTILE * sizeof(glm::vec3), NULL, GL_DYNAMIC_DRAW);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, m_centerPosBuffer.size() * sizeof(glm::vec3), m_centerPosBuffer.data());
 
+}
+
+void ProjectileManager::setupAnimatedGraphicBuffers()
+{
+	glGenVertexArrays(1, &m_vao);
+	glGenBuffers(1, &m_verticesVBO);
+	glGenBuffers(1, &m_uvVBO);
+	glGenBuffers(1, &m_centerVBO);
+
+	glBindVertexArray(m_vao);
+
+	// Buffer for vertices
+	glBindBuffer(GL_ARRAY_BUFFER, m_verticesVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(m_vertex_buffer_data), m_vertex_buffer_data, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, NULL, NULL);
+	glBindBuffer(GL_ARRAY_BUFFER, NULL);
+
+	// Buffer for uv
+	glBindBuffer(GL_ARRAY_BUFFER, m_uvVBO);
+	glBufferData(GL_ARRAY_BUFFER, MAX_PROJECTILE * sizeof(float) * 8, NULL, GL_DYNAMIC_DRAW);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, NULL, NULL);
+	glBindBuffer(GL_ARRAY_BUFFER, NULL);
+	glVertexAttribDivisor(1, 1);
+
+	// Buffer for centerPositions
+	glBindBuffer(GL_ARRAY_BUFFER, m_centerVBO);
+	glBufferData(GL_ARRAY_BUFFER, MAX_PROJECTILE * sizeof(glm::vec3), NULL, GL_DYNAMIC_DRAW);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, NULL, NULL);
+	glBindBuffer(GL_ARRAY_BUFFER, NULL);
+	glVertexAttribDivisor(2, 1);
+
+	glBindVertexArray(NULL);
+}
+
+void ProjectileManager::updateAnimatedBuffers()
+{
+}
+
+void ProjectileManager::addUVsToVector(Projectile* proj)
+{
 }
