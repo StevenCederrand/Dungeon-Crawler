@@ -26,6 +26,7 @@ private:
 
 	void resetPlayer();
 	void constructWorld();
+	void addRoom();
 
 private:
 	Parser* m_parser;
@@ -45,6 +46,7 @@ private:
 	Map* m_map;
 	ScreenBlood* m_screenBlood;
 
+	Light* m_playerLight;
 
 };
 

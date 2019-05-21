@@ -32,6 +32,8 @@ private:
 	int m_cellSize;
 	bool m_errorGettingGridCell;
 
+	glm::vec2 m_center;
+
 	std::vector<GridCell*> m_occupiedCells;
 
 };

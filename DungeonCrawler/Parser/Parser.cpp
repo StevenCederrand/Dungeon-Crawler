@@ -55,7 +55,7 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 	std::vector<glm::vec3> maxMinVector;
 	bool newCollider = false;
 	unsigned int currentBox = -2;
-	glm::vec4 maxMin = glm::vec4(-1000, -1000, 1000, 1000); 
+	glm::vec4 maxMin = glm::vec4(-10000, -10000, 10000, 10000); 
 
 	while (std::getline(objFile, line))
 	{

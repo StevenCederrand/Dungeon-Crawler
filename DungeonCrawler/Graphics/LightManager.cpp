@@ -23,6 +23,7 @@ LightManager::LightManager()
 	glBufferData(GL_SHADER_STORAGE_BUFFER, int(Settings::getMaxLights() * m_lightByteSize), NULL, GL_DYNAMIC_DRAW);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_ubo);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
 }
 
 LightManager::~LightManager()
@@ -32,6 +33,7 @@ LightManager::~LightManager()
 
 void LightManager::update(float dt)
 {
+	
 }
 
 void LightManager::addLight(const glm::vec3 & position, const glm::vec3 & color, const float & radius, GameObjectManager* gameObjectManager)
@@ -62,10 +64,54 @@ const int LightManager::getNumberOfLights() const
 	return int(m_lights.size());
 }
 
-void LightManager::setSun(Shader* shader, glm::vec3 position, glm::vec3 color) {
-	shader->use();
-	shader->setVec3("sunColor", color);
-	shader->setVec3("sunPosition", position);
-	shader->unuse();
+const glm::vec3& LightManager::getSunColor() const
+{
+	return m_sunColor;
+}
 
+const glm::vec3& LightManager::getSunPosition() const
+{
+	return m_sunPosition;
+}
+
+const glm::vec3& LightManager::getPlayerLightPosition() const
+{
+	return m_playerLightPosition;
+}
+
+const glm::vec4& LightManager::getPlayerLightColorAndRange() const
+{
+	return m_playerLightColorAndRange;
+}
+
+void LightManager::setSun(const glm::vec3& position, const glm::vec3& color) {
+	
+	m_sunPosition = position;
+	m_sunColor = color;
+}
+
+void LightManager::setSunPosition(const glm::vec3& position)
+{
+	m_sunPosition = position;
+}
+
+void LightManager::setSunColor(const glm::vec3& color)
+{
+	m_sunColor = color;
+}
+
+void LightManager::setPlayerLight(const glm::vec3& position, const glm::vec4& colorAndRange)
+{
+	m_playerLightPosition = position;
+	m_playerLightColorAndRange = colorAndRange;
+}
+
+void LightManager::setPlayerLightPosition(const glm::vec3& position)
+{
+	m_playerLightPosition = position;
+}
+
+void LightManager::setPlayerLightColorAndRange(const glm::vec4& colorAndRange)
+{
+	m_playerLightColorAndRange = colorAndRange;
 }

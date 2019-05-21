@@ -271,6 +271,10 @@ void Renderer::lightPass() {
 		lightShader->setVec4("flashColor", m_playerLight->color);
 	}
 
+	lightShader->setVec3("sunColor", m_lightManager->getSunColor());
+	lightShader->setVec3("sunPosition", m_lightManager->getSunPosition());	
+	lightShader->setVec3("playerLightPosition", m_lightManager->getPlayerLightPosition());
+	lightShader->setVec4("playerLightColorAndRange", m_lightManager->getPlayerLightColorAndRange());
 	lightShader->setMat4("lightSpaceMatrix", m_framebuffer->getLightSpaceMatrix());
 	lightShader->setInt("numberOfLights", m_lightManager->getNumberOfLights());
 	lightShader->setVec3("cameraPosition", m_camera->getPosition());
@@ -308,7 +312,7 @@ void Renderer::renderMap()
 		
 			//move the room the the right place
 			modelmatrix = glm::translate(modelmatrix, glm::vec3(
-				maxMinValues[i].x * tempValue,
+				maxMinValues[i].x * tempValue*0.65,
 				-maxMinValues[i].y * tempValue,
 				0.0f));
 		

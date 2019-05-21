@@ -113,7 +113,7 @@ void Player::update(float dt)
 			{
 				m_reloading = true;
 				AudioEngine::play("gun_reload", 1.0f);
-				m_reloadTime = 4.f;
+				m_reloadTime = 1.f;
 			}
 			manualReload(dt);
 		//}
@@ -273,7 +273,7 @@ Light* Player::getFlash() {
 
 void Player::spotlightHandler() {
 	this->m_spotlight->direction = this->getLookDirection();
-	this->m_spotlight->position = this->getPosition();
+	this->m_spotlight->position = this->getPosition() + glm::vec3(0.0f, 2.f, 0.0f);
 	this->m_flash->position = glm::vec4(this->getPosition() + glm::vec3(0.0f, 2.f, 0.0f), 1.0);
 }
 

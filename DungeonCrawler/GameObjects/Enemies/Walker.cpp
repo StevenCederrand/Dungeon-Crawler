@@ -140,9 +140,10 @@ void Walker::calculatePath(float dt)
 		// and also checks if the error flag has been set, if so then A* can't be run, otherwise
 		// it will crash when player is on a invalid cell or outside the cell system
 		const GridCell& playerCell = m_room->getGrid()->getCell(getPlayerPosition().x, getPlayerPosition().z);
-		if (m_room->getGrid()->failedGettingGridCell() || !playerCell.valid)
+		if (m_room->getGrid()->failedGettingGridCell() || !playerCell.valid) {
+			
 			canRunAStar = false;
-		
+		}
 
 		// If there was no errors getting the cells then run A* star and get
 		// the vector of nodes
