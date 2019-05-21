@@ -553,13 +553,13 @@ namespace FBXParserLibrary {
 				yMin = meshVertice.y;
 		}
 
-		glm::vec4 lmaxMinValues;//MAXMAXMINMIN
-		lmaxMinValues.x = xMax;
-		lmaxMinValues.y = yMax;
-		lmaxMinValues.z = xMin;
-		lmaxMinValues.w = yMin;
+		glm::vec4 lminMaxValues;//MINMINMAXMAX, ITS IN THE WRONG ORDER, IT SHOULD BE MIN MAX
+		lminMaxValues.x = xMin;
+		lminMaxValues.y = yMin;
+		lminMaxValues.z = xMax;
+		lminMaxValues.w = yMax;
 
-		fileData->setMaxMinValuesMesh(lmaxMinValues);
+		fileData->setMinMaxValuesMesh(lminMaxValues);
 
 		//OBJECT SPAWN ON THE SIDE of the hitbox, the object mesh is offset by half?
 	}
@@ -615,19 +615,17 @@ namespace FBXParserLibrary {
 			nrOfHitboxVerticesLastCykle += fileData->getBoundingBoxHeaders()[i].vertexCount;
 
 
-			//z always 0?
+			glm::vec3 lminValues;	//XYZ MIN
+			lminValues.x = xMin;
+			lminValues.y = yMin;
+			lminValues.z = zMin;
+			fileData->addMinMaxValuesHitbox(lminValues); 
 
 			glm::vec3 lmaxValues;	//XYZ MAX
 			lmaxValues.x = xMax;
 			lmaxValues.y = yMax;
 			lmaxValues.z = zMax;
-			fileData->addMaxMinValuesHitbox(lmaxValues);
-
-			glm::vec3 lminValues;	//XYZ MIN
-			lminValues.x = xMin;
-			lminValues.y = yMin;
-			lminValues.z = zMin;
-			fileData->addMaxMinValuesHitbox(lminValues); 
+			fileData->addMinMaxValuesHitbox(lmaxValues);
 			
 			//ALL MIN MAX VALUES ARE THE SAME, CHECK READABLE FILE
 		}

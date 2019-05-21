@@ -27,10 +27,10 @@ private:
 	std::vector<std::string> m_normalMapName;
 
 	//Mesh
-	glm::vec4 m_maxMinValuesMesh;
+	glm::vec4 m_minMaxValuesMesh;
 
 	//hitbox
-	std::vector<glm::vec3> m_maxMinValuesHitbox;
+	std::vector<glm::vec3> m_minMaxValuesHitbox;
 
 
 public:
@@ -102,11 +102,11 @@ public:
 	void addAlbedoMapName(std::string albedoMapName);
 	void addNormalMapName(std::string normalMapName);
 
-	void addMaxMinValuesHitbox(glm::vec3 maxMinValuesHitbox);
+	void addMinMaxValuesHitbox(glm::vec3 maxMinValuesHitbox);
 
 	void addBoundingBoxHeader(BoundingBoxHeader boundingBoxHeader);
 	//SET FUNCTIONS
-	void setMaxMinValuesMesh(glm::vec4);
+	void setMinMaxValuesMesh(glm::vec4);
 
 	//GET FUNCTIONS
 	std::vector<glm::vec3> getVertexPos()const;
@@ -116,6 +116,6 @@ public:
 	std::vector<std::string> getAlbedoMapName()const;
 	std::vector<std::string> getNormalMapName()const;
 
-	glm::vec4 getMaxMinValuesMesh()const;
-	std::vector<glm::vec3> getMaxMinValuesHitbox()const;
+	glm::vec4 getMinMaxValuesMesh()const;					//ACTUALLY IS MINMAX
+	std::vector<glm::vec3> getMinMaxValuesHitbox()const;	//ACTUALLY IS MINMAX
 };

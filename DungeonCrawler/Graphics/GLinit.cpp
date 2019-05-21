@@ -98,7 +98,7 @@ Mesh* GLinit::createMeshFBX(std::string name, FBXParserData* data)
 	}
 
 	
-	storeDataInAttributeList(0, 3, onlyVisibleMeshes); //WITH BOUNDING BOX
+	storeDataInAttributeList(0, 3, onlyVisibleMeshes); //WITHOUT BOUNDING BOX
 	storeDataInAttributeList(1, 2, data->getUVs());
 	storeDataInAttributeList(2, 3, data->getNormals());
 	glBindVertexArray(NULL);
@@ -144,10 +144,10 @@ Mesh* GLinit::createMeshFBX(std::string name, FBXParserData* data)
 	mesh->setDiffuseColor(glm::vec3(255, 0, 0));
 	mesh->setShininess(0.5f);
 
-	mesh->setMaxMinValues(data->getMaxMinValuesMesh()); //THIS SHOULD BE THE MESH
+	mesh->setMaxMinValues(data->getMinMaxValuesMesh()); //THIS SHOULD BE THE MESH
 
 	//hitbox
-	mesh->setBoundingBoxMinMax(data->getMaxMinValuesHitbox()); //XYZ MAX XYZ MIN //this will be all of the hitboxes for the mesh
+	mesh->setBoundingBoxMinMax(data->getMinMaxValuesHitbox()); //XYZ MAX XYZ MIN //this will be all of the hitboxes for the mesh
 
 
 	MeshMap::addMesh(name, mesh); //adds the mesh to the meshmap, this is where the mesh is saved

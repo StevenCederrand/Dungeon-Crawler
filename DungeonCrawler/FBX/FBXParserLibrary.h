@@ -63,6 +63,7 @@ namespace FBXParserLibrary {
 	void setPositionOfBoundingBox(FBXParserData* fileData, float normal[]);
 
 	//calculatemaxminvalue
+	//These are reversed. MinMaxValue
 	void calculateMinMaxValueMesh(std::ifstream& binaryFile, FBXParserData* fileData);
 	void calculateMinMaxValueHitbox(std::ifstream& binaryFile, FBXParserData* fileData);
 }
