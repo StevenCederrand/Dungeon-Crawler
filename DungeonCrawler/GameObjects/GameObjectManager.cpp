@@ -470,8 +470,8 @@ void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
 		this->addGameObject(enemy);
 	}
 
-	int numMeleeEnemies = Randomizer::single(1, 1);
-	int numRangedEnemies = Randomizer::single(1, 1);
+	int numMeleeEnemies = Randomizer::single(2, 4);
+	int numRangedEnemies = Randomizer::single(1, 4);
 
 	//Spawn Melee Enemies
 	for (int i = 0; i < numMeleeEnemies; i++)

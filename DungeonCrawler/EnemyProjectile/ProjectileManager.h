@@ -21,6 +21,7 @@ public:
 	const GLuint& getVAO() const;
 	const GLuint& getTextureID();
 	const size_t getNumberOfEnemyProjectiles() const;
+	const int getNumberOfAnimationFrames() const;
 private:
 	GLuint m_vao;
 	GLuint m_verticesVBO;
@@ -28,6 +29,8 @@ private:
 	GLuint m_centerVBO;
 	GLuint m_textureID;
 	GLuint m_colorVBO;
+	GLuint m_anim_currentIndexVBO;
+
 	GLfloat m_vertex_buffer_data[12];
 	
 	// Used if projectiles is not going to be animated
@@ -42,10 +45,10 @@ private:
 	void updateBuffers();
 
 
-	std::vector<glm::vec2> m_uvBuffer;
+	std::vector<float> m_animationIndices;
 	void setupAnimatedGraphicBuffers();
 	void updateAnimatedBuffers();
-	void addUVsToVector(Projectile* proj);
+	void addAnimatedIndicesToVec(Projectile* proj);
 
 private:
 	std::vector<Projectile*> m_projectiles;
@@ -61,7 +64,7 @@ private:
 	int m_pxHeight;
 	int m_frames;
 	bool m_isAnmiated;
-
+	float m_indx = 0;
 };
 
 #endif

@@ -39,7 +39,7 @@ void Shooter::update(float dt)
 	m_hoverEffectTimer += dt;
 	if (m_hoverEffectTimer >= 0.05f) {
 		m_hoverEffectTimer = 0.0f;
-		m_effects->addParticles("EnemyHoverEmitter", getPosition(), glm::vec3(Randomizer::single(-100.0f,100.0f) / 100.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 100.0f), 1.0f, 1);
+		m_effects->addParticles("EnemyHoverEmitter", getPosition() + glm::vec3(0.0f,0.5f,0.0f), glm::vec3(Randomizer::single(-100.0f,100.0f) / 100.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 100.0f), 1.0f, 1);
 	}
 
 	float lengthToPlayer = glm::length(getPosition() - getPlayerPosition());
@@ -81,7 +81,7 @@ void Shooter::update(float dt)
 			calculatePath(dt, true, false);
 			
 			if(m_path.size() > 0)
-				m_projectileManager->spawnProjectile(new Projectile(getPosition() + glm::vec3(0.0f, 2.0f, 0.0f), m_path, m_damage, 2.0f, m_room->getGrid()->getCellSize()));
+				m_projectileManager->spawnProjectile(new Projectile(getPosition() + glm::vec3(0.0f, 2.0f, 0.0f), m_path, m_damage, 12.0f, m_room->getGrid()->getCellSize()));
 		}
 	}
 

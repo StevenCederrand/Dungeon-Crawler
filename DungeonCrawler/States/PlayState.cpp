@@ -165,7 +165,7 @@ void PlayState::constructWorld()
 
 	Camera::active = m_camera;
 	m_lightManager = new LightManager();
-	m_projectileManager = new ProjectileManager(m_GLinit, m_effects, "testSheet.png", 640, 128, 5, 0.5f);
+	m_projectileManager = new ProjectileManager(m_GLinit, m_effects, "blackProjectileSheet.png", 768, 64, 12, 0.025f);
 	m_gameObjectManager = new GameObjectManager(m_effects, m_projectileManager);
 	m_map = new Map(m_gameObjectManager);
 	m_renderer = new Renderer(m_camera, m_lightManager, m_effects, m_projectileManager, m_playerHealthBar, m_map, m_screenBlood);
@@ -173,23 +173,6 @@ void PlayState::constructWorld()
 
 	Mesh* boxMesh = MeshMap::getMesh("Box");
 	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
-	//Mesh* roomStart = MeshMap::getMesh("RoomStart");
-	//Mesh* roomEnd = MeshMap::getMesh("RoomEnd");
-	
-
-
-//	Room* r_roomStart = new Room(roomStart, ROOM_EMPTY , m_player);
-//	Room* r_roomEnd = new Room(roomEnd, ROOM_BOSS, m_player);
-
-//	m_gameObjectManager->addGameObject(r_roomStart);
-
-//	Room* r_roomStart = new Room(roomStart, ROOM_EMPTY , m_player);
-//	Room* r_roomEnd = new Room(roomEnd, ROOM_BOSS, m_player);
-
-	//m_gameObjectManager->addGameObject(r_roomStart);
-
-//	m_gameObjectManager->addGameObject(r_roomEnd);
-
 	
 	m_gameObjectManager->addGameObject(m_player);
 	

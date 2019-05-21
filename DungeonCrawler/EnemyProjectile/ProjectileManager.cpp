@@ -24,10 +24,12 @@ ProjectileManager::ProjectileManager(GLinit* glInit, Effects* effects, const std
 	m_vertex_buffer_data[9] =  m_size;
 	m_vertex_buffer_data[10] = m_size;
 	m_vertex_buffer_data[11] = 0.0f;
-
-	setupGraphicBuffers();
-
+	m_col = glm::vec4(1.0f);
+	
+	m_frames = 0;
 	m_isAnmiated = false;
+	
+	setupGraphicBuffers();
 
 }
 
@@ -53,12 +55,12 @@ ProjectileManager::ProjectileManager(GLinit* glInit, Effects* effects, const std
 	m_vertex_buffer_data[10] = m_size;
 	m_vertex_buffer_data[11] = 0.0f;
 
-
 	m_isAnmiated = true;
 	m_pxWidth = pixelWidth;
 	m_pxHeight = pixelHeight;
 	m_frames = frames;
 	m_animDelay = animDelay;
+	m_col = glm::vec4(1.0f);
 
 	setupAnimatedGraphicBuffers();
 
@@ -69,6 +71,8 @@ ProjectileManager::~ProjectileManager()
 	glDeleteBuffers(1, &m_verticesVBO);
 	glDeleteBuffers(1, &m_uvVBO);
 	glDeleteBuffers(1, &m_centerVBO);
+	glDeleteBuffers(1, &m_colorVBO);
+	glDeleteBuffers(1, &m_anim_currentIndexVBO);
 	glDeleteVertexArrays(1, &m_vao);
 
 	for (int i = 0; i < m_projectiles.size(); i++)
@@ -88,7 +92,7 @@ void ProjectileManager::update(float dt)
 {
 
 	m_centerPosBuffer.clear();
-	m_uvBuffer.clear();
+	m_animationIndices.clear();
 
 	if (m_player != nullptr) {
 
@@ -137,20 +141,14 @@ void ProjectileManager::update(float dt)
 			}
 
 			m_centerPosBuffer.emplace_back(proj->getPosition());
-
-			if (m_isAnmiated) {
-				addUVsToVector(proj);
-			}
-
-
+			if(m_isAnmiated)
+				addAnimatedIndicesToVec(proj);
 		}
-		if (m_isAnmiated) {
+		if (m_isAnmiated)
 			updateAnimatedBuffers();
-		}
-		else {
+		else
 			updateBuffers();
-
-		}
+		
 	}
 }
 
@@ -175,6 +173,11 @@ const size_t ProjectileManager::getNumberOfEnemyProjectiles() const
 	return m_projectiles.size();
 }
 
+const int ProjectileManager::getNumberOfAnimationFrames() const
+{
+	return m_frames;
+}
+
 void ProjectileManager::setupGraphicBuffers()
 {
 	glGenVertexArrays(1, &m_vao);
@@ -182,6 +185,7 @@ void ProjectileManager::setupGraphicBuffers()
 	glGenBuffers(1, &m_uvVBO);
 	glGenBuffers(1, &m_centerVBO);
 	glGenBuffers(1, &m_colorVBO);
+	glGenBuffers(1, &m_anim_currentIndexVBO);
 
 	glBindVertexArray(m_vao);
 
@@ -205,13 +209,18 @@ void ProjectileManager::setupGraphicBuffers()
 	glVertexAttribDivisor(2, 1);
 
 	// Buffer for color
-	m_col = glm::vec4(1.0f);
-
 	glBindBuffer(GL_ARRAY_BUFFER, m_colorVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4), &m_col, GL_STATIC_DRAW);
 	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, NULL, NULL);
 	glBindBuffer(GL_ARRAY_BUFFER, NULL);
-
+	glVertexAttribDivisor(3, MAX_PROJECTILE);
+	
+	// Animation index
+	glBindBuffer(GL_ARRAY_BUFFER, m_anim_currentIndexVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float), &m_indx, GL_STATIC_DRAW);
+	glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, NULL, NULL);
+	glBindBuffer(GL_ARRAY_BUFFER, NULL);
+	glVertexAttribDivisor(4, MAX_PROJECTILE);
 
 	glBindVertexArray(NULL);
 
@@ -224,7 +233,7 @@ void ProjectileManager::updateBuffers()
 	glBufferSubData(GL_ARRAY_BUFFER, 0, m_centerPosBuffer.size() * sizeof(glm::vec3), m_centerPosBuffer.data());
 
 }
-// Stopped here!
+
 void ProjectileManager::setupAnimatedGraphicBuffers()
 {
 	glGenVertexArrays(1, &m_vao);
@@ -232,6 +241,7 @@ void ProjectileManager::setupAnimatedGraphicBuffers()
 	glGenBuffers(1, &m_uvVBO);
 	glGenBuffers(1, &m_centerVBO);
 	glGenBuffers(1, &m_colorVBO);
+	glGenBuffers(1, &m_anim_currentIndexVBO);
 	glBindVertexArray(m_vao);
 
 	// Buffer for vertices
@@ -242,10 +252,9 @@ void ProjectileManager::setupAnimatedGraphicBuffers()
 
 	// Buffer for uv
 	glBindBuffer(GL_ARRAY_BUFFER, m_uvVBO);
-	glBufferData(GL_ARRAY_BUFFER, MAX_PROJECTILE * sizeof(glm::vec2), NULL, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(m_uv_buffer_data), m_uv_buffer_data, GL_STATIC_DRAW);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, NULL, NULL);
 	glBindBuffer(GL_ARRAY_BUFFER, NULL);
-	
 
 	// Buffer for centerPositions
 	glBindBuffer(GL_ARRAY_BUFFER, m_centerVBO);
@@ -254,14 +263,19 @@ void ProjectileManager::setupAnimatedGraphicBuffers()
 	glBindBuffer(GL_ARRAY_BUFFER, NULL);
 	glVertexAttribDivisor(2, 1);
 
-
 	// Buffer for color
-	m_col = glm::vec4(1.0f);
-
 	glBindBuffer(GL_ARRAY_BUFFER, m_colorVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4), &m_col, GL_STATIC_DRAW);
 	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, NULL, NULL);
 	glBindBuffer(GL_ARRAY_BUFFER, NULL);
+	glVertexAttribDivisor(3, MAX_PROJECTILE);
+
+	// Animation index
+	glBindBuffer(GL_ARRAY_BUFFER, m_anim_currentIndexVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float), NULL, GL_DYNAMIC_DRAW);
+	glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, NULL, NULL);
+	glBindBuffer(GL_ARRAY_BUFFER, NULL);
+	glVertexAttribDivisor(4, 1);
 
 	glBindVertexArray(NULL);
 }
@@ -272,20 +286,13 @@ void ProjectileManager::updateAnimatedBuffers()
 	glBufferData(GL_ARRAY_BUFFER, MAX_PROJECTILE * sizeof(glm::vec3), NULL, GL_DYNAMIC_DRAW);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, m_centerPosBuffer.size() * sizeof(glm::vec3), m_centerPosBuffer.data());
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_uvVBO);
-	glBufferData(GL_ARRAY_BUFFER, MAX_PROJECTILE * sizeof(glm::vec2), NULL, GL_DYNAMIC_DRAW);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, m_uvBuffer.size() * sizeof(glm::vec2), m_uvBuffer.data());
+	glBindBuffer(GL_ARRAY_BUFFER, m_anim_currentIndexVBO);
+	glBufferData(GL_ARRAY_BUFFER, MAX_PROJECTILE * sizeof(float), NULL, GL_DYNAMIC_DRAW);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, m_animationIndices.size() * sizeof(float), m_animationIndices.data());
 }
 
-void ProjectileManager::addUVsToVector(Projectile* proj)
+void ProjectileManager::addAnimatedIndicesToVec(Projectile* proj)
 {
-	/*	Standard uv
-		0.0f, 1.0f,		- top left
-		1.0f, 1.0f,		- top right
-		0.0f, 0.0f,		- bottom left
-		1.0f, 0.0f		- bottom right
-	
-	*/
 	int projCurrentAnimIndex = proj->getInternalAnimIndex();
 
 	if (proj->getInternalAnimTimer() >= m_animDelay)
@@ -301,20 +308,5 @@ void ProjectileManager::addUVsToVector(Projectile* proj)
 			
 	}
 
-	float uv_min_x = (((float)m_pxWidth / (float)m_frames) * (projCurrentAnimIndex)) / (float)m_pxWidth;
-	float uv_max_x = (((float)m_pxWidth / (float)m_frames) * (projCurrentAnimIndex + 1)) / (float)m_pxWidth;
-
-	float uv_min_y = 0.0f;
-	float uv_max_y = 1.0f;
-
-	glm::vec2 tl = glm::vec2(uv_min_x, uv_max_y);
-	glm::vec2 tr = glm::vec2(uv_max_x, uv_max_y);
-	glm::vec2 bl = glm::vec2(uv_min_x, uv_min_y);
-	glm::vec2 br = glm::vec2(uv_max_x, uv_min_y);
-
-	m_uvBuffer.emplace_back(tl);
-	m_uvBuffer.emplace_back(tr);
-	m_uvBuffer.emplace_back(bl);
-	m_uvBuffer.emplace_back(br);
-
+	m_animationIndices.emplace_back((float)projCurrentAnimIndex);
 }

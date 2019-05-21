@@ -170,7 +170,7 @@ void Renderer::renderEffects()
 	effectsShader->use();
 	effectsShader->setMat4("viewMatrix", m_camera->getViewMatrix());
 	effectsShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
-	
+	effectsShader->setFloat("nrAnimationFrames", 1.0f);
 	const std::map<std::string, Emitter*>& emitters = m_effects->getEmitters();
 	
 	for (const auto& map : emitters)
@@ -205,11 +205,14 @@ void Renderer::renderProjectiles()
 	effectsShader->use();
 	effectsShader->setMat4("viewMatrix", m_camera->getViewMatrix());
 	effectsShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+	effectsShader->setFloat("nrAnimationFrames", (float)m_projectileManager->getNumberOfAnimationFrames());
 
 	glBindVertexArray(m_projectileManager->getVAO());
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(3);
+	glEnableVertexAttribArray(4);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_projectileManager->getTextureID());
@@ -219,7 +222,9 @@ void Renderer::renderProjectiles()
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
-	
+	glDisableVertexAttribArray(3);
+	glDisableVertexAttribArray(4);
+
 	glBindVertexArray(0);
 
 	effectsShader->unuse();
