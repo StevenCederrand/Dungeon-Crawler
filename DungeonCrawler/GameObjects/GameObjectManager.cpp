@@ -457,31 +457,40 @@ void GameObjectManager::roomManager(GameObject* object) {
 
 void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
 
+	int spawnOffset = 5;
+
 	Mesh* enemyMesh = MeshMap::getMesh("Enemy");
 	if (currentRoom->getType() == ROOM_BOSS)
 	{
 		GameObject* enemy = new Boss(enemyMesh, BOSS, currentRoom, glm::vec3(
-			Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),
+			currentRoom->getCentrePosition().x,
 			0.f,
-			Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)), m_projectileManager, m_effects);
+			currentRoom->getCentrePosition().y),
+			m_projectileManager, m_effects);
 		this->addGameObject(enemy);
 	}
+
+	int numMeleeEnemies = Randomizer::single(2, 4);
+	int numRangedEnemies = Randomizer::single(2, 4);
+
 	//Spawn Melee Enemies
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < numMeleeEnemies; i++)
 	{
 		GameObject* enemy = new Walker(enemyMesh, WALKER, currentRoom, glm::vec3(
-			Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),
+			Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
 			0.f,
-			Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)), m_effects);
+			Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)),
+			m_effects);
 		this->addGameObject(enemy);
 	}
 	//Spawn Ranged Enemies
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < numRangedEnemies; i++)
 	{
 		GameObject* enemy = new Shooter(enemyMesh, SHOOTER, currentRoom, glm::vec3(
-			Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),
+			Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
 			0.f,
-			Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)), m_projectileManager, m_effects);
+			Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)),
+			m_projectileManager, m_effects);
 
 		this->addGameObject(enemy);
 	}
