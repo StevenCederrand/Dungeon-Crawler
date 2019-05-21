@@ -398,7 +398,7 @@ void SaveHierarchy::m_SaveControlPoints(FbxMesh* pMesh, bool collision)
 	{
 		for (int i = 0; i < lControlPointsCount; i++)
 		{
-			m_bBMesh.AddControlPoint(lControlPoints[i]);
+			m_bBMesh.AddControlPoint(lControlPoints[i]); //THIS IS RIGHT
 		}
 	}
 	else

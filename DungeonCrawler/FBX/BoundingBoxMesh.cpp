@@ -28,12 +28,16 @@ void BoundingBoxMesh::PrepareForNewMesh()
 	m_collision = 0;
 	m_staticMesh = 0;
 
+	m_controlPointsVECTOR.clear();
+	m_controlPointIndexArrVECTOR.clear();
+	vertexArrVECTOR.clear();
+
 	initiateArrays();
 }
 
 void BoundingBoxMesh::MakeAllTheVertices(int lNrOfVertices)
 {
-	for (int i = 0; i < lNrOfVertices; i++)//For each vector
+	for (int i = 0; i < lNrOfVertices; i++)//For each vector //shoudld add each pre done numbers, +32 for each
 	{
 		BoundingBoxVertex tempVertex;
 		for (int j = 0; j < 3; j++)

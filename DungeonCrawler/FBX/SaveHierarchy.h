@@ -10,7 +10,7 @@ class SaveHierarchy
 {
 private:
 	StaticMesh m_staticMesh; //will only be one, load one at a time, replaced
-	BoundingBoxMesh m_bBMesh;
+	BoundingBoxMesh m_bBMesh; //control points and indices never flushed
 	MainHeader m_mainHeader;
 
 	Material m_Material;
