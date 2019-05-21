@@ -18,6 +18,9 @@ uniform struct Spotlight {
 uniform vec4 flashColor;
 uniform vec4 flashPosition;
 
+uniform vec3 playerLightPosition;
+uniform vec4 playerLightColorAndRange;
+
 uniform vec3 sunColor;
 uniform vec3 sunPosition;
 uniform vec3 cameraPosition;
@@ -158,6 +161,17 @@ vec3 getSumOfAllColorFromPointLights(float specularStrength, vec3 worldPosition)
 		finalColor += currentColor * strength;
 	}
 
+	float dist = length(playerLightPosition - worldPosition);
+
+	// Player light
+	vec3 currentColor = getDiffuseColor(playerLightPosition, playerLightColorAndRange.rgb) 
+	+ getPhongColor(playerLightPosition, specularStrength, playerLightColorAndRange.rgb);
+	float strength = clamp((playerLightColorAndRange.w - dist) / playerLightColorAndRange.w, 0.f, 1.0f);
+	finalColor += currentColor * strength;
+
+
+
+
 	return finalColor;
 }
 
@@ -186,10 +200,3 @@ vec3 getAmbientColor(float ambientFactor)
 	vec3 ambientColor = vec3(0.8f);
 	return ambientColor * ambientFactor;
 }
-
-/*
-uniform struct Spotlight {
-	vec3 position;
-	vec3 direction;
-	float radius;
-} spotlight;*/

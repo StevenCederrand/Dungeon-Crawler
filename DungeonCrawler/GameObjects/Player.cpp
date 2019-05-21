@@ -110,7 +110,7 @@ void Player::update(float dt)
 			{
 				m_reloading = true;
 				AudioEngine::play("gun_reload", 1.0f);
-				m_reloadTime = 4.f;
+				m_reloadTime = 1.f;
 			}
 			manualReload(dt);
 		//}

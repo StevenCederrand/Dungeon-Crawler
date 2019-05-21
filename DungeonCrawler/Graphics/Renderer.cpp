@@ -272,7 +272,9 @@ void Renderer::lightPass() {
 	}
 
 	lightShader->setVec3("sunColor", m_lightManager->getSunColor());
-	lightShader->setVec3("sunPosition", m_lightManager->getSunPosition());
+	lightShader->setVec3("sunPosition", m_lightManager->getSunPosition());	
+	lightShader->setVec3("playerLightPosition", m_lightManager->getPlayerLightPosition());
+	lightShader->setVec4("playerLightColorAndRange", m_lightManager->getPlayerLightColorAndRange());
 	lightShader->setMat4("lightSpaceMatrix", m_framebuffer->getLightSpaceMatrix());
 	lightShader->setInt("numberOfLights", m_lightManager->getNumberOfLights());
 	lightShader->setVec3("cameraPosition", m_camera->getPosition());
