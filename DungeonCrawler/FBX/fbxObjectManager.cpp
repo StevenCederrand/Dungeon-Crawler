@@ -57,7 +57,7 @@ const char * fbxObjectManager::LoadFbxFile()
 	//Loading in my file
 	//User chooses name of file, via trextbox? hardcoded for now
 
-	const char* lFilename = "\\Assets\\FBX\\BoxWithHitbox.fbx";
+	const char* lFilename = "\\Assets\\FBX\\FlyGuy.fbx";
 	return lFilename;
 }
 

@@ -499,6 +499,34 @@ void SaveHierarchy::m_SaveNormals(FbxMesh* pMesh, int k, int vertexCounter)
 			break; // other reference modes not shown here!
 		}
 	}
+	else if (leNormal->GetMappingMode() == FbxGeometryElement::eByControlPoint) //mesh was by control point, works with the way for by polygon vertex?
+	{
+		switch (leNormal->GetReferenceMode())
+		{
+		case FbxGeometryElement::eDirect: //currently used
+			lNormalCoordinates = leNormal->GetDirectArray().GetAt(vertexCounter);
+			m_staticMesh.AddNormalCoordinate(lNormalCoordinates); //save normals
+
+			//Display3DVector(header, leNormal->GetDirectArray().GetAt(vertexId));
+			break;
+		case FbxGeometryElement::eIndexToDirect:
+		{
+			//int id = leNormal->GetIndexArray().GetAt(vertexId);
+			//Display3DVector(header, leNormal->GetDirectArray().GetAt(id));
+		}
+		break;
+		default:
+			break; // other reference modes not shown here!
+		}
+	}
+	else if (leNormal->GetMappingMode() == FbxGeometryElement::eByEdge)
+	{
+		int stop = 1;
+	}
+	else if (leNormal->GetMappingMode() == FbxGeometryElement::eByPolygon)
+	{
+		int stop = 1;
+	}
 }
 
 //saves UV, UVIndex, normal, controlpointIndex
