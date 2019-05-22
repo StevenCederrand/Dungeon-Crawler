@@ -20,6 +20,7 @@ namespace FBXParserLibrary
 			{
 				saveMeshHeader(infileBinary, fileData);
 				saveVertexHeader(infileBinary, fileData, i);
+				calculateMinMaxValueMesh(infileBinary, fileData, i);
 			}
 
 			saveMaterialHeader(infileBinary, fileData);
@@ -30,7 +31,7 @@ namespace FBXParserLibrary
 				saveBoundingBoxVertexHeader(infileBinary, fileData, i);
 			}
 
-			calculateMinMaxValueMesh(infileBinary, fileData);
+			
 			calculateMinMaxValueHitbox(infileBinary, fileData);
 
 			infileBinary.close();
@@ -161,6 +162,7 @@ namespace FBXParserLibrary
 
 			fileData->addNormal(vertexNormal);
 		}
+		fileData->moveVerticePosToVector();
 	}
 
 	void saveMaterialHeader(std::ifstream& infileBinary, FBXParserData* fileData)
@@ -248,18 +250,18 @@ namespace FBXParserLibrary
 		return convertedCharacter;
 	}
 
-	void calculateMinMaxValueMesh(std::ifstream& binaryFile, FBXParserData* fileData)
+	void calculateMinMaxValueMesh(std::ifstream& binaryFile, FBXParserData* fileData, int vectorNr)
 	{
 		//is onyl 36 now, should be 72
-		std::vector<glm::vec3> allVertices = fileData->getVertexPos();
+		std::vector<glm::vec3> currentMeshVertices = fileData->getVerticePosVector()[vectorNr];
 		float xMin = 0.f;
 		float xMax = 0.f;
 		float yMin = 0.f;
 		float yMax = 0.f;
 
-		for (int i = 0; i < fileData->getMeshHeaders()[0].vertexCount; i++)	//change from 0
+		for (int i = 0; i < fileData->getMeshHeaders()[vectorNr].vertexCount; i++)	//change from 0
 		{
-			glm::vec3 meshVertice = allVertices[i];
+			glm::vec3 meshVertice = currentMeshVertices[i];
 
 			if (i == 1) //first pass to make eveything compare to the first vertice
 			{
@@ -296,7 +298,7 @@ namespace FBXParserLibrary
 
 		for (int i = 0; i < fileData->getMainHeader().boundingBoxCount; i++)
 		{
-			nrOfHitboxVertices += fileData->getBoundingBoxHeaders()[i].vertexCount; //fix
+			nrOfHitboxVertices += fileData->getBoundingBoxHeaders()[i].vertexCount;
 
 			std::vector<glm::vec3> hitboxVertices = fileData->getVertexPosHitbox();
 			float xMin = 0.f;

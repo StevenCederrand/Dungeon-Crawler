@@ -76,12 +76,24 @@ Mesh* GLinit::createMeshFBX(std::string name, FBXParserData* data)
 	GLuint vao = createAndBindVAO();
 	std::vector<GLuint> indices;
 
-	for (int i = 0; i < data->getMeshHeaders()[0].vertexCount; i++)	//Without bounding box, //change from 0
-		indices.emplace_back(i);
+	int meshCount = data->getMainHeader().staticMeshCount;
+	int indiceCounter = 0;
+	std::vector<glm::vec3> allMeshVertices;
+	allMeshVertices.reserve(10000);
+	for (int i = 0; i < meshCount; i++)
+	{
+		for (int j = 0; j < data->getMeshHeaders()[i].vertexCount; j++)
+		{
+			indices.emplace_back(indiceCounter);
+			indiceCounter++;
 
+			allMeshVertices.emplace_back(data->getVerticePosVector()[i][j]);
+		}
+	}
 	bindIndices(indices);
 
-	storeDataInAttributeList(0, 3, data->getVertexPos()); //WITHOUT BOUNDING BOX
+
+	storeDataInAttributeList(0, 3, allMeshVertices); //WITHOUT BOUNDING BOX
 	storeDataInAttributeList(1, 2, data->getUVs());
 	storeDataInAttributeList(2, 3, data->getNormals());
 	glBindVertexArray(NULL);
@@ -121,7 +133,7 @@ Mesh* GLinit::createMeshFBX(std::string name, FBXParserData* data)
 
 	mesh->setVao(vao);
 	mesh->setTextureID(textureID);
-	mesh->setNrOfIndices(data->getVertexPos().size());	//WITH BOUNDING BOX
+	mesh->setNrOfIndices(allMeshVertices.size());	//WITHOUT BOUNDING BOX
 	mesh->setAmbientColor(glm::vec3(255, 0, 0));
 	mesh->setSpecularColor(glm::vec3(255, 0, 0));
 	mesh->setDiffuseColor(glm::vec3(255, 0, 0));

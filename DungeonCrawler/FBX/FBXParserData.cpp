@@ -43,6 +43,8 @@ FBXParserData::FBXParserData(int vectorStartValue)
 	m_uvs.reserve(vectorStartValue);
 	m_normals.reserve(vectorStartValue);
 
+	m_verticePosVector.reserve(vectorStartValue);
+
 	//vertice hitbox data
 	m_verticePosHitbox.reserve(vectorStartValue);
 
@@ -90,6 +92,13 @@ Vertex FBXParserData::getVertexHeader() const
 BoundingBoxVertex FBXParserData::getBoundingBoxVertexHeader() const
 {
 	return BoundingBoxVertex();
+}
+
+void FBXParserData::moveVerticePosToVector()
+{
+	//moves the vertexArr for the mesh to the big vector containing all the vertices for all the meshes
+	m_verticePosVector.emplace_back(m_verticePos);
+	m_verticePos.clear(); //cleans it so it can be filled with a new meshes info
 }
 
 //ADD FUNCTIONS
@@ -168,6 +177,11 @@ std::vector<glm::vec2> FBXParserData::getUVs()const
 std::vector<glm::vec3> FBXParserData::getNormals()const
 {
 	return m_normals;
+}
+
+std::vector<std::vector<glm::vec3>> FBXParserData::getVerticePosVector()const
+{
+	return m_verticePosVector;
 }
 
 std::vector<glm::vec3> FBXParserData::getVertexPosHitbox()const

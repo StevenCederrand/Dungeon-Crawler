@@ -25,6 +25,6 @@ namespace FBXParserLibrary
 	bool binaryToBool(std::ifstream& binaryFile);
 	char binaryToChar(std::ifstream& binaryFile);
 
-	void calculateMinMaxValueMesh(std::ifstream& binaryFile, FBXParserData* fileData);
+	void calculateMinMaxValueMesh(std::ifstream& binaryFile, FBXParserData* fileData, int vectorNr);
 	void calculateMinMaxValueHitbox(std::ifstream& binaryFile, FBXParserData* fileData);
 }

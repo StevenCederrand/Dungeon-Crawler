@@ -51,6 +51,7 @@ public:
 	Vertex getVertexHeader()const;
 	BoundingBoxVertex getBoundingBoxVertexHeader()const;
 
+	void moveVerticePosToVector();
 
 	//ADD FUNCTIONS
 	void addVertexPos(glm::vec3 vertexPos);
@@ -78,6 +79,7 @@ public:
 	std::vector<glm::vec3> getVertexPos()const;
 	std::vector<glm::vec2> getUVs()const;
 	std::vector<glm::vec3> getNormals()const;
+	std::vector<std::vector<glm::vec3>> getVerticePosVector()const;
 
 	std::vector<glm::vec3> getVertexPosHitbox()const;
 
