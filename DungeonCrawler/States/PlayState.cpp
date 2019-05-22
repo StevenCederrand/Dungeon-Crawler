@@ -47,12 +47,11 @@ PlayState::PlayState() {
 
 	FBXParserData* roomStart = m_FBXParser->binaryMeshReading(FBXPath + "roomStart.bin"); //SHOULD MAKE BINARY
 	m_GLinit->createMeshFBX("RoomStart", roomStart);
+	delete roomStart;
 
 	FBXParserData* enemyData = m_FBXParser->binaryMeshReading(FBXPath + "flyGuy.bin"); //SHOULD MAKE BINARY
 	m_GLinit->createMeshFBX("Enemy", enemyData);
-
-	//ENEMY DOESNT ORK!?!?!?! enemy works if made alone, maybe room doesnt work?
-	//delete enemyData;
+	delete enemyData;
 
 
 	#pragma region Create_Objects
@@ -93,6 +92,9 @@ PlayState::~PlayState() {
 	delete m_projectileManager;
 	delete m_playerHealthBar;
 	delete m_screenBlood;
+
+	//Fbx
+	delete m_FBXParser;
 }
 
 void PlayState::update(float dt) {
