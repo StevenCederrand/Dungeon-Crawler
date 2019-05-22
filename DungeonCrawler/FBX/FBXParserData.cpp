@@ -13,16 +13,6 @@ FBXParserData::FBXParserData(int vectorStartValue)
 	m_mainHeader.boundingBoxCount = 0;
 	m_mainHeader.materialCount = 0;
 
-	//m_materialheader
-	for (int i = 0; i < 100; i++)
-	{
-		m_materialHeader.nameOfAlbedo[i] = ' ';
-		m_materialHeader.nameOfNormal[i] = ' ';
-	}
-	m_materialHeader.materialID = 0;
-	m_materialHeader.nrOfTextures = 0;
-	m_materialHeader.whatShader = 0;
-
 	//Vertex
 	m_vertexHeader.position[0] = 0.f;
 	m_vertexHeader.position[1] = 0.f;
@@ -74,9 +64,9 @@ MainHeader FBXParserData::getMainHeader() const
 	return this->m_mainHeader;
 }
 
-Material FBXParserData::getMaterialHeader()const
+std::vector<Material> FBXParserData::getMaterialHeaders()const
 {
-	return m_materialHeader;
+	return m_materialHeaders;
 }
 
 std::vector<BoundingBoxHeader> FBXParserData::getBoundingBoxHeaders() const
@@ -147,6 +137,11 @@ void FBXParserData::addMeshHeader(MeshHeader meshHeader)
 	m_meshHeaders.emplace_back(meshHeader);
 }
 
+void FBXParserData::addMaterialHeader(Material materialHeader)
+{
+	m_materialHeaders.emplace_back(materialHeader);
+}
+
 //SET FUNCTIONS
 void FBXParserData::setMinMaxValuesMesh(glm::vec4 minMaxValues) //ACTUALLY IS MINMAX
 {
@@ -156,11 +151,6 @@ void FBXParserData::setMinMaxValuesMesh(glm::vec4 minMaxValues) //ACTUALLY IS MI
 void FBXParserData::setMainHeader(MainHeader mainHeader)
 {
 	m_mainHeader = mainHeader;
-}
-
-void FBXParserData::setMaterialHeader(Material materialHeader)
-{
-	m_materialHeader = materialHeader;
 }
 
 //GET FUNCTIONS

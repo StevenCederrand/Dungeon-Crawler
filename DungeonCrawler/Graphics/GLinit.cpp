@@ -98,31 +98,36 @@ Mesh* GLinit::createMeshFBX(std::string name, FBXParserData* data)
 	storeDataInAttributeList(2, 3, data->getNormals());
 	glBindVertexArray(NULL);
 
+	Mesh* mesh = new Mesh();
+
+
+	////
+	////		IF MESH AND MATERIAL MATERIALID == THEN USE IT, DO CHECK HERE
+	////
+
 	std::string lTextureFiles;
 	for (int i = 0; i < 100; i++)
 	{
-		if (data->getMaterialHeader().nameOfAlbedo[i] == ' ')
+		if (data->getMaterialHeaders()[0].nameOfAlbedo[i] == ' ') //FIX MATERIAL
 			i = 100;
 		else
-			lTextureFiles += data->getMaterialHeader().nameOfAlbedo[i];
+			lTextureFiles += data->getMaterialHeaders()[0].nameOfAlbedo[i];	//FIX MATERIAL
 	}
 	std::string lEntireFilePath = TexturePath + lTextureFiles;
 
 	GLuint textureID = createTexture(lEntireFilePath); //should be texture files name
 
-	Mesh* mesh = new Mesh();
-
-	if (data->getMaterialHeader().nameOfNormal[0] != ' ')
+	if (data->getMaterialHeaders()[0].nameOfNormal[0] != ' ')	//FIX MATERIAL
 	{
 		mesh->setHasNormalMap(1);
 
 		std::string lNormalFiles;
 		for (int i = 0; i < 100; i++)
 		{
-			if (data->getMaterialHeader().nameOfNormal[i] == ' ')
+			if (data->getMaterialHeaders()[0].nameOfNormal[i] == ' ')	//FIX MATERIAL
 				i = 100;
 			else
-				lNormalFiles += data->getMaterialHeader().nameOfNormal[i];
+				lNormalFiles += data->getMaterialHeaders()[0].nameOfNormal[i];	//FIX MATERIAL
 		}
 		std::string lEntireNormalFilePath = TexturePath + lNormalFiles;
 		GLuint normalID = createTexture(lEntireNormalFilePath);

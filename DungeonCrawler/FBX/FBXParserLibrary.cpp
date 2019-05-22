@@ -23,7 +23,10 @@ namespace FBXParserLibrary
 				calculateMinMaxValueMesh(infileBinary, fileData, i);
 			}
 
-			saveMaterialHeader(infileBinary, fileData);
+			for (int i = 0; i < fileData->getMainHeader().materialCount; i++)
+			{
+				saveMaterialHeader(infileBinary, fileData);
+			}
 
 			for (int i = 0; i < fileData->getMainHeader().boundingBoxCount; i++)
 			{
@@ -197,7 +200,7 @@ namespace FBXParserLibrary
 		unsigned int whatShader = (int)binaryToInt(infileBinary);
 		lmaterialHeader.whatShader = whatShader;
 
-		fileData->setMaterialHeader(lmaterialHeader);
+		fileData->addMaterialHeader(lmaterialHeader);
 	}
 	
 	void saveBoundingBoxVertexHeader(std::ifstream& infileBinary, FBXParserData* fileData, int vectorNr)
