@@ -48,7 +48,7 @@ PlayState::PlayState() {
 	FBXParserData* roomStart = m_FBXParser->binaryMeshReading(FBXPath + "roomWithGate.bin"); //SHOULD MAKE BINARY
 	m_GLinit->createMeshFBX("RoomStart", roomStart);
 
-	FBXParserData* enemyData = m_FBXParser->binaryMeshReading(FBXPath + "ourFileBinary.bin"); //SHOULD MAKE BINARY
+	FBXParserData* enemyData = m_FBXParser->binaryMeshReading(FBXPath + "flyGuy.bin"); //SHOULD MAKE BINARY
 	m_GLinit->createMeshFBX("Enemy", enemyData);
 
 	//ENEMY DOESNT ORK!?!?!?! enemy works if made alone, maybe room doesnt work?
