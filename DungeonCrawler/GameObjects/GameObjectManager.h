@@ -40,11 +40,13 @@ private:
 
 	
 	void roomManager(GameObject* object);
-	void spawner(Room* currentRoom, int numberOfEnemies);
+	void spawner(Room* currentRoom);
 
 
 private:
 	int m_numberOfEnemies; //This is per room
+	int m_walkerDifficulty;
+	int m_shooterDifficulty;
 	bool m_gameFinished;
 	std::vector<GameObject*> m_gameObjects;
 	Player* m_player;

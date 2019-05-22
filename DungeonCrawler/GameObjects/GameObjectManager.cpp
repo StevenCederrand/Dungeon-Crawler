@@ -14,6 +14,8 @@ GameObjectManager::GameObjectManager(Effects* effects, ProjectileManager* projec
 	m_projectileManager = projectileManager;
 	m_broadPhaseBox = nullptr;
 	m_player = nullptr;
+	m_walkerDifficulty = 2;
+	m_shooterDifficulty = 0;
 }
 
 GameObjectManager::~GameObjectManager()
@@ -447,7 +449,7 @@ void GameObjectManager::roomManager(GameObject* object) {
 				//Swap the play state to fighting
 				m_player->setPlayerState(FIGHTING);
 				//Spawn enemies
-				this->spawner(m_rooms.at(i), Randomizer::single(3, 6));
+				this->spawner(m_rooms.at(i));
 				m_rooms.at(i)->resetMaxMinValues(); 
 
 			}
@@ -455,7 +457,7 @@ void GameObjectManager::roomManager(GameObject* object) {
 	}
 }
 
-void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
+void GameObjectManager::spawner(Room* currentRoom) {
 
 	int spawnOffset = 5;
 
@@ -470,8 +472,14 @@ void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
 		this->addGameObject(enemy);
 	}
 
-	int numMeleeEnemies = Randomizer::single(2, 4);
-	int numRangedEnemies = Randomizer::single(1, 4);
+	int numMeleeEnemies = Randomizer::single(m_walkerDifficulty, m_walkerDifficulty + 2);
+	int numRangedEnemies = m_shooterDifficulty;
+	m_walkerDifficulty += 2;
+	if (m_walkerDifficulty > 7)
+	{
+		m_shooterDifficulty++;
+		m_walkerDifficulty = 3;
+	}
 
 	//Spawn Melee Enemies
 	for (int i = 0; i < numMeleeEnemies; i++)

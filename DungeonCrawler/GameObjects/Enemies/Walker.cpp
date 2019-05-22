@@ -16,7 +16,7 @@ Walker::Walker(Mesh * mesh, Type type, Room* room, const glm::vec3& position, Ef
 	this->setScale(glm::vec3(1.f, 1.f, 1.f));
 	this->m_room = room;
 	this->m_health = 1.f;
-	this->m_speed = 6.f;
+	this->m_speed = 10.f;
 	this->m_damage = 1.f;
 	this->m_isPlayerClose = false;
 	this->m_type = type;
@@ -44,7 +44,7 @@ void Walker::update(float dt)
 		m_effects->addParticles("EnemyHoverEmitter", getPosition() + glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(Randomizer::single(-100.0f, 100.0f) / 100.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 100.0f), 1.0f, 1);
 	}
 
-	if (lengthToPlayer > 2.5f) {
+	if (lengthToPlayer > 2.f) {
 		calculatePath(dt);
 		moveToTarget(dt);
 	}

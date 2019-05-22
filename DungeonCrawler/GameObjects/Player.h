@@ -77,6 +77,7 @@ private:
 	int m_pistolBullets;
 	bool m_reloading;
 	float m_reloadTime;
+	float m_reloadTimeAdd;
 	float m_damage;
 	float m_chargeDamage;
 	float m_automaticDamage;
