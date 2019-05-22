@@ -20,7 +20,7 @@ public:
 	float getDistanceToPlayer() const;
 	void amIDead();
 	bool getAliveStatus()const;
-	
+	void bossWalkAnim(float dt);
 
 private:
 	void calculatePath(float dt, bool ignoreTimer, bool occupy);
@@ -38,6 +38,8 @@ private:
 	Type m_type;
 	bool m_amIAlive;
 	float m_attackCooldown;
+	float m_sinTime;
+	float m_sinAddTime;
 
 	Effects* m_effects;
 	ProjectileManager* m_projectileManager;

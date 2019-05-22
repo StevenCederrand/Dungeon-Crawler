@@ -10,11 +10,26 @@ pl_dash Dash.wav
 #player shot
 pl_gun_shot Gunshot.wav
 
+#player damage taken
+pl_damage_taken DamageTaken.wav
+
+#player damage taken
+pl_ranged_damage_taken DamageTaken2.wav
+
 #Firing an empty round
 gun_click gun_click_1.wav
+
+#Reloading
+gun_reload Reload.wav
 
 #bullet impact with enemy
 gun_impact_enemy gun_impact_enemy.wav
 
 #bullet impact with wall
 gun_impact_wall BulletImpact.wav
+
+#Enemy hitting the Player
+Enemy_melee Enemy_melee.wav
+
+#Enemy shooting, actually shooting
+Enemy_shot Enemy_Shot2.wav

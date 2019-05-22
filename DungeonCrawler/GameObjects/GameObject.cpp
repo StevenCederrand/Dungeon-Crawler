@@ -56,8 +56,8 @@ void GameObject::updateModelMatrix()
 {
 	m_modelMatrix = glm::mat4(1.f);
 	m_modelMatrix = glm::translate(m_modelMatrix, m_position);
-	m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(m_rotation.x), glm::vec3(1.f, 0.f, 0.f));
 	m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(m_rotation.y), glm::vec3(0.f, 1.f, 0.f));
+	m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(m_rotation.x), glm::vec3(1.f, 0.f, 0.f));
 	m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(m_rotation.z), glm::vec3(0.f, 0.f, 1.f));
 	m_modelMatrix = glm::scale(m_modelMatrix, m_scale);
 }
@@ -128,7 +128,7 @@ void GameObject::lookAt(const glm::vec3& position)
 		position.z - this->getPosition().z);
 	float angle = glm::degrees(atan2f(direction.z, direction.x));
 
-	setRotation(glm::vec3(0.0f, -angle, 0.0f));
+	setRotation(glm::vec3(0.f, -angle, 0.f));
 		
 }
 

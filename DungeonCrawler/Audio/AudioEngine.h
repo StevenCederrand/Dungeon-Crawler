@@ -25,10 +25,12 @@ public:
 	static bool unloadSSO(std::string ssoName);
 	static void update();
 	//Play a sound
-	static void play(std::string key, float volume);
+	static FMOD::Channel* play(std::string key, float volume);
 	//play the entire sound without being able to replay it
 	static void playOnce(std::string key, float volume);
-
+	
+	//Stop playing the specific sound
+	static void stop(std::string key);
 private:
 	static FMOD_RESULT init();
 	//Check to see if a key in the hashmap is in use
@@ -46,6 +48,7 @@ private:
 	static FMOD::System *m_soundSystem;
 	static std::map<std::string, FMOD::Sound*> m_sounds;	
 	static std::vector<FMOD::Channel*> m_channels;
+
 	static void* m_extraDriverData;
 	static std::vector<std::string> keysInUse;
 };

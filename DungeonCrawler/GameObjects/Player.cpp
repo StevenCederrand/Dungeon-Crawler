@@ -12,6 +12,9 @@
 #include "Powerups.h"
 #include "../Vendor/Lodepng/lodepng.h"
 #include "../Globals/Paths.h"
+#include "cmath"
+
+#define M_PI 3.14159265358979323846
 
 Player::Player(Mesh* mesh, Type type) :
 	GameObject(mesh, type)
@@ -32,6 +35,10 @@ Player::Player(Mesh* mesh, Type type) :
 	this->m_dashTimer = 0.f;
 	this->m_shake = 0.f;
 	this->m_shakeDir = glm::vec3(0.f, 0.f, 0.f);
+	this->m_sinTime = 0.f;
+	this->m_sinDefaultAddTime = 10.f;
+	this->m_sinAddTime = m_sinDefaultAddTime; // 0.30 sekunder walk ljud - inte synkat
+	
 
 	this->m_spotlight = new Spotlight();
 	this->m_spotlight->position = this->getPlayerPosition() + glm::vec3(0.0f, 1.0f, 0.0f);
@@ -105,7 +112,8 @@ void Player::update(float dt)
 			if ((m_pistolBullets <= 0) && (m_reloading == false) && (m_spraying == false))
 			{
 				m_reloading = true;
-				m_reloadTime = 2.f;
+				AudioEngine::play("gun_reload", 1.0f);
+				m_reloadTime = 1.f;
 			}
 			manualReload(dt);
 		//}
@@ -119,6 +127,7 @@ void Player::update(float dt)
 		reloadCd(dt);
 		screenShake(dt);
 		spotlightHandler();
+		
 	}
 }
 
@@ -156,6 +165,8 @@ void Player::hit(const HitDescription & desc)
 			m_health += boosts.x;
 			m_automaticDamage += boosts.y;
 			m_defaultSpeed += boosts.z;
+			m_sinAddTime += boosts.z;
+			
 		}
 		else
 		{
@@ -165,6 +176,7 @@ void Player::hit(const HitDescription & desc)
 			}
 			m_automaticDamage += boosts.y;
 			m_defaultSpeed += boosts.z;
+			m_sinAddTime += boosts.z;
 		}
 		
 	}
@@ -183,7 +195,6 @@ void Player::move(float dt)
 	m_movementDirection = glm::vec3(0.f);
 
 	bool inMotion = false;
-	rotatePlayer();
 	if (Input::isKeyHeldDown(GLFW_KEY_W))
 	{
 		m_movementDirection.z =  -this->m_speed * dt;
@@ -206,8 +217,16 @@ void Player::move(float dt)
 	}
 
 	if (inMotion) {
+		wobbleAnim(dt);
 		AudioEngine::playOnce(m_walkSounds.at(1), 0.5f);
 	}
+	else
+	{
+		setRotation(glm::vec3(0.f, getRotation().y, 0.f));
+		m_sinTime = 0.f;
+	}
+
+	rotatePlayer();
 	setVelocity(m_movementDirection);
 	
 	Camera::active->setToPlayer(getPosition(), m_shakeDir);
@@ -222,7 +241,8 @@ void Player::rotatePlayer()
 		0,
 		pos.z - this->getPosition().z);
 	m_angle = glm::degrees(atan2f(m_lookDirection.z, m_lookDirection.x));
-	setRotation(glm::vec3(0.f, -m_angle, 0.f));
+
+	setRotation(glm::vec3(getRotation().x, -m_angle, getRotation().z));
 }
 
 const glm::vec3 & Player::getLookDirection() const
@@ -253,7 +273,7 @@ Light* Player::getFlash() {
 
 void Player::spotlightHandler() {
 	this->m_spotlight->direction = this->getLookDirection();
-	this->m_spotlight->position = this->getPosition();
+	this->m_spotlight->position = this->getPosition() + glm::vec3(0.0f, 2.f, 0.0f);
 	this->m_flash->position = glm::vec4(this->getPosition() + glm::vec3(0.0f, 2.f, 0.0f), 1.0);
 }
 
@@ -374,6 +394,7 @@ void Player::powerUpCd(float dt)
 		m_health -= m_boostResetters.x;
 		m_automaticDamage -= m_boostResetters.y;
 		m_defaultSpeed -= m_boostResetters.z;
+		m_sinAddTime = m_sinDefaultAddTime;
 		m_poweredUp = false;
 	}
 	if (m_boostTimer > 0)
@@ -387,7 +408,8 @@ void Player::manualReload(float dt)
 	if ((Input::isKeyPressed(GLFW_KEY_R)) && (m_reloading == false) && (m_pistolBullets < 6))
 	{
 		m_reloading = true;
-		m_reloadTime = 2.f;
+		AudioEngine::play("gun_reload", 1.0f);
+		m_reloadTime = 4.f;
 	}
 }
 
@@ -397,6 +419,7 @@ void Player::reloadCd(float dt)
 	{
 		m_reloading = false;
 		m_pistolBullets = 6;
+		
 		m_data->pixels = m_image[6].data();
 		m_cursor = glfwCreateCursor(m_data, 32, 32);
 		glfwSetCursor(glfwGetCurrentContext(), m_cursor);
@@ -468,6 +491,26 @@ void Player::screenShake(float dt)
 	{
 		m_shake -= dt;
 	}
+}
+
+void Player::wobbleAnim(float dt)
+{
+	m_sinTime += (m_sinAddTime * dt);
+	float sinCurve = (10 * sinf(m_sinTime));
+	//float cosCurve = (10 * cosf(m_sinTime));
+	//float sinAngle = (sinf(glm::radians(-m_angle))) * sinCurve;
+	//float cosAngle = (cosf(glm::radians(-m_angle))) * cosCurve;
+	/*LOG_WARNING(" ");
+	LOG_WARNING("Angle ");
+	LOG_WARNING(std::to_string(m_angle));
+	LOG_WARNING("Sin: ");
+	LOG_WARNING(std::to_string(sinAngle));
+	LOG_WARNING("Cos: ");
+	LOG_WARNING(std::to_string(cosAngle));*/
+
+	//setRotation(glm::vec3(cosAngle, getRotation().y, sinAngle));
+	//setRotation(glm::vec3(sinCurve, getRotation().y, getRotation().z));
+	setRotation(glm::vec3(sinCurve, getRotation().y, getRotation().z));
 }
 
 void Player::setSpeed(float speed)

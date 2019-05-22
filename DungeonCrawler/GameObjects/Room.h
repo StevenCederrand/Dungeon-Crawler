@@ -15,9 +15,9 @@ public:
 	GridSystem* getGrid() const;
 
 	const glm::vec2& getCentrePosition() const;
-
-private:
 	void resetMaxMinValues();
+	
+private:
 	void setupMaxMinValues();
 	void calculateCentrePosition();
 private:
@@ -25,6 +25,7 @@ private:
 	GridSystem* m_gridsystem;
 	Type m_type;
 	GameObject* m_playerObject;
+	bool m_reset;
 };
 
 

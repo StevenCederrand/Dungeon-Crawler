@@ -170,7 +170,7 @@ void Renderer::renderEffects()
 	effectsShader->use();
 	effectsShader->setMat4("viewMatrix", m_camera->getViewMatrix());
 	effectsShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
-	
+	effectsShader->setFloat("nrAnimationFrames", 1.0f);
 	const std::map<std::string, Emitter*>& emitters = m_effects->getEmitters();
 	
 	for (const auto& map : emitters)
@@ -205,11 +205,14 @@ void Renderer::renderProjectiles()
 	effectsShader->use();
 	effectsShader->setMat4("viewMatrix", m_camera->getViewMatrix());
 	effectsShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+	effectsShader->setFloat("nrAnimationFrames", (float)m_projectileManager->getNumberOfAnimationFrames());
 
 	glBindVertexArray(m_projectileManager->getVAO());
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(3);
+	glEnableVertexAttribArray(4);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_projectileManager->getTextureID());
@@ -219,7 +222,9 @@ void Renderer::renderProjectiles()
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
-	
+	glDisableVertexAttribArray(3);
+	glDisableVertexAttribArray(4);
+
 	glBindVertexArray(0);
 
 	effectsShader->unuse();
@@ -271,6 +276,10 @@ void Renderer::lightPass() {
 		lightShader->setVec4("flashColor", m_playerLight->color);
 	}
 
+	lightShader->setVec3("sunColor", m_lightManager->getSunColor());
+	lightShader->setVec3("sunPosition", m_lightManager->getSunPosition());	
+	lightShader->setVec3("playerLightPosition", m_lightManager->getPlayerLightPosition());
+	lightShader->setVec4("playerLightColorAndRange", m_lightManager->getPlayerLightColorAndRange());
 	lightShader->setMat4("lightSpaceMatrix", m_framebuffer->getLightSpaceMatrix());
 	lightShader->setInt("numberOfLights", m_lightManager->getNumberOfLights());
 	lightShader->setVec3("cameraPosition", m_camera->getPosition());
@@ -281,7 +290,7 @@ void Renderer::lightPass() {
 void Renderer::renderMap()
 {
 	if (m_map->getShouldRender()) {
-
+		glEnable(GL_BLEND);
 		Shader* mapShader = ShaderMap::getShader("MapShader");
 		mapShader->use();
 
@@ -308,7 +317,7 @@ void Renderer::renderMap()
 		
 			//move the room the the right place
 			modelmatrix = glm::translate(modelmatrix, glm::vec3(
-				maxMinValues[i].x * tempValue,
+				maxMinValues[i].x * tempValue*0.65,
 				-maxMinValues[i].y * tempValue,
 				0.0f));
 		
@@ -325,6 +334,7 @@ void Renderer::renderMap()
 
 
 		mapShader->unuse();
+		glDisable(GL_BLEND);
 	}
 }
 

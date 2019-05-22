@@ -14,7 +14,6 @@ GameObjectManager::GameObjectManager(Effects* effects, ProjectileManager* projec
 	m_projectileManager = projectileManager;
 	m_broadPhaseBox = nullptr;
 	m_player = nullptr;
-	m_bossDeadStatus = false;
 }
 
 GameObjectManager::~GameObjectManager()
@@ -206,10 +205,6 @@ Player * GameObjectManager::getPlayer() const {
 	return m_player;
 }
 
-bool GameObjectManager::bossDead() const
-{
-	return m_bossDeadStatus;
-}
 
 const std::vector<GameObject*>& GameObjectManager::getGameObjects() const
 {
@@ -221,10 +216,17 @@ std::vector<GameObject*>* GameObjectManager::getVectorPointer()
 	return &m_gameObjects;
 }
 
+bool GameObjectManager::gameFinished()
+{
+	if (this->m_gameFinished) {
+		return true;
+	}
+	return false;
+}
+
 std::vector<Room*>& GameObjectManager::getClearedRooms()
 {
 	return m_roomsCleared;
-	// TODO: insert return statement here
 }
 
 void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject * object, glm::vec3& newVel, bool& hasCollided)
@@ -354,7 +356,6 @@ void GameObjectManager::handleDeadEnemies(float dt)
 				this->m_numberOfEnemies--;
 				delete m_gameObjects[i];
 				m_gameObjects.erase(m_gameObjects.begin() + i);
-				m_bossDeadStatus = true;
 				continue;
 			}
 		}
@@ -399,6 +400,11 @@ void GameObjectManager::handleEnemyAttacks(GameObject* object, float dt)
 void GameObjectManager::roomManager(GameObject* object) {
 	
 	if (m_numberOfEnemies == 0 && m_isLocked) {
+		if (m_rooms.at(m_currentRoom)->getType() == ROOM_BOSS) {
+			if (m_numberOfEnemies <= 0) {
+				this->m_gameFinished = true;
+			}
+		}
 		//Remove the room from the vector of uncleared rooms
 		m_rooms.erase(m_rooms.begin() + m_currentRoom);
 		//Reset the player
@@ -413,6 +419,7 @@ void GameObjectManager::roomManager(GameObject* object) {
 				m_gameObjects.at(m_doorIndex)->setCollidable(false);
 			}
 		}
+		this->m_currentRoom = -1;
 		//Unlock the room
 		m_isLocked = false;
 	}
@@ -433,7 +440,7 @@ void GameObjectManager::roomManager(GameObject* object) {
 				this->m_isLocked = !m_isLocked;
 
 				//Spawn the door
-				//m_gameObjects.at(m_doorIndex)->setCollidable(true);
+				m_gameObjects.at(m_doorIndex)->setCollidable(true);
 
 				glm::vec3 objectPosition = m_gameObjects.at(m_doorIndex)->getPosition();
 				m_gameObjects.at(m_doorIndex)->setPosition(glm::vec3(objectPosition.x, 0, objectPosition.z));				
@@ -441,6 +448,7 @@ void GameObjectManager::roomManager(GameObject* object) {
 				m_player->setPlayerState(FIGHTING);
 				//Spawn enemies
 				this->spawner(m_rooms.at(i), Randomizer::single(3, 6));
+				m_rooms.at(i)->resetMaxMinValues(); 
 
 			}
 		}
@@ -449,31 +457,40 @@ void GameObjectManager::roomManager(GameObject* object) {
 
 void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
 
+	int spawnOffset = 5;
+
 	Mesh* enemyMesh = MeshMap::getMesh("Enemy");
 	if (currentRoom->getType() == ROOM_BOSS)
 	{
 		GameObject* enemy = new Boss(enemyMesh, BOSS, currentRoom, glm::vec3(
-			Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),
+			currentRoom->getCentrePosition().x,
 			0.f,
-			Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)), m_projectileManager, m_effects);
+			currentRoom->getCentrePosition().y),
+			m_projectileManager, m_effects);
 		this->addGameObject(enemy);
 	}
-	for (int i = 0; i < numberOfEnemies; i++)
 
+	int numMeleeEnemies = Randomizer::single(2, 4);
+	int numRangedEnemies = Randomizer::single(1, 4);
+
+	//Spawn Melee Enemies
+	for (int i = 0; i < numMeleeEnemies; i++)
 	{
 		GameObject* enemy = new Walker(enemyMesh, WALKER, currentRoom, glm::vec3(
-			Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),
+			Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
 			0.f,
-			Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)), m_effects);
+			Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)),
+			m_effects);
 		this->addGameObject(enemy);
 	}
-
-	for (int i = 0; i < numberOfEnemies; i++)
+	//Spawn Ranged Enemies
+	for (int i = 0; i < numRangedEnemies; i++)
 	{
 		GameObject* enemy = new Shooter(enemyMesh, SHOOTER, currentRoom, glm::vec3(
-			Randomizer::single(currentRoom->getMaxMinValues().z, currentRoom->getMaxMinValues().x),
+			Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
 			0.f,
-			Randomizer::single(currentRoom->getMaxMinValues().w, currentRoom->getMaxMinValues().y)), m_projectileManager, m_effects);
+			Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)),
+			m_projectileManager, m_effects);
 
 		this->addGameObject(enemy);
 	}

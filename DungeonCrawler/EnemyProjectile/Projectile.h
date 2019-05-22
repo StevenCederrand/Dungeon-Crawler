@@ -10,12 +10,15 @@ public:
 	~Projectile();
 
 	void update(float dt);
+	void resetInternalAnimTimer();
+	void setInternalAnimIndex(int index);
 	AABB* getAABB() const;
 	
 	const float getDamage() const;
 	const glm::vec3& getPosition() const;
 	const bool isAtDestination() const;
-
+	const int& getInternalAnimIndex() const;
+	const float& getInternalAnimTimer() const;
 private:
 	glm::vec3 m_position;
 	std::vector<Node> m_path;
@@ -24,6 +27,9 @@ private:
 	float m_damage;
 	float m_speed;
 	AABB* m_aabb;
+
+	int m_internalAnimIndex;
+	float m_internalAnimTimer;
 };
 
 

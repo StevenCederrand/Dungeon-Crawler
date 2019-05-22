@@ -14,11 +14,14 @@ Room::Room(Mesh * mesh, Type type, GameObject* playerObject, const glm::vec3 & p
 	float width = this->getMaxMinValues().x - this->getMaxMinValues().z;
 	m_gridsystem = new GridSystem(width, length, 1, this);
 	m_gridsystem->constructCells();
+	this->m_reset = false;
 }
 
 Room::~Room()
 {
-	this->resetMaxMinValues();
+	if (!this->m_reset) {
+		this->resetMaxMinValues();
+	}
 	delete m_gridsystem;
 }
 
@@ -67,6 +70,7 @@ void Room::resetMaxMinValues() {
 	maxMinValues.z -= 5;
 	maxMinValues.w -= 7;
 	this->setMaxMinValues(maxMinValues);
+	this->m_reset = true;
 }
 
 void Room::setupMaxMinValues() {

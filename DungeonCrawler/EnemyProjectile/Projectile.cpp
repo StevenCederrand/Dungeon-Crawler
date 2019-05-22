@@ -10,6 +10,9 @@ Projectile::Projectile(const glm::vec3& startPosition, const std::vector<Node>& 
 	m_isAtDestination = false;
 
 	m_aabb = new AABB(glm::vec3(-m_cellSize * 0.25f, 0.0f, -m_cellSize * 0.25f), glm::vec3(m_cellSize * 0.25f, 0.0f, m_cellSize * 0.25f));
+
+	m_internalAnimIndex = 0;
+	m_internalAnimTimer = 0.0f;
 }
 
 Projectile::~Projectile()
@@ -19,6 +22,7 @@ Projectile::~Projectile()
 
 void Projectile::update(float dt)
 {
+
 	if (m_path.size() > 0)
 	{
 		int index = m_path.size() - 1;
@@ -30,7 +34,7 @@ void Projectile::update(float dt)
 		float length = sqrtf(xDir * xDir + zDir * zDir);
 
 		glm::vec3 velocity = (glm::vec3(xDir, 0.0f, zDir) / length) * m_speed * dt;
-
+		m_internalAnimTimer += dt;
 
 		// Move towards the node
 		m_position += velocity;
@@ -48,6 +52,16 @@ void Projectile::update(float dt)
 		m_isAtDestination = true;
 	}
 
+}
+
+void Projectile::resetInternalAnimTimer()
+{
+	m_internalAnimTimer = 0.0f;
+}
+
+void Projectile::setInternalAnimIndex(int index)
+{
+	m_internalAnimIndex = index;
 }
 
 AABB* Projectile::getAABB() const
@@ -68,4 +82,14 @@ const glm::vec3& Projectile::getPosition() const
 const bool Projectile::isAtDestination() const
 {
 	return m_isAtDestination;
+}
+
+const int& Projectile::getInternalAnimIndex() const
+{
+	return m_internalAnimIndex;
+}
+
+const float& Projectile::getInternalAnimTimer() const
+{
+	return m_internalAnimTimer;
 }

@@ -4,6 +4,7 @@
 #include <list>
 #include <System/Log.h>
 #include <Utility/Randomizer.h>
+#include <Audio/AudioEngine.h>
 #define M_PI 3.14159265358979323846
 
 Shooter::Shooter(Mesh* mesh, Type type, Room* room, const glm::vec3& position, ProjectileManager* projectileManager, Effects* effects) :
@@ -38,7 +39,7 @@ void Shooter::update(float dt)
 	m_hoverEffectTimer += dt;
 	if (m_hoverEffectTimer >= 0.05f) {
 		m_hoverEffectTimer = 0.0f;
-		m_effects->addParticles("EnemyHoverEmitter", getPosition(), glm::vec3(Randomizer::single(-100.0f,100.0f) / 100.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 100.0f), 1.0f, 1);
+		m_effects->addParticles("EnemyHoverEmitter", getPosition() + glm::vec3(0.0f,0.5f,0.0f), glm::vec3(Randomizer::single(-100.0f,100.0f) / 100.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 100.0f), 1.0f, 1);
 	}
 
 	float lengthToPlayer = glm::length(getPosition() - getPlayerPosition());
@@ -55,7 +56,7 @@ void Shooter::update(float dt)
 		// Clear path because he can just stand here and shoot
 
 		m_path.clear();
-
+		
 		if (!m_castingSpell){
 			m_castingSpell = true;
 		}
@@ -68,6 +69,11 @@ void Shooter::update(float dt)
 
 		if (m_currentCastTime >= m_castTime)
 		{
+			LOG_INFO("Casting Spell");
+			AudioEngine::play("Enemy_shot", 0.4f);
+			//Have the enemy fire when the Enemy_shot sound effect is done playing
+
+
 			// Find a path using A* and create some kind of projectile that travels that path
 			m_castingSpell = false;
 			m_currentCastTime = 0.0f;
@@ -75,7 +81,7 @@ void Shooter::update(float dt)
 			calculatePath(dt, true, false);
 			
 			if(m_path.size() > 0)
-				m_projectileManager->spawnProjectile(new Projectile(getPosition() + glm::vec3(0.0f, 2.0f, 0.0f), m_path, m_damage, 16.0f, m_room->getGrid()->getCellSize()));
+				m_projectileManager->spawnProjectile(new Projectile(getPosition() + glm::vec3(0.0f, 2.0f, 0.0f), m_path, m_damage, 12.0f, m_room->getGrid()->getCellSize()));
 		}
 	}
 
@@ -187,7 +193,7 @@ float Shooter::getDistanceToPlayer() const
 
 void Shooter::floatingAnim(float dt)
 {
-	float sinCurve = sin(m_sinTime * M_PI / 180);
+	float sinCurve = sinf(m_sinTime * M_PI / 180);
 	m_sinTime += (m_sinAddTime * dt);
 
 	setPosition(glm::vec3(getPosition().x, sinCurve, getPosition().z));

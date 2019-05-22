@@ -57,23 +57,25 @@ PlayState::PlayState() {
 	#pragma region Create_Objects
 	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
 	ParserData* playerData = m_parser->loadFromObj("MainCharacterPosed.obj");
-	ParserData* doorData = m_parser->loadFromObj("doorEnd.obj");
+	
+
 	//ParserData* roomStart = m_parser->loadFromObj("roomStart.obj");
-	ParserData* roomEnd = m_parser->loadFromObj("roomEnd.obj");
+
+	//ParserData* roomEnd = m_parser->loadFromObj("roomEnd.obj");
 
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
 	ParserData* powerUpData = m_parser->loadFromObj("LifePowerUp.obj");
-	//ParserData* enemyData = m_parser->loadFromObj("FlyGuyConverted.obj");
+	ParserData* enemyData = m_parser->loadFromObj("FlyGuyConverted.obj");
 
-	m_GLinit->createMesh("Door", doorData);
+
 	//m_GLinit->createMesh("RoomStart", roomStart);
-	m_GLinit->createMesh("RoomEnd", roomEnd);
+	//m_GLinit->createMesh("RoomEnd", roomEnd);
 
 	m_GLinit->createMesh("Box", boxData);
 	m_GLinit->createMesh("PlayerModel", playerData);
 	m_GLinit->createMesh("Sphere", sphereData);
 	m_GLinit->createMesh("PowerUp", powerUpData);
-	//m_GLinit->createMesh("Enemy", enemyData);
+	m_GLinit->createMesh("Enemy", enemyData);
 	#pragma endregion
 
 	//we want to setUp the world
@@ -106,6 +108,8 @@ void PlayState::update(float dt) {
 	m_effects->update(dt);
 	m_camera->update(dt);
 	m_lightManager->update(dt);
+	m_lightManager->setPlayerLightPosition(glm::vec3(m_player->getPosition().x, 15.0f, m_player->getPosition().z));
+	m_lightManager->setSunPosition(glm::vec3(m_player->getPosition().x, 20.0f, m_player->getPosition().z));
 	m_renderer->prepareGameObjects(m_gameObjectManager->getGameObjects());
 	m_screenBlood->update(dt);
 	Player* player = m_gameObjectManager->getPlayer();
@@ -118,12 +122,14 @@ void PlayState::update(float dt) {
 		m_stateManager->pushTemporaryState(gameOver);
 	}
 
-	if (m_gameObjectManager->bossDead()) {
+	if (m_gameObjectManager->gameFinished()) {
 		WinState* winState = new WinState();
 		GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
 		glfwSetCursor(glfwGetCurrentContext(), cursor);
 		m_stateManager->pushTemporaryState(winState);
 	}
+
+	m_gameObjectManager->gameFinished();
 }
 
 void PlayState::renderImGUI()
@@ -175,7 +181,7 @@ void PlayState::constructWorld()
 
 	Camera::active = m_camera;
 	m_lightManager = new LightManager();
-	m_projectileManager = new ProjectileManager(m_GLinit, m_effects);
+	m_projectileManager = new ProjectileManager(m_GLinit, m_effects, "blackProjectileSheet.png", 768, 64, 12, 0.025f);
 	m_gameObjectManager = new GameObjectManager(m_effects, m_projectileManager);
 	m_map = new Map(m_gameObjectManager);
 	m_renderer = new Renderer(m_camera, m_lightManager, m_effects, m_projectileManager, m_playerHealthBar, m_map, m_screenBlood);
@@ -183,19 +189,11 @@ void PlayState::constructWorld()
 
 	Mesh* boxMesh = MeshMap::getMesh("Box");
 	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
-	Mesh* roomStart = MeshMap::getMesh("RoomStart");
-	Mesh* roomEnd = MeshMap::getMesh("RoomEnd");
-	Mesh* door = MeshMap::getMesh("Door");
-
-	Room* r_roomStart = new Room(roomStart, ROOM_EMPTY, m_player);
-	Room* r_roomEnd = new Room(roomEnd, ROOM_BOSS, m_player);
-
-	m_gameObjectManager->addGameObject(r_roomStart);
-	m_gameObjectManager->addGameObject(r_roomEnd);
-	m_gameObjectManager->addGameObject(new Box(door, DOOR));
+	
 	m_gameObjectManager->addGameObject(m_player);
 	
 	m_projectileManager->setPlayer(m_player);
+	addRoom();
 
 	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 5, 0, 0, false, glm::vec3(4.f, 0.5f, -2.f));
 	m_gameObjectManager->addGameObject(m_powerUp);
@@ -204,8 +202,9 @@ void PlayState::constructWorld()
 	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 0, 5, true, glm::vec3(-5.f, 0.5f, -7.f));
 	m_gameObjectManager->addGameObject(m_powerUp);
 
-	m_lightManager->setSun(ShaderMap::getShader("LightPass"), glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(0.8f, 0.8f, 0.8f));
-	for (int i = 0; i < 2; i++)
+	m_lightManager->setPlayerLight(glm::vec3(m_player->getPosition().x, 15.0f, m_player->getPosition().z), glm::vec4(1.0f, 1.0f, 1.0f, 25.0f));
+	m_lightManager->setSun(glm::vec3(m_player->getPosition().x, 20.0f, m_player->getPosition().z), glm::vec3(0.8f, 0.8f, 0.8f));
+	for (int i = 0; i < 1; i++)
 	{
 	m_lightManager->addLight(
 		// Position
@@ -225,4 +224,49 @@ void PlayState::constructWorld()
 	//Used for the player flashlight & shadow mapping from the 
 	//flashlights view
 	m_renderer->preparePlayerLights(m_gameObjectManager->getPlayer());
+}
+
+void PlayState::addRoom()
+{
+	for (int i = 0; i <= 31; i++)
+	{
+		std::string file = "Room";
+		std::string id = "Room";
+		Type type = ROOM;
+		
+		if (i<10)
+		{
+			file += "0" + std::to_string(i);
+			id += "0" + std::to_string(i);
+		}
+		else {
+			file += std::to_string(i);
+			id += std::to_string(i);
+		}
+		if (i==31)
+		{
+			type = ROOM_BOSS;
+		}
+		else if (i == 0) {
+			type = ROOM_EMPTY;
+		}
+
+			
+		ParserData* roomStart = m_parser->loadFromObj(file + ".obj");
+		Mesh * roomMesh = m_GLinit->createMesh(id, roomStart);
+
+
+		Room * r_roomStart = new Room(roomMesh, type, m_player);
+		m_gameObjectManager->addGameObject(r_roomStart);
+
+	}
+
+
+	ParserData* doorData = m_parser->loadFromObj("Doors.obj");
+
+	Mesh* door = m_GLinit->createMesh("Door", doorData);
+
+	m_gameObjectManager->addGameObject(new Box(door, DOOR));
+
+
 }

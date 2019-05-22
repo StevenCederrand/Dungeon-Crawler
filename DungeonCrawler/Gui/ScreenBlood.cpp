@@ -32,15 +32,17 @@ ScreenBlood::~ScreenBlood()
 void ScreenBlood::update(float dt)
 {
 	float newHealth = m_player->getHealth();
+	//if health now is lower than before set alpha to 1 (show the screenBlood)
 	if (newHealth < m_savedHealth)
 	{
 		m_alphaValue = 1;
 	}
-	if (m_alphaValue >= 0 && newHealth> 2)
+	//lower alpha if it's over 0
+	if (m_alphaValue >= 0 && newHealth > 2)
 	{
 		m_alphaValue -= 2.2 * dt;
 	}
-	
+
 	m_savedHealth = newHealth;
 	m_modelMatrix = glm::mat4(1.0f);
 }

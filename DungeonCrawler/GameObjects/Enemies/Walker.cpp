@@ -6,6 +6,7 @@
 #include <iostream>
 #include <chrono>
 #include <Utility/Randomizer.h>
+#include <Audio/AudioEngine.h>
 #define M_PI 3.14159265358979323846
 
 Walker::Walker(Mesh * mesh, Type type, Room* room, const glm::vec3& position, Effects* effects):
@@ -40,7 +41,7 @@ void Walker::update(float dt)
 	m_hoverEffectTimer += dt;
 	if (m_hoverEffectTimer >= 0.05f) {
 		m_hoverEffectTimer = 0.0f;
-		m_effects->addParticles("EnemyHoverEmitter", getPosition(), glm::vec3(Randomizer::single(-100.0f, 100.0f) / 100.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 100.0f), 1.0f, 1);
+		m_effects->addParticles("EnemyHoverEmitter", getPosition() + glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(Randomizer::single(-100.0f, 100.0f) / 100.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 100.0f), 1.0f, 1);
 	}
 
 	if (lengthToPlayer > 2.5f) {
@@ -56,6 +57,8 @@ bool Walker::meleeRange(float dt)
 {
 	if ((getDistanceToPlayer() <= 2.5f) && (m_attackCooldown <= 0.f))
 	{
+		AudioEngine::play("Enemy_melee", 1.0f);
+		AudioEngine::play("pl_damage_taken", 1.0f);
 		m_attackCooldown = 2.f;
 		return true;
 	}
@@ -111,27 +114,10 @@ void Walker::attackCooldown(float dt)
 
 void Walker::floatingAnim(float dt)
 {	
-	float sinCurve = sin(m_sinTime * M_PI/ 180);
+	float sinCurve = sinf(m_sinTime * M_PI/ 180.f);
 	m_sinTime += (m_sinAddTime * dt);
 
 	setPosition(glm::vec3(getPosition().x, sinCurve, getPosition().z));
-	
-	//if ((getPosition().y >= m_floatMax - 0.01) && (m_floatDirection == true))
-	//{
-	//	m_floatDirection = false;
-	//}
-	//if ((getPosition().y <= m_floatMin + 0.01) && (m_floatDirection == false))
-	//{
-	//	m_floatDirection = true;
-	//}
-	//if (m_floatDirection)
-	//{
-	//	setPosition(glm::vec3(getPosition().x, lerp(getPosition().y, m_floatMax, m_percentage), getPosition().z));
-	//}
-	//else
-	//{
-	//	setPosition(glm::vec3(getPosition().x, lerp(getPosition().y, m_floatMin, m_percentage), getPosition().z));
-	//}
 }
 
 void Walker::calculatePath(float dt)
@@ -154,9 +140,10 @@ void Walker::calculatePath(float dt)
 		// and also checks if the error flag has been set, if so then A* can't be run, otherwise
 		// it will crash when player is on a invalid cell or outside the cell system
 		const GridCell& playerCell = m_room->getGrid()->getCell(getPlayerPosition().x, getPlayerPosition().z);
-		if (m_room->getGrid()->failedGettingGridCell() || !playerCell.valid)
+		if (m_room->getGrid()->failedGettingGridCell() || !playerCell.valid) {
+			
 			canRunAStar = false;
-		
+		}
 
 		// If there was no errors getting the cells then run A* star and get
 		// the vector of nodes
