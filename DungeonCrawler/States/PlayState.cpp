@@ -48,7 +48,7 @@ PlayState::PlayState() {
 	//FBXParserData* enemyData = m_FBXParser->binaryMeshReading(FBXPath + "ourFileBinary.bin"); //SHOULD MAKE BINARY
 	//m_GLinit->createMeshFBX("Enemy", enemyData);
 
-	FBXParserData* roomStart = m_FBXParser->binaryMeshReading(FBXPath + "roomStart.bin"); //SHOULD MAKE BINARY
+	FBXParserData* roomStart = m_FBXParser->binaryMeshReading(FBXPath + "roomWithGate.bin"); //SHOULD MAKE BINARY
 	m_GLinit->createMeshFBX("RoomStart", roomStart);
 	//delete enemyData;
 

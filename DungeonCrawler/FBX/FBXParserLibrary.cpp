@@ -280,7 +280,7 @@ namespace FBXParserLibrary
 				yMin = meshVertice.y;
 		}
 
-		glm::vec4 lminMaxValues;//MINMINMAXMAX, ITS IN THE WRONG ORDER, IT SHOULD BE MIN MAX
+		glm::vec4 lminMaxValues;//MINMINMAXMAX
 		lminMaxValues.x = xMin;
 		lminMaxValues.y = yMin;
 		lminMaxValues.z = xMax;

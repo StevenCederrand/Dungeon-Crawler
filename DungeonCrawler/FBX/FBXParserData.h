@@ -20,7 +20,6 @@ private:
 	//vertice mesh data
 	//maybe make vector of vectors? each one for a new mesh
 	std::vector<std::vector<glm::vec3>> m_verticePosVector; //Add m_verticePos to this each time one is done.
-	FORTSÄTT HÄR
 
 	std::vector<glm::vec3> m_verticePos;
 	std::vector<glm::vec2> m_uvs;
