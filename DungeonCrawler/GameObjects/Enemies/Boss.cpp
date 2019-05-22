@@ -15,6 +15,8 @@ Boss::Boss(Mesh* mesh, Type type, Room* room, const glm::vec3& position,Projecti
 	this->m_type = type;
 	this->m_amIAlive = true;
 	this->m_room = room;
+	this->m_sinTime = 0.f;
+	this->m_sinAddTime = 15.f;
 	m_attackCooldown = 0.f;
 	
 	m_shooting = false;
@@ -94,6 +96,15 @@ bool Boss::getAliveStatus() const
 	return m_amIAlive;
 }
 
+void Boss::bossWalkAnim(float dt)
+{
+	float sinCurve = ( 10*sinf(m_sinTime));
+	m_sinTime += (m_sinAddTime * dt);
+
+	setRotation(glm::vec3(getRotation().x, getRotation().y, sinCurve));
+	//setRotation(glm::vec3(sinCurve, getRotation().y, getRotation().z));
+}
+
 void Boss::updateCooldowns(float dt)
 {
 	if (m_attackCooldown > 0.f)
@@ -120,6 +131,7 @@ void Boss::updateBehaviour(float dt)
 		if (lengthToPlayer > 2.5f) {
 			calculatePath(dt, false, true);
 			moveToTarget(dt);
+			bossWalkAnim(dt);
 		}
 
 	}
@@ -129,6 +141,7 @@ void Boss::updateBehaviour(float dt)
 			m_shooting = true;
 			m_currentShootingRechargeCooldown = m_shootingRechargeCooldown;
 			m_shootingRounds = Randomizer::single(15, 25);
+			//setRotation(glm::vec3(getRotation().x, getRotation().y, 0.f));
 		}
 	}
 

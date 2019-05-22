@@ -193,7 +193,7 @@ float Shooter::getDistanceToPlayer() const
 
 void Shooter::floatingAnim(float dt)
 {
-	float sinCurve = sin(m_sinTime * M_PI / 180);
+	float sinCurve = sinf(m_sinTime * M_PI / 180);
 	m_sinTime += (m_sinAddTime * dt);
 
 	setPosition(glm::vec3(getPosition().x, sinCurve, getPosition().z));

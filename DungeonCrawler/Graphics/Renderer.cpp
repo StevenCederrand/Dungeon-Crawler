@@ -317,7 +317,7 @@ void Renderer::renderMap()
 		
 			//move the room the the right place
 			modelmatrix = glm::translate(modelmatrix, glm::vec3(
-				maxMinValues[i].x * tempValue,
+				maxMinValues[i].x * tempValue*0.65,
 				-maxMinValues[i].y * tempValue,
 				0.0f));
 		
