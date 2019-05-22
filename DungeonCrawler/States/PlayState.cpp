@@ -45,7 +45,7 @@ PlayState::PlayState() {
 	//change to FBX, one Parserdata for multiple objects
 	//CONTINUE HERE
 
-	FBXParserData* roomStart = m_FBXParser->binaryMeshReading(FBXPath + "roomWithGate.bin"); //SHOULD MAKE BINARY
+	FBXParserData* roomStart = m_FBXParser->binaryMeshReading(FBXPath + "roomStart.bin"); //SHOULD MAKE BINARY
 	m_GLinit->createMeshFBX("RoomStart", roomStart);
 
 	FBXParserData* enemyData = m_FBXParser->binaryMeshReading(FBXPath + "flyGuy.bin"); //SHOULD MAKE BINARY
