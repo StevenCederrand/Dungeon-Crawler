@@ -89,8 +89,6 @@ void AnimatedEmitter::update(float dt)
 
 		}
 
-		
-
 		if (p.parent != nullptr)
 			p.center = p.parent->getPosition();
 			

@@ -521,6 +521,12 @@ void GameObjectManager::spawner(Room* currentRoom) {
 			0.f,
 			Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)),
 			m_effects);
+
+		glm::vec3 summonPos = enemy->getPosition();
+		summonPos.y = 0.25f;
+		std::printf("%s\n", vec3ToString(summonPos).data());
+		
+
 		this->addGameObject(enemy);
 	}
 	//Spawn Ranged Enemies
@@ -532,6 +538,7 @@ void GameObjectManager::spawner(Room* currentRoom) {
 			Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)),
 			m_projectileManager, m_effects);
 
+		
 		this->addGameObject(enemy);
 	}
 

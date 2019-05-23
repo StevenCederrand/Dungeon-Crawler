@@ -26,6 +26,8 @@ Shooter::Shooter(Mesh* mesh, Type type, Room* room, const glm::vec3& position, P
 	this->m_sinAddTime = 100.f;
 	setPosition(position);
 	m_Astar = new AStar();
+
+	m_effects->addAnimParticle("summonCircle", position + glm::vec3(0.0f, 2.0f, 0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(0.0f), 8.0f);
 }
 
 Shooter::~Shooter()
