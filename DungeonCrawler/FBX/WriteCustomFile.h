@@ -9,12 +9,14 @@
 #include "HeaderStructs.h"
 #include "StaticMesh.h"
 #include "BoundingBoxMesh.h"
+#include "FileExplorer.h"
 
 class WriteCustomFile
 {
 private:
-	void CreateCustomFile();
 	MainHeader m_mainHeader;
+	std::string m_binFileName;
+
 public:
 	WriteCustomFile();
 	~WriteCustomFile();
@@ -23,6 +25,4 @@ public:
 	void WriteBoundingBoxMesh(BoundingBoxMesh currentMesh);
 	void WriteMaterial(Material currentMaterial);
 	void WriteDynamicMesh();
-
-	void SmallFile(); //writes small file
 };

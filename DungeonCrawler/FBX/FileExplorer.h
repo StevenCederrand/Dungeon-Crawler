@@ -12,4 +12,5 @@ public:
 	~FileExplorer();
 
 	std::string nameOfFileToOpen();
+	std::string nameOfFileToSave();
 };

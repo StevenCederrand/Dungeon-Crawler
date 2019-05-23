@@ -17,7 +17,7 @@ void fbxObjectManager::initializer()
 	CreateIOSettingsObject(m_lsdkManager);
 	this->m_lsdkScene = CreateFbxScene(m_lsdkManager);
 	this->m_lsdkImporter = CreateFbxImporter(m_lsdkManager);
-	this->m_lFilename = LoadFbxFile();
+	m_lFilename = LoadFbxFile();
 	InitializeFbxImporter(m_lsdkImporter, m_lFilename, m_lsdkManager);
 	UseFbxImporter(m_lsdkImporter, m_lsdkScene);
 	DestroyFbxImporter(m_lsdkImporter);
@@ -52,28 +52,20 @@ FbxImporter *& fbxObjectManager::CreateFbxImporter(FbxManager * lSdkManager)
 	return lImporter;
 }
 
-const char * fbxObjectManager::LoadFbxFile()
+std::string fbxObjectManager::LoadFbxFile()
 {
-	//Loading in my file
-	//User chooses name of file, via trextbox? hardcoded for now
 	FileExplorer fileExplorer;
-	//const char* lFilename;
-
 	std::string nameOfFile = fileExplorer.nameOfFileToOpen();
-
-	const char* lFilename = nameOfFile.data(); //gets the data but isnt const anymore.
-
-	const char* lFilenameHARDCODED = "\\Assets\\FBX\\FlyGuy.fbx";
-
-	return lFilenameHARDCODED;
+	
+	return nameOfFile;
 }
 
-void fbxObjectManager::InitializeFbxImporter(FbxImporter *& lImporter, const char * lFilename, FbxManager * lSdkManager)
+void fbxObjectManager::InitializeFbxImporter(FbxImporter *& lImporter, std::string lnameOfFile, FbxManager * lSdkManager)
 {
 	// Use the first argument as the name for our FBX file.
 	// Second is fileFormat, leave at -1.
 	// Last is what IO Settings to use, we get it from out manager which in turn gets it from our IOSettingsObject. Default settings are used.
-	if (!lImporter->Initialize(lFilename, -1, lSdkManager->GetIOSettings())) //If initializing failes, go into if statement
+	if (!lImporter->Initialize(lnameOfFile.c_str(), -1, lSdkManager->GetIOSettings())) //If initializing failes, go into if statement
 	{
 		printf("Call to FbxImporter::Initialize() failed.\n");
 		printf("Error returned: %s\n\n", lImporter->GetStatus().GetErrorString());

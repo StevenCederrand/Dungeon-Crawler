@@ -3,25 +3,11 @@
 WriteCustomFile::WriteCustomFile()
 {
 	m_mainHeader = MainHeader{ 1 }; //Creates one mainheader	//CHANGE PROBABLY!!, DOESNT NEED TO BE PRIVATE VAR
-
-	SmallFile(); //REMOVE LATER
 }
 
 WriteCustomFile::~WriteCustomFile()
 {
 	
-}
-
-void WriteCustomFile::CreateCustomFile()
-{
-	//Version Header
-	unsigned int version = 0; //on top of file, once
-
-	//Creates a scope of meshes based on the amount the ones counted in the mainheader staticmeshcount
-	MeshHeader h { m_mainHeader.staticMeshCount };
-	//Creates a vertex pointer to a new vertex array
-	Vertex *vArray = new Vertex[h.vertexCount];
-
 }
 
 void WriteCustomFile::WriteMainHeader(int nrOfStaticMeshes, int nrOfBoundingBoxes, int nrOfMaterial) //works
@@ -35,13 +21,16 @@ void WriteCustomFile::WriteMainHeader(int nrOfStaticMeshes, int nrOfBoundingBoxe
 	m_mainHeader.boundingBoxCount = nrOfBoundingBoxes;
 	m_mainHeader.materialCount = nrOfMaterial;
 
+	FileExplorer fileExplorer;
+	m_binFileName = fileExplorer.nameOfFileToSave();
+
 	std::ofstream outfileBinary;
-	outfileBinary.open("ourFileBinary.bin", std::ios::out | std::ios::trunc | std::ios::binary); //trunc to clean
+	outfileBinary.open(m_binFileName + ".bin", std::ios::out | std::ios::trunc | std::ios::binary); //trunc to clean
 	outfileBinary.write((const char*)&m_mainHeader, sizeof(MainHeader));
 	outfileBinary.close();
 
 	std::ofstream outfileReadable;
-	outfileReadable.open("ourFileReadable.txt", std::ios::out | std::ios::trunc);
+	outfileReadable.open(m_binFileName + ".txt", std::ios::out | std::ios::trunc);
 	outfileReadable << "Version: " << m_mainHeader.version
 		<< "\nNr of dynamic meshes: " << m_mainHeader.dynamicMeshCount
 		<< "\nNr of static meshes: " << m_mainHeader.staticMeshCount
@@ -69,7 +58,7 @@ void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think
 	lmeshHeader.padding2 = false;
 
 	std::ofstream outfileBinary;
-	outfileBinary.open("ourFileBinary.bin", std::ios::out | std::ios::app | std::ios::binary);
+	outfileBinary.open(m_binFileName + ".bin", std::ios::out | std::ios::app | std::ios::binary);
 	outfileBinary.write((const char*)&lmeshHeader, sizeof(MeshHeader));
 
 	Vertex* vArray = new Vertex[lmeshHeader.vertexCount];
@@ -84,7 +73,7 @@ void WriteCustomFile::WriteStaticMesh(StaticMesh currentMesh) //testing, I think
 
 
 	std::ofstream outfileReadable;
-	outfileReadable.open("ourFileReadable.txt", std::ios::out | std::ios::app);
+	outfileReadable.open(m_binFileName + ".txt", std::ios::out | std::ios::app);
 	outfileReadable << "Name of mesh: " << nameOfMesh
 		<< "\nVertex count: " << lmeshHeader.vertexCount
 		<< "\nMaterial ID: " << lmeshHeader.materialID //FIXA SÅ DENNA E RÄTT
@@ -144,7 +133,7 @@ void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //specia
 	lboundingBoxHeader.padding2 = 0;
 
 	std::ofstream outfileBinary;
-	outfileBinary.open("ourFileBinary.bin", std::ios::out | std::ios::app | std::ios::binary); //writing, append, in binery
+	outfileBinary.open(m_binFileName + ".bin", std::ios::out | std::ios::app | std::ios::binary); //writing, append, in binery
 	outfileBinary.write((const char*)&lboundingBoxHeader, sizeof(BoundingBoxHeader));
 
 	BoundingBoxVertex *bbvArray = new BoundingBoxVertex[lboundingBoxHeader.vertexCount];
@@ -159,7 +148,7 @@ void WriteCustomFile::WriteBoundingBoxMesh(BoundingBoxMesh currentMesh) //specia
 
 
 	std::ofstream outfileReadable;
-	outfileReadable.open("ourFileReadable.txt", std::ios::out | std::ios::app);
+	outfileReadable.open(m_binFileName + ".txt", std::ios::out | std::ios::app);
 	outfileReadable << "Name of mesh: " << nameOfHitbox
 		<< "\nVertex count: " << lboundingBoxHeader.vertexCount
 		<< "\n\nCollision: " << lboundingBoxHeader.collision
@@ -203,12 +192,12 @@ void WriteCustomFile::WriteMaterial(Material currentMaterial)
 	lMaterial.whatShader = currentMaterial.whatShader;
 
 	std::ofstream outfileBinary;
-	outfileBinary.open("ourFileBinary.bin", std::ios::out | std::ios::app | std::ios::binary); //writing, append, in binery
+	outfileBinary.open(m_binFileName + ".bin", std::ios::out | std::ios::app | std::ios::binary); //writing, append, in binery
 	outfileBinary.write((const char*)&lMaterial, sizeof(Material));
 
 
 	std::ofstream outfileReadable;
-	outfileReadable.open("ourFileReadable.txt", std::ios::out | std::ios::app);
+	outfileReadable.open(m_binFileName + ".txt", std::ios::out | std::ios::app);
 	outfileReadable << "Name of albedo Texture: " << nameOfAlbedo
 		<< "\nName of normalmap: " << nameOfNormal
 		<< "\nMaterial ID: " << lMaterial.materialID
@@ -222,21 +211,3 @@ void WriteCustomFile::WriteDynamicMesh()
 {
 	printf("Dynamic mesh");
 }
-
-void WriteCustomFile::SmallFile()
-{
-	SmallInfoHeader lsmallInfoHeader{ 1 };
-
-	lsmallInfoHeader.intInfo = 1;
-	lsmallInfoHeader.floatInfo = 1.5f;
-	lsmallInfoHeader.charInfo1 = 'a';
-	lsmallInfoHeader.charInfo2 = 'b';
-	lsmallInfoHeader.charInfo3 = 'c';
-	lsmallInfoHeader.charInfo4 = 'd';
-
-	std::ofstream outfileBinary;
-	outfileBinary.open("smallFile.bin", std::ios::out | std::ios::trunc | std::ios::binary); //writing, append, in binery
-	outfileBinary.write((const char*)&lsmallInfoHeader, sizeof(SmallInfoHeader));
-	outfileBinary.close();
-}
-

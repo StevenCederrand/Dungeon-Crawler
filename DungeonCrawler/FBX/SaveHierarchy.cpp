@@ -29,7 +29,6 @@ void SaveHierarchy::SaveEntireHierarchy(FbxScene* lScene)
 			m_calculateNrOfNodes(lRootNode->GetChild(i));
 		}
 		m_file.WriteMainHeader(m_nrOfStaticMesh, m_nrOfBoundingBox, m_nrOfMaterial); //MainHeader
-		//printf("FINAL Number of Nodes: %i\n", m_nrOfNodes);
 
 		//Write Static Meshes
 		for (int i = 0; i < lRootNode->GetChildCount(); i++)
@@ -157,7 +156,6 @@ void SaveHierarchy::m_SaveStaticMeshNode(FbxNode* pNode)
 	// Recursively print the children.
 	for (int j = 0; j < pNode->GetChildCount(); j++)
 	{
-		printf("\n");
 		m_SaveStaticMeshNode(pNode->GetChild(j));	//Deeper in the tree
 	}
 }
@@ -222,7 +220,6 @@ void SaveHierarchy::m_SaveDynamicMeshNode(FbxNode* pNode)
 	// Recursively print the children.
 	for (int j = 0; j < pNode->GetChildCount(); j++)
 	{
-		printf("\n");
 		m_SaveDynamicMeshNode(pNode->GetChild(j));	//Deeper in the tree
 	}
 }
@@ -283,7 +280,6 @@ void SaveHierarchy::m_SaveStaticHitboxNode(FbxNode* pNode)
 	// Recursively print the children.
 	for (int j = 0; j < pNode->GetChildCount(); j++)
 	{
-		printf("\n");
 		m_SaveStaticHitboxNode(pNode->GetChild(j));	//Deeper in the tree
 	}
 }
@@ -372,7 +368,6 @@ void SaveHierarchy::m_SaveMaterialNode(FbxNode*pNode) //writes to file
 	// Recursively print the children.
 	for (int j = 0; j < pNode->GetChildCount(); j++)
 	{
-		printf("\n");
 		m_SaveMaterialNode(pNode->GetChild(j));	//Deeper in the tree
 	}
 }
@@ -408,7 +403,6 @@ void SaveHierarchy::m_SaveControlPoints(FbxMesh* pMesh, bool collision)
 			m_staticMesh.AddControlPoint(lControlPoints[i]);
 		}
 	}
-	printf("\n\n");
 }
 
 void SaveHierarchy::m_SaveControlPointsIndex(FbxMesh* pMesh, int i, int j, bool collision)
@@ -610,8 +604,6 @@ void SaveHierarchy::m_SaveStaticMesh(FbxNode* pNode, bool collision, bool static
 					{
 						int nr = lMaterial->GetUniqueID(); //GETS UNIQUE ID
 						m_staticMesh.setMaterialID(nr);
-
-						DisplayInt("        All polygons share the same material in mesh ", i);
 					}
 				}
 			}
@@ -761,7 +753,6 @@ void SaveHierarchy::CheckUniqueMaterial(FbxNode* pNode) //checks if the meshes m
 			m_staticMesh.setMaterialID(-1);
 		}
 	}
-	printf("nrOFmaterial %i \n", m_nrOfMaterial);
 }
 
 void SaveHierarchy::SaveMaterialFromMesh(FbxMesh* pMesh)
@@ -774,8 +765,6 @@ void SaveHierarchy::SaveMaterialConnections(FbxMesh* pMesh)
 	int i, l, lPolygonCount = pMesh->GetPolygonCount();
 
 	char header[MAT_HEADER_LENGTH];
-
-	DisplayString("    Polygons Material Connections");
 
 	//check whether the material maps with only one mesh
 	bool lIsAllSame = true;
@@ -808,7 +797,6 @@ void SaveHierarchy::SaveMaterialConnections(FbxMesh* pMesh)
 						int nr = lMaterial->GetUniqueID(); //GETS UNIQUE ID
 						m_Material.materialID = nr;
 
-						DisplayInt("        All polygons share the same material in mesh ", l);
 						SaveMaterialTextureConnections(lMaterial, lMatId, l);
 					}
 				}
@@ -826,8 +814,6 @@ void SaveHierarchy::SaveMaterialConnections(FbxMesh* pMesh)
 	{
 		for (i = 0; i < lPolygonCount; i++)
 		{
-			DisplayInt("        Polygon ", i);
-
 			for (l = 0; l < pMesh->GetElementMaterialCount(); l++)
 			{
 
