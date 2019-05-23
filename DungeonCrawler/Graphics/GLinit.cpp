@@ -25,6 +25,8 @@ GLinit::~GLinit()
 
 Mesh* GLinit::createMesh(std::string name, ParserData* data)
 {
+	//Make a check if FBX is binary
+	//Use the FBXParser class that takes in the binary custom files and generates the meshes
 	if (MeshMap::MeshExistWithName(name))
 		return MeshMap::getMesh(name);
 
@@ -61,6 +63,95 @@ Mesh* GLinit::createMesh(std::string name, ParserData* data)
 	
 	MeshMap::addMesh(name, mesh);
 	return mesh;
+}
+
+Mesh* GLinit::createMeshFBX(std::string name, FBXParserData* data)
+{
+	//Make a check if FBX is binary
+	//Use the FBXParser class that takes in the binary custom files and generates the meshes
+	if (MeshMap::MeshExistWithName(name))
+		return MeshMap::getMesh(name);
+
+	
+	GLuint vao = createAndBindVAO();
+	std::vector<GLuint> indices;
+
+	int meshCount = data->getMainHeader().staticMeshCount;
+	int indiceCounter = 0;
+	std::vector<glm::vec3> allMeshVertices;
+	allMeshVertices.reserve(10000);
+	for (int i = 0; i < meshCount; i++)
+	{
+		for (int j = 0; j < data->getMeshHeaders()[i].vertexCount; j++)
+		{
+			indices.emplace_back(indiceCounter);
+			indiceCounter++;
+
+			allMeshVertices.emplace_back(data->getVerticePosVector()[i][j]);
+		}
+	}
+	bindIndices(indices);
+
+
+	storeDataInAttributeList(0, 3, allMeshVertices); //WITHOUT BOUNDING BOX
+	storeDataInAttributeList(1, 2, data->getUVs());
+	storeDataInAttributeList(2, 3, data->getNormals());
+	glBindVertexArray(NULL);
+
+	Mesh* mesh = new Mesh();
+
+
+	////
+	////		IF MESH AND MATERIAL MATERIALID == THEN USE IT, DO CHECK HERE
+	////
+
+	std::string lTextureFiles;
+	for (int i = 0; i < 100; i++)
+	{
+		if (data->getMaterialHeaders()[0].nameOfAlbedo[i] == ' ') //FIX MATERIAL
+			i = 100;
+		else
+			lTextureFiles += data->getMaterialHeaders()[0].nameOfAlbedo[i];	//FIX MATERIAL
+	}
+	std::string lEntireFilePath = TexturePath + lTextureFiles;
+
+	GLuint textureID = createTexture(lEntireFilePath); //should be texture files name
+
+	if (data->getMaterialHeaders()[0].nameOfNormal[0] != ' ')	//FIX MATERIAL
+	{
+		mesh->setHasNormalMap(1);
+
+		std::string lNormalFiles;
+		for (int i = 0; i < 100; i++)
+		{
+			if (data->getMaterialHeaders()[0].nameOfNormal[i] == ' ')	//FIX MATERIAL
+				i = 100;
+			else
+				lNormalFiles += data->getMaterialHeaders()[0].nameOfNormal[i];	//FIX MATERIAL
+		}
+		std::string lEntireNormalFilePath = TexturePath + lNormalFiles;
+		GLuint normalID = createTexture(lEntireNormalFilePath);
+		mesh->setNormalID(normalID);
+	}
+	else
+		mesh->setHasNormalMap(0);
+
+	mesh->setVao(vao);
+	mesh->setTextureID(textureID);
+	mesh->setNrOfIndices(allMeshVertices.size());	//WITHOUT BOUNDING BOX
+	mesh->setAmbientColor(glm::vec3(255, 0, 0));
+	mesh->setSpecularColor(glm::vec3(255, 0, 0));
+	mesh->setDiffuseColor(glm::vec3(255, 0, 0));
+	mesh->setShininess(0.5f);
+
+	mesh->setMaxMinValues(data->getMinMaxValuesMesh()); //THIS SHOULD BE THE MESH
+
+	//hitbox
+	mesh->setBoundingBoxMinMax(data->getMinMaxValuesHitbox()); //XYZ MAX XYZ MIN //this will be all of the hitboxes for the mesh
+
+
+	MeshMap::addMesh(name, mesh); //adds the mesh to the meshmap, this is where the mesh is saved
+	return mesh; //not used right now
 }
 
 GLuint GLinit::createAndBindVAO()

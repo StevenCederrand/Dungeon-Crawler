@@ -104,6 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)CustomFBXLibrary\src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>fmodL_vc.lib;glfw3.lib;opengl32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -116,6 +117,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)CustomFBXLibrary\src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>fmodL_vc.lib;glfw3.lib;opengl32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -130,6 +132,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)CustomFBXLibrary\src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -146,6 +149,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)CustomFBXLibrary\src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -160,6 +164,9 @@
     <ClCompile Include="Collision\AABB.cpp" />
     <ClCompile Include="EnemyProjectile\Projectile.cpp" />
     <ClCompile Include="EnemyProjectile\ProjectileManager.cpp" />
+    <ClCompile Include="FBX\FBXParser.cpp" />
+    <ClCompile Include="FBX\FBXParserLibrary.cpp" />
+    <ClCompile Include="FBX\FBXParserData.cpp" />
     <ClCompile Include="GameObjects\Box.cpp" />
     <ClCompile Include="GameObjects\Enemies\Boss.cpp" />
     <ClCompile Include="GameObjects\Enemies\Shooter.cpp" />
@@ -184,6 +191,7 @@
     <ClCompile Include="Gui\ScreenBlood.cpp" />
     <ClCompile Include="States\GameOverState.cpp" />
     <ClCompile Include="States\WinState.cpp" />
+    <ClCompile Include="System\Main.cpp" />
     <ClCompile Include="UserInterface\Button.cpp" />
     <ClCompile Include="Parser\ParserData.cpp" />
     <ClCompile Include="Graphics\Shader.cpp" />
@@ -191,7 +199,6 @@
     <ClCompile Include="System\Application.cpp" />
     <ClCompile Include="System\Input.cpp" />
     <ClCompile Include="System\Log.cpp" />
-    <ClCompile Include="System\Main.cpp" />
     <ClCompile Include="States\MenuState.cpp" />
     <ClCompile Include="States\PlayState.cpp" />
     <ClCompile Include="States\StateManager.cpp" />
@@ -217,6 +224,10 @@
     <ClInclude Include="Audio\AudioEngine.h" />
     <ClInclude Include="Collision\AABB.h" />
     <ClInclude Include="Collision\HitData.h" />
+    <ClInclude Include="FBX\FBXParser.h" />
+    <ClInclude Include="FBX\FBXParserLibrary.h" />
+    <ClInclude Include="FBX\FBXParserData.h" />
+    <ClInclude Include="FBX\Headerstruct.h" />
     <ClInclude Include="EnemyProjectile\Projectile.h" />
     <ClInclude Include="EnemyProjectile\ProjectileManager.h" />
     <ClInclude Include="GameObjects\Box.h" />
@@ -276,6 +287,11 @@
     <ClInclude Include="Vendor\ImGui\imstb_truetype.h" />
     <ClInclude Include="Vendor\Lodepng\lodepng.h" />
     <ClInclude Include="Vendor\stb\stb_image.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CustomFBXLibrary\CustomFBXLibrary.vcxproj">
+      <Project>{a5c0a647-b5b5-4af3-be7f-9b3c386f2692}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

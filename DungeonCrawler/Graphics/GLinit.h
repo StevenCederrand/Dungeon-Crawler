@@ -1,6 +1,7 @@
 #ifndef _GLINIT_H
 #define _GLINIT_H
 #include "Parser/ParserData.h"
+#include "FBX/FBXParserData.h"
 #include "Mesh.h"
 #include <string>
 
@@ -12,6 +13,7 @@ public:
 	~GLinit();
 	//If we're already have the mesh created then we return the pointer to that mesh.
 	Mesh* createMesh(std::string name, ParserData* data);
+	Mesh* createMeshFBX(std::string name, FBXParserData* data);
 	GLuint createTexture(std::string filename, bool useFilepath = false, bool alpha = false);
 private:
 	GLuint createAndBindVAO();

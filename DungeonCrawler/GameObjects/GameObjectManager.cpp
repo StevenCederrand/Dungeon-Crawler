@@ -436,7 +436,7 @@ void GameObjectManager::roomManager(GameObject* object) {
 				m_gameObjects.at(m_doorIndex)->setCollidable(false);
 				continue;
 			}
-			if (m_rooms.at(i)->intersection(m_player->getPosition())) {
+			if (m_rooms.at(i)->intersection(m_player->getPosition()) && m_rooms.at(i) != nullptr) {
 				this->m_currentRoom = i;				
 				//Lock the doors
 				this->m_isLocked = !m_isLocked;

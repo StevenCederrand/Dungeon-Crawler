@@ -27,6 +27,7 @@
 PlayState::PlayState() {
 
 	m_parser = new Parser();
+	m_FBXParser = new FBXParser();
 	m_GLinit = new GLinit();
 
 	#pragma region Init
@@ -40,7 +41,19 @@ PlayState::PlayState() {
 
 	AudioEngine::loadSSO("Game.sso");
 	#pragma endregion
-		
+	
+	//change to FBX, one Parserdata for multiple objects
+	//CONTINUE HERE
+
+	//FBXParserData* roomStart = m_FBXParser->binaryMeshReading(FBXPath + "roomStart.bin"); //SHOULD MAKE BINARY
+	//m_GLinit->createMeshFBX("RoomStart", roomStart);
+	//delete roomStart;
+
+	FBXParserData* enemyData = m_FBXParser->binaryMeshReading(FBXPath + "flyGuy.bin"); //SHOULD MAKE BINARY
+	m_GLinit->createMeshFBX("Enemy", enemyData);
+	delete enemyData;
+
+
 	#pragma region Create_Objects
 	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
 	ParserData* playerData = m_parser->loadFromObj("MainCharacterPosed.obj");
@@ -52,7 +65,7 @@ PlayState::PlayState() {
 
 	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
 	ParserData* powerUpData = m_parser->loadFromObj("LifePowerUp.obj");
-	ParserData* enemyData = m_parser->loadFromObj("FlyGuyConverted.obj");
+	//ParserData* enemyData = m_parser->loadFromObj("FlyGuyConverted.obj");
 
 
 	//m_GLinit->createMesh("RoomStart", roomStart);
@@ -62,7 +75,7 @@ PlayState::PlayState() {
 	m_GLinit->createMesh("PlayerModel", playerData);
 	m_GLinit->createMesh("Sphere", sphereData);
 	m_GLinit->createMesh("PowerUp", powerUpData);
-	m_GLinit->createMesh("Enemy", enemyData);
+	//m_GLinit->createMesh("Enemy", enemyData);
 	#pragma endregion
 
 	//we want to setUp the world
@@ -81,6 +94,9 @@ PlayState::~PlayState() {
 	delete m_projectileManager;
 	delete m_playerHealthBar;
 	delete m_screenBlood;
+
+	//Fbx
+	delete m_FBXParser;
 }
 
 void PlayState::update(float dt) {
@@ -235,6 +251,9 @@ void PlayState::addRoom()
 			type = ROOM_EMPTY;
 		}
 
+		//FBXParserData* roomStart = m_FBXParser->binaryMeshReading(FBXPath + "roomStart.bin"); //SHOULD MAKE BINARY
+		//Mesh* roomMesh = m_GLinit->createMeshFBX("RoomStart", roomStart);
+		//delete roomStart;
 			
 		ParserData* roomStart = m_parser->loadFromObj(file + ".obj");
 		Mesh * roomMesh = m_GLinit->createMesh(id, roomStart);
