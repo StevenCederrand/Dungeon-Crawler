@@ -1,5 +1,5 @@
 #pragma once
-#include "Headerstruct.h"
+#include "Headerstructs.h"
 class FBXParserData {
 public:
 
