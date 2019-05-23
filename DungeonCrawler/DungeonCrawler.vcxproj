@@ -163,6 +163,7 @@
     <ClCompile Include="FBX\DisplayCommon.cpp" />
     <ClCompile Include="FBX\DisplayHierarchy.cpp" />
     <ClCompile Include="FBX\fbxObjectManager.cpp" />
+    <ClCompile Include="FBX\FileExplorer.cpp" />
     <ClCompile Include="FBX\main.cpp" />
     <ClCompile Include="FBX\Material.cpp" />
     <ClCompile Include="FBX\StaticMesh.cpp" />
@@ -207,6 +208,7 @@
     <ClInclude Include="FBX\DisplayCommon.h" />
     <ClInclude Include="FBX\DisplayHierarchy.h" />
     <ClInclude Include="FBX\fbxObjectManager.h" />
+    <ClInclude Include="FBX\FileExplorer.h" />
     <ClInclude Include="FBX\HeaderStructs.h" />
     <ClInclude Include="FBX\Material.h" />
     <ClInclude Include="FBX\StaticMesh.h" />

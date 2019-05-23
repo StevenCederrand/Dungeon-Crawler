@@ -56,9 +56,16 @@ const char * fbxObjectManager::LoadFbxFile()
 {
 	//Loading in my file
 	//User chooses name of file, via trextbox? hardcoded for now
+	FileExplorer fileExplorer;
+	//const char* lFilename;
 
-	const char* lFilename = "\\Assets\\FBX\\RoomStart.fbx";
-	return lFilename;
+	std::string nameOfFile = fileExplorer.nameOfFileToOpen();
+
+	const char* lFilename = nameOfFile.data(); //gets the data but isnt const anymore.
+
+	const char* lFilenameHARDCODED = "\\Assets\\FBX\\FlyGuy.fbx";
+
+	return lFilenameHARDCODED;
 }
 
 void fbxObjectManager::InitializeFbxImporter(FbxImporter *& lImporter, const char * lFilename, FbxManager * lSdkManager)

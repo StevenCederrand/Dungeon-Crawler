@@ -43,6 +43,7 @@
     <ClCompile Include="FBX\StaticMesh.cpp" />
     <ClCompile Include="FBX\BoundingBoxMesh.cpp" />
     <ClCompile Include="FBX\Material.cpp" />
+    <ClCompile Include="FBX\FileExplorer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -93,6 +94,7 @@
     <ClInclude Include="FBX\StaticMesh.h" />
     <ClInclude Include="FBX\BoundingBoxMesh.h" />
     <ClInclude Include="FBX\Material.h" />
+    <ClInclude Include="FBX\FileExplorer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FBX\box.fbx" />

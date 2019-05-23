@@ -1,6 +1,8 @@
 #pragma once
 
 #include <fbxsdk.h>
+#include <vector>
+#include "FileExplorer.h"
 
 class fbxObjectManager
 {
