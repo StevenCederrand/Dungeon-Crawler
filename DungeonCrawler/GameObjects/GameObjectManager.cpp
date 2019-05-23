@@ -462,6 +462,7 @@ void GameObjectManager::spawner(Room* currentRoom) {
 	int spawnOffset = 5;
 
 	Mesh* enemyMesh = MeshMap::getMesh("Enemy");
+	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
 	if (currentRoom->getType() == ROOM_BOSS)
 	{
 		GameObject* enemy = new Boss(enemyMesh, BOSS, currentRoom, glm::vec3(
@@ -472,6 +473,34 @@ void GameObjectManager::spawner(Room* currentRoom) {
 		this->addGameObject(enemy);
 	}
 
+	int powerUpRoulette = Randomizer::single(1, 3);
+	if (powerUpRoulette == 1)
+	{
+		GameObject* powerUp = new PowerUps(powerUpMesh, POWERUPS, 1.f, 0.f, 0.f, false, glm::vec3(
+			Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
+			0.5f,
+			Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)));
+		this->addGameObject(powerUp);
+	}
+	if (powerUpRoulette == 2)
+	{
+		GameObject* powerUp = new PowerUps(powerUpMesh, POWERUPS, 0.f, 1.f, 0.f, true, glm::vec3(
+			Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
+			0.5f,
+			Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)));
+		this->addGameObject(powerUp);
+	}
+	if (powerUpRoulette == 3)
+	{
+		GameObject* powerUp = new PowerUps(powerUpMesh, POWERUPS, 0.f, 0.f, 5.f, true, glm::vec3(
+			Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
+			0.5f,
+			Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)));
+		this->addGameObject(powerUp);
+	}
+	
+
+	//Calculate ammount of Enemies
 	int numMeleeEnemies = Randomizer::single(m_walkerDifficulty, m_walkerDifficulty + 2);
 	int numRangedEnemies = m_shooterDifficulty;
 	m_walkerDifficulty += 2;
@@ -480,7 +509,6 @@ void GameObjectManager::spawner(Room* currentRoom) {
 		m_shooterDifficulty++;
 		m_walkerDifficulty = 3;
 	}
-
 	//Spawn Melee Enemies
 	for (int i = 0; i < numMeleeEnemies; i++)
 	{

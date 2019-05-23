@@ -172,19 +172,19 @@ void PlayState::constructWorld()
 
 
 	Mesh* boxMesh = MeshMap::getMesh("Box");
-	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
+	//Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
 	
 	m_gameObjectManager->addGameObject(m_player);
 	
 	m_projectileManager->setPlayer(m_player);
 	addRoom();
 
-	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 5, 0, 0, false, glm::vec3(4.f, 0.5f, -2.f));
-	m_gameObjectManager->addGameObject(m_powerUp);
+	//m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 5, 0, 0, false, glm::vec3(4.f, 0.5f, -2.f));
+	//m_gameObjectManager->addGameObject(m_powerUp);
 	//m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 10, 0, false, glm::vec3(2.f, 0.5f, -10.f));
 	//m_gameObjectManager->addGameObject(m_powerUp);
-	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 0, 5, true, glm::vec3(-5.f, 0.5f, -7.f));
-	m_gameObjectManager->addGameObject(m_powerUp);
+	//m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 0, 5, true, glm::vec3(-5.f, 0.5f, -7.f));
+	//m_gameObjectManager->addGameObject(m_powerUp);
 
 	m_lightManager->setPlayerLight(glm::vec3(m_player->getPosition().x, 15.0f, m_player->getPosition().z), glm::vec4(1.0f, 1.0f, 1.0f, 25.0f));
 	m_lightManager->setSun(glm::vec3(m_player->getPosition().x, 20.0f, m_player->getPosition().z), glm::vec3(0.8f, 0.8f, 0.8f));

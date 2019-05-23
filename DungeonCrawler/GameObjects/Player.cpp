@@ -395,6 +395,7 @@ void Player::powerUpCd(float dt)
 		m_health -= m_boostResetters.x;
 		m_automaticDamage -= m_boostResetters.y;
 		m_defaultSpeed -= m_boostResetters.z;
+		m_boostResetters = glm::vec3(0.f, 0.f, 0.f);
 		m_sinAddTime = m_sinDefaultAddTime;
 		m_poweredUp = false;
 	}
