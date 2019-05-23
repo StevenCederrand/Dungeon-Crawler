@@ -81,7 +81,7 @@ void Emitter::addParticle(const glm::vec3& pos, const glm::vec3& velocity, float
 
 		size_t pIndex = getFirstUnusedParticle();
 		Particle & p = m_particles[pIndex];
-		p.center = pos + glm::vec3(Randomizer::single(-1.f, 1.f) / 6.f, 0.5f, Randomizer::single(-1.f, 1.f) / 6.f);
+		p.center = pos;
 		p.velocity = velocity;
 		p.lifetime = lifetime;
 		p.initialLifetime = lifetime;

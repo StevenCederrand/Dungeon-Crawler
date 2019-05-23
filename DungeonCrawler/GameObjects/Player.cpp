@@ -65,8 +65,6 @@ Player::Player(Mesh* mesh, Type type) :
 
 	this->setupSoundVector();
 
-
-
 	for (size_t i = 0; i < 7; i++)
 	{
 		unsigned error = lodepng::decode(m_image[i], m_width, m_height, TexturePath + "AmmoBar" + std::to_string(i) +".png");
@@ -240,6 +238,7 @@ void Player::rotatePlayer()
 		pos.x - this->getPosition().x,
 		0,
 		pos.z - this->getPosition().z);
+	
 	m_angle = glm::degrees(atan2f(m_lookDirection.z, m_lookDirection.x));
 
 	setRotation(glm::vec3(getRotation().x, -m_angle, getRotation().z));

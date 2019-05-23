@@ -61,8 +61,12 @@ void GameObjectManager::update(float dt)
 		float xAngle = cosf(glm::radians(m_player->getAngle()));
 		float zAngle = sinf(glm::radians(m_player->getAngle()));
 		float offset = 0.5f;
-		glm::vec3 posToSpawnParticle = m_player->getPosition() + glm::vec3(xAngle, 2.0f, zAngle) + (offset * m_player->getLookDirection());
-		m_effects->addParticles("GunFlareEmitter", posToSpawnParticle, glm::vec3(2.5f, 0.0f, 2.5f) * m_player->getLookDirection(), 0.2f);
+		
+		glm::vec3 playerPos = m_player->getPosition();
+		glm::vec3 lookDir = m_player->getLookDirection();
+
+		glm::vec3 posToSpawnParticle = playerPos + glm::vec3(xAngle, 2.5f, zAngle) + (offset * lookDir);
+		m_effects->addParticles("GunFlareEmitter", posToSpawnParticle, glm::vec3(1.0f, 0.5f, 1.0f) * lookDir, 0.50f);
 	}
 
 	//------ Update all the game objects and check for collision 'n stuff ------
