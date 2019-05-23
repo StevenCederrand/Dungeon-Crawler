@@ -23,7 +23,7 @@ Player::Player(Mesh* mesh, Type type) :
 	this->setScale(glm::vec3(0.65f, 0.65f, 0.65f));
 	this->m_defaultSpeed = 7.f;
 	this->m_speed = 7.0f;
-	this->m_health = 1000.f;
+	this->m_health = 10.f;
 	this->m_maxHealth = 10.f;
 	this->m_damage = 1.f;
 	this->m_automaticDamage = 1.f;
@@ -57,6 +57,7 @@ Player::Player(Mesh* mesh, Type type) :
 	//this->m_iframes = 0.f;
 	this->m_pistolBullets = 6;
 	this->m_reloadTime = 0.f;
+	this->m_reloadTimeAdd = 1.f;
 	this->m_reloading = false;
 
 	this->m_boostResetters = (glm::vec3(0.f, 0.f, 0.f));
@@ -111,7 +112,7 @@ void Player::update(float dt)
 			{
 				m_reloading = true;
 				AudioEngine::play("gun_reload", 1.0f);
-				m_reloadTime = 1.f;
+				m_reloadTime = m_reloadTimeAdd;
 			}
 			manualReload(dt);
 		//}
@@ -393,6 +394,7 @@ void Player::powerUpCd(float dt)
 		m_health -= m_boostResetters.x;
 		m_automaticDamage -= m_boostResetters.y;
 		m_defaultSpeed -= m_boostResetters.z;
+		m_boostResetters = glm::vec3(0.f, 0.f, 0.f);
 		m_sinAddTime = m_sinDefaultAddTime;
 		m_poweredUp = false;
 	}
@@ -408,7 +410,7 @@ void Player::manualReload(float dt)
 	{
 		m_reloading = true;
 		AudioEngine::play("gun_reload", 1.0f);
-		m_reloadTime = 4.f;
+		m_reloadTime = m_reloadTimeAdd;
 	}
 }
 
