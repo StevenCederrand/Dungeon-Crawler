@@ -89,15 +89,28 @@ void AnimatedEmitter::update(float dt)
 
 		}
 
-		if (p.parent != nullptr)
+		if (p.parent != nullptr) {
 			p.center = p.parent->getPosition();
+		}
+		
 			
+		if (p.hadParent && p.parent == nullptr)
+		{
+			printf("Hello?\n");
+			p.hadParent = false;
+			p.lifetime = 2.0f;
+			p.initialLifetime = 2.0f;
+			p.immortal = false;
+		}
+
+		
+
 		if (m_billboarded) {
 			p.center += p.offset + p.velocity * dt;
 		}
 		else{
 			p.modelMatrix = glm::mat4(1.f);
-			p.modelMatrix = glm::translate(p.modelMatrix, p.center);
+			p.modelMatrix = glm::translate(p.modelMatrix, p.center + p.offset);
 			p.modelMatrix = glm::rotate(p.modelMatrix, glm::radians(p.rotation.x), glm::vec3(1.f, 0.f, 0.f));
 			p.modelMatrix = glm::rotate(p.modelMatrix, glm::radians(p.rotation.y), glm::vec3(0.f, 1.f, 0.f));
 			p.modelMatrix = glm::rotate(p.modelMatrix, glm::radians(p.rotation.z), glm::vec3(0.f, 0.f, 1.f));
@@ -171,6 +184,7 @@ void AnimatedEmitter::addParticle(GameObject* parent, const glm::vec3& offset, i
 		p.animState = 0;
 		p.animTimer = 0.0f;
 		p.immortal = true;
+		p.hadParent = true;
 		p.color = glm::vec4(1.f);
 		p.modelMatrix = glm::mat4(1.0f);
 		m_nrOfParticles++;
@@ -193,6 +207,7 @@ void AnimatedEmitter::addParticle(GameObject* parent, const glm::vec3& offset, c
 		p.animState = 0;
 		p.animTimer = 0.0f;
 		p.immortal = true;
+		p.hadParent = true;
 		p.color = glm::vec4(1.f);
 
 		m_nrOfParticles++;

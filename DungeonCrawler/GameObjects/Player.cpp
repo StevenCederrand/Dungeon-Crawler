@@ -272,8 +272,8 @@ Light* Player::getFlash() {
 }
 
 void Player::spotlightHandler() {
-	this->m_spotlight->direction = this->getLookDirection();
-	this->m_spotlight->position = this->getPosition() + glm::vec3(0.0f, 1.5f, 0.0f);
+	this->m_spotlight->direction = this->getLookDirection() - glm::vec3(0.0f, 0.30f, 0.0f);
+	this->m_spotlight->position = this->getPosition() + glm::vec3(0.0f, 1.75f, 0.0f);
 	this->m_flash->position = glm::vec4(this->getPosition() + glm::vec3(0.0f, 2.f, 0.0f), 1.0);
 }
 

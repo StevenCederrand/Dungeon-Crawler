@@ -6,7 +6,7 @@
 #include <Graphics/Effects.h>
 class Shooter : public GameObject {
 public:
-	Shooter(Mesh* mesh, Type type, Room* room, const glm::vec3& position, ProjectileManager* projectileManager, Effects* effects);
+	Shooter(Mesh* mesh, Type type, Room* room, const glm::vec3& position, ProjectileManager* projectileManager, Effects* effects, float timeBeforeSpawn);
 	~Shooter();
 	void update(float dt);
 
@@ -33,7 +33,7 @@ private:
 	float m_attackCooldown;
 	float m_sinTime;
 	float m_sinAddTime;
-
+	bool m_hasSpawned;
 	float m_castTime;
 	float m_currentCastTime;
 	float m_hoverEffectTimer;

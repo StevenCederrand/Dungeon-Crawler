@@ -5,11 +5,12 @@
 #include <GLM//gtx/quaternion.hpp>
 #include <System/Log.h>
 
-GameObject::GameObject(Mesh * mesh, Type type, const glm::vec3 & position)
+GameObject::GameObject(Mesh * mesh, Type type, const glm::vec3 & position, float timeBeforeSpawn)
 {
 	m_mesh = mesh;
 	m_isCollidable = true;
 	m_position = position;
+	m_timeBeforeSpawn = timeBeforeSpawn;
 	m_rotation = glm::vec3(0.f);
 	m_velocity = glm::vec3(0.f);
 	m_scale = glm::vec3(1.f);
@@ -49,6 +50,15 @@ void GameObject::internalUpdate(float dt)
 		m_colorTint = glm::vec3(1.f);
 		m_colorTintFadeDuration = 0.f;
 	}
+
+	if (m_timeBeforeSpawn > 0.0f){
+		m_timeBeforeSpawn -= dt;
+		
+		if (m_timeBeforeSpawn <= 0.0f){
+			m_timeBeforeSpawn = 0.0f;
+		}
+	}
+
 
 }
 
@@ -135,6 +145,11 @@ void GameObject::lookAt(const glm::vec3& position)
 float GameObject::lerp(float start, float end, float percent)
 {
 	return ((start)+percent * (end - start));;
+}
+
+const bool GameObject::isSpawned() const
+{
+	return (m_timeBeforeSpawn <= 0.0f);
 }
 
 void GameObject::hit(const HitDescription & desc)

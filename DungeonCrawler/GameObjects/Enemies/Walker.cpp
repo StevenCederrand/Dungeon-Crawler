@@ -9,11 +9,10 @@
 #include <Audio/AudioEngine.h>
 #define M_PI 3.14159265358979323846
 
-Walker::Walker(Mesh * mesh, Type type, Room* room, const glm::vec3& position, Effects* effects):
-	GameObject(mesh, type)
+Walker::Walker(Mesh * mesh, Type type, Room* room, const glm::vec3& position, Effects* effects, float timeBeforeSpawn):
+	GameObject(mesh, type, position, timeBeforeSpawn)
 {
 	this->m_effects = effects;
-	this->setScale(glm::vec3(1.f, 1.f, 1.f));
 	this->m_room = room;
 	this->m_health = 1.f;
 	this->m_speed = 10.f;
@@ -23,11 +22,10 @@ Walker::Walker(Mesh * mesh, Type type, Room* room, const glm::vec3& position, Ef
 	this->m_amIAlive = true;
 	this->m_sinTime = Randomizer::single(0.f, 360.f);
 	this->m_sinAddTime = 150.f;
-	setPosition(position);
 	m_Astar = new AStar();
 	m_attackCooldown = 0.f;
-
-	m_effects->addAnimParticle("summonCircle", position + glm::vec3(0.0f, 2.0f, 0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(0.0f), 8.0f);
+	m_hasSpawned = false;
+	m_effects->addAnimParticle("summonCircle", position + glm::vec3(0.0f, 2.0f, 0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(0.0f), m_timeBeforeSpawn);
 
 }
 
@@ -39,6 +37,13 @@ Walker::~Walker()
 
 void Walker::update(float dt)
 {
+	if (!m_hasSpawned)
+	{
+		m_hasSpawned = true;
+		for(int i = 0; i < 15; i++)
+			m_effects->addParticles("EnemySpawnEmitter", getPosition() + glm::vec3(0.0f, 1.5f, 0.0f), glm::vec3(Randomizer::single(-100.0f, 100.0f) / 50.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 50.0f), 1.0f, 1);
+	}
+	
 	float lengthToPlayer = getDistanceToPlayer();
 	
 	m_hoverEffectTimer += dt;
@@ -92,6 +97,11 @@ float Walker::getDistanceToPlayer() const
 	float length = sqrtf(xDir * xDir + zDir * zDir);
 
 	return length;
+}
+
+float Walker::getTimeBeforeSpawn() const
+{
+	return m_timeBeforeSpawn;
 }
 
 void Walker::amIDead()

@@ -55,6 +55,9 @@ void Renderer::prepareGameObjects(const std::vector<GameObject*>& gameObjects)
 	for (size_t i = 0; i < gameObjects.size(); i++)
 	{
 		GameObject* object = gameObjects[i];
+		
+		if (!object->isSpawned())
+			return;
 
 		m_meshIterator = m_meshes.find(object->getMesh());
 

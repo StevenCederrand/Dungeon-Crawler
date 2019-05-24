@@ -29,10 +29,13 @@ enum Type {
 
 class GameObject {
 public:
-	GameObject(Mesh* mesh, Type type, const glm::vec3& position = glm::vec3(0.f));
+	GameObject(Mesh* mesh, Type type, const glm::vec3& position = glm::vec3(0.f), float timeBeforeSpawn = 0.0f);
 	virtual ~GameObject();
-
 	virtual void update(float dt) = 0;
+	virtual void hit(const HitDescription& desc);
+	virtual bool meleeRange(float dt);
+	virtual Type getType();
+	
 	void internalUpdate(float dt);
 	void updateModelMatrix();
 	void setPosition(const glm::vec3& position);
@@ -46,14 +49,12 @@ public:
 	void setPlayerPosition(const glm::vec3& position);
 	void setMaxMinValues(const glm::vec4& maxMinValues);
 	void setHit();
+	
 	// Rotates the game object to the desired position
 	void lookAt(const glm::vec3& position);
-
 	float lerp(float start, float end, float percent);
 
-	virtual void hit(const HitDescription & desc);
-	virtual bool meleeRange(float dt);
-	virtual Type getType();
+	const bool isSpawned() const;
 
 	std::vector<AABB*> getBoundingBoxes() const;
 	const glm::vec3& getPosition() const;
@@ -67,7 +68,8 @@ public:
 	const glm::vec4& getMaxMinValues() const;
 
 	Mesh* getMesh() const;
-
+protected:
+	float m_timeBeforeSpawn;
 private:
 
 	Mesh* m_mesh;
@@ -85,6 +87,8 @@ private:
 	glm::vec4 m_maxMinValues;
 
 	Type m_type;
+	
+
 };
 
 

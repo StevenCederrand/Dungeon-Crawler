@@ -43,12 +43,13 @@ private:
 		glm::mat4 modelMatrix;
 		bool immortal;
 		GameObject* parent;
+		bool hadParent;
 
 		Particle()
 			: center(0.0f), velocity(0.0f), rotation(0.0f), offset(0.0f),
 			color(1.0f), lifetime(0.0f), initialLifetime(0.f),
 			modelMatrix(1.0f), immortal(false), parent(nullptr),
-			animState(0), animTimer(0.0f)
+			animState(0), animTimer(0.0f), hadParent(false)
 		{ }
 
 	};

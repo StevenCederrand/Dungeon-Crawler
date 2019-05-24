@@ -93,17 +93,18 @@ void GameObjectManager::update(float dt)
 		// Update the object
 		object->setPlayerPosition(m_player->getPosition());
 		object->internalUpdate(dt);
-		object->update(dt);
-		object->updateModelMatrix();
-		handleEnemyAttacks(object, dt);
-		// Handle collisions if there is any
-		handlePlayerCollisionAgainstObjects(dt, object, newVel, hasCollided);
+		if (object->isSpawned()) {
+			object->update(dt);
+			object->updateModelMatrix();
+			handleEnemyAttacks(object, dt);
+			// Handle collisions if there is any
+			handlePlayerCollisionAgainstObjects(dt, object, newVel, hasCollided);
 
-		// If player is shooting then handle it
-		if (m_player->isShooting()) {
-			handlePlayerShooting(dt, object, rayDirection, rayLengthUntilCollision, objectHit);
+			// If player is shooting then handle it
+			if (m_player->isShooting()) {
+				handlePlayerShooting(dt, object, rayDirection, rayLengthUntilCollision, objectHit);
+			}
 		}
-			
 	}
 
 	// Lastly we translate the player with the velocity that has been 
@@ -338,6 +339,11 @@ void GameObjectManager::handleDeadEnemies(float dt)
 		{
 			if (!dynamic_cast<Walker*>(object)->getAliveStatus())
 			{
+				for (int i = 0; i < 10; i++) {
+					m_effects->addParticles("ProjectileExplosionEmitter", object->getPosition() + glm::vec3(0.0f, 2.5f, 0.0f),
+						glm::vec3(Randomizer::single(-100.0f, 100.0f) / 25.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 25.0f), 0.50f);
+				}
+
 				this->m_numberOfEnemies--;
 				delete m_gameObjects[i];
 				m_gameObjects.erase(m_gameObjects.begin() + i);
@@ -349,6 +355,11 @@ void GameObjectManager::handleDeadEnemies(float dt)
 		{
 			if (!dynamic_cast<Shooter*>(object)->getAliveStatus())
 			{
+				for (int i = 0; i < 10; i++) {
+					m_effects->addParticles("ProjectileExplosionEmitter", object->getPosition() + glm::vec3(0.0f, 2.5f, 0.0f),
+						glm::vec3(Randomizer::single(-100.0f, 100.0f) / 25.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 25.0f), 0.50f);
+				}
+
 				this->m_numberOfEnemies--;
 				delete m_gameObjects[i];
 				m_gameObjects.erase(m_gameObjects.begin() + i);
@@ -359,6 +370,11 @@ void GameObjectManager::handleDeadEnemies(float dt)
 		{
 			if (!dynamic_cast<Boss*>(object)->getAliveStatus())
 			{
+				for (int i = 0; i < 10; i++) {
+					m_effects->addParticles("ProjectileExplosionEmitter", object->getPosition() + glm::vec3(0.0f, 2.5f, 0.0f),
+						glm::vec3(Randomizer::single(-100.0f, 100.0f) / 25.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 25.0f), 0.50f);
+				}
+
 				this->m_numberOfEnemies--;
 				delete m_gameObjects[i];
 				m_gameObjects.erase(m_gameObjects.begin() + i);
@@ -369,7 +385,9 @@ void GameObjectManager::handleDeadEnemies(float dt)
 		{
 			if (dynamic_cast<PowerUps*>(object)->powerTriggered())
 			{
+				printf("Deleted a powerup\n");
 				delete m_gameObjects[i];
+				m_gameObjects[i] = nullptr;
 				m_gameObjects.erase(m_gameObjects.begin() + i);
 				continue;
 			}
@@ -464,6 +482,7 @@ void GameObjectManager::roomManager(GameObject* object) {
 void GameObjectManager::spawner(Room* currentRoom) {
 
 	int spawnOffset = 5;
+	float timeBeforeSpawn = 5.0f;
 
 	Mesh* enemyMesh = MeshMap::getMesh("Enemy");
 	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
@@ -483,26 +502,30 @@ void GameObjectManager::spawner(Room* currentRoom) {
 		GameObject* powerUp = new PowerUps(powerUpMesh, POWERUPS, 1.f, 0.f, 0.f, false, glm::vec3(
 			Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
 			0.5f,
-			Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)));
+			Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)), m_effects);
 		this->addGameObject(powerUp);
+
 	}
 	if (powerUpRoulette == 2)
 	{
 		GameObject* powerUp = new PowerUps(powerUpMesh, POWERUPS, 0.f, 1.f, 0.f, true, glm::vec3(
 			Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
 			0.5f,
-			Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)));
+			Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)), m_effects);
 		this->addGameObject(powerUp);
+
+		
 	}
 	if (powerUpRoulette == 3)
 	{
 		GameObject* powerUp = new PowerUps(powerUpMesh, POWERUPS, 0.f, 0.f, 5.f, true, glm::vec3(
 			Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
 			0.5f,
-			Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)));
+			Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)), m_effects);
 		this->addGameObject(powerUp);
+
 	}
-	
+
 
 	//Calculate ammount of Enemies
 	int numMeleeEnemies = Randomizer::single(m_walkerDifficulty, m_walkerDifficulty + 2);
@@ -519,12 +542,7 @@ void GameObjectManager::spawner(Room* currentRoom) {
 			Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
 			0.f,
 			Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)),
-			m_effects);
-
-		glm::vec3 summonPos = enemy->getPosition();
-		summonPos.y = 0.25f;
-		std::printf("%s\n", vec3ToString(summonPos).data());
-		
+			m_effects, timeBeforeSpawn);
 
 		this->addGameObject(enemy);
 	}
@@ -535,7 +553,7 @@ void GameObjectManager::spawner(Room* currentRoom) {
 			Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
 			0.f,
 			Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)),
-			m_projectileManager, m_effects);
+			m_projectileManager, m_effects, timeBeforeSpawn);
 
 		
 		this->addGameObject(enemy);

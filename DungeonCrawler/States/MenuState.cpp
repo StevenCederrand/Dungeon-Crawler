@@ -88,13 +88,6 @@ void MenuState::update(float dt) {
 		glfwSetWindowShouldClose(glfwGetCurrentContext(), true);
 	}
 
-	if (Input::isKeyReleased(GLFW_KEY_S)) {
-		AudioEngine::play("LMouseClick", 1.0f);
-	}
-
-	if (Input::isKeyReleased(GLFW_KEY_ENTER)) {
-		AudioEngine::playOnce("SystemStart", 1.0f);
-	}
 	AudioEngine::update();
 }
 
