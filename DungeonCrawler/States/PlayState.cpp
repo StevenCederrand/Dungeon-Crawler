@@ -61,6 +61,10 @@ PlayState::PlayState() {
 	m_GLinit->createMeshFBX("Crates", crateData);
 	delete crateData;
 
+	FBXParserData* roomWallsData = m_FBXParser->binaryMeshReading(FBXPath + "roomWalls.bin"); //SHOULD MAKE BINARY
+	m_GLinit->createMeshFBX("RoomWalls", roomWallsData);
+	delete roomWallsData;
+
 	#pragma region Create_Objects
 	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
 	ParserData* playerData = m_parser->loadFromObj("MainCharacterPosed.obj");
@@ -205,6 +209,11 @@ void PlayState::constructWorld()
 	GameObject* testCrate = new Box(crates, Type::BOX);
 	m_gameObjectManager->addGameObject(testCrate);
 
+	Mesh* walls = MeshMap::getMesh("RoomWalls");
+	GameObject* wallObject = new Box(walls, Type::BOX);
+	m_gameObjectManager->addGameObject(wallObject);
+
+
 	m_gameObjectManager->addGameObject(m_player);
 	
 	m_projectileManager->setPlayer(m_player);
@@ -268,12 +277,17 @@ void PlayState::addRoom()
 		}
 		*/
 
-	FBXParserData* roomStartREAL = m_FBXParser->binaryMeshReading(FBXPath + "roomStartReal.bin"); //SHOULD MAKE BINARY
-	Mesh * roomMesh = m_GLinit->createMeshFBX("roomStartReal", roomStartREAL);
-	delete roomStartREAL;
-
+	FBXParserData* roomStart = m_FBXParser->binaryMeshReading(FBXPath + "roomStart.bin"); //SHOULD MAKE BINARY
+	Mesh * roomMesh = m_GLinit->createMeshFBX("roomStart", roomStart);
+	delete roomStart;
 	Room * r_roomStart = new Room(roomMesh, ROOM_EMPTY, m_player);
 	m_gameObjectManager->addGameObject(r_roomStart);
+
+	FBXParserData* room2 = m_FBXParser->binaryMeshReading(FBXPath + "room2.bin"); //SHOULD MAKE BINARY
+	Mesh * room2Mesh = m_GLinit->createMeshFBX("room2", room2);
+	delete room2;
+	Room * r_room2 = new Room(room2Mesh, ROOM, m_player);
+	m_gameObjectManager->addGameObject(r_room2);
 
 	//ParserData* roomStart = m_parser->loadFromObj(file + ".obj");
 	//Mesh * roomMesh = m_GLinit->createMesh(id, roomStart);
