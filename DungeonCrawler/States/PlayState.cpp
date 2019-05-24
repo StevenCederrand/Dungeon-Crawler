@@ -53,6 +53,9 @@ PlayState::PlayState() {
 	m_GLinit->createMeshFBX("Enemy", enemyData);
 	delete enemyData;
 
+	FBXParserData* barrelData = m_FBXParser->binaryMeshReading(FBXPath + "barrels.bin"); //SHOULD MAKE BINARY
+	m_GLinit->createMeshFBX("Barrels", barrelData);
+	delete barrelData;
 
 	#pragma region Create_Objects
 	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
@@ -189,6 +192,10 @@ void PlayState::constructWorld()
 
 	Mesh* boxMesh = MeshMap::getMesh("Box");
 	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
+
+	Mesh* barrels = MeshMap::getMesh("Barrels");
+	GameObject* testBox = new Box(barrels, Type::BOX);
+	m_gameObjectManager->addGameObject(testBox);
 	
 	m_gameObjectManager->addGameObject(m_player);
 	
