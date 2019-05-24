@@ -100,7 +100,7 @@ void FBXParserData::addVertexPos(glm::vec3 vertexPos)
 void FBXParserData::addUV(glm::vec2 uv)
 {
 	m_uvs.emplace_back(uv);
-}
+} 
 
 void FBXParserData::addNormal(glm::vec3 normal)
 {
