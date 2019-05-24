@@ -243,12 +243,13 @@ void PlayState::constructWorld()
 
 void PlayState::addRoom()
 {
-	for (int i = 0; i <= 31; i++)
+	/*
+	for (int i = 0; i <= 7; i++)
 	{
 		std::string file = "Room";
 		std::string id = "Room";
 		Type type = ROOM;
-		
+
 		if (i<10)
 		{
 			file += "0" + std::to_string(i);
@@ -265,24 +266,24 @@ void PlayState::addRoom()
 		else if (i == 0) {
 			type = ROOM_EMPTY;
 		}
+		*/
 
-		//FBXParserData* roomStart = m_FBXParser->binaryMeshReading(FBXPath + "roomStart.bin"); //SHOULD MAKE BINARY
-		//Mesh* roomMesh = m_GLinit->createMeshFBX("RoomStart", roomStart);
-		//delete roomStart;
-			
-		ParserData* roomStart = m_parser->loadFromObj(file + ".obj");
-		Mesh * roomMesh = m_GLinit->createMesh(id, roomStart);
+	FBXParserData* roomStartREAL = m_FBXParser->binaryMeshReading(FBXPath + "roomStartReal.bin"); //SHOULD MAKE BINARY
+	Mesh * roomMesh = m_GLinit->createMeshFBX("roomStartReal", roomStartREAL);
+	delete roomStartREAL;
 
+	Room * r_roomStart = new Room(roomMesh, ROOM_EMPTY, m_player);
+	m_gameObjectManager->addGameObject(r_roomStart);
 
-		Room * r_roomStart = new Room(roomMesh, type, m_player);
-		m_gameObjectManager->addGameObject(r_roomStart);
-
-	}
+	//ParserData* roomStart = m_parser->loadFromObj(file + ".obj");
+	//Mesh * roomMesh = m_GLinit->createMesh(id, roomStart);
 
 
-	ParserData* doorData = m_parser->loadFromObj("Doors.obj");
 
-	Mesh* door = m_GLinit->createMesh("Door", doorData);
+	//DOOORS
+	ParserData * doorData = m_parser->loadFromObj("Doors.obj");
+
+	Mesh * door = m_GLinit->createMesh("Door", doorData);
 
 	m_gameObjectManager->addGameObject(new Box(door, DOOR));
 
