@@ -6,3 +6,4 @@ imgui.ini
 Assets/Binaries
 x64/
 CustomFBXLibrary/x64
+CustomFBXLibrary/Release
