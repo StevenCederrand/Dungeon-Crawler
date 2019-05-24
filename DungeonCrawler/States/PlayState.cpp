@@ -38,6 +38,7 @@ PlayState::PlayState() {
 	m_effects->createEmitter("ProjectileExplosionEmitter", "whitePuff00.png", 0.50f);
 	m_effects->createEmitter("EnemyHoverEmitter", "WallSmoke.png", 0.30f);
 	m_effects->createEmitter("GunFlareEmitter", "GunFlare.png", 0.25f);
+	m_effects->createAnimatedEmitter("summonCircle", "summonCircleSheet.png", 1920, 64, 30, 0.025f, false, 2.0f);
 
 	AudioEngine::loadSSO("Game.sso");
 	#pragma endregion

@@ -38,6 +38,7 @@ private:
 	void shadowPass(); //Get depth buffer
 	void geometryPass();
 	void renderEffects();
+	void renderAnimatedEffects();
 	void renderProjectiles();
 	void renderHealthBar();
 	void lightPass();

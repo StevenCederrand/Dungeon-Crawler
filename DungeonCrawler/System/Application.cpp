@@ -171,6 +171,7 @@ void Application::initShaders() {
 	shader = ShaderMap::createShader("LightPass", "LightPass/LightPass.vs", "LightPass/LightPass.fs");
 	shader = ShaderMap::createShader("ShadowPass", "ShadowPass/ShadowPass.vs", "ShadowPass/ShadowPass.fs");
 	shader = ShaderMap::createShader("EffectsShader", "EffectsShader.vs", "EffectsShader.fs");
+	shader = ShaderMap::createShader("AnimatedEffectsShader", "AnimatedEffects.vs", "AnimatedEffects.fs");
 	shader = ShaderMap::createShader("UIShader", "UI.vs", "UI.fs");
 	shader = ShaderMap::createShader("MapShader", "Map.vs", "Map.fs");
 	shader = ShaderMap::createShader("ScreenBloodShader", "ScreenBlood.vs", "ScreenBlood.fs");
