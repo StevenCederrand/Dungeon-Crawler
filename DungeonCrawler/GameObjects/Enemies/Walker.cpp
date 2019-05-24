@@ -136,7 +136,7 @@ void Walker::calculatePath(float dt)
 	m_AStarTimer += dt;
 
 	// Runs every half second
-	if (m_AStarTimer >= 1.f) {
+	if (m_AStarTimer >= 0.25f) {
 		m_AStarTimer = 0.0f;
 		
 		// Get the cells that the player and the walker is standing on

@@ -508,10 +508,9 @@ void GameObjectManager::spawner(Room* currentRoom) {
 	int numMeleeEnemies = Randomizer::single(m_walkerDifficulty, m_walkerDifficulty + 2);
 	int numRangedEnemies = m_shooterDifficulty;
 	m_walkerDifficulty += 2;
-	if (m_walkerDifficulty > 7)
+	if (m_walkerDifficulty % 4)
 	{
-		m_shooterDifficulty++;
-		m_walkerDifficulty = 3;
+		m_shooterDifficulty = m_walkerDifficulty%4;
 	}
 	//Spawn Melee Enemies
 	for (int i = 0; i < numMeleeEnemies; i++)
