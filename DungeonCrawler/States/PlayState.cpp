@@ -43,7 +43,7 @@ PlayState::PlayState() {
 	m_effects->createEmitter("SpeedPickupEmitter", "ArrowUpSymbol.png", 0.5f);
 	m_effects->createEmitter("DamageBuffEmitter", "DamageBuffSymbol.png", 0.5f);
 	m_effects->createAnimatedEmitter("summonCircle", "summonCircleSheet.png", 1920, 64, 30, 0.025f, false, 2.0f);
-
+	m_effects->createAnimatedEmitter("bossSummonCircle", "BossSummonCircleSheet.png", 1920, 64, 30, 0.025f, false, 3.0f);
 	AudioEngine::loadSSO("Game.sso");
 	#pragma endregion
 	
@@ -115,7 +115,7 @@ void PlayState::update(float dt) {
 	m_lightManager->update(dt);
 	m_lightManager->setPlayerLightPosition(glm::vec3(m_player->getPosition().x, 15.0f, m_player->getPosition().z));
 	m_lightManager->setSunPosition(glm::vec3(m_player->getPosition().x, 20.0f, m_player->getPosition().z));
-	m_renderer->prepareGameObjects(m_gameObjectManager->getGameObjects());
+	//m_renderer->prepareGameObjects(m_gameObjectManager->getGameObjects());
 	m_screenBlood->update(dt);
 	Player* player = m_gameObjectManager->getPlayer();
 	if (player->getHealth() <= 0 || Input::isKeyPressed(GLFW_KEY_9))
@@ -190,7 +190,7 @@ void PlayState::constructWorld()
 	m_gameObjectManager = new GameObjectManager(m_effects, m_projectileManager);
 	m_map = new Map(m_gameObjectManager);
 	m_renderer = new Renderer(m_camera, m_lightManager, m_effects, m_projectileManager, m_playerHealthBar, m_map, m_screenBlood);
-
+	m_gameObjectManager->setRendererRef(m_renderer);
 
 	Mesh* boxMesh = MeshMap::getMesh("Box");
 

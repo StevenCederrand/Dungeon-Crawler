@@ -6,6 +6,8 @@
 
 #define MAX_PARTICLES 120
 
+class GameObject;
+
 class Emitter {
 public:
 	Emitter(GLinit* glInit, const std::string& texturepath, float sizeOfAnParticle);
@@ -13,6 +15,7 @@ public:
 
 	void update(float dt);
 	void addParticle(const glm::vec3& pos, const glm::vec3& velocity, float lifetime, int numberOfParticles = 1);
+	void addParticle(GameObject* gameObject, const glm::vec3& offset, float lifetime, int numberOfParticles = 1);
 	const GLuint getVAO() const;
 	const GLuint getTextureID() const;
 	const unsigned int getNumberOfParticles() const;
@@ -20,12 +23,14 @@ public:
 public:
 	struct Particle {
 		glm::vec3 velocity;
+		glm::vec3 offset;
 		glm::vec3 center;
 		glm::vec4 color;
 		float lifetime;
 		float initialLifetime;
+		GameObject* parent;
 		Particle()
-			: center(0.0f), velocity(0.0f), color(1.0f), lifetime(0.0f), initialLifetime(0.f) { }
+			: center(0.0f), velocity(0.0f), offset(0.0f), color(1.0f), lifetime(0.0f), initialLifetime(0.f), parent(nullptr) { }
 
 	};
 

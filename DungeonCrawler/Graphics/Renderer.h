@@ -22,8 +22,7 @@ public:
 		Map* map, ScreenBlood* screenBlood);
 
 	~Renderer();
-
-	void prepareGameObjects(const std::vector<GameObject*>& gameObjects);
+	void prepareGameObject(GameObject* gameObject);
 	void preparePlayerLights(Player* player);
 	void render();
 	

@@ -13,6 +13,8 @@
 #include "Room.h"
 #include <EnemyProjectile/ProjectileManager.h>
 
+class Renderer;
+
 class GameObjectManager {
 
 public:
@@ -23,7 +25,7 @@ public:
 	void update(float dt);
 	void addGameObject(GameObject* gameObject);
 	void constructPlayerBroadPhaseBox();
-
+	void setRendererRef(Renderer* renderer);
 	Player* getPlayer() const;
 	const std::vector<GameObject*>& getGameObjects() const;
 	std::vector<GameObject*>* getVectorPointer();
@@ -63,7 +65,7 @@ private:
 	int m_doorIndex;
 	int m_currentRoom;
 
-	
+	Renderer* m_renderer;
 };
 
 #endif

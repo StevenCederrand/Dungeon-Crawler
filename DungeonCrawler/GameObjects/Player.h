@@ -43,11 +43,12 @@ public:
 
 	const EntityState& getPlayerState() const;
 	float getSpeed()const;
+	float getRemainingBoostTime() const;
 	float getHealth()const;
 	float getDamage()const;
 	int getBulletCount()const;
 	bool isShooting() const;
-
+	const glm::vec3& getBoostVector() const;
 	const glm::vec3& getLookDirection() const;
 	const float& getAngle() const;
 

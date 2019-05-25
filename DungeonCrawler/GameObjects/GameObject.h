@@ -68,8 +68,7 @@ public:
 	const glm::vec4& getMaxMinValues() const;
 
 	Mesh* getMesh() const;
-protected:
-	float m_timeBeforeSpawn;
+
 private:
 
 	Mesh* m_mesh;
@@ -85,7 +84,7 @@ private:
 	bool m_isCollidable;
 	std::vector<AABB*> m_boundingBoxes;
 	glm::vec4 m_maxMinValues;
-
+	float m_timeBeforeSpawn;
 	Type m_type;
 	
 

@@ -25,7 +25,7 @@ Walker::Walker(Mesh * mesh, Type type, Room* room, const glm::vec3& position, Ef
 	m_Astar = new AStar();
 	m_attackCooldown = 0.f;
 	m_hasSpawned = false;
-	m_effects->addAnimParticle("summonCircle", position + glm::vec3(0.0f, 2.0f, 0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(0.0f), m_timeBeforeSpawn);
+	m_effects->addAnimParticle("summonCircle", position + glm::vec3(0.0f, 2.0f, 0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(0.0f), timeBeforeSpawn);
 
 }
 
@@ -97,11 +97,6 @@ float Walker::getDistanceToPlayer() const
 	float length = sqrtf(xDir * xDir + zDir * zDir);
 
 	return length;
-}
-
-float Walker::getTimeBeforeSpawn() const
-{
-	return m_timeBeforeSpawn;
 }
 
 void Walker::amIDead()

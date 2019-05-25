@@ -565,6 +565,11 @@ float Player::getSpeed() const
 	return this->m_speed;
 }
 
+float Player::getRemainingBoostTime() const
+{
+	return m_boostTimer;
+}
+
 float Player::getHealth() const
 {
 	return this->m_health;
@@ -583,4 +588,9 @@ int Player::getBulletCount() const
 bool Player::isShooting() const
 {
 	return m_shooting;
+}
+
+const glm::vec3& Player::getBoostVector() const
+{
+	return m_boostResetters;
 }

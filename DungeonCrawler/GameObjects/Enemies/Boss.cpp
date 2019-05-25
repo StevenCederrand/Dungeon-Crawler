@@ -2,8 +2,8 @@
 #include "../../Utility/Randomizer.h"
 #include <System/Log.h>
 
-Boss::Boss(Mesh* mesh, Type type, Room* room, const glm::vec3& position,ProjectileManager* projectileManager, Effects* effects):
-	GameObject(mesh, type)
+Boss::Boss(Mesh* mesh, Type type, Room* room, const glm::vec3& position,ProjectileManager* projectileManager, Effects* effects, float timeBeforeSpawn):
+	GameObject(mesh, type, position, timeBeforeSpawn)
 {
 	m_projectileManager = projectileManager;
 	m_effects = effects;
@@ -27,10 +27,11 @@ Boss::Boss(Mesh* mesh, Type type, Room* room, const glm::vec3& position,Projecti
 	m_shootingTimer = 0.0f;
 	m_projectileSpeed = 25.0f;
 	m_projectileDamage = 1.5f;
-
-	setCollidable(true);
-	setPosition(position);
+	m_hasSpawned = false;
 	m_Astar = new AStar();
+
+	m_effects->addAnimParticle("bossSummonCircle", position + glm::vec3(0.0f, 2.0f, 0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(0.0f), timeBeforeSpawn);
+
 }
 
 Boss::~Boss()
@@ -40,6 +41,14 @@ Boss::~Boss()
 
 void Boss::update(float dt)
 {
+	if (!m_hasSpawned)
+	{
+		m_hasSpawned = true;
+		for (int i = 0; i < 15; i++)
+			m_effects->addParticles("EnemySpawnEmitter", getPosition() + glm::vec3(0.0f, 1.5f, 0.0f), glm::vec3(Randomizer::single(-100.0f, 100.0f) / 10.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 10.0f), 1.0f, 1);
+	}
+
+
 	lookAt(getPlayerPosition());
 	updateHoverEffect(dt);
 	updateBehaviour(dt);

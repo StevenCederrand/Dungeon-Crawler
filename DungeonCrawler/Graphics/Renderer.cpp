@@ -51,28 +51,24 @@ Renderer::~Renderer() {
 	delete m_framebuffer;
 }
 
-void Renderer::prepareGameObjects(const std::vector<GameObject*>& gameObjects)
+void Renderer::prepareGameObject(GameObject* gameObject)
 {
-	for (size_t i = 0; i < gameObjects.size(); i++)
+	
+	if (!gameObject->isSpawned())
+		return;
+
+	m_meshIterator = m_meshes.find(gameObject->getMesh());
+
+	if (m_meshIterator != m_meshes.end())
 	{
-		GameObject* object = gameObjects[i];
-		
-		if (!object->isSpawned())
-			return;
-
-		m_meshIterator = m_meshes.find(object->getMesh());
-
-		if (m_meshIterator != m_meshes.end())
-		{
-			m_meshIterator->second.emplace_back(object);
-		}
-		else
-		{
-			std::vector<GameObject*> meshVec;
-			meshVec.reserve(MESH_VECTOR_RESERVE_SIZE);
-			meshVec.emplace_back(object);
-			m_meshes.emplace(object->getMesh(), meshVec);
-		}
+		m_meshIterator->second.emplace_back(gameObject);
+	}
+	else
+	{
+		std::vector<GameObject*> meshVec;
+		meshVec.reserve(MESH_VECTOR_RESERVE_SIZE);
+		meshVec.emplace_back(gameObject);
+		m_meshes.emplace(gameObject->getMesh(), meshVec);
 	}
 }
 

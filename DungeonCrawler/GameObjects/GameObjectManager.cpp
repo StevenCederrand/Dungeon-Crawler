@@ -7,6 +7,7 @@
 #include "../System/Input.h"
 #include "../Graphics/MeshMap.h"
 #include "../Utility/Randomizer.h"
+#include <Graphics/Renderer.h>
 
 GameObjectManager::GameObjectManager(Effects* effects, ProjectileManager* projectileManager)
 {
@@ -48,7 +49,37 @@ void GameObjectManager::update(float dt)
 	m_player->update(dt);
 	m_player->updateModelMatrix();
 	
+	//------ Send player object to the renderer
+	if (m_renderer != nullptr)
+		m_renderer->prepareGameObject(m_player);
 
+	//------ Boost Visualisation ------
+	const glm::vec3& playerBoostVec = m_player->getBoostVector();
+	static float BoostVisTimer = 0.0f;
+	const float velUp = 1.0f;
+	const float yOffset = 3.5f;
+
+	BoostVisTimer -= dt;
+
+	if (BoostVisTimer <= 0.0f)
+	{
+		BoostVisTimer = 0.10f;
+		glm::vec3 offset = Randomizer::vec3(-10.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f) / 15.0f;
+		offset.y = yOffset;
+
+		if (playerBoostVec.y > 0.0f)
+		{
+			m_effects->addParticles("DamageBuffEmitter", m_player->getPosition() + offset, glm::vec3(0.0f, velUp, 0.0f), 0.5f);
+		}
+
+		if (playerBoostVec.z > 0.0f)
+		{
+			m_effects->addParticles("SpeedPickupEmitter", m_player->getPosition() + offset, glm::vec3(0.0f, velUp, 0.0f), 0.5f);
+		}
+
+	}
+
+	
 	//------ Player ray used for shooting ------
 	float rayLengthUntilCollision = -1.0f;
 	glm::vec3 rayDirection = m_player->getLookDirection();
@@ -96,6 +127,10 @@ void GameObjectManager::update(float dt)
 		if (object->isSpawned()) {
 			object->update(dt);
 			object->updateModelMatrix();
+			
+			if (m_renderer != nullptr)
+				m_renderer->prepareGameObject(object);
+
 			handleEnemyAttacks(object, dt);
 			// Handle collisions if there is any
 			handlePlayerCollisionAgainstObjects(dt, object, newVel, hasCollided);
@@ -205,6 +240,11 @@ void GameObjectManager::constructPlayerBroadPhaseBox()
 		m_player->getBoundingBoxes()[0]->getDimensions().z * 10.f);
 	m_broadPhaseBox->setParentPosition(m_player->getPosition());
 
+}
+
+void GameObjectManager::setRendererRef(Renderer* renderer)
+{
+	m_renderer = renderer;
 }
 
 Player * GameObjectManager::getPlayer() const {
@@ -385,7 +425,6 @@ void GameObjectManager::handleDeadEnemies(float dt)
 		{
 			if (dynamic_cast<PowerUps*>(object)->powerTriggered())
 			{
-				printf("Deleted a powerup\n");
 				delete m_gameObjects[i];
 				m_gameObjects[i] = nullptr;
 				m_gameObjects.erase(m_gameObjects.begin() + i);
@@ -483,6 +522,7 @@ void GameObjectManager::spawner(Room* currentRoom) {
 
 	int spawnOffset = 5;
 	float timeBeforeSpawn = 5.0f;
+	float bossTimeBeforeSpawn = 8.0f;
 
 	Mesh* enemyMesh = MeshMap::getMesh("Enemy");
 	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
@@ -492,7 +532,7 @@ void GameObjectManager::spawner(Room* currentRoom) {
 			currentRoom->getCentrePosition().x,
 			0.f,
 			currentRoom->getCentrePosition().y),
-			m_projectileManager, m_effects);
+			m_projectileManager, m_effects, bossTimeBeforeSpawn);
 		this->addGameObject(enemy);
 	}
 

@@ -78,6 +78,11 @@ void Emitter::update(float dt)
 			continue;
 		}
 
+		if (p.parent != nullptr)
+		{
+			p.center = p.parent->getPosition() + p.offset;
+		}
+
 		p.center += p.velocity * dt;
 		p.color.a = p.lifetime / p.initialLifetime;
 
@@ -108,6 +113,25 @@ void Emitter::addParticle(const glm::vec3& pos, const glm::vec3& velocity, float
 		Particle & p = m_particles[pIndex];
 		p.center = pos;
 		p.velocity = velocity;
+		p.lifetime = lifetime;
+		p.initialLifetime = lifetime;
+		p.color = glm::vec4(1.f);
+		m_nrOfParticles++;
+	}
+}
+
+void Emitter::addParticle(GameObject* gameObject, const glm::vec3& offset, float lifetime, int numberOfParticles)
+{
+	for (int i = 0; i < numberOfParticles; i++)
+	{
+		if (m_nrOfParticles == MAX_PARTICLES)
+			return;
+
+		size_t pIndex = getFirstUnusedParticle();
+		Particle& p = m_particles[pIndex];
+		p.parent = gameObject;
+		p.center = gameObject->getPosition();
+		p.offset = offset;
 		p.lifetime = lifetime;
 		p.initialLifetime = lifetime;
 		p.color = glm::vec4(1.f);

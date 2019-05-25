@@ -15,7 +15,6 @@ public:
 	Type getType();
 	float getDamage()const;
 	float getDistanceToPlayer() const;
-	float getTimeBeforeSpawn() const;
 	void amIDead();
 	bool getAliveStatus()const;
 	void attackCooldown(float dt);
