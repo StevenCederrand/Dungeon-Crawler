@@ -41,7 +41,7 @@ void Walker::update(float dt)
 	{
 		m_hasSpawned = true;
 		for(int i = 0; i < 15; i++)
-			m_effects->addParticles("EnemySpawnEmitter", getPosition() + glm::vec3(0.0f, 1.5f, 0.0f), glm::vec3(Randomizer::single(-100.0f, 100.0f) / 50.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 50.0f), 1.0f, 1);
+			m_effects->addParticles("EnemySpawnEmitter", getPosition() + glm::vec3(0.0f, 1.5f, 0.0f), glm::vec3(Randomizer::single(-100.0f, 100.0f) / 10.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 10.0f), 1.0f, 1);
 	}
 	
 	float lengthToPlayer = getDistanceToPlayer();
@@ -49,7 +49,7 @@ void Walker::update(float dt)
 	m_hoverEffectTimer += dt;
 	if (m_hoverEffectTimer >= 0.05f) {
 		m_hoverEffectTimer = 0.0f;
-		m_effects->addParticles("EnemyHoverEmitter", getPosition() + glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(Randomizer::single(-100.0f, 100.0f) / 100.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 100.0f), 1.0f, 1);
+		m_effects->addParticles("EnemyHoverEmitter", getPosition() + glm::vec3(0.0f, 1.5f, 0.0f), glm::vec3(Randomizer::single(-100.0f, 100.0f) / 100.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 100.0f), 1.0f, 1);
 	}
 
 	if (lengthToPlayer > 2.f) {

@@ -32,7 +32,7 @@ public:
 	const glm::vec3& getSpecularColor() const;
 	const glm::vec3& getAmbientColor() const;
 	const glm::vec3& getdiffuseColor() const;
-	const std::vector<glm::vec3>& getMaxMinVector() const;
+	const std::vector<glm::vec3>& getMinMaxVector() const;
 	const float& getShininess() const;
 	const glm::vec4& getMaxMinValues() const;
 	const bool& hasNormalMap() const;
@@ -48,7 +48,7 @@ private:
 	glm::vec3 m_specularColor;
 	glm::vec3 m_ambientColor;
 	glm::vec3 m_diffuseColor;
-	std::vector<glm::vec3> m_maxMinVector;
+	std::vector<glm::vec3> m_minMaxVector;
 	float m_shininess;
 	glm::vec4 m_maxMinValues;
 	bool m_hasNormalMap;

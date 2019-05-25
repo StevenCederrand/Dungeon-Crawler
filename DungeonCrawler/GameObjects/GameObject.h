@@ -29,7 +29,7 @@ enum Type {
 
 class GameObject {
 public:
-	GameObject(Mesh* mesh, Type type, const glm::vec3& position = glm::vec3(0.f), float timeBeforeSpawn = 0.0f);
+	GameObject(Mesh* mesh, Type type, const glm::vec3& position = glm::vec3(0.f), float timeBeforeSpawn = 0.0f, float boundingBoxExpand = 0.0f);
 	virtual ~GameObject();
 	virtual void update(float dt) = 0;
 	virtual void hit(const HitDescription& desc);

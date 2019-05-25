@@ -4,6 +4,7 @@
 #include "ShaderMap.h"
 #include "../System/Log.h"
 #include <Globals/Settings.h>
+#include <Globals/Helper.h>
 #define MESH_VECTOR_RESERVE_SIZE 150
 
 

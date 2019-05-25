@@ -5,7 +5,7 @@
 #include <GLM//gtx/quaternion.hpp>
 #include <System/Log.h>
 
-GameObject::GameObject(Mesh * mesh, Type type, const glm::vec3 & position, float timeBeforeSpawn)
+GameObject::GameObject(Mesh * mesh, Type type, const glm::vec3 & position, float timeBeforeSpawn, float boundingBoxExpand)
 {
 	m_mesh = mesh;
 	m_isCollidable = true;
@@ -19,11 +19,11 @@ GameObject::GameObject(Mesh * mesh, Type type, const glm::vec3 & position, float
 	updateModelMatrix();
 	
 
-	if (!mesh->getMaxMinVector().empty())
+	if (!mesh->getMinMaxVector().empty())
 	{
-		for (size_t i = 0; i < mesh->getMaxMinVector().size() - 1; i += 2)
+		for (size_t i = 0; i < mesh->getMinMaxVector().size() - 1; i += 2)
 		{
-			AABB* aabb = new AABB(mesh->getMaxMinVector()[i], mesh->getMaxMinVector()[i + 1]);
+			AABB* aabb = new AABB(mesh->getMinMaxVector()[i] - boundingBoxExpand, mesh->getMinMaxVector()[i + 1] + boundingBoxExpand);
 			aabb->setParentPosition(position);
 
 			m_boundingBoxes.emplace_back(aabb);

@@ -1,5 +1,21 @@
 #include "Emitter.h"
 #include "Utility/Randomizer.h"
+#include <algorithm>
+#include <Utility/Camera.h>
+
+struct compare {
+	// the compiler will automatically inline this
+	bool operator()(const Emitter::Particle p1, const Emitter::Particle p2) {
+		
+		glm::vec3 diff1 = Camera::active->getPosition() - p1.center;
+		float l1 = glm::length(diff1);
+		
+		glm::vec3 diff2 = Camera::active->getPosition() - p2.center;
+		float l2 = glm::length(diff2);
+
+		return l1 > l2;
+	}
+};
 
 Emitter::Emitter(GLinit* glInit, const std::string& texturepath, float sizeOfAnParticle)
 {
@@ -26,6 +42,8 @@ Emitter::Emitter(GLinit* glInit, const std::string& texturepath, float sizeOfAnP
 	}
 
 	this->setupGraphicBuffers();
+
+	m_sortTimer = 0.0f;
 }
 
 Emitter::~Emitter()
@@ -67,6 +85,13 @@ void Emitter::update(float dt)
 		m_colorBuffer.emplace_back(p.color);
 	}
 
+	m_sortTimer -= dt;
+	if (m_sortTimer <= 0.0f)
+	{
+		m_sortTimer = 0.20f;
+		std::sort(m_particles.begin(), m_particles.end(), compare{});
+	}
+	
 	updateBuffers();
 
 }

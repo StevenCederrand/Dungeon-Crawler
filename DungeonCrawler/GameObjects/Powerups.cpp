@@ -10,11 +10,12 @@ PowerUps::PowerUps(Mesh* mesh, Type type, float health, float damage, float spee
 	this->m_type = type; 
 	this->m_trigger = false;
 	this->m_timed = timed;
-
 	this->m_particleSpawnDelay = 0.10f;
 	this->m_particleSpawnTimer = 0.0f;
 	this->m_particleVelUp = 2.5f;
 	m_effect = effects;
+
+	setScale(glm::vec3(0.75f, 0.75f, 0.75f));
 
 }
 

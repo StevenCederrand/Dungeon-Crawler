@@ -17,7 +17,7 @@ public:
 	const GLuint getTextureID() const;
 	const unsigned int getNumberOfParticles() const;
 
-private:
+public:
 	struct Particle {
 		glm::vec3 velocity;
 		glm::vec3 center;
@@ -29,6 +29,8 @@ private:
 
 	};
 
+private:
+	
 	GLuint m_textureID = -1;
 	unsigned int m_nrOfParticles = 0;
 	unsigned int m_lastUnusedParticle = 0;
@@ -55,6 +57,7 @@ private:
 	void setupGraphicBuffers();
 	void updateBuffers();
 	size_t getFirstUnusedParticle();
+	float m_sortTimer;
 };
 
 

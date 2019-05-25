@@ -17,9 +17,8 @@
 #define M_PI 3.14159265358979323846
 
 Player::Player(Mesh* mesh, Type type) :
-	GameObject(mesh, type)
+	GameObject(mesh, type, glm::vec3(0.f, 0.f, 0.f), 0.0f, 0.2f)
 {
-	this->setPosition(glm::vec3(0.f, 0.f, 0.f));
 	this->setScale(glm::vec3(0.65f, 0.65f, 0.65f));
 	this->m_defaultSpeed = 7.f;
 	this->m_speed = 7.0f;
@@ -272,8 +271,13 @@ Light* Player::getFlash() {
 }
 
 void Player::spotlightHandler() {
-	this->m_spotlight->direction = this->getLookDirection() - glm::vec3(0.0f, 0.30f, 0.0f);
-	this->m_spotlight->position = this->getPosition() + glm::vec3(0.0f, 1.75f, 0.0f);
+	this->m_spotlight->direction = this->getLookDirection();
+	this->m_spotlight->position = this->getPosition() + m_spotlight->direction * glm::vec3(-1.0f, 0.0f, -1.0f);
+
+
+	this->m_spotlight->position.y += 2.0f;
+	this->m_spotlight->direction.y -= 0.20f;
+
 	this->m_flash->position = glm::vec4(this->getPosition() + glm::vec3(0.0f, 2.f, 0.0f), 1.0);
 }
 
