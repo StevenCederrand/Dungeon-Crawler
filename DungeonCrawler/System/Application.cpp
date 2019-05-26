@@ -86,6 +86,10 @@ bool Application::initialize()
 	// Initialize the shaders
 	this->initShaders();
 
+	// Seeding
+	unsigned int time_ui = unsigned int(time(NULL));
+	srand(time_ui);
+
 	// Initializes the input system
 	m_input = new Input();
 	m_stateManager = new StateManager();

@@ -532,6 +532,7 @@ void GameObjectManager::spawner(Room* currentRoom) {
 			currentRoom->getCentrePosition().x,
 			0.f,
 			currentRoom->getCentrePosition().y),
+			this,
 			m_projectileManager, m_effects, bossTimeBeforeSpawn);
 		this->addGameObject(enemy);
 	}
