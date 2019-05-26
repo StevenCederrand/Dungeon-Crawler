@@ -13,7 +13,7 @@ Boss::Boss(Mesh* mesh, Type type, Room* room, const glm::vec3& position, GameObj
 	m_effects = effects;
 	this->setScale(glm::vec3(2.f, 2.f, 2.f));
 	this->m_health = 40.f;
-	this->m_speed = 11.f;
+	this->m_speed = 10.f;
 	this->m_damage = 1.f;
 	this->m_isPlayerClose = false;
 	this->m_type = type;
@@ -212,10 +212,9 @@ void Boss::updateBehaviour(float dt)
 		//Spawn Melee Enemies
 		for (int i = 0; i < 3; i++)
 		{
-			GameObject* enemy = new Walker(enemyMesh, WALKER, this->m_room, glm::vec3(
-				Randomizer::single(this->m_room->getMaxMinValues().z + spawnOffset, this->m_room->getMaxMinValues().x - spawnOffset),
-				0.f,
-				Randomizer::single(this->m_room->getMaxMinValues().w + spawnOffset, this->m_room->getMaxMinValues().y - spawnOffset)),
+			auto cell = m_room->getGrid()->getFreeRandomCell();
+
+			GameObject* enemy = new Walker(enemyMesh, WALKER, this->m_room, glm::vec3(cell.x, 0.0f, cell.z),
 				m_effects, timeBeforeSpawn);
 
 			m_gameObjectManager->addGameObject(enemy);
@@ -223,12 +222,10 @@ void Boss::updateBehaviour(float dt)
 		//Spawn Ranged Enemies
 		for (int i = 0; i < 2; i++)
 		{
-			GameObject* enemy = new Shooter(enemyMesh, SHOOTER, this->m_room, glm::vec3(
-				Randomizer::single(this->m_room->getMaxMinValues().z + spawnOffset, this->m_room->getMaxMinValues().x - spawnOffset),
-				0.f,
-				Randomizer::single(this->m_room->getMaxMinValues().w + spawnOffset, this->m_room->getMaxMinValues().y - spawnOffset)),
-				m_projectileManager, m_effects, timeBeforeSpawn);
+			auto cell = m_room->getGrid()->getFreeRandomCell();
 
+			GameObject* enemy = new Shooter(enemyMesh, SHOOTER, this->m_room, glm::vec3(cell.x, 0.0f, cell.z),
+				m_projectileManager, m_effects, timeBeforeSpawn);
 
 			m_gameObjectManager->addGameObject(enemy);
 		}

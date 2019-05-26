@@ -64,16 +64,19 @@ void GameObjectManager::update(float dt)
 	if (BoostVisTimer <= 0.0f)
 	{
 		BoostVisTimer = 0.10f;
-		glm::vec3 offset = Randomizer::vec3(-10.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f) / 15.0f;
-		offset.y = yOffset;
+		
 
 		if (playerBoostVec.y > 0.0f)
 		{
+			glm::vec3 offset = Randomizer::vec3(-10.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f) / 15.0f;
+			offset.y = yOffset;
 			m_effects->addParticles("DamageBuffEmitter", m_player->getPosition() + offset, glm::vec3(0.0f, velUp, 0.0f), 0.5f);
 		}
 
 		if (playerBoostVec.z > 0.0f)
 		{
+			glm::vec3 offset = Randomizer::vec3(-10.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f) / 15.0f;
+			offset.y = yOffset;
 			m_effects->addParticles("SpeedPickupEmitter", m_player->getPosition() + offset, glm::vec3(0.0f, velUp, 0.0f), 0.5f);
 		}
 
@@ -304,9 +307,22 @@ void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject
 					if (dynamic_cast<PowerUps*>(object))
 					{
 						m_powerup = dynamic_cast<PowerUps*>(object);
+
+						if (m_powerup->getBoost().x != 0)
+						{
+							for (int jj = 0; jj < 25; jj++) {
+								glm::vec3 offset = Randomizer::vec3(-10.0f, 10.0f, 0.0f, 0.0f, -10.0f, 10.0f) / 15.0f;
+								offset.y = 1.0f;
+								m_effects->addParticles("HealthPickupEmitter", m_player->getPosition() + offset, glm::vec3(0.0f, 2.0f, 0.0f), 1.50f);
+							}
+						}
+
+
 						desc.powerUp = m_powerup;
 						m_player->hit(desc);
 						dynamic_cast<PowerUps*>(object)->trigger();
+
+						
 						continue;
 					}
 					float remainingTime = 1.0f - collisionTime;
@@ -536,37 +552,38 @@ void GameObjectManager::spawner(Room* currentRoom) {
 			m_projectileManager, m_effects, bossTimeBeforeSpawn);
 		this->addGameObject(enemy);
 	}
-
-	int powerUpRoulette = Randomizer::single(1, 3);
-	if (powerUpRoulette == 1)
-	{
-		GameObject* powerUp = new PowerUps(powerUpMesh, POWERUPS, 1.f, 0.f, 0.f, false, glm::vec3(
-			Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
-			0.5f,
-			Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)), m_effects);
-		this->addGameObject(powerUp);
-
-	}
-	if (powerUpRoulette == 2)
-	{
-		GameObject* powerUp = new PowerUps(powerUpMesh, POWERUPS, 0.f, 1.f, 0.f, true, glm::vec3(
-			Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
-			0.5f,
-			Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)), m_effects);
-		this->addGameObject(powerUp);
-
+	for (int i = 0; i < 2; i++) {
 		
-	}
-	if (powerUpRoulette == 3)
-	{
-		GameObject* powerUp = new PowerUps(powerUpMesh, POWERUPS, 0.f, 0.f, 5.f, true, glm::vec3(
-			Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
-			0.5f,
-			Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)), m_effects);
-		this->addGameObject(powerUp);
+		int powerUpRoulette = Randomizer::single(1, 3);
+		if (powerUpRoulette == 1)
+		{
+			GameObject* powerUp = new PowerUps(powerUpMesh, POWERUPS, 1.f, 0.f, 0.f, false, glm::vec3(
+				Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
+				0.5f,
+				Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)), m_effects);
+			this->addGameObject(powerUp);
 
-	}
+		}
+		if (powerUpRoulette == 2)
+		{
+			GameObject* powerUp = new PowerUps(powerUpMesh, POWERUPS, 0.f, 1.f, 0.f, true, glm::vec3(
+				Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
+				0.5f,
+				Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)), m_effects);
+			this->addGameObject(powerUp);
 
+
+		}
+		if (powerUpRoulette == 3)
+		{
+			GameObject* powerUp = new PowerUps(powerUpMesh, POWERUPS, 0.f, 0.f, 5.f, true, glm::vec3(
+				Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
+				0.5f,
+				Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)), m_effects);
+			this->addGameObject(powerUp);
+
+		}
+	}
 
 	//Calculate ammount of Enemies
 	int numMeleeEnemies = Randomizer::single(m_walkerDifficulty, m_walkerDifficulty + 2);
