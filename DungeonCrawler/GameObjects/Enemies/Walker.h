@@ -6,7 +6,7 @@
 
 class Walker : public GameObject {
 public:
-	Walker(Mesh* mesh, Type type, Room* room, const glm::vec3& position, Effects* effects);
+	Walker(Mesh* mesh, Type type, Room* room, const glm::vec3& position, Effects* effects, float timeBeforeSpawn);
 	~Walker();
 	void update(float dt);
 
@@ -33,8 +33,7 @@ private:
 	float m_attackCooldown;
 	float m_sinTime;
 	float m_sinAddTime;
-	
-
+	bool m_hasSpawned;
 	float m_AStarTimer;
 	Room* m_room;
 	AStar* m_Astar;

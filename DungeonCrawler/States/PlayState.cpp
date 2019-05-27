@@ -37,8 +37,13 @@ PlayState::PlayState() {
 	m_effects->createEmitter("WallSmokeEmitter", "WallSmoke.png", 0.50f);
 	m_effects->createEmitter("ProjectileExplosionEmitter", "whitePuff00.png", 0.50f);
 	m_effects->createEmitter("EnemyHoverEmitter", "WallSmoke.png", 0.30f);
+	m_effects->createEmitter("EnemySpawnEmitter", "WallSmoke.png", 0.75f);
 	m_effects->createEmitter("GunFlareEmitter", "GunFlare.png", 0.25f);
-
+	m_effects->createEmitter("HealthPickupEmitter", "HealthSymbol.png", 0.5f);
+	m_effects->createEmitter("SpeedPickupEmitter", "ArrowUpSymbol.png", 0.5f);
+	m_effects->createEmitter("DamageBuffEmitter", "DamageBuffSymbol.png", 0.5f);
+	m_effects->createAnimatedEmitter("summonCircle", "summonCircleSheet.png", 1920, 64, 30, 0.025f, false, 2.0f);
+	m_effects->createAnimatedEmitter("bossSummonCircle", "BossSummonCircleSheet.png", 1920, 64, 30, 0.025f, false, 3.0f);
 	AudioEngine::loadSSO("Game.sso");
 	#pragma endregion
 	
@@ -142,10 +147,10 @@ void PlayState::update(float dt) {
 	m_lightManager->update(dt);
 	m_lightManager->setPlayerLightPosition(glm::vec3(m_player->getPosition().x, 15.0f, m_player->getPosition().z));
 	m_lightManager->setSunPosition(glm::vec3(m_player->getPosition().x, 20.0f, m_player->getPosition().z));
-	m_renderer->prepareGameObjects(m_gameObjectManager->getGameObjects());
+	//m_renderer->prepareGameObjects(m_gameObjectManager->getGameObjects());
 	m_screenBlood->update(dt);
 	Player* player = m_gameObjectManager->getPlayer();
-	if (player->getHealth()<=0)
+	if (player->getHealth() <= 0 || Input::isKeyPressed(GLFW_KEY_9))
 	{
 		resetPlayer();
 		GameOverState* gameOver = new GameOverState();
@@ -154,7 +159,7 @@ void PlayState::update(float dt) {
 		m_stateManager->pushTemporaryState(gameOver);
 	}
 
-	if (m_gameObjectManager->gameFinished()) {
+	if (m_gameObjectManager->gameFinished() || Input::isKeyPressed(GLFW_KEY_8)) {
 		WinState* winState = new WinState();
 		GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
 		glfwSetCursor(glfwGetCurrentContext(), cursor);
@@ -217,7 +222,7 @@ void PlayState::constructWorld()
 	m_gameObjectManager = new GameObjectManager(m_effects, m_projectileManager);
 	m_map = new Map(m_gameObjectManager);
 	m_renderer = new Renderer(m_camera, m_lightManager, m_effects, m_projectileManager, m_playerHealthBar, m_map, m_screenBlood);
-
+	m_gameObjectManager->setRendererRef(m_renderer);
 
 	Mesh* boxMesh = MeshMap::getMesh("Box");
 	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
@@ -256,13 +261,6 @@ void PlayState::constructWorld()
 	
 	m_projectileManager->setPlayer(m_player);
 	addRoom();
-
-	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 5, 0, 0, false, glm::vec3(4.f, 0.5f, -2.f));
-	m_gameObjectManager->addGameObject(m_powerUp);
-	//m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 10, 0, false, glm::vec3(2.f, 0.5f, -10.f));
-	//m_gameObjectManager->addGameObject(m_powerUp);
-	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 0, 5, true, glm::vec3(-5.f, 0.5f, -7.f));
-	m_gameObjectManager->addGameObject(m_powerUp);
 
 	m_lightManager->setPlayerLight(glm::vec3(m_player->getPosition().x, 15.0f, m_player->getPosition().z), glm::vec4(1.0f, 1.0f, 1.0f, 25.0f));
 	m_lightManager->setSun(glm::vec3(m_player->getPosition().x, 20.0f, m_player->getPosition().z), glm::vec3(0.8f, 0.8f, 0.8f));
@@ -306,7 +304,7 @@ void PlayState::addRoom()
 			file += std::to_string(i);
 			id += std::to_string(i);
 		}
-		if (i==31)
+		if (i==2)
 		{
 			type = ROOM_BOSS;
 		}

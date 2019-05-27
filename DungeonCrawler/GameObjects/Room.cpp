@@ -19,9 +19,6 @@ Room::Room(Mesh * mesh, Type type, GameObject* playerObject, const glm::vec3 & p
 
 Room::~Room()
 {
-	if (!this->m_reset) {
-		this->resetMaxMinValues();
-	}
 	delete m_gridsystem;
 }
 

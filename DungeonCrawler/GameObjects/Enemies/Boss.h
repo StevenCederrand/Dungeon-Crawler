@@ -5,10 +5,13 @@
 #include <EnemyProjectile/ProjectileManager.h>
 #include <Graphics/Effects.h>
 
+// Forward declaration
+class GameObjectManager;
+
 class Boss : public GameObject
 {
 public:
-	Boss(Mesh* mesh, Type type, Room* room, const glm::vec3& position, ProjectileManager* projectileManager, Effects* effects);
+	Boss(Mesh* mesh, Type type, Room* room, const glm::vec3& position, GameObjectManager* gameObjectManager, ProjectileManager* projectileManager, Effects* effects, float timeBeforeSpawn);
 	~Boss();
 	void update(float dt);
 
@@ -52,13 +55,21 @@ private:
 	std::vector<Node> m_path;
 
 	bool m_shooting;
+	bool m_hasSpawned;
+	
+	float m_spawnEnemiesCooldown;
+	float m_currentSpawnEnemiesCooldown;
+
 	float m_shootingRechargeCooldown;
 	float m_currentShootingRechargeCooldown;
 	int m_shootingRounds;
 	float m_shootingSpeed;
 	float m_shootingTimer;
+
 	float m_projectileSpeed;
 	float m_projectileDamage;
+
+	GameObjectManager* m_gameObjectManager;
 };
 
 #endif

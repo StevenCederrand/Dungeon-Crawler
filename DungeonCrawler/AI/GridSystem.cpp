@@ -1,6 +1,7 @@
 #include "GridSystem.h"
 #include <System/Log.h>
 #include <GameObjects/Room.h>
+#include <Utility/Randomizer.h>
 
 GridSystem::GridSystem(int width, int length, int cellSize, Room* room)
 {
@@ -98,6 +99,23 @@ const GridCell& GridSystem::getCell(float x, float z)
 
 	m_errorGettingGridCell = false;
 	return m_cells[index];
+}
+
+const GridCell& GridSystem::getFreeRandomCell()
+{
+
+	int index = -1;
+	while (index == -1)
+	{
+		index = Randomizer::single(0, (int)(m_cells.size() - 1));
+
+		if (m_cells[index].info.occupied || !m_cells[index].valid)
+			index = -1;
+
+	}
+
+	return m_cells[index];
+
 }
 
 const GridCell& GridSystem::getCell(float x, float z, bool occupy, GameObject* occupant)

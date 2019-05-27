@@ -1,5 +1,21 @@
 #include "Emitter.h"
 #include "Utility/Randomizer.h"
+#include <algorithm>
+#include <Utility/Camera.h>
+
+struct compare {
+	// the compiler will automatically inline this
+	bool operator()(const Emitter::Particle p1, const Emitter::Particle p2) {
+		
+		glm::vec3 diff1 = Camera::active->getPosition() - p1.center;
+		float l1 = glm::length(diff1);
+		
+		glm::vec3 diff2 = Camera::active->getPosition() - p2.center;
+		float l2 = glm::length(diff2);
+
+		return l1 > l2;
+	}
+};
 
 Emitter::Emitter(GLinit* glInit, const std::string& texturepath, float sizeOfAnParticle)
 {
@@ -26,6 +42,8 @@ Emitter::Emitter(GLinit* glInit, const std::string& texturepath, float sizeOfAnP
 	}
 
 	this->setupGraphicBuffers();
+
+	m_sortTimer = 0.0f;
 }
 
 Emitter::~Emitter()
@@ -60,6 +78,11 @@ void Emitter::update(float dt)
 			continue;
 		}
 
+		if (p.parent != nullptr)
+		{
+			p.center = p.parent->getPosition() + p.offset;
+		}
+
 		p.center += p.velocity * dt;
 		p.color.a = p.lifetime / p.initialLifetime;
 
@@ -67,6 +90,13 @@ void Emitter::update(float dt)
 		m_colorBuffer.emplace_back(p.color);
 	}
 
+	m_sortTimer -= dt;
+	if (m_sortTimer <= 0.0f)
+	{
+		m_sortTimer = 0.20f;
+		std::sort(m_particles.begin(), m_particles.end(), compare{});
+	}
+	
 	updateBuffers();
 
 }
@@ -81,8 +111,27 @@ void Emitter::addParticle(const glm::vec3& pos, const glm::vec3& velocity, float
 
 		size_t pIndex = getFirstUnusedParticle();
 		Particle & p = m_particles[pIndex];
-		p.center = pos + glm::vec3(Randomizer::single(-1.f, 1.f) / 6.f, 0.5f, Randomizer::single(-1.f, 1.f) / 6.f);
+		p.center = pos;
 		p.velocity = velocity;
+		p.lifetime = lifetime;
+		p.initialLifetime = lifetime;
+		p.color = glm::vec4(1.f);
+		m_nrOfParticles++;
+	}
+}
+
+void Emitter::addParticle(GameObject* gameObject, const glm::vec3& offset, float lifetime, int numberOfParticles)
+{
+	for (int i = 0; i < numberOfParticles; i++)
+	{
+		if (m_nrOfParticles == MAX_PARTICLES)
+			return;
+
+		size_t pIndex = getFirstUnusedParticle();
+		Particle& p = m_particles[pIndex];
+		p.parent = gameObject;
+		p.center = gameObject->getPosition();
+		p.offset = offset;
 		p.lifetime = lifetime;
 		p.initialLifetime = lifetime;
 		p.color = glm::vec4(1.f);

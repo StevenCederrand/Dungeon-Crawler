@@ -26,8 +26,8 @@ Application::~Application() {
 	delete m_audioEngine;
 
 	glfwTerminate();
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui::DestroyContext();
+	//ImGui_ImplOpenGL3_Shutdown();
+	//ImGui::DestroyContext();
 }
 
 bool Application::initialize()
@@ -72,19 +72,23 @@ bool Application::initialize()
 	glfwSwapInterval(1);
 
 	// Setup Dear ImGui context
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
+	//IMGUI_CHECKVERSION();
+	//ImGui::CreateContext();
 
 	// Setup Platform/Renderer bindings
-	ImGui_ImplGlfw_InitForOpenGL(m_window, true);
-	ImGui_ImplOpenGL3_Init("#version 410 core");
-	ImGui::StyleColorsDark();
+	//ImGui_ImplGlfw_InitForOpenGL(m_window, true);
+	//ImGui_ImplOpenGL3_Init("#version 410 core");
+	//ImGui::StyleColorsDark();
 
 	// Initialize the audio system
 	m_audioEngine = new AudioEngine();
 
 	// Initialize the shaders
 	this->initShaders();
+
+	// Seeding
+	unsigned int time_ui = unsigned int(time(NULL));
+	srand(time_ui);
 
 	// Initializes the input system
 	m_input = new Input();
@@ -133,13 +137,13 @@ void Application::run()
 		this->m_audioEngine->update();
 
 		// IMGUI STUFF
-		ImGui_ImplOpenGL3_NewFrame();
+		/*ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 		this->renderImGUI();
 		m_stateManager->renderImGUI();
 		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());*/
 		glfwSwapBuffers(m_window);
 	}
 }
@@ -171,6 +175,7 @@ void Application::initShaders() {
 	shader = ShaderMap::createShader("LightPass", "LightPass/LightPass.vs", "LightPass/LightPass.fs");
 	shader = ShaderMap::createShader("ShadowPass", "ShadowPass/ShadowPass.vs", "ShadowPass/ShadowPass.fs");
 	shader = ShaderMap::createShader("EffectsShader", "EffectsShader.vs", "EffectsShader.fs");
+	shader = ShaderMap::createShader("AnimatedEffectsShader", "AnimatedEffects.vs", "AnimatedEffects.fs");
 	shader = ShaderMap::createShader("UIShader", "UI.vs", "UI.fs");
 	shader = ShaderMap::createShader("MapShader", "Map.vs", "Map.fs");
 	shader = ShaderMap::createShader("ScreenBloodShader", "ScreenBlood.vs", "ScreenBlood.fs");

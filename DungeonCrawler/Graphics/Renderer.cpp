@@ -4,6 +4,7 @@
 #include "ShaderMap.h"
 #include "../System/Log.h"
 #include <Globals/Settings.h>
+#include <Globals/Helper.h>
 #define MESH_VECTOR_RESERVE_SIZE 150
 
 
@@ -21,8 +22,8 @@ Renderer::Renderer(Camera* camera, LightManager* lightManager, Effects* effects,
 	m_framebuffer = new Framebuffer();
 	glEnable(GL_DEPTH_TEST);
 	//Generate framebuffers & textures
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_BLEND);
@@ -50,25 +51,24 @@ Renderer::~Renderer() {
 	delete m_framebuffer;
 }
 
-void Renderer::prepareGameObjects(const std::vector<GameObject*>& gameObjects)
+void Renderer::prepareGameObject(GameObject* gameObject)
 {
-	for (size_t i = 0; i < gameObjects.size(); i++)
+	
+	if (!gameObject->isSpawned())
+		return;
+
+	m_meshIterator = m_meshes.find(gameObject->getMesh());
+
+	if (m_meshIterator != m_meshes.end())
 	{
-		GameObject* object = gameObjects[i];
-
-		m_meshIterator = m_meshes.find(object->getMesh());
-
-		if (m_meshIterator != m_meshes.end())
-		{
-			m_meshIterator->second.emplace_back(object);
-		}
-		else
-		{
-			std::vector<GameObject*> meshVec;
-			meshVec.reserve(MESH_VECTOR_RESERVE_SIZE);
-			meshVec.emplace_back(object);
-			m_meshes.emplace(object->getMesh(), meshVec);
-		}
+		m_meshIterator->second.emplace_back(gameObject);
+	}
+	else
+	{
+		std::vector<GameObject*> meshVec;
+		meshVec.reserve(MESH_VECTOR_RESERVE_SIZE);
+		meshVec.emplace_back(gameObject);
+		m_meshes.emplace(gameObject->getMesh(), meshVec);
 	}
 }
 
@@ -95,7 +95,7 @@ void Renderer::render() {
 	
 	this->renderHealthBar();
 	this->renderEffects();
-
+	this->renderAnimatedEffects();
 	this->renderMap();
 	this->renderProjectiles();
 	this->renderBlood();
@@ -195,6 +195,63 @@ void Renderer::renderEffects()
 	}
 
 	effectsShader->unuse();
+	glDisable(GL_BLEND);
+}
+
+void Renderer::renderAnimatedEffects()
+{
+	glEnable(GL_BLEND);
+	Shader* animEffectShader = ShaderMap::getShader("AnimatedEffectsShader"); // CHANGE SHADER
+	animEffectShader->use();
+	animEffectShader->setMat4("viewMatrix", m_camera->getViewMatrix());
+	animEffectShader->setMat4("projectionMatrix", m_camera->getProjectionMatrix());
+	
+	const std::map<std::string, AnimatedEmitter*>& animEmitters = m_effects->getAnimatedEmitters();
+
+	for (const auto& map : animEmitters)
+	{
+		animEffectShader->setFloat("nrAnimationFrames", map.second->getNumberOfAnimationFrames());
+
+		glBindVertexArray(map.second->getVAO());
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
+		glEnableVertexAttribArray(3);
+		glEnableVertexAttribArray(4);
+
+		if (!map.second->isBillBoarded()) {
+			glEnableVertexAttribArray(5);
+			glEnableVertexAttribArray(6);
+			glEnableVertexAttribArray(7);
+			glEnableVertexAttribArray(8);
+			animEffectShader->setInt("billBoarded", -1);
+		}
+		else{
+			animEffectShader->setInt("billBoarded", 1);
+		}
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, map.second->getTextureID());
+		glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, map.second->getNumberOfParticles());
+		glBindTexture(GL_TEXTURE_2D, NULL);
+
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
+		glDisableVertexAttribArray(3);
+		glDisableVertexAttribArray(4);
+
+		if (map.second->isBillBoarded()) {
+			glDisableVertexAttribArray(5);
+			glDisableVertexAttribArray(6);
+			glDisableVertexAttribArray(7);
+			glDisableVertexAttribArray(8);
+
+		}
+		glBindVertexArray(0);
+	}
+
+	animEffectShader->unuse();
 	glDisable(GL_BLEND);
 }
 

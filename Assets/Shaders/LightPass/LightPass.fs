@@ -103,7 +103,7 @@ float shadowCalculations(vec4 lightSpacePos) {
 	//Sample the depthmap and get the closest depth from the light
 	float closestDepth = texture(shadowBuffer, projectCoords.xy).r;
 	float currentDepth = projectCoords.z;
-	float bias = 0.0001f;
+	float bias = 0.005f;
 
 	for(int i = -1; i <= 1; ++i) {
 		for(int j = -1; j <= 1; ++j) {

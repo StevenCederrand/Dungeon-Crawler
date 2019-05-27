@@ -130,6 +130,7 @@
     <ClInclude Include="src\FBXImporter.h" />
     <ClInclude Include="src\FBXParserData.h" />
     <ClInclude Include="src\Headerstruct.h" />
+    <ClInclude Include="src\Headerstructs.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

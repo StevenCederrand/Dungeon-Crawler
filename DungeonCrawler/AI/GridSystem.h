@@ -16,6 +16,7 @@ public:
 	void update(float dt);
 
 	const GridCell& getCell(float x, float z);
+	const GridCell& getFreeRandomCell();
 	const GridCell& getCell(float x, float z, bool occupy, GameObject* occupant);
 	void occupyCellWithIndex(int index, GameObject* occupant);
 	

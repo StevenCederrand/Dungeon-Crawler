@@ -22,8 +22,7 @@ public:
 		Map* map, ScreenBlood* screenBlood);
 
 	~Renderer();
-
-	void prepareGameObjects(const std::vector<GameObject*>& gameObjects);
+	void prepareGameObject(GameObject* gameObject);
 	void preparePlayerLights(Player* player);
 	void render();
 	
@@ -38,6 +37,7 @@ private:
 	void shadowPass(); //Get depth buffer
 	void geometryPass();
 	void renderEffects();
+	void renderAnimatedEffects();
 	void renderProjectiles();
 	void renderHealthBar();
 	void lightPass();

@@ -7,6 +7,7 @@
 #include "../System/Input.h"
 #include "../Graphics/MeshMap.h"
 #include "../Utility/Randomizer.h"
+#include <Graphics/Renderer.h>
 
 GameObjectManager::GameObjectManager(Effects* effects, ProjectileManager* projectileManager)
 {
@@ -14,6 +15,8 @@ GameObjectManager::GameObjectManager(Effects* effects, ProjectileManager* projec
 	m_projectileManager = projectileManager;
 	m_broadPhaseBox = nullptr;
 	m_player = nullptr;
+	m_walkerDifficulty = 2;
+	m_shooterDifficulty = 0;
 }
 
 GameObjectManager::~GameObjectManager()
@@ -46,7 +49,40 @@ void GameObjectManager::update(float dt)
 	m_player->update(dt);
 	m_player->updateModelMatrix();
 	
+	//------ Send player object to the renderer
+	if (m_renderer != nullptr)
+		m_renderer->prepareGameObject(m_player);
 
+	//------ Boost Visualisation ------
+	const glm::vec3& playerBoostVec = m_player->getBoostVector();
+	static float BoostVisTimer = 0.0f;
+	const float velUp = 1.0f;
+	const float yOffset = 3.5f;
+
+	BoostVisTimer -= dt;
+
+	if (BoostVisTimer <= 0.0f)
+	{
+		BoostVisTimer = 0.10f;
+		
+
+		if (playerBoostVec.y > 0.0f)
+		{
+			glm::vec3 offset = Randomizer::vec3(-10.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f) / 15.0f;
+			offset.y = yOffset;
+			m_effects->addParticles("DamageBuffEmitter", m_player->getPosition() + offset, glm::vec3(0.0f, velUp, 0.0f), 0.5f);
+		}
+
+		if (playerBoostVec.z > 0.0f)
+		{
+			glm::vec3 offset = Randomizer::vec3(-10.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f) / 15.0f;
+			offset.y = yOffset;
+			m_effects->addParticles("SpeedPickupEmitter", m_player->getPosition() + offset, glm::vec3(0.0f, velUp, 0.0f), 0.5f);
+		}
+
+	}
+
+	
 	//------ Player ray used for shooting ------
 	float rayLengthUntilCollision = -1.0f;
 	glm::vec3 rayDirection = m_player->getLookDirection();
@@ -61,8 +97,12 @@ void GameObjectManager::update(float dt)
 		float xAngle = cosf(glm::radians(m_player->getAngle()));
 		float zAngle = sinf(glm::radians(m_player->getAngle()));
 		float offset = 0.5f;
-		glm::vec3 posToSpawnParticle = m_player->getPosition() + glm::vec3(xAngle, 2.0f, zAngle) + (offset * m_player->getLookDirection());
-		m_effects->addParticles("GunFlareEmitter", posToSpawnParticle, glm::vec3(2.5f, 0.0f, 2.5f) * m_player->getLookDirection(), 0.2f);
+		
+		glm::vec3 playerPos = m_player->getPosition();
+		glm::vec3 lookDir = m_player->getLookDirection();
+
+		glm::vec3 posToSpawnParticle = playerPos + glm::vec3(xAngle, 2.5f, zAngle) + (offset * lookDir);
+		m_effects->addParticles("GunFlareEmitter", posToSpawnParticle, glm::vec3(1.0f, 0.5f, 1.0f) * lookDir, 0.50f);
 	}
 
 	//------ Update all the game objects and check for collision 'n stuff ------
@@ -87,17 +127,22 @@ void GameObjectManager::update(float dt)
 		// Update the object
 		object->setPlayerPosition(m_player->getPosition());
 		object->internalUpdate(dt);
-		object->update(dt);
-		object->updateModelMatrix();
-		handleEnemyAttacks(object, dt);
-		// Handle collisions if there is any
-		handlePlayerCollisionAgainstObjects(dt, object, newVel, hasCollided);
-
-		// If player is shooting then handle it
-		if (m_player->isShooting()) {
-			handlePlayerShooting(dt, object, rayDirection, rayLengthUntilCollision, objectHit);
-		}
+		if (object->isSpawned()) {
+			object->update(dt);
+			object->updateModelMatrix();
 			
+			if (m_renderer != nullptr)
+				m_renderer->prepareGameObject(object);
+
+			handleEnemyAttacks(object, dt);
+			// Handle collisions if there is any
+			handlePlayerCollisionAgainstObjects(dt, object, newVel, hasCollided);
+
+			// If player is shooting then handle it
+			if (m_player->isShooting()) {
+				handlePlayerShooting(dt, object, rayDirection, rayLengthUntilCollision, objectHit);
+			}
+		}
 	}
 
 	// Lastly we translate the player with the velocity that has been 
@@ -200,6 +245,11 @@ void GameObjectManager::constructPlayerBroadPhaseBox()
 
 }
 
+void GameObjectManager::setRendererRef(Renderer* renderer)
+{
+	m_renderer = renderer;
+}
+
 Player * GameObjectManager::getPlayer() const {
 
 	return m_player;
@@ -257,9 +307,22 @@ void GameObjectManager::handlePlayerCollisionAgainstObjects(float dt, GameObject
 					if (dynamic_cast<PowerUps*>(object))
 					{
 						m_powerup = dynamic_cast<PowerUps*>(object);
+
+						if (m_powerup->getBoost().x != 0)
+						{
+							for (int jj = 0; jj < 25; jj++) {
+								glm::vec3 offset = Randomizer::vec3(-10.0f, 10.0f, 0.0f, 0.0f, -10.0f, 10.0f) / 15.0f;
+								offset.y = 1.0f;
+								m_effects->addParticles("HealthPickupEmitter", m_player->getPosition() + offset, glm::vec3(0.0f, 2.0f, 0.0f), 1.50f);
+							}
+						}
+
+
 						desc.powerUp = m_powerup;
 						m_player->hit(desc);
 						dynamic_cast<PowerUps*>(object)->trigger();
+
+						
 						continue;
 					}
 					float remainingTime = 1.0f - collisionTime;
@@ -332,6 +395,11 @@ void GameObjectManager::handleDeadEnemies(float dt)
 		{
 			if (!dynamic_cast<Walker*>(object)->getAliveStatus())
 			{
+				for (int i = 0; i < 10; i++) {
+					m_effects->addParticles("ProjectileExplosionEmitter", object->getPosition() + glm::vec3(0.0f, 2.5f, 0.0f),
+						glm::vec3(Randomizer::single(-100.0f, 100.0f) / 25.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 25.0f), 0.50f);
+				}
+
 				this->m_numberOfEnemies--;
 				delete m_gameObjects[i];
 				m_gameObjects.erase(m_gameObjects.begin() + i);
@@ -343,6 +411,11 @@ void GameObjectManager::handleDeadEnemies(float dt)
 		{
 			if (!dynamic_cast<Shooter*>(object)->getAliveStatus())
 			{
+				for (int i = 0; i < 10; i++) {
+					m_effects->addParticles("ProjectileExplosionEmitter", object->getPosition() + glm::vec3(0.0f, 2.5f, 0.0f),
+						glm::vec3(Randomizer::single(-100.0f, 100.0f) / 25.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 25.0f), 0.50f);
+				}
+
 				this->m_numberOfEnemies--;
 				delete m_gameObjects[i];
 				m_gameObjects.erase(m_gameObjects.begin() + i);
@@ -353,6 +426,11 @@ void GameObjectManager::handleDeadEnemies(float dt)
 		{
 			if (!dynamic_cast<Boss*>(object)->getAliveStatus())
 			{
+				for (int i = 0; i < 10; i++) {
+					m_effects->addParticles("ProjectileExplosionEmitter", object->getPosition() + glm::vec3(0.0f, 2.5f, 0.0f),
+						glm::vec3(Randomizer::single(-100.0f, 100.0f) / 25.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 25.0f), 0.50f);
+				}
+
 				this->m_numberOfEnemies--;
 				delete m_gameObjects[i];
 				m_gameObjects.erase(m_gameObjects.begin() + i);
@@ -364,6 +442,7 @@ void GameObjectManager::handleDeadEnemies(float dt)
 			if (dynamic_cast<PowerUps*>(object)->powerTriggered())
 			{
 				delete m_gameObjects[i];
+				m_gameObjects[i] = nullptr;
 				m_gameObjects.erase(m_gameObjects.begin() + i);
 				continue;
 			}
@@ -434,7 +513,7 @@ void GameObjectManager::roomManager(GameObject* object) {
 				m_gameObjects.at(m_doorIndex)->setCollidable(false);
 				continue;
 			}
-			if (m_rooms.at(i)->intersection(m_player->getPosition())) {
+			if (m_rooms.at(i)->intersection(m_player->getPosition()) && m_rooms.at(i) != nullptr) {
 				this->m_currentRoom = i;				
 				//Lock the doors
 				this->m_isLocked = !m_isLocked;
@@ -447,7 +526,7 @@ void GameObjectManager::roomManager(GameObject* object) {
 				//Swap the play state to fighting
 				m_player->setPlayerState(FIGHTING);
 				//Spawn enemies
-				this->spawner(m_rooms.at(i), Randomizer::single(3, 6));
+				this->spawner(m_rooms.at(i));
 				m_rooms.at(i)->resetMaxMinValues(); 
 
 			}
@@ -455,24 +534,65 @@ void GameObjectManager::roomManager(GameObject* object) {
 	}
 }
 
-void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
+void GameObjectManager::spawner(Room* currentRoom) {
 
 	int spawnOffset = 5;
+	float timeBeforeSpawn = 5.0f;
+	float bossTimeBeforeSpawn = 8.0f;
 
 	Mesh* enemyMesh = MeshMap::getMesh("Enemy");
+	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
 	if (currentRoom->getType() == ROOM_BOSS)
 	{
 		GameObject* enemy = new Boss(enemyMesh, BOSS, currentRoom, glm::vec3(
 			currentRoom->getCentrePosition().x,
 			0.f,
 			currentRoom->getCentrePosition().y),
-			m_projectileManager, m_effects);
+			this,
+			m_projectileManager, m_effects, bossTimeBeforeSpawn);
 		this->addGameObject(enemy);
 	}
+	for (int i = 0; i < 2; i++) {
+		
+		int powerUpRoulette = Randomizer::single(1, 3);
+		if (powerUpRoulette == 1)
+		{
+			GameObject* powerUp = new PowerUps(powerUpMesh, POWERUPS, 1.f, 0.f, 0.f, false, glm::vec3(
+				Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
+				0.5f,
+				Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)), m_effects);
+			this->addGameObject(powerUp);
 
-	int numMeleeEnemies = Randomizer::single(2, 4);
-	int numRangedEnemies = Randomizer::single(1, 4);
+		}
+		if (powerUpRoulette == 2)
+		{
+			GameObject* powerUp = new PowerUps(powerUpMesh, POWERUPS, 0.f, 1.f, 0.f, true, glm::vec3(
+				Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
+				0.5f,
+				Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)), m_effects);
+			this->addGameObject(powerUp);
 
+
+		}
+		if (powerUpRoulette == 3)
+		{
+			GameObject* powerUp = new PowerUps(powerUpMesh, POWERUPS, 0.f, 0.f, 5.f, true, glm::vec3(
+				Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
+				0.5f,
+				Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)), m_effects);
+			this->addGameObject(powerUp);
+
+		}
+	}
+
+	//Calculate ammount of Enemies
+	int numMeleeEnemies = Randomizer::single(m_walkerDifficulty, m_walkerDifficulty + 2);
+	int numRangedEnemies = m_shooterDifficulty;
+	m_walkerDifficulty += 2;
+	if (m_walkerDifficulty % 4)
+	{
+		m_shooterDifficulty = m_walkerDifficulty%4;
+	}
 	//Spawn Melee Enemies
 	for (int i = 0; i < numMeleeEnemies; i++)
 	{
@@ -480,7 +600,8 @@ void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
 			Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
 			0.f,
 			Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)),
-			m_effects);
+			m_effects, timeBeforeSpawn);
+
 		this->addGameObject(enemy);
 	}
 	//Spawn Ranged Enemies
@@ -490,8 +611,9 @@ void GameObjectManager::spawner(Room* currentRoom, int numberOfEnemies) {
 			Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
 			0.f,
 			Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)),
-			m_projectileManager, m_effects);
+			m_projectileManager, m_effects, timeBeforeSpawn);
 
+		
 		this->addGameObject(enemy);
 	}
 

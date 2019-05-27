@@ -2,14 +2,18 @@
 #include "../../Utility/Randomizer.h"
 #include <System/Log.h>
 
-Boss::Boss(Mesh* mesh, Type type, Room* room, const glm::vec3& position,ProjectileManager* projectileManager, Effects* effects):
-	GameObject(mesh, type)
+#include <GameObjects/GameObjectManager.h>
+#include <Graphics/MeshMap.h>
+
+Boss::Boss(Mesh* mesh, Type type, Room* room, const glm::vec3& position, GameObjectManager* gameObjectManager, ProjectileManager* projectileManager, Effects* effects, float timeBeforeSpawn):
+	GameObject(mesh, type, position, timeBeforeSpawn)
 {
+	m_gameObjectManager = gameObjectManager;
 	m_projectileManager = projectileManager;
 	m_effects = effects;
 	this->setScale(glm::vec3(2.f, 2.f, 2.f));
-	this->m_health = 30.f;
-	this->m_speed = 12.f;
+	this->m_health = 40.f;
+	this->m_speed = 10.f;
 	this->m_damage = 1.f;
 	this->m_isPlayerClose = false;
 	this->m_type = type;
@@ -27,10 +31,15 @@ Boss::Boss(Mesh* mesh, Type type, Room* room, const glm::vec3& position,Projecti
 	m_shootingTimer = 0.0f;
 	m_projectileSpeed = 25.0f;
 	m_projectileDamage = 1.5f;
+	m_hasSpawned = false;
 
-	setCollidable(true);
-	setPosition(position);
+	m_spawnEnemiesCooldown = 20.0f;
+	m_currentSpawnEnemiesCooldown = 10.0f;
+
 	m_Astar = new AStar();
+
+	m_effects->addAnimParticle("bossSummonCircle", position + glm::vec3(0.0f, 2.0f, 0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(0.0f), timeBeforeSpawn);
+
 }
 
 Boss::~Boss()
@@ -40,6 +49,14 @@ Boss::~Boss()
 
 void Boss::update(float dt)
 {
+	if (!m_hasSpawned)
+	{
+		m_hasSpawned = true;
+		for (int i = 0; i < 15; i++)
+			m_effects->addParticles("EnemySpawnEmitter", getPosition() + glm::vec3(0.0f, 1.5f, 0.0f), glm::vec3(Randomizer::single(-100.0f, 100.0f) / 10.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 10.0f), 1.0f, 1);
+	}
+
+
 	lookAt(getPlayerPosition());
 	updateHoverEffect(dt);
 	updateBehaviour(dt);
@@ -100,9 +117,8 @@ void Boss::bossWalkAnim(float dt)
 {
 	float sinCurve = ( 10*sinf(m_sinTime));
 	m_sinTime += (m_sinAddTime * dt);
-
+	
 	setRotation(glm::vec3(getRotation().x, getRotation().y, sinCurve));
-	//setRotation(glm::vec3(sinCurve, getRotation().y, getRotation().z));
 }
 
 void Boss::updateCooldowns(float dt)
@@ -118,7 +134,7 @@ void Boss::updateHoverEffect(float dt)
 	m_hoverEffectTimer += dt;
 	if (m_hoverEffectTimer >= 0.05f) {
 		m_hoverEffectTimer = 0.0f;
-		m_effects->addParticles("EnemyHoverEmitter", getPosition() + glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(Randomizer::single(-100.0f, 100.0f) / 100.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 100.0f), 1.0f, 1);
+		m_effects->addParticles("EnemySpawnEmitter", getPosition() + glm::vec3(0.0f, 1.5f, 0.0f), glm::vec3(Randomizer::single(-100.0f, 100.0f) / 30.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 30.0F), 1.0f, 1);
 	}
 }
 
@@ -141,7 +157,18 @@ void Boss::updateBehaviour(float dt)
 			m_shooting = true;
 			m_currentShootingRechargeCooldown = m_shootingRechargeCooldown;
 			m_shootingRounds = Randomizer::single(15, 25);
-			//setRotation(glm::vec3(getRotation().x, getRotation().y, 0.f));
+			
+			// Teleport
+
+			for (int i = 0; i < 30; i++)
+				m_effects->addParticles("EnemySpawnEmitter", getPosition() + glm::vec3(0.0f, 2.5f, 0.0f), glm::vec3(Randomizer::single(-100.0f, 100.0f) / 10.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 10.0f), 1.0f, 1);
+
+			auto cell = m_room->getGrid()->getFreeRandomCell();
+			setPosition(glm::vec3(cell.x, 0.0f, cell.z));
+
+			for (int i = 0; i < 30; i++)
+				m_effects->addParticles("EnemySpawnEmitter", getPosition() + glm::vec3(0.0f, 2.5f, 0.0f), glm::vec3(Randomizer::single(-100.0f, 100.0f) / 10.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 10.0f), 1.0f, 1);
+
 		}
 	}
 
@@ -160,7 +187,7 @@ void Boss::updateBehaviour(float dt)
 			if (m_path.size() > 0) {
 				m_projectileManager->spawnProjectile(new Projectile(getPosition() + glm::vec3(0.0f, 2.0f, 0.0f), m_path, m_damage, m_projectileSpeed, m_room->getGrid()->getCellSize()));
 				m_shootingRounds--;
-				LOG_INFO("Rounds: " + std::to_string(m_shootingRounds));
+				
 			}
 
 		}
@@ -175,6 +202,34 @@ void Boss::updateBehaviour(float dt)
 
 	}
 
+	m_currentSpawnEnemiesCooldown -= dt;
+	if (m_currentSpawnEnemiesCooldown <= 0.0f)
+	{
+		m_currentSpawnEnemiesCooldown = m_spawnEnemiesCooldown;
+		Mesh* enemyMesh = MeshMap::getMesh("Enemy");
+		float timeBeforeSpawn = 3.5f;
+		int spawnOffset = 15;
+		//Spawn Melee Enemies
+		for (int i = 0; i < 3; i++)
+		{
+			auto cell = m_room->getGrid()->getFreeRandomCell();
+
+			GameObject* enemy = new Walker(enemyMesh, WALKER, this->m_room, glm::vec3(cell.x, 0.0f, cell.z),
+				m_effects, timeBeforeSpawn);
+
+			m_gameObjectManager->addGameObject(enemy);
+		}
+		//Spawn Ranged Enemies
+		for (int i = 0; i < 2; i++)
+		{
+			auto cell = m_room->getGrid()->getFreeRandomCell();
+
+			GameObject* enemy = new Shooter(enemyMesh, SHOOTER, this->m_room, glm::vec3(cell.x, 0.0f, cell.z),
+				m_projectileManager, m_effects, timeBeforeSpawn);
+
+			m_gameObjectManager->addGameObject(enemy);
+		}
+	}
 
 }
 

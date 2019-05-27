@@ -5,11 +5,12 @@
 #include <GLM//gtx/quaternion.hpp>
 #include <System/Log.h>
 
-GameObject::GameObject(Mesh * mesh, Type type, const glm::vec3 & position)
+GameObject::GameObject(Mesh * mesh, Type type, const glm::vec3 & position, float timeBeforeSpawn, float boundingBoxExpand)
 {
 	m_mesh = mesh;
 	m_isCollidable = true;
 	m_position = position;
+	m_timeBeforeSpawn = timeBeforeSpawn;
 	m_rotation = glm::vec3(0.f);
 	m_velocity = glm::vec3(0.f);
 	m_scale = glm::vec3(1.f);
@@ -18,11 +19,11 @@ GameObject::GameObject(Mesh * mesh, Type type, const glm::vec3 & position)
 	updateModelMatrix();
 	
 
-	if (!mesh->getMaxMinVector().empty())
+	if (!mesh->getMinMaxVector().empty())
 	{
-		for (size_t i = 0; i < mesh->getMaxMinVector().size() - 1; i += 2)
+		for (size_t i = 0; i < mesh->getMinMaxVector().size() - 1; i += 2)
 		{
-			AABB* aabb = new AABB(mesh->getMaxMinVector()[i], mesh->getMaxMinVector()[i + 1]);
+			AABB* aabb = new AABB(mesh->getMinMaxVector()[i] - boundingBoxExpand, mesh->getMinMaxVector()[i + 1] + boundingBoxExpand);
 			aabb->setParentPosition(position);
 
 			m_boundingBoxes.emplace_back(aabb);
@@ -49,6 +50,15 @@ void GameObject::internalUpdate(float dt)
 		m_colorTint = glm::vec3(1.f);
 		m_colorTintFadeDuration = 0.f;
 	}
+
+	if (m_timeBeforeSpawn > 0.0f){
+		m_timeBeforeSpawn -= dt;
+		
+		if (m_timeBeforeSpawn <= 0.0f){
+			m_timeBeforeSpawn = 0.0f;
+		}
+	}
+
 
 }
 
@@ -135,6 +145,11 @@ void GameObject::lookAt(const glm::vec3& position)
 float GameObject::lerp(float start, float end, float percent)
 {
 	return ((start)+percent * (end - start));;
+}
+
+const bool GameObject::isSpawned() const
+{
+	return (m_timeBeforeSpawn <= 0.0f);
 }
 
 void GameObject::hit(const HitDescription & desc)

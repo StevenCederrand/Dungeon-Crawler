@@ -178,6 +178,7 @@
     <ClCompile Include="GameObjects\Powerups.cpp" />
     <ClCompile Include="GameObjects\Room.cpp" />
     <ClCompile Include="Globals\Settings.cpp" />
+    <ClCompile Include="Graphics\AnimatedEmitter.cpp" />
     <ClCompile Include="Graphics\Effects.cpp" />
     <ClCompile Include="Graphics\Emitter.cpp" />
     <ClCompile Include="Graphics\Framebuffer.cpp" />
@@ -244,6 +245,7 @@
     <ClInclude Include="Globals\LightTypes.h" />
     <ClInclude Include="Globals\Paths.h" />
     <ClInclude Include="Globals\Settings.h" />
+    <ClInclude Include="Graphics\AnimatedEmitter.h" />
     <ClInclude Include="Graphics\Effects.h" />
     <ClInclude Include="Graphics\Emitter.h" />
     <ClInclude Include="Graphics\Framebuffer.h" />

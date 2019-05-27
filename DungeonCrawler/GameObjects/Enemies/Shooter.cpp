@@ -7,8 +7,8 @@
 #include <Audio/AudioEngine.h>
 #define M_PI 3.14159265358979323846
 
-Shooter::Shooter(Mesh* mesh, Type type, Room* room, const glm::vec3& position, ProjectileManager* projectileManager, Effects* effects) :
-	GameObject(mesh, type)
+Shooter::Shooter(Mesh* mesh, Type type, Room* room, const glm::vec3& position, ProjectileManager* projectileManager, Effects* effects, float timeBeforeSpawn) :
+	GameObject(mesh, type, position, timeBeforeSpawn)
 {
 	this->m_room = room;
 	this->m_projectileManager = projectileManager;
@@ -24,8 +24,9 @@ Shooter::Shooter(Mesh* mesh, Type type, Room* room, const glm::vec3& position, P
 	this->m_amIAlive = true;
 	this->m_sinTime = Randomizer::single(0.f, 360.f);
 	this->m_sinAddTime = 100.f;
-	setPosition(position);
 	m_Astar = new AStar();
+
+	m_effects->addAnimParticle("summonCircle", position + glm::vec3(0.0f, 2.0f, 0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(0.0f), 8.0f);
 }
 
 Shooter::~Shooter()
@@ -36,10 +37,17 @@ Shooter::~Shooter()
 void Shooter::update(float dt)
 {
 
+	if (!m_hasSpawned)
+	{
+		m_hasSpawned = true;
+		for (int i = 0; i < 15; i++)
+			m_effects->addParticles("EnemySpawnEmitter", getPosition() + glm::vec3(0.0f, 1.5f, 0.0f), glm::vec3(Randomizer::single(-100.0f, 100.0f) / 10.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 10.0f), 1.0f, 1);
+	}
+
 	m_hoverEffectTimer += dt;
 	if (m_hoverEffectTimer >= 0.05f) {
 		m_hoverEffectTimer = 0.0f;
-		m_effects->addParticles("EnemyHoverEmitter", getPosition() + glm::vec3(0.0f,0.5f,0.0f), glm::vec3(Randomizer::single(-100.0f,100.0f) / 100.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 100.0f), 1.0f, 1);
+		m_effects->addParticles("EnemyHoverEmitter", getPosition() + glm::vec3(0.0f,1.5f,0.0f), glm::vec3(Randomizer::single(-100.0f,100.0f) / 100.0f, 0.0f, Randomizer::single(-100.0f, 100.0f) / 100.0f), 1.0f, 1);
 	}
 
 	float lengthToPlayer = glm::length(getPosition() - getPlayerPosition());
@@ -69,10 +77,7 @@ void Shooter::update(float dt)
 
 		if (m_currentCastTime >= m_castTime)
 		{
-			LOG_INFO("Casting Spell");
 			AudioEngine::play("Enemy_shot", 0.4f);
-			//Have the enemy fire when the Enemy_shot sound effect is done playing
-
 
 			// Find a path using A* and create some kind of projectile that travels that path
 			m_castingSpell = false;
@@ -134,7 +139,7 @@ void Shooter::calculatePath(float dt, bool ignoreTimer, bool occupy)
 	m_AStarTimer += dt;
 
 	// Runs every half second
-	if (m_AStarTimer >= 1.f || ignoreTimer) {
+	if (m_AStarTimer >= 0.25f || ignoreTimer) {
 		m_AStarTimer = 0.0f;
 
 		// Get the cells that the player and the walker is standing on

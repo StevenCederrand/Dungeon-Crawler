@@ -77,6 +77,7 @@
     <ClCompile Include="System\Main.cpp" />
     <ClCompile Include="FBX\FBXParser.cpp" />
     <ClCompile Include="FBX\FBXParserLibrary.cpp" />
+    <ClCompile Include="Graphics\AnimatedEmitter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI\AStar.h" />
@@ -181,5 +182,6 @@
     <ClInclude Include="FBX\Headerstruct.h" />
     <ClInclude Include="FBX\FBXParser.h" />
     <ClInclude Include="FBX\FBXParserLibrary.h" />
+    <ClInclude Include="Graphics\AnimatedEmitter.h" />
   </ItemGroup>
 </Project>

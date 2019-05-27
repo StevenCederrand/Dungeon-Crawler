@@ -17,13 +17,12 @@
 #define M_PI 3.14159265358979323846
 
 Player::Player(Mesh* mesh, Type type) :
-	GameObject(mesh, type)
+	GameObject(mesh, type, glm::vec3(0.f, 0.f, 0.f), 0.0f, 0.2f)
 {
-	this->setPosition(glm::vec3(0.f, 0.f, 0.f));
 	this->setScale(glm::vec3(0.65f, 0.65f, 0.65f));
 	this->m_defaultSpeed = 7.f;
 	this->m_speed = 7.0f;
-	this->m_health = 1000.f;
+	this->m_health = 10.f;
 	this->m_maxHealth = 10.f;
 	this->m_damage = 1.f;
 	this->m_automaticDamage = 1.f;
@@ -57,6 +56,7 @@ Player::Player(Mesh* mesh, Type type) :
 	//this->m_iframes = 0.f;
 	this->m_pistolBullets = 6;
 	this->m_reloadTime = 0.f;
+	this->m_reloadTimeAdd = 1.f;
 	this->m_reloading = false;
 
 	this->m_boostResetters = (glm::vec3(0.f, 0.f, 0.f));
@@ -64,8 +64,6 @@ Player::Player(Mesh* mesh, Type type) :
 	this->m_poweredUp = false;
 
 	this->setupSoundVector();
-
-
 
 	for (size_t i = 0; i < 7; i++)
 	{
@@ -113,7 +111,7 @@ void Player::update(float dt)
 			{
 				m_reloading = true;
 				AudioEngine::play("gun_reload", 1.0f);
-				m_reloadTime = 1.f;
+				m_reloadTime = m_reloadTimeAdd;
 			}
 			manualReload(dt);
 		//}
@@ -240,6 +238,7 @@ void Player::rotatePlayer()
 		pos.x - this->getPosition().x,
 		0,
 		pos.z - this->getPosition().z);
+	
 	m_angle = glm::degrees(atan2f(m_lookDirection.z, m_lookDirection.x));
 
 	setRotation(glm::vec3(getRotation().x, -m_angle, getRotation().z));
@@ -273,7 +272,12 @@ Light* Player::getFlash() {
 
 void Player::spotlightHandler() {
 	this->m_spotlight->direction = this->getLookDirection();
-	this->m_spotlight->position = this->getPosition() + glm::vec3(0.0f, 2.f, 0.0f);
+	this->m_spotlight->position = this->getPosition() + m_spotlight->direction * glm::vec3(-1.0f, 0.0f, -1.0f);
+
+
+	this->m_spotlight->position.y += 2.0f;
+	this->m_spotlight->direction.y -= 0.20f;
+
 	this->m_flash->position = glm::vec4(this->getPosition() + glm::vec3(0.0f, 2.f, 0.0f), 1.0);
 }
 
@@ -394,6 +398,7 @@ void Player::powerUpCd(float dt)
 		m_health -= m_boostResetters.x;
 		m_automaticDamage -= m_boostResetters.y;
 		m_defaultSpeed -= m_boostResetters.z;
+		m_boostResetters = glm::vec3(0.f, 0.f, 0.f);
 		m_sinAddTime = m_sinDefaultAddTime;
 		m_poweredUp = false;
 	}
@@ -409,7 +414,7 @@ void Player::manualReload(float dt)
 	{
 		m_reloading = true;
 		AudioEngine::play("gun_reload", 1.0f);
-		m_reloadTime = 4.f;
+		m_reloadTime = m_reloadTimeAdd;
 	}
 }
 
@@ -560,6 +565,11 @@ float Player::getSpeed() const
 	return this->m_speed;
 }
 
+float Player::getRemainingBoostTime() const
+{
+	return m_boostTimer;
+}
+
 float Player::getHealth() const
 {
 	return this->m_health;
@@ -578,4 +588,9 @@ int Player::getBulletCount() const
 bool Player::isShooting() const
 {
 	return m_shooting;
+}
+
+const glm::vec3& Player::getBoostVector() const
+{
+	return m_boostResetters;
 }

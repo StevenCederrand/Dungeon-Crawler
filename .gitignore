@@ -4,3 +4,7 @@ bin-intermediate
 README.md
 imgui.ini
 Assets/Binaries
+x64/
+Release/
+CustomFBXLibrary/x64
+CustomFBXLibrary/Release
