@@ -488,6 +488,7 @@ void GameObjectManager::roomManager(GameObject* object) {
 		m_rooms.erase(m_rooms.begin() + m_currentRoom);
 		//Reset the player
 		m_player->setPlayerState(ROAMING);
+		AudioEngine::play("ClearRoom", 1.0f);
 		//Find the 'door' object
 		for (size_t i = 0; i < m_gameObjects.size(); i++) {
 			if (m_gameObjects.at(i)->getType() == DOOR) {
@@ -517,7 +518,7 @@ void GameObjectManager::roomManager(GameObject* object) {
 				this->m_currentRoom = i;				
 				//Lock the doors
 				this->m_isLocked = !m_isLocked;
-
+				AudioEngine::play("LockRoom", 0.9f);
 				//Spawn the door
 				m_gameObjects.at(m_doorIndex)->setCollidable(true);
 

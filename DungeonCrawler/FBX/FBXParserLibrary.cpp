@@ -20,7 +20,8 @@ namespace FBXParserLibrary
 			{
 				saveMeshHeader(infileBinary, fileData);
 				saveVertexHeader(infileBinary, fileData, i);
-				calculateMinMaxValueMesh(infileBinary, fileData, i);
+				if (fileData->getMeshHeaders()[i].collision == false)
+					calculateMinMaxValueMesh(infileBinary, fileData, i);
 			}
 
 			for (int i = 0; i < fileData->getMainHeader().materialCount; i++)
@@ -253,43 +254,44 @@ namespace FBXParserLibrary
 		return convertedCharacter;
 	}
 
+	//USES X AND Z
 	void calculateMinMaxValueMesh(std::ifstream& binaryFile, FBXParserData* fileData, int vectorNr)
 	{
 		//is onyl 36 now, should be 72
 		std::vector<glm::vec3> currentMeshVertices = fileData->getVerticePosVector()[vectorNr];
 		float xMin = 0.f;
 		float xMax = 0.f;
-		float yMin = 0.f;
-		float yMax = 0.f;
+		float zMin = 0.f;
+		float zMax = 0.f;
 
 		for (int i = 0; i < fileData->getMeshHeaders()[vectorNr].vertexCount; i++)	//change from 0
 		{
 			glm::vec3 meshVertice = currentMeshVertices[i];
 
-			if (i == 1) //first pass to make eveything compare to the first vertice
+			if (i == 0) //first pass to make eveything compare to the first vertice
 			{
-				float xMin = meshVertice.x;
-				float xMax = meshVertice.x;
-				float yMin = meshVertice.y;
-				float yMax = meshVertice.y;
+				xMin = meshVertice.x;
+				xMax = meshVertice.x;
+				zMin = meshVertice.z;
+				zMax = meshVertice.z;
 			}
 
 			if (meshVertice.x >= xMax)
 				xMax = meshVertice.x;
-			if (meshVertice.y >= yMax)
-				yMax = meshVertice.y;
+			if (meshVertice.z >= zMax)
+				zMax = meshVertice.z;
 
 			if (meshVertice.x <= xMin)
 				xMin = meshVertice.x;
-			if (meshVertice.y <= yMin)
-				yMin = meshVertice.y;
+			if (meshVertice.z <= zMin)
+				zMin = meshVertice.z;
 		}
 
-		glm::vec4 lminMaxValues;//MINMINMAXMAX
-		lminMaxValues.x = xMin;
-		lminMaxValues.y = yMin;
-		lminMaxValues.z = xMax;
-		lminMaxValues.w = yMax;
+		glm::vec4 lminMaxValues;	//MAXMAXMINMIN XZ XZ
+		lminMaxValues.x = xMax;
+		lminMaxValues.y = zMax;
+		lminMaxValues.z = xMin;
+		lminMaxValues.w = zMin;
 
 		fileData->setMinMaxValuesMesh(lminMaxValues);
 	}

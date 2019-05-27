@@ -1,8 +1,6 @@
 ## If the key has a '-' then that sound exists in a set of sounds
 #Player walking sounds
-#pl_walk step1F.wav
 pl_walk-2 W_test.wav
-#pl_walk-3 step3F.wav
 
 #player dash
 pl_dash Dash2.wav
@@ -36,3 +34,14 @@ Enemy_shot Enemy_Shot2.wav
 
 #Enemy Death
 Enemy_death MonsterDeath.wav
+
+#packs
+HealthPack HealthPack.wav
+SpeedPack SpeedPack.wav
+DamagePack DamagePack.wav
+
+#Rooms
+LockRoom RoomsClosing.wav
+
+#Room Clear sound
+ClearRoom RoomVictorySound.wav
