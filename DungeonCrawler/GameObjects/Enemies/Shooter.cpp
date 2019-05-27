@@ -116,6 +116,7 @@ void Shooter::amIDead()
 {
 	if (m_health <= 0)
 	{
+		AudioEngine::play("Enemy_death", 0.2f);
 		m_amIAlive = false;
 	}
 }

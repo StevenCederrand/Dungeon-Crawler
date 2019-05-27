@@ -68,12 +68,16 @@ void MenuState::update(float dt) {
 	m_camera->update(dt);
 	m_uiManager->update(dt);
 
+	if (Input::isMousePressed(GLFW_MOUSE_BUTTON_1)) {
+		AudioEngine::play("LMouseClick", 1.0f);
+	}
+
+
 	if (m_playButton->isPressed()) {
 		bool completed = false;
 
 		//Have a side thread output text while it's loading
 		std::thread b(loadScreen, std::ref(completed));
-
 		//The main thread will then create the playstate
 		PlayState* state = new PlayState();
 		completed = true;

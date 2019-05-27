@@ -2,6 +2,7 @@
 #include <System/Application.h>
 #include <Globals/Settings.h>
 #include "Vendor/ImGui/imgui.h"
+#include <Audio/AudioEngine.h>
 
 WinState::WinState() {
 	this->m_glInit = new GLinit();
@@ -15,6 +16,7 @@ WinState::WinState() {
 
 	this->m_uiManager->registerUIElement(m_winner);
 	this->registerUIButtons();
+	AudioEngine::loadSSO("Menu.sso");
 }
 
 WinState::~WinState() {
@@ -27,7 +29,13 @@ void WinState::update(float dt) {
 	this->m_uiCamera->update(dt);
 	this->m_uiManager->update(dt);
 
+	if (Input::isMousePressed(GLFW_MOUSE_BUTTON_1)) {
+		AudioEngine::play("LMouseClick", 1.0f);
+	}
+	
 	if (this->m_return->isPressed()) {
+		
+		AudioEngine::unloadSSO("Menu.sso");
 		MenuState* menu = new MenuState();
 		this->m_stateManager->setState(menu);
 		return;

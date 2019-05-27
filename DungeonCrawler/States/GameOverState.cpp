@@ -3,6 +3,7 @@
 #include "MenuState.h"
 #include "Vendor/ImGui/imgui.h"
 #include <Globals/Settings.h>
+#include <Audio/AudioEngine.h>
 
 GameOverState::GameOverState()
 {
@@ -36,7 +37,7 @@ GameOverState::GameOverState()
 	m_manager->registerUIElement(m_menu);
 	m_manager->registerUIElement(m_logo);
 	m_manager->registerUIElement(m_dead);
-
+	AudioEngine::loadSSO("Menu.sso");
 }
 
 GameOverState::~GameOverState()
@@ -50,15 +51,22 @@ void GameOverState::update(float dt)
 {
 	m_camera->update(dt);
 	m_manager->update(dt);
+	if (Input::isMousePressed(GLFW_MOUSE_BUTTON_1)) {
+		AudioEngine::play("LMouseClick", 1.0f);
+	}
+
 
 	if (m_playAgain->isPressed())
 	{
+		AudioEngine::unloadSSO("Menu.sso");
+		AudioEngine::loadSSO("Game.sso");
 		m_stateManager->popState();
 		return;
 	}
 
 	if (m_menu->isPressed())
 	{
+		AudioEngine::unloadSSO("Menu.sso");
 		MenuState* menu = new MenuState();
 		m_stateManager->setState(menu);
 		return;
