@@ -150,7 +150,7 @@ Mesh* GLinit::createMeshFBX(std::string name, FBXParserData* data)
 	mesh->setBoundingBoxMinMax(data->getMinMaxValuesHitbox()); //XYZ MAX XYZ MIN //this will be all of the hitboxes for the mesh
 
 
-	MeshMap::addMesh(name, mesh); //adds the mesh to the meshmap, this is where the mesh is saved
+VBF	MeshMap::addMesh(name, mesh); //adds the mesh to the meshmap, this is where the mesh is saved
 	return mesh; //not used right now
 }
 

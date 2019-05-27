@@ -53,17 +53,17 @@ PlayState::PlayState() {
 	m_GLinit->createMeshFBX("Enemy", enemyData);
 	delete enemyData;
 
-	FBXParserData* barrelData = m_FBXParser->binaryMeshReading(FBXPath + "barrels.bin"); //SHOULD MAKE BINARY
-	m_GLinit->createMeshFBX("Barrels", barrelData);
-	delete barrelData;
+	//FBXParserData* barrelData = m_FBXParser->binaryMeshReading(FBXPath + "barrels.bin"); //SHOULD MAKE BINARY
+	//m_GLinit->createMeshFBX("Barrels", barrelData);
+	//delete barrelData;
 
-	FBXParserData* crateData = m_FBXParser->binaryMeshReading(FBXPath + "CRATES.bin"); //SHOULD MAKE BINARY
-	m_GLinit->createMeshFBX("Crates", crateData);
-	delete crateData;
+	//FBXParserData* crateData = m_FBXParser->binaryMeshReading(FBXPath + "CRATES.bin"); //SHOULD MAKE BINARY
+	//m_GLinit->createMeshFBX("Crates", crateData);
+	//delete crateData;
 
-	FBXParserData* roomWallsData = m_FBXParser->binaryMeshReading(FBXPath + "roomWalls.bin"); //SHOULD MAKE BINARY
-	m_GLinit->createMeshFBX("RoomWalls", roomWallsData);
-	delete roomWallsData;
+	//FBXParserData* roomWallsData = m_FBXParser->binaryMeshReading(FBXPath + "roomWalls.bin"); //SHOULD MAKE BINARY
+	//m_GLinit->createMeshFBX("RoomWalls", roomWallsData);
+	//delete roomWallsData;
 
 	#pragma region Create_Objects
 	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
@@ -201,17 +201,17 @@ void PlayState::constructWorld()
 	Mesh* boxMesh = MeshMap::getMesh("Box");
 	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
 
-	Mesh* barrels = MeshMap::getMesh("Barrels");
-	GameObject* testBox = new Box(barrels, Type::BOX);
-	m_gameObjectManager->addGameObject(testBox);
+	//Mesh* barrels = MeshMap::getMesh("Barrels");
+	//GameObject* testBox = new Box(barrels, Type::BOX);
+	//m_gameObjectManager->addGameObject(testBox);
 	
-	Mesh* crates = MeshMap::getMesh("Crates");
-	GameObject* testCrate = new Box(crates, Type::BOX);
-	m_gameObjectManager->addGameObject(testCrate);
+	//Mesh* crates = MeshMap::getMesh("Crates");
+	//GameObject* testCrate = new Box(crates, Type::BOX);
+	//m_gameObjectManager->addGameObject(testCrate);
 
-	Mesh* walls = MeshMap::getMesh("RoomWalls");
-	GameObject* wallObject = new Box(walls, Type::BOX);
-	m_gameObjectManager->addGameObject(wallObject);
+	//Mesh* walls = MeshMap::getMesh("RoomWalls");
+	//GameObject* wallObject = new Box(walls, Type::BOX);
+	//m_gameObjectManager->addGameObject(wallObject);
 
 
 	m_gameObjectManager->addGameObject(m_player);
