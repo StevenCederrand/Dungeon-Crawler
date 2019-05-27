@@ -53,13 +53,13 @@ PlayState::PlayState() {
 	m_GLinit->createMeshFBX("Enemy", enemyData);
 	delete enemyData;
 
-	//FBXParserData* barrelData = m_FBXParser->binaryMeshReading(FBXPath + "barrels.bin"); //SHOULD MAKE BINARY
-	//m_GLinit->createMeshFBX("Barrels", barrelData);
-	//delete barrelData;
+	FBXParserData* barrelData = m_FBXParser->binaryMeshReading(FBXPath + "barrels.bin"); //SHOULD MAKE BINARY
+	m_GLinit->createMeshFBX("Barrels", barrelData);
+	delete barrelData;
 
-	//FBXParserData* crateData = m_FBXParser->binaryMeshReading(FBXPath + "CRATES.bin"); //SHOULD MAKE BINARY
-	//m_GLinit->createMeshFBX("Crates", crateData);
-	//delete crateData;
+	FBXParserData* crateData = m_FBXParser->binaryMeshReading(FBXPath + "CRATES.bin"); //SHOULD MAKE BINARY
+	m_GLinit->createMeshFBX("Crates", crateData);
+	delete crateData;
 
 	//FBXParserData* roomWallsData = m_FBXParser->binaryMeshReading(FBXPath + "roomWalls.bin"); //SHOULD MAKE BINARY
 	//m_GLinit->createMeshFBX("RoomWalls", roomWallsData);
@@ -201,13 +201,13 @@ void PlayState::constructWorld()
 	Mesh* boxMesh = MeshMap::getMesh("Box");
 	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
 
-	//Mesh* barrels = MeshMap::getMesh("Barrels");
-	//GameObject* testBox = new Box(barrels, Type::BOX);
-	//m_gameObjectManager->addGameObject(testBox);
+	Mesh* barrels = MeshMap::getMesh("Barrels");
+	GameObject* testBox = new Box(barrels, Type::BOX);
+	m_gameObjectManager->addGameObject(testBox);
 	
-	//Mesh* crates = MeshMap::getMesh("Crates");
-	//GameObject* testCrate = new Box(crates, Type::BOX);
-	//m_gameObjectManager->addGameObject(testCrate);
+	Mesh* crates = MeshMap::getMesh("Crates");
+	GameObject* testCrate = new Box(crates, Type::BOX);
+	m_gameObjectManager->addGameObject(testCrate);
 
 	//Mesh* walls = MeshMap::getMesh("RoomWalls");
 	//GameObject* wallObject = new Box(walls, Type::BOX);
@@ -288,6 +288,43 @@ void PlayState::addRoom()
 	delete room2;
 	Room * r_room2 = new Room(room2Mesh, ROOM, m_player);
 	m_gameObjectManager->addGameObject(r_room2);
+
+
+	FBXParserData* room3 = m_FBXParser->binaryMeshReading(FBXPath + "room3.bin"); //SHOULD MAKE BINARY
+	Mesh * room3Mesh = m_GLinit->createMeshFBX("room3", room3);
+	delete room3;
+	Room * r_room3 = new Room(room3Mesh, ROOM, m_player);
+	m_gameObjectManager->addGameObject(r_room3);
+
+	FBXParserData* room4 = m_FBXParser->binaryMeshReading(FBXPath + "room4.bin"); //SHOULD MAKE BINARY
+	Mesh * room4Mesh = m_GLinit->createMeshFBX("room4", room4);
+	delete room4;
+	Room * r_room4 = new Room(room4Mesh, ROOM, m_player);
+	m_gameObjectManager->addGameObject(r_room4);
+
+	FBXParserData* room5 = m_FBXParser->binaryMeshReading(FBXPath + "room5.bin"); //SHOULD MAKE BINARY
+	Mesh * room5Mesh = m_GLinit->createMeshFBX("room5", room5);
+	delete room5;
+	Room * r_room5 = new Room(room5Mesh, ROOM, m_player);
+	m_gameObjectManager->addGameObject(r_room5);
+
+	FBXParserData* room6 = m_FBXParser->binaryMeshReading(FBXPath + "room6.bin"); //SHOULD MAKE BINARY
+	Mesh * room6Mesh = m_GLinit->createMeshFBX("room6", room6);
+	delete room6;
+	Room * r_room6 = new Room(room6Mesh, ROOM, m_player);
+	m_gameObjectManager->addGameObject(r_room6);
+
+	FBXParserData* room7 = m_FBXParser->binaryMeshReading(FBXPath + "room7.bin"); //SHOULD MAKE BINARY
+	Mesh * room7Mesh = m_GLinit->createMeshFBX("room7", room7);
+	delete room7;
+	Room * r_room7 = new Room(room7Mesh, ROOM, m_player);
+	m_gameObjectManager->addGameObject(r_room7);
+
+	FBXParserData* room8 = m_FBXParser->binaryMeshReading(FBXPath + "room8.bin"); //SHOULD MAKE BINARY
+	Mesh * room8Mesh = m_GLinit->createMeshFBX("room8", room8);
+	delete room8;
+	Room * r_room8 = new Room(room8Mesh, ROOM, m_player);
+	m_gameObjectManager->addGameObject(r_room8);
 
 	//ParserData* roomStart = m_parser->loadFromObj(file + ".obj");
 	//Mesh * roomMesh = m_GLinit->createMesh(id, roomStart);
