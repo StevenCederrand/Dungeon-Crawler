@@ -26,8 +26,8 @@ Application::~Application() {
 	delete m_audioEngine;
 
 	glfwTerminate();
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui::DestroyContext();
+	//ImGui_ImplOpenGL3_Shutdown();
+	//ImGui::DestroyContext();
 }
 
 bool Application::initialize()
@@ -72,13 +72,13 @@ bool Application::initialize()
 	glfwSwapInterval(1);
 
 	// Setup Dear ImGui context
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
+	//IMGUI_CHECKVERSION();
+	//ImGui::CreateContext();
 
 	// Setup Platform/Renderer bindings
-	ImGui_ImplGlfw_InitForOpenGL(m_window, true);
-	ImGui_ImplOpenGL3_Init("#version 410 core");
-	ImGui::StyleColorsDark();
+	//ImGui_ImplGlfw_InitForOpenGL(m_window, true);
+	//ImGui_ImplOpenGL3_Init("#version 410 core");
+	//ImGui::StyleColorsDark();
 
 	// Initialize the audio system
 	m_audioEngine = new AudioEngine();
@@ -137,13 +137,13 @@ void Application::run()
 		this->m_audioEngine->update();
 
 		// IMGUI STUFF
-		ImGui_ImplOpenGL3_NewFrame();
+		/*ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 		this->renderImGUI();
 		m_stateManager->renderImGUI();
 		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());*/
 		glfwSwapBuffers(m_window);
 	}
 }
