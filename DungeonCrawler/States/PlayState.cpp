@@ -50,10 +50,6 @@ PlayState::PlayState() {
 	//change to FBX, one Parserdata for multiple objects
 	//CONTINUE HERE
 
-	//FBXParserData* roomStart = m_FBXParser->binaryMeshReading(FBXPath + "roomStart.bin"); //SHOULD MAKE BINARY
-	//m_GLinit->createMeshFBX("RoomStart", roomStart);
-	//delete roomStart;
-
 	FBXParserData* enemyData = m_FBXParser->binaryMeshReading(FBXPath + "flyGuy.bin"); //SHOULD MAKE BINARY
 	m_GLinit->createMeshFBX("Enemy", enemyData);
 	delete enemyData;
@@ -87,9 +83,23 @@ PlayState::PlayState() {
 	m_GLinit->createMeshFBX("table", tableData);
 	delete tableData;
 
-	//FBXParserData* roomWallsData = m_FBXParser->binaryMeshReading(FBXPath + "roomWalls.bin"); //SHOULD MAKE BINARY
-	//m_GLinit->createMeshFBX("RoomWalls", roomWallsData);
-	//delete roomWallsData;
+	FBXParserData* barsData = m_FBXParser->binaryMeshReading(FBXPath + "bars.bin"); //SHOULD MAKE BINARY
+	m_GLinit->createMeshFBX("bars", barsData);
+	delete barsData;
+
+	FBXParserData* benchData = m_FBXParser->binaryMeshReading(FBXPath + "bench.bin"); //SHOULD MAKE BINARY
+	m_GLinit->createMeshFBX("bench", benchData);
+	delete benchData;
+
+	FBXParserData* ChairData = m_FBXParser->binaryMeshReading(FBXPath + "Chair.bin"); //SHOULD MAKE BINARY
+	m_GLinit->createMeshFBX("Chair", ChairData);
+	delete ChairData;
+
+	FBXParserData* CookerData = m_FBXParser->binaryMeshReading(FBXPath + "Cooker.bin"); //SHOULD MAKE BINARY
+	m_GLinit->createMeshFBX("Cooker", CookerData);
+	delete CookerData;
+
+
 
 	#pragma region Create_Objects
 	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
@@ -255,6 +265,22 @@ void PlayState::constructWorld()
 	Mesh* table = MeshMap::getMesh("table");
 	GameObject* testtable = new Box(table, Type::BOX);
 	m_gameObjectManager->addGameObject(testtable);
+
+	Mesh* bars = MeshMap::getMesh("bars");
+	GameObject* testbars = new Box(bars, Type::BOX);
+	m_gameObjectManager->addGameObject(testbars);
+
+	Mesh* bench = MeshMap::getMesh("bench");
+	GameObject* testbench = new Box(bench, Type::BOX);
+	m_gameObjectManager->addGameObject(testbench);
+
+	Mesh* Chair = MeshMap::getMesh("Chair");
+	GameObject* testChair = new Box(Chair, Type::BOX);
+	m_gameObjectManager->addGameObject(testChair);
+
+	Mesh* Cooker = MeshMap::getMesh("Cooker");
+	GameObject* testCooker = new Box(Cooker, Type::BOX);
+	m_gameObjectManager->addGameObject(testCooker);
 
 
 	m_gameObjectManager->addGameObject(m_player);
