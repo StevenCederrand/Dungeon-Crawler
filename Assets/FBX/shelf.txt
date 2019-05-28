@@ -1,12 +1,12 @@
 Version: 3
 Nr of dynamic meshes: 0
 Nr of static meshes: 1
-Nr of bounding boxes: 1
+Nr of bounding boxes: 0
 Nr of materials: 1
 
 Name of mesh: Shelf2                                                                                              
 Vertex count: 660
-Material ID: 44
+Material ID: 43
 Collision: 0
 Static mesh: 1
 
@@ -2655,89 +2655,8 @@ normal: -0.580943 0.000000 -0.813944
 
 Name of albedo Texture: brownTree.jpg                                                                                       
 Name of normalmap:                                                                                                     
-Material ID: 44
+Material ID: 43
 Nr of Textures: 1
 What Shader: 1
-
-
-Name of mesh: Shelf2Collision                                                                                     
-Vertex count: 36
-
-Collision: 1
-Static mesh: 1
-
-
-
-Position: 18.353825 -0.956283 -98.009140 
-
-Position: 19.781656 -0.959560 -99.037086 
-
-Position: 18.352781 7.361244 -98.037102 
-
-Position: 18.352781 7.361244 -98.037102 
-
-Position: 19.781656 -0.959560 -99.037086 
-
-Position: 19.780613 7.357967 -99.065056 
-
-Position: 18.352781 7.361244 -98.037102 
-
-Position: 19.780613 7.357967 -99.065056 
-
-Position: 12.029942 7.330924 -106.819481 
-
-Position: 12.029942 7.330924 -106.819481 
-
-Position: 19.780613 7.357967 -99.065056 
-
-Position: 13.457773 7.327647 -107.847427 
-
-Position: 12.029942 7.330924 -106.819481 
-
-Position: 13.457773 7.327647 -107.847427 
-
-Position: 12.030985 -0.986603 -106.791512 
-
-Position: 12.030985 -0.986603 -106.791512 
-
-Position: 13.457773 7.327647 -107.847427 
-
-Position: 13.458817 -0.989880 -107.819466 
-
-Position: 12.030985 -0.986603 -106.791512 
-
-Position: 13.458817 -0.989880 -107.819466 
-
-Position: 18.353825 -0.956283 -98.009140 
-
-Position: 18.353825 -0.956283 -98.009140 
-
-Position: 13.458817 -0.989880 -107.819466 
-
-Position: 19.781656 -0.959560 -99.037086 
-
-Position: 19.781656 -0.959560 -99.037086 
-
-Position: 13.458817 -0.989880 -107.819466 
-
-Position: 19.780613 7.357967 -99.065056 
-
-Position: 19.780613 7.357967 -99.065056 
-
-Position: 13.458817 -0.989880 -107.819466 
-
-Position: 13.457773 7.327647 -107.847427 
-
-Position: 12.030985 -0.986603 -106.791512 
-
-Position: 18.353825 -0.956283 -98.009140 
-
-Position: 12.029942 7.330924 -106.819481 
-
-Position: 12.029942 7.330924 -106.819481 
-
-Position: 18.353825 -0.956283 -98.009140 
-
-Position: 18.352781 7.361244 -98.037102 
 
 

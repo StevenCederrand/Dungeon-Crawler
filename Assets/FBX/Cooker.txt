@@ -1,12 +1,12 @@
 Version: 3
 Nr of dynamic meshes: 0
 Nr of static meshes: 1
-Nr of bounding boxes: 1
+Nr of bounding boxes: 0
 Nr of materials: 1
 
 Name of mesh: Cooker                                                                                              
 Vertex count: 456
-Material ID: 44
+Material ID: 43
 Collision: 0
 Static mesh: 1
 
@@ -1837,91 +1837,10 @@ UV: 0.995821 0.000000
 normal: 0.000000 -0.000000 -1.000000 
 
 
-Name of albedo Texture: Heater.jpg                                                                                          
+Name of albedo Texture: Metal.jpg                                                                                           
 Name of normalmap:                                                                                                     
-Material ID: 44
+Material ID: 43
 Nr of Textures: 1
 What Shader: 1
-
-
-Name of mesh: CookerCollision                                                                                     
-Vertex count: 36
-
-Collision: 1
-Static mesh: 1
-
-
-
-Position: -103.771965 -0.059842 -164.364410 
-
-Position: -99.525383 -0.059842 -164.364410 
-
-Position: -103.771965 2.861158 -164.364410 
-
-Position: -103.771965 2.861158 -164.364410 
-
-Position: -99.525383 -0.059842 -164.364410 
-
-Position: -99.525383 2.861158 -164.364410 
-
-Position: -103.771965 2.861158 -164.364410 
-
-Position: -99.525383 2.861158 -164.364410 
-
-Position: -103.771965 2.861158 -166.477478 
-
-Position: -103.771965 2.861158 -166.477478 
-
-Position: -99.525383 2.861158 -164.364410 
-
-Position: -99.525383 2.861158 -166.477478 
-
-Position: -103.771965 2.861158 -166.477478 
-
-Position: -99.525383 2.861158 -166.477478 
-
-Position: -103.771965 -0.059842 -166.477478 
-
-Position: -103.771965 -0.059842 -166.477478 
-
-Position: -99.525383 2.861158 -166.477478 
-
-Position: -99.525383 -0.059842 -166.477478 
-
-Position: -103.771965 -0.059842 -166.477478 
-
-Position: -99.525383 -0.059842 -166.477478 
-
-Position: -103.771965 -0.059842 -164.364410 
-
-Position: -103.771965 -0.059842 -164.364410 
-
-Position: -99.525383 -0.059842 -166.477478 
-
-Position: -99.525383 -0.059842 -164.364410 
-
-Position: -99.525383 -0.059842 -164.364410 
-
-Position: -99.525383 -0.059842 -166.477478 
-
-Position: -99.525383 2.861158 -164.364410 
-
-Position: -99.525383 2.861158 -164.364410 
-
-Position: -99.525383 -0.059842 -166.477478 
-
-Position: -99.525383 2.861158 -166.477478 
-
-Position: -103.771965 -0.059842 -166.477478 
-
-Position: -103.771965 -0.059842 -164.364410 
-
-Position: -103.771965 2.861158 -166.477478 
-
-Position: -103.771965 2.861158 -166.477478 
-
-Position: -103.771965 -0.059842 -164.364410 
-
-Position: -103.771965 2.861158 -164.364410 
 
 

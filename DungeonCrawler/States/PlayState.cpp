@@ -54,34 +54,14 @@ PlayState::PlayState() {
 	m_GLinit->createMeshFBX("Enemy", enemyData);
 	delete enemyData;
 
-	FBXParserData* barrelData = m_FBXParser->binaryMeshReading(FBXPath + "barrels.bin"); //SHOULD MAKE BINARY
-	m_GLinit->createMeshFBX("Barrels", barrelData);
+
+	FBXParserData* barrelData = m_FBXParser->binaryMeshReading(FBXPath + "barrel.bin"); //SHOULD MAKE BINARY
+	m_GLinit->createMeshFBX("barrel", barrelData);
 	delete barrelData;
 
-	FBXParserData* crateData = m_FBXParser->binaryMeshReading(FBXPath + "Crates.bin"); //SHOULD MAKE BINARY
-	m_GLinit->createMeshFBX("Crates", crateData);
-	delete crateData;
-
-
-	FBXParserData* barrelsStandingData = m_FBXParser->binaryMeshReading(FBXPath + "barrelsStanding.bin"); //SHOULD MAKE BINARY
-	m_GLinit->createMeshFBX("barrelsStanding", barrelsStandingData);
-	delete barrelsStandingData;
-
-	FBXParserData* closedCellsData = m_FBXParser->binaryMeshReading(FBXPath + "closedCells.bin"); //SHOULD MAKE BINARY
-	m_GLinit->createMeshFBX("closedCells", closedCellsData);
-	delete closedCellsData;
-
-	FBXParserData* heaterData = m_FBXParser->binaryMeshReading(FBXPath + "heater.bin"); //SHOULD MAKE BINARY
-	m_GLinit->createMeshFBX("heater", heaterData);
-	delete heaterData;
-
-	FBXParserData* shelf2Data = m_FBXParser->binaryMeshReading(FBXPath + "shelf2.bin"); //SHOULD MAKE BINARY
-	m_GLinit->createMeshFBX("shelf2", shelf2Data);
-	delete shelf2Data;
-
-	FBXParserData* tableData = m_FBXParser->binaryMeshReading(FBXPath + "table.bin"); //SHOULD MAKE BINARY
-	m_GLinit->createMeshFBX("table", tableData);
-	delete tableData;
+	FBXParserData* barrelStandingData = m_FBXParser->binaryMeshReading(FBXPath + "barrelStanding.bin"); //SHOULD MAKE BINARY
+	m_GLinit->createMeshFBX("barrelStanding", barrelStandingData);
+	delete barrelStandingData;
 
 	FBXParserData* barsData = m_FBXParser->binaryMeshReading(FBXPath + "bars.bin"); //SHOULD MAKE BINARY
 	m_GLinit->createMeshFBX("bars", barsData);
@@ -91,13 +71,33 @@ PlayState::PlayState() {
 	m_GLinit->createMeshFBX("bench", benchData);
 	delete benchData;
 
-	FBXParserData* ChairData = m_FBXParser->binaryMeshReading(FBXPath + "Chair.bin"); //SHOULD MAKE BINARY
-	m_GLinit->createMeshFBX("Chair", ChairData);
-	delete ChairData;
+	FBXParserData* chairData = m_FBXParser->binaryMeshReading(FBXPath + "chair.bin"); //SHOULD MAKE BINARY
+	m_GLinit->createMeshFBX("chair", chairData);
+	delete chairData;
+	
+	FBXParserData* closedCellData = m_FBXParser->binaryMeshReading(FBXPath + "closedCell.bin"); //SHOULD MAKE BINARY
+	m_GLinit->createMeshFBX("closedCell", closedCellData);
+	delete closedCellData;
 
-	FBXParserData* CookerData = m_FBXParser->binaryMeshReading(FBXPath + "Cooker.bin"); //SHOULD MAKE BINARY
-	m_GLinit->createMeshFBX("Cooker", CookerData);
-	delete CookerData;
+	FBXParserData* cookerData = m_FBXParser->binaryMeshReading(FBXPath + "cooker.bin"); //SHOULD MAKE BINARY
+	m_GLinit->createMeshFBX("cooker", cookerData);
+	delete cookerData;
+
+	FBXParserData* cratesData = m_FBXParser->binaryMeshReading(FBXPath + "crates.bin"); //SHOULD MAKE BINARY
+	m_GLinit->createMeshFBX("crates", cratesData);
+	delete cratesData;
+
+	FBXParserData* heatersData = m_FBXParser->binaryMeshReading(FBXPath + "heaters.bin"); //SHOULD MAKE BINARY
+	m_GLinit->createMeshFBX("heaters", heatersData);
+	delete heatersData;
+
+	FBXParserData* shelfData = m_FBXParser->binaryMeshReading(FBXPath + "shelf.bin"); //SHOULD MAKE BINARY
+	m_GLinit->createMeshFBX("shelf", shelfData);
+	delete shelfData;
+
+	FBXParserData* tableData = m_FBXParser->binaryMeshReading(FBXPath + "table.bin"); //SHOULD MAKE BINARY
+	m_GLinit->createMeshFBX("table", tableData);
+	delete tableData;
 
 
 
@@ -239,50 +239,50 @@ void PlayState::constructWorld()
 	Mesh* boxMesh = MeshMap::getMesh("Box");
 	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
 
-	Mesh* barrels = MeshMap::getMesh("Barrels");
-	GameObject* testBox = new Box(barrels, Type::BOX);
-	m_gameObjectManager->addGameObject(testBox);
 	
-	Mesh* crates = MeshMap::getMesh("Crates");
-	GameObject* testCrate = new Box(crates, Type::BOX);
-	m_gameObjectManager->addGameObject(testCrate);
+	Mesh* barrelMesh = MeshMap::getMesh("barrel");
+	GameObject* barrelObj = new Box(barrelMesh, Type::BOX);
+	m_gameObjectManager->addGameObject(barrelObj);
 
-	
-	Mesh* barrelsStanding = MeshMap::getMesh("barrelsStanding");
-	GameObject* testbarrelsStanding = new Box(barrelsStanding, Type::BOX);
-	m_gameObjectManager->addGameObject(testbarrelsStanding);
+	Mesh* barrelStandingMesh = MeshMap::getMesh("barrelStanding");
+	GameObject* barrelStandingObj = new Box(barrelStandingMesh, Type::BOX);
+	m_gameObjectManager->addGameObject(barrelStandingObj);
 
-	Mesh* closedCells = MeshMap::getMesh("closedCells");
-	GameObject* testclosedCells = new Box(closedCells, Type::BOX);
-	m_gameObjectManager->addGameObject(testclosedCells);
+	Mesh* barsMesh = MeshMap::getMesh("bars");
+	GameObject* barsObj = new Box(barsMesh, Type::BOX);
+	m_gameObjectManager->addGameObject(barsObj);
 
-	Mesh* heater = MeshMap::getMesh("heater");
-	GameObject* testheater = new Box(heater, Type::BOX);
-	m_gameObjectManager->addGameObject(testheater);
+	Mesh* benchMesh = MeshMap::getMesh("bench");
+	GameObject* benchObj = new Box(benchMesh, Type::BOX);
+	m_gameObjectManager->addGameObject(benchObj);
 
-	Mesh* shelf2 = MeshMap::getMesh("shelf2");
-	GameObject* testshelf2 = new Box(shelf2, Type::BOX);
-	m_gameObjectManager->addGameObject(testshelf2);
+	Mesh* chairMesh = MeshMap::getMesh("chair");
+	GameObject* chairObj = new Box(chairMesh, Type::BOX);
+	m_gameObjectManager->addGameObject(chairObj);
 
-	Mesh* table = MeshMap::getMesh("table");
-	GameObject* testtable = new Box(table, Type::BOX);
-	m_gameObjectManager->addGameObject(testtable);
+	Mesh* closedCellMesh = MeshMap::getMesh("closedCell");
+	GameObject* closedCellObj = new Box(closedCellMesh, Type::BOX);
+	m_gameObjectManager->addGameObject(closedCellObj);
 
-	Mesh* bars = MeshMap::getMesh("bars");
-	GameObject* testbars = new Box(bars, Type::BOX);
-	m_gameObjectManager->addGameObject(testbars);
+	Mesh* cookerMesh = MeshMap::getMesh("cooker");
+	GameObject* cookerObj = new Box(cookerMesh, Type::BOX);
+	m_gameObjectManager->addGameObject(cookerObj);
 
-	Mesh* bench = MeshMap::getMesh("bench");
-	GameObject* testbench = new Box(bench, Type::BOX);
-	m_gameObjectManager->addGameObject(testbench);
+	Mesh* cratesMesh = MeshMap::getMesh("crates");
+	GameObject* cratesObj = new Box(cratesMesh, Type::BOX);
+	m_gameObjectManager->addGameObject(cratesObj);
 
-	Mesh* Chair = MeshMap::getMesh("Chair");
-	GameObject* testChair = new Box(Chair, Type::BOX);
-	m_gameObjectManager->addGameObject(testChair);
+	Mesh* heatersMesh = MeshMap::getMesh("heaters");
+	GameObject* heatersObj = new Box(heatersMesh, Type::BOX);
+	m_gameObjectManager->addGameObject(heatersObj);
 
-	Mesh* Cooker = MeshMap::getMesh("Cooker");
-	GameObject* testCooker = new Box(Cooker, Type::BOX);
-	m_gameObjectManager->addGameObject(testCooker);
+	Mesh* shelfMesh = MeshMap::getMesh("shelf");
+	GameObject* shelfObj = new Box(shelfMesh, Type::BOX);
+	m_gameObjectManager->addGameObject(shelfObj);
+
+	Mesh* tableMesh = MeshMap::getMesh("table");
+	GameObject* tableObj = new Box(tableMesh, Type::BOX);
+	m_gameObjectManager->addGameObject(tableObj);
 
 
 	m_gameObjectManager->addGameObject(m_player);
@@ -353,7 +353,6 @@ void PlayState::addRoom()
 	Room * r_room2 = new Room(room2Mesh, ROOM, m_player);
 	m_gameObjectManager->addGameObject(r_room2);
 
-
 	FBXParserData* room3 = m_FBXParser->binaryMeshReading(FBXPath + "room3.bin"); //SHOULD MAKE BINARY
 	Mesh * room3Mesh = m_GLinit->createMeshFBX("room3", room3);
 	delete room3;
@@ -384,11 +383,11 @@ void PlayState::addRoom()
 	Room * r_room7 = new Room(room7Mesh, ROOM, m_player);
 	m_gameObjectManager->addGameObject(r_room7);
 
-	FBXParserData* room8 = m_FBXParser->binaryMeshReading(FBXPath + "room8.bin"); //SHOULD MAKE BINARY
-	Mesh * room8Mesh = m_GLinit->createMeshFBX("room8", room8);
-	delete room8;
-	Room * r_room8 = new Room(room8Mesh, ROOM_BOSS, m_player);
-	m_gameObjectManager->addGameObject(r_room8);
+	FBXParserData* roomBossData = m_FBXParser->binaryMeshReading(FBXPath + "roomBoss.bin"); //SHOULD MAKE BINARY
+	Mesh * roomBossMesh = m_GLinit->createMeshFBX("roomBoss", roomBossData);
+	delete roomBossData;
+	Room * r_roomBoss = new Room(roomBossMesh, ROOM_BOSS, m_player);
+	m_gameObjectManager->addGameObject(r_roomBoss);
 
 	//ParserData* roomStart = m_parser->loadFromObj(file + ".obj");
 	//Mesh * roomMesh = m_GLinit->createMesh(id, roomStart);

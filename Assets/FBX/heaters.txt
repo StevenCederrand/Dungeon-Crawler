@@ -1,12 +1,12 @@
 Version: 3
 Nr of dynamic meshes: 0
 Nr of static meshes: 1
-Nr of bounding boxes: 1
+Nr of bounding boxes: 0
 Nr of materials: 1
 
 Name of mesh: Heaters                                                                                             
 Vertex count: 2340
-Material ID: 44
+Material ID: 43
 Collision: 0
 Static mesh: 1
 
@@ -9373,91 +9373,10 @@ UV: 0.645892 0.044483
 normal: 0.451659 0.875222 -0.173177 
 
 
-Name of albedo Texture: Heater.jpg                                                                                          
+Name of albedo Texture: Metal.jpg                                                                                           
 Name of normalmap:                                                                                                     
-Material ID: 44
+Material ID: 43
 Nr of Textures: 1
 What Shader: 1
-
-
-Name of mesh: heaterCollision                                                                                     
-Vertex count: 36
-
-Collision: 1
-Static mesh: 1
-
-
-
-Position: 89.499565 -0.465587 -116.590332 
-
-Position: 104.329659 -0.465587 -116.590332 
-
-Position: 89.499565 5.501924 -116.590332 
-
-Position: 89.499565 5.501924 -116.590332 
-
-Position: 104.329659 -0.465587 -116.590332 
-
-Position: 104.329659 5.501924 -116.590332 
-
-Position: 89.499565 5.501924 -116.590332 
-
-Position: 104.329659 5.501924 -116.590332 
-
-Position: 89.499565 5.501924 -119.999695 
-
-Position: 89.499565 5.501924 -119.999695 
-
-Position: 104.329659 5.501924 -116.590332 
-
-Position: 104.329659 5.501924 -119.999695 
-
-Position: 89.499565 5.501924 -119.999695 
-
-Position: 104.329659 5.501924 -119.999695 
-
-Position: 89.499565 -0.465587 -119.999695 
-
-Position: 89.499565 -0.465587 -119.999695 
-
-Position: 104.329659 5.501924 -119.999695 
-
-Position: 104.329659 -0.465587 -119.999695 
-
-Position: 89.499565 -0.465587 -119.999695 
-
-Position: 104.329659 -0.465587 -119.999695 
-
-Position: 89.499565 -0.465587 -116.590332 
-
-Position: 89.499565 -0.465587 -116.590332 
-
-Position: 104.329659 -0.465587 -119.999695 
-
-Position: 104.329659 -0.465587 -116.590332 
-
-Position: 104.329659 -0.465587 -116.590332 
-
-Position: 104.329659 -0.465587 -119.999695 
-
-Position: 104.329659 5.501924 -116.590332 
-
-Position: 104.329659 5.501924 -116.590332 
-
-Position: 104.329659 -0.465587 -119.999695 
-
-Position: 104.329659 5.501924 -119.999695 
-
-Position: 89.499565 -0.465587 -119.999695 
-
-Position: 89.499565 -0.465587 -116.590332 
-
-Position: 89.499565 5.501924 -119.999695 
-
-Position: 89.499565 5.501924 -119.999695 
-
-Position: 89.499565 -0.465587 -116.590332 
-
-Position: 89.499565 5.501924 -116.590332 
 
 
