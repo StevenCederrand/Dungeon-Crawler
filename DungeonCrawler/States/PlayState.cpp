@@ -58,7 +58,7 @@ PlayState::PlayState() {
 	m_GLinit->createMeshFBX("Barrels", barrelData);
 	delete barrelData;
 
-	FBXParserData* crateData = m_FBXParser->binaryMeshReading(FBXPath + "CRATES.bin"); //SHOULD MAKE BINARY
+	FBXParserData* crateData = m_FBXParser->binaryMeshReading(FBXPath + "Crates.bin"); //SHOULD MAKE BINARY
 	m_GLinit->createMeshFBX("Crates", crateData);
 	delete crateData;
 
