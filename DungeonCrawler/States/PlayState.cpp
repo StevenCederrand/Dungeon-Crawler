@@ -99,6 +99,9 @@ PlayState::PlayState() {
 	m_GLinit->createMeshFBX("table", tableData);
 	delete tableData;
 
+	FBXParserData* roomWallsData = m_FBXParser->binaryMeshReading(FBXPath + "roomWalls.bin"); //SHOULD MAKE BINARY
+	m_GLinit->createMeshFBX("roomWalls", roomWallsData);
+	delete roomWallsData;
 
 
 	#pragma region Create_Objects
@@ -284,6 +287,10 @@ void PlayState::constructWorld()
 	GameObject* tableObj = new Box(tableMesh, Type::BOX);
 	m_gameObjectManager->addGameObject(tableObj);
 
+	Mesh* roomWallsMesh = MeshMap::getMesh("roomWalls");
+	GameObject* roomWallsObj = new Box(roomWallsMesh, Type::BOX);
+	m_gameObjectManager->addGameObject(roomWallsObj);
+	
 
 	m_gameObjectManager->addGameObject(m_player);
 	
