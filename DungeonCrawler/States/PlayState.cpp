@@ -299,22 +299,22 @@ void PlayState::constructWorld()
 
 	m_lightManager->setPlayerLight(glm::vec3(m_player->getPosition().x, 15.0f, m_player->getPosition().z), glm::vec4(1.0f, 1.0f, 1.0f, 25.0f));
 	m_lightManager->setSun(glm::vec3(m_player->getPosition().x, 20.0f, m_player->getPosition().z), glm::vec3(0.8f, 0.8f, 0.8f));
-	for (int i = 0; i < 1; i++)
-	{
-	m_lightManager->addLight(
-		// Position
-		glm::vec3(
-			Randomizer::single(-20.f, 20.f),
-			40.f,
-			Randomizer::single(-60.f, 20.f)),
-		// Color
-		glm::vec3(
-			Randomizer::single(0.f, 255.f) / 255.f,
-			Randomizer::single(0.f, 255.f) / 255.f,
-			Randomizer::single(0.f, 255.f) / 255.f),
-		60.f, m_gameObjectManager);
+	//for (int i = 0; i < 1; i++)
+	//{
+	//m_lightManager->addLight(
+	//	// Position
+	//	glm::vec3(
+	//		Randomizer::single(-20.f, 20.f),
+	//		40.f,
+	//		Randomizer::single(-60.f, 20.f)),
+	//	// Color
+	//	glm::vec3(
+	//		Randomizer::single(0.f, 255.f) / 255.f,
+	//		Randomizer::single(0.f, 255.f) / 255.f,
+	//		Randomizer::single(0.f, 255.f) / 255.f),
+	//	60.f, m_gameObjectManager);
 
-	}
+	//}
 
 	//Used for the player flashlight & shadow mapping from the 
 	//flashlights view
