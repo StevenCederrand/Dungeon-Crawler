@@ -545,6 +545,7 @@ void GameObjectManager::spawner(Room* currentRoom) {
 	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
 	if (currentRoom->getType() == ROOM_BOSS)
 	{
+		
 		GameObject* enemy = new Boss(enemyMesh, BOSS, currentRoom, glm::vec3(
 			currentRoom->getCentrePosition().x,
 			0.f,
@@ -556,31 +557,25 @@ void GameObjectManager::spawner(Room* currentRoom) {
 	for (int i = 0; i < 2; i++) {
 		
 		int powerUpRoulette = Randomizer::single(1, 3);
+
+		auto cell = currentRoom->getGrid()->getFreeRandomCell();
+
 		if (powerUpRoulette == 1)
 		{
-			GameObject* powerUp = new PowerUps(powerUpMesh, POWERUPS, 1.f, 0.f, 0.f, false, glm::vec3(
-				Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
-				0.5f,
-				Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)), m_effects);
+			GameObject* powerUp = new PowerUps(powerUpMesh, POWERUPS, 1.f, 0.f, 0.f, false, glm::vec3(cell.x, 0.5f, cell.z), m_effects);
 			this->addGameObject(powerUp);
 
 		}
 		if (powerUpRoulette == 2)
 		{
-			GameObject* powerUp = new PowerUps(powerUpMesh, POWERUPS, 0.f, 1.f, 0.f, true, glm::vec3(
-				Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
-				0.5f,
-				Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)), m_effects);
+			GameObject* powerUp = new PowerUps(powerUpMesh, POWERUPS, 0.f, 1.f, 0.f, true, glm::vec3(cell.x, 0.5f, cell.z), m_effects);
 			this->addGameObject(powerUp);
-
 
 		}
 		if (powerUpRoulette == 3)
 		{
-			GameObject* powerUp = new PowerUps(powerUpMesh, POWERUPS, 0.f, 0.f, 5.f, true, glm::vec3(
-				Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
-				0.5f,
-				Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)), m_effects);
+			
+			GameObject* powerUp = new PowerUps(powerUpMesh, POWERUPS, 0.f, 0.f, 5.f, true, glm::vec3(cell.x, 0.5f, cell.z), m_effects);
 			this->addGameObject(powerUp);
 
 		}
@@ -597,22 +592,33 @@ void GameObjectManager::spawner(Room* currentRoom) {
 	//Spawn Melee Enemies
 	for (int i = 0; i < numMeleeEnemies; i++)
 	{
-		GameObject* enemy = new Walker(enemyMesh, WALKER, currentRoom, glm::vec3(
+		auto cell = currentRoom->getGrid()->getFreeRandomCell();
+
+		GameObject* enemy = new Walker(enemyMesh, WALKER, currentRoom, glm::vec3(cell.x, 0.0f, cell.z),
+			m_effects, timeBeforeSpawn);
+
+
+		/*GameObject* enemy = new Walker(enemyMesh, WALKER, currentRoom, glm::vec3(
 			Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
 			0.f,
 			Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)),
-			m_effects, timeBeforeSpawn);
+			m_effects, timeBeforeSpawn);*/
 
 		this->addGameObject(enemy);
 	}
 	//Spawn Ranged Enemies
 	for (int i = 0; i < numRangedEnemies; i++)
 	{
-		GameObject* enemy = new Shooter(enemyMesh, SHOOTER, currentRoom, glm::vec3(
+		auto cell = currentRoom->getGrid()->getFreeRandomCell();
+
+		GameObject* enemy = new Shooter(enemyMesh, SHOOTER, currentRoom, glm::vec3(cell.x, 0.0f, cell.z),
+			m_projectileManager, m_effects, timeBeforeSpawn);
+		
+		/*GameObject* enemy = new Shooter(enemyMesh, SHOOTER, currentRoom, glm::vec3(
 			Randomizer::single(currentRoom->getMaxMinValues().z + spawnOffset, currentRoom->getMaxMinValues().x - spawnOffset),
 			0.f,
 			Randomizer::single(currentRoom->getMaxMinValues().w + spawnOffset, currentRoom->getMaxMinValues().y - spawnOffset)),
-			m_projectileManager, m_effects, timeBeforeSpawn);
+			m_projectileManager, m_effects, timeBeforeSpawn);*/
 
 		
 		this->addGameObject(enemy);
