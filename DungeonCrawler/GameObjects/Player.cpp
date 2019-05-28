@@ -103,22 +103,14 @@ void Player::update(float dt)
 	
 	if (!m_debug)
 	{
-		//weaponSwap();
-		//if (m_weaponSlot == 1)
-		//{
-			shootAutomatic(dt);
-			if ((m_pistolBullets <= 0) && (m_reloading == false) && (m_spraying == false))
-			{
-				m_reloading = true;
-				AudioEngine::play("gun_reload", 1.0f);
-				m_reloadTime = m_reloadTimeAdd;
-			}
-			manualReload(dt);
-		//}
-		//if (m_weaponSlot == 2)
-		//{
-			//shootChargeShot(dt);
-		//}
+		shootAutomatic(dt);
+		if ((m_pistolBullets <= 0) && (m_reloading == false) && (m_spraying == false))
+		{
+			m_reloading = true;
+			AudioEngine::play("gun_reload", 1.0f);
+			m_reloadTime = m_reloadTimeAdd;
+		}
+		manualReload(dt);
 		powerUpCd(dt);
 		move(dt);
 		dashCd(dt);
@@ -132,8 +124,6 @@ void Player::update(float dt)
 void Player::hit(const HitDescription & desc)
 {
 	Type type = desc.owner->getType();
-	/*if (m_iframes <= 0)
-	{*/
 	if (type == Type::WALKER)
 	{
 		Walker* walker = dynamic_cast<Walker*>(desc.owner);
@@ -149,8 +139,6 @@ void Player::hit(const HitDescription & desc)
 		Boss* boss = dynamic_cast<Boss*>(desc.owner);
 		takeDamage(boss->getDamage());
 	}
-	/*	m_iframes = 2.f;
-	}*/
 	if (type == Type::POWERUPS)
 	{
 		PowerUps* powerUp = dynamic_cast<PowerUps*>(desc.owner);
@@ -369,6 +357,7 @@ void Player::dash()
 {
 	if (!m_dashCd)
 	{
+		AudioEngine::play("pl_dash", 0.7f);
 		setSpeed(m_dash);
 		m_dashCd = !m_dashCd;
 		m_dashTimer = 1.f;

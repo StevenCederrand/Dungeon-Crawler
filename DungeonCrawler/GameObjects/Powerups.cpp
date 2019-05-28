@@ -1,5 +1,6 @@
 #include "Powerups.h"
 #include <Utility/Randomizer.h>
+#include <Audio/AudioEngine.h>
 
 PowerUps::PowerUps(Mesh* mesh, Type type, float health, float damage, float speed, bool timed, glm::vec3 position, Effects* effects) :
 	GameObject(mesh, type, position)
@@ -51,6 +52,16 @@ void PowerUps::update(float dt)
 
 void PowerUps::trigger()
 {
+	if (m_healthUp > 0) {
+		AudioEngine::play("HealthPack", 1.0f);
+	}
+	else if (m_speedUp > 0) {
+		AudioEngine::play("SpeedPack", 1.0f);
+	}
+	else if (m_damageUp > 0) {
+		AudioEngine::play("DamagePack", 1.0f);
+	}
+
 	this->m_trigger = true;
 }
 

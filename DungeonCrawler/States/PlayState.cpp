@@ -163,6 +163,7 @@ void PlayState::update(float dt) {
 	if (player->getHealth() <= 0 || Input::isKeyPressed(GLFW_KEY_9))
 	{
 		resetPlayer();
+		AudioEngine::unloadSSO("Game.sso");
 		GameOverState* gameOver = new GameOverState();
 		GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
 		glfwSetCursor(glfwGetCurrentContext(), cursor);
@@ -171,6 +172,7 @@ void PlayState::update(float dt) {
 
 	if (m_gameObjectManager->gameFinished() || Input::isKeyPressed(GLFW_KEY_8)) {
 		WinState* winState = new WinState();
+		AudioEngine::unloadSSO("Game.sso");
 		GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
 		glfwSetCursor(glfwGetCurrentContext(), cursor);
 		m_stateManager->pushTemporaryState(winState);

@@ -290,11 +290,6 @@
     <ClInclude Include="Vendor\Lodepng\lodepng.h" />
     <ClInclude Include="Vendor\stb\stb_image.h" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CustomFBXLibrary\CustomFBXLibrary.vcxproj">
-      <Project>{a5c0a647-b5b5-4af3-be7f-9b3c386f2692}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
 </Project>
