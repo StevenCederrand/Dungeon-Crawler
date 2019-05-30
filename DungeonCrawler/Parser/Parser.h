@@ -15,6 +15,7 @@ public:
 	//Parse SSO files
 	void parseSSO(const std::string filename);
 	void cleanMemoryAllocated();
+	void writeToBinary(ParserData* data, const std::string& filename);
 
 private:
 	std::vector<std::string> split(const std::string& line, const char splitter);
@@ -30,7 +31,6 @@ private:
 	int getFaceIndexIfExist(GLuint vertexIndex, GLuint uvIndex, GLuint normalIndex, GLuint indexCounter);
 			
 	
-	void writeToBinary(ParserData* data, const std::string& filename);
 	void writeBinaryVecInt(std::ofstream& binaryFile, std::vector<GLuint> vector);
 	void writeBinaryVecVec3(std::ofstream& binaryFile, std::vector<glm::vec3> vector);
 	void writeBinaryVecVec2(std::ofstream& binaryFile, std::vector<glm::vec2> vector);

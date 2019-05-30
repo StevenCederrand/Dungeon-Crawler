@@ -174,7 +174,7 @@ ParserData * Parser::loadFromObj(const std::string & filename)
 
 	data->setFilename(filenameString[0]);
 
-	writeToBinary(data, filenameString[0]);
+	//writeToBinary(data, filenameString[0]);
 	
 	m_memoryTracker.emplace_back(data);
 

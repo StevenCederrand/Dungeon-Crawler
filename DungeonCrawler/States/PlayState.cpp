@@ -42,27 +42,113 @@ PlayState::PlayState() {
 	#pragma endregion
 		
 	#pragma region Create_Objects
-	ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
-	ParserData* playerData = m_parser->loadFromObj("MainCharacterPosed.obj");
+	//ParserData* boxData = m_parser->loadFromObj("collisionboxtest.obj");
 	
+
+	static std::chrono::high_resolution_clock timer;
+	static std::chrono::time_point<std::chrono::high_resolution_clock> timerStart;
+	static std::chrono::time_point<std::chrono::high_resolution_clock> timerStop;
+	using ms = std::chrono::duration<float, std::milli>;
+
+	std::string temps = "FlyGuyConverted.obj";
+	std::string temps1 = "MainCharacterPosed.obj";
+
+	//OBJ
+	timerStart = timer.now();
+	ParserData* playerData = m_parser->loadFromObj(temps);
+	
+	timerStop = timer.now();
+	float duration = std::chrono::duration_cast<ms>(timerStop - timerStart).count();
+	LOG_WARNING("\nOBJ1: ");
+	LOG_WARNING(duration/1000);
+
+	//OBJ
+	timerStart = timer.now();
+	playerData = m_parser->loadFromObj(temps);
+
+	timerStop = timer.now();
+	duration = std::chrono::duration_cast<ms>(timerStop - timerStart).count();
+	LOG_WARNING("\nOBJ2: ");
+	LOG_WARNING(duration / 1000);
+
+	//OBJ
+	timerStart = timer.now();
+	playerData = m_parser->loadFromObj(temps);
+
+	timerStop = timer.now();
+	duration = std::chrono::duration_cast<ms>(timerStop - timerStart).count();
+	LOG_WARNING("\nOBJ3: ");
+	LOG_WARNING(duration / 1000);
+
+	//OBJ
+	timerStart = timer.now();
+	playerData = m_parser->loadFromObj(temps);
+
+	timerStop = timer.now();
+	duration = std::chrono::duration_cast<ms>(timerStop - timerStart).count();
+	LOG_WARNING("\nOBJ4: ");
+	LOG_WARNING(duration / 1000);
+
+	//BINARY
+	m_parser->writeToBinary(playerData, "FlyGuyConverted");
+	timerStart = timer.now();
+	playerData = m_parser->loadFromObj(temps);
+
+	timerStop = timer.now();
+	duration = std::chrono::duration_cast<ms>(timerStop - timerStart).count();
+	LOG_WARNING("\nBinary1: ");
+	LOG_WARNING(duration/1000);
+
+	//BINARY
+	timerStart = timer.now();
+	playerData = m_parser->loadFromObj(temps);
+
+	timerStop = timer.now();
+	duration = std::chrono::duration_cast<ms>(timerStop - timerStart).count();
+	LOG_WARNING("\nBinary2: ");
+	LOG_WARNING(duration / 1000);
+
+
+	//BINARY
+	timerStart = timer.now();
+	playerData = m_parser->loadFromObj(temps);
+
+	timerStop = timer.now();
+	duration = std::chrono::duration_cast<ms>(timerStop - timerStart).count();
+	LOG_WARNING("\nBinary3: ");
+	LOG_WARNING(duration / 1000);
+
+	//BINARY
+	timerStart = timer.now();
+	playerData = m_parser->loadFromObj(temps);
+
+	timerStop = timer.now();
+	duration = std::chrono::duration_cast<ms>(timerStop - timerStart).count();
+	LOG_WARNING("\nBinary4: ");
+	LOG_WARNING(duration / 1000);
+	
+
+
+
+
 
 	//ParserData* roomStart = m_parser->loadFromObj("roomStart.obj");
 
 	//ParserData* roomEnd = m_parser->loadFromObj("roomEnd.obj");
 
-	ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
-	ParserData* powerUpData = m_parser->loadFromObj("LifePowerUp.obj");
-	ParserData* enemyData = m_parser->loadFromObj("FlyGuyConverted.obj");
+	//ParserData* sphereData = m_parser->loadFromObj("sphere.obj");
+	//ParserData* powerUpData = m_parser->loadFromObj("LifePowerUp.obj");
+	//ParserData* enemyData = m_parser->loadFromObj("FlyGuyConverted.obj");
 
 
 	//m_GLinit->createMesh("RoomStart", roomStart);
 	//m_GLinit->createMesh("RoomEnd", roomEnd);
 
-	m_GLinit->createMesh("Box", boxData);
+	//m_GLinit->createMesh("Box", boxData);
 	m_GLinit->createMesh("PlayerModel", playerData);
-	m_GLinit->createMesh("Sphere", sphereData);
-	m_GLinit->createMesh("PowerUp", powerUpData);
-	m_GLinit->createMesh("Enemy", enemyData);
+	//m_GLinit->createMesh("Sphere", sphereData);
+	//m_GLinit->createMesh("PowerUp", powerUpData);
+	//m_GLinit->createMesh("Enemy", enemyData);
 	#pragma endregion
 
 	//we want to setUp the world
@@ -171,8 +257,8 @@ void PlayState::constructWorld()
 	m_renderer = new Renderer(m_camera, m_lightManager, m_effects, m_projectileManager, m_playerHealthBar, m_map, m_screenBlood);
 
 
-	Mesh* boxMesh = MeshMap::getMesh("Box");
-	Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
+	//Mesh* boxMesh = MeshMap::getMesh("Box");
+	//Mesh* powerUpMesh = MeshMap::getMesh("PowerUp");
 	//Mesh* roomStart = MeshMap::getMesh("RoomStart");
 	//Mesh* roomEnd = MeshMap::getMesh("RoomEnd");
 	
@@ -194,17 +280,18 @@ void PlayState::constructWorld()
 	m_gameObjectManager->addGameObject(m_player);
 	
 	m_projectileManager->setPlayer(m_player);
-	addRoom();
+	//addRoom();
 
-	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 5, 0, 0, false, glm::vec3(4.f, 0.5f, -2.f));
-	m_gameObjectManager->addGameObject(m_powerUp);
+	//m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 5, 0, 0, false, glm::vec3(4.f, 0.5f, -2.f));
+	//m_gameObjectManager->addGameObject(m_powerUp);
 	//m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 10, 0, false, glm::vec3(2.f, 0.5f, -10.f));
 	//m_gameObjectManager->addGameObject(m_powerUp);
-	m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 0, 5, true, glm::vec3(-5.f, 0.5f, -7.f));
-	m_gameObjectManager->addGameObject(m_powerUp);
+	//m_powerUp = new PowerUps(powerUpMesh, POWERUPS, 0, 0, 5, true, glm::vec3(-5.f, 0.5f, -7.f));
+	//m_gameObjectManager->addGameObject(m_powerUp);
 
 	m_lightManager->setPlayerLight(glm::vec3(m_player->getPosition().x, 15.0f, m_player->getPosition().z), glm::vec4(1.0f, 1.0f, 1.0f, 25.0f));
 	m_lightManager->setSun(glm::vec3(m_player->getPosition().x, 20.0f, m_player->getPosition().z), glm::vec3(0.8f, 0.8f, 0.8f));
+	/*
 	for (int i = 0; i < 1; i++)
 	{
 	m_lightManager->addLight(
@@ -221,6 +308,7 @@ void PlayState::constructWorld()
 		60.f, m_gameObjectManager);
 
 	}
+	*/
 
 	//Used for the player flashlight & shadow mapping from the 
 	//flashlights view
