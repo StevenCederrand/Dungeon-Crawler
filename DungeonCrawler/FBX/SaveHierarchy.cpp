@@ -899,6 +899,11 @@ void SaveHierarchy::SaveTextureNames(FbxProperty &pProperty, int mapKind)
 						{
 							m_Material.nameOfAlbedo[k] = ' ';
 						}
+						//copy texture files
+						std::filesystem::path start = nameOfTexture;
+						std::filesystem::path end = ("D:/3D/Dungeon-Crawler/" + nameOfTextureLastPart);
+						std::filesystem::copy_options copyOptions = std::filesystem::copy_options::skip_existing;
+						std::filesystem::copy(start, end, copyOptions);
 					}
 					else if (mapKind == 2)
 					{
@@ -910,6 +915,11 @@ void SaveHierarchy::SaveTextureNames(FbxProperty &pProperty, int mapKind)
 						{
 							m_Material.nameOfNormal[k] = ' ';
 						}
+						//copy texture files
+						std::filesystem::path start = nameOfTexture;
+						std::filesystem::path end = ("D:/3D/Dungeon-Crawler/" + nameOfTextureLastPart);
+						std::filesystem::copy_options copyOptions = std::filesystem::copy_options::skip_existing;
+						std::filesystem::copy(start, end, copyOptions);
 					}
 					m_Material.nrOfTextures++;
 				}

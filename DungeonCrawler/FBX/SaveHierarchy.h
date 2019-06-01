@@ -2,6 +2,7 @@
 
 //Has memory leaks
 
+#include <filesystem>
 #include "StaticMesh.h"
 #include "BoundingBoxMesh.h"
 #include "WriteCustomFile.h"
